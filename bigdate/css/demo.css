@@ -1,0 +1,175 @@
+.container{
+    position: relative;
+    display: flex;
+    display: -webkit-flex;
+}
+ul.icon_list{
+ width:10%;
+ height:100%;
+}
+ul.icon_list li{
+    width: 100%;
+    height: 81px;
+}
+ul.icon_list li img{
+    width:100%;
+}
+.content,.title_list{
+    position: relative;
+    top:0;
+    left:0;
+    width:60%;
+    height:1000px;
+    background-color: #fff;
+}
+.content .hh{
+    width:100%;
+    height:100%;
+}
+.content img{
+    width: 72px;
+    height: 81px;
+}
+.property{
+    width:12%;
+    height:100%;
+    border: 1px solid red;
+    padding:5px;
+}
+.property input,.property select{
+    width:45%;
+    border: none;
+    height:20px;
+}
+.property .item{
+    padding:5px 0;
+}
+.property .axis{
+    padding:10px 6px;
+    text-align: left;
+}
+.property .axis>div{
+    margin-top: 10px;
+    height:150px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.measure{
+    padding:10px 6px;
+    height:100%;
+    width:12%;
+    text-align: left;
+}
+.measure .item .list{
+    margin: 10px 0;
+    background-color: #fff;
+    height:150px;
+    border-radius: 5px;
+}
+.echart li{
+    height: 54px;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    padding: 10px 15px;
+    color: #ccc;
+    position: relative;
+    display: block;
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+}
+.echart li>.chart-icon{
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url(../images/chart-icon.png) no-repeat;
+    background-size: 32px;
+    /*background-repeat: ;*/
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    border: 1px solid #999;
+
+}
+#scatter .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -65px;
+}
+#line .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -1px;
+}
+#bar .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -33px;
+}
+#map .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -257px;
+}
+#pie .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -129px;
+}
+#radar .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -161px;
+}
+#candlestick .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -97px;
+}
+#boxplot .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -577px;
+}
+#heatmap .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -353px;
+}
+#graph .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -225px;
+}
+#treemap .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -449px;
+}
+#parallel .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -513px;
+}
+#sankey .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -545px;
+}
+#funnel .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -321px;
+}
+#gauge .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -289px;
+}
+#pictorialBar .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -769px;
+}
+#themeRiver .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -801px;
+}
+#calendar .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -833px;
+}
+#custom .chart-icon{
+    background-position-x: -1px;
+    background-position-y: -865px;
+}
+.echart li>.chart-name{
+    display: inline-block;
+    position: relative;
+    top: -12px;
+    margin-left: 10px;
+}

@@ -1,0 +1,150 @@
+.demand_main{
+    margin: 10px 96px 0;
+}
+.new_demand{
+    margin: 50px 67px 0 0;
+    width: 132px;
+    height: 188px;
+    float: left;
+    position: relative;
+}
+.new_demand:hover{
+    border-radius: 2px;
+    border: 1px solid #b8d6fb;
+    margin-top: 49px;
+    background: #ebf3fd;
+}
+.new_demand dt{
+    height: 120px;
+    width: 120px;
+    margin: 5px auto 0;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid #E7Ebf0;
+}
+.new_demand dt img{
+    width: 100%;
+    height: 100%;
+}
+.new_demand dd{
+    cursor: pointer;
+}
+.new_demand dd p{
+    margin-top: 12px;
+    font-size: 14px;
+    color: #3d5275;
+    text-align: center;
+}
+.new_demand dd span{
+    margin-top: 10px;
+    font-size: 12px;
+    color: #627595;
+    text-align: center;
+    display: block;
+}
+.demand_name{
+    width: 410px;
+    margin: 30px auto 0;
+    overflow: hidden;
+    position: relative;
+}
+.demand_name label{
+    font-size: 16px;
+    coor: #3d5275;
+    display: block;
+    float: left;
+    width: 90px;
+    height: 36px;
+    line-height: 36px;
+}
+.demand_name label span{
+    color: red;
+}
+.demand_name .new_name,.demand_name .new_type{
+    width: 310px;
+    display: block;
+    float: left;
+    height: 36px;
+    border-radius: 3px;
+    border: 1px solid #d3d7e2;
+    font-size: 16px;
+    color: #3d5275;
+}
+.demand_name .new_Inp{
+    position: absolute;
+    width: 280px;
+    height: 32px;
+    left: 91px;
+    top: 1px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-left: 0px;
+    border-top: 0px;
+}
+.demand_name .new_type{
+    background: url(../images/xuankuangbeijing.png) no-repeat 278px 0px;
+    background-size: cover;
+}
+.demand_name .new_describe{
+    width: 310px;
+    display: block;
+    height: 120px;
+    font-size: 16px;
+    color: #3d5275;
+    border-radius: 3px;
+    border: 1px solid #d3d7e2;
+}
+.hint{
+    width: 410px;
+    margin: 0 auto;
+    font-size: 14px;
+    color: #9ea6b4;
+    text-align: right;
+    line-height: 25px;
+}
+.new_demdand_btn{
+    width: 410px;
+    margin: 20px auto;
+}
+.new_demdand_btn .new_btn,.new_demdand_btn .call_btn{
+    display: block;
+    width: 90px;
+    height: 36px;
+    float: left;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    font-size: 16px;
+    color: #FFFFFF;
+    cursor: pointer;
+    line-height: 36px;
+    text-align: center;
+}
+.new_demdand_btn .new_btn{
+    margin-left: 90px;
+    background: #578fe6;
+}
+.new_demdand_btn .new_btn:hover{
+    background: #038dff;
+}
+.new_demdand_btn .call_btn{
+    margin-left: 50px;
+    background: #d4d4d4;
+}
+.new_demdand_btn .call_btn:hover{
+    background: #c9c9c9;
+}
+#demand_delete{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: #CCE;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+}

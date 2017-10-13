@@ -1,0 +1,14 @@
+.container,.nav{
+    position: absolute;
+    top:0;
+    left:200px;
+    width:100%;
+    height:200px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+}
+.container{
+    top:0;
+    height:100%;
+    border:1px solid red;
+}

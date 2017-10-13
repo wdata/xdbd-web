@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>注册</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/form.css" />
+    <!--[if lt IE 9]>
+      <script src="common/html5shiv.min.js"></script>
+      <script src="common/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <section>
+    	<div class="wrapper">
+    		<div class="form-wrapper">
+    			<div class="ban-box">
+    				<div class="ban-main">
+    					<img src="images/ban.png" alt="" />
+    				</div>
+    			</div>
+    			<div class="register-form form-box">
+    				<div class="form">
+    					<div class="form-title">
+	    					<h2>用户注册</h2>
+	    				</div>
+	    				<form>
+	    					<div class="form-control">
+	    						<label for="">
+	    							手机号码
+	    						</label>
+	    						<input type="text" placeholder="请输入手机号码" id="" name="phonenum" class="txtinp w360 fl"/>
+	    					</div>
+	    					<div class="form-control">
+	    						<label for="">
+	    							图片验证码
+	    						</label>
+	    						<input type="text" placeholder="请输入图片验证码" id="" name="imgcode" class="txtinp w240 fl"/>
+	    						<div class="img-check w110 fr">
+	    							<img src="images/img-check.png" alt="" />
+	    						</div>
+	    					</div>
+	    					<div class="form-control">
+	    						<label for="">
+	    							短信验证码
+	    						</label>
+	    						<input type="text" placeholder="请输入短信验证码" id="" name="msgcode" class="txtinp w240 fl"/>
+	    						<div class="sms-check w110 fr">
+	    							<input type="button" value="短信验证码" class="b"/>
+	    						</div>
+	    					</div>
+	    					<div class="form-control">
+	    						<label for="">
+	    							设置密码
+	    						</label>
+	    						<input type="password" placeholder="请输入密码" id="" name="psw" class="txtinp w360 fl"/>
+	    					</div>
+	    					<div class="form-control">
+	    						<label for="">
+	    							确认密码
+	    						</label>
+	    						<input type="password" placeholder="请再次输入密码" id="password" name="okpsw" class="txtinp w360 fl"/>
+	    					</div>
+	    					<div class="form-control">
+	    						<label for=""></label>
+	    						<div class="select-file fl">
+	    							<input type="checkbox" class="fl" />
+	    							<img src="images/icon_checked.png" alt="" />
+	    							<span>同意并遵守<a href="#" class="b">《服务条款》</a></span>
+	    						</div>
+	    					</div>
+	    					<div class="form-control">
+	    						<label for=""></label>
+	    						<input type="submit" name="" id="registerBtn" value="立即注册" class="regbtn txtinp w360 b"/>
+	    					</div>
+	    				</form>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </section>
+    <script src="plugin/jQuery/jquery.min.js"></script>
+    <script src="plugin/validate/jquery.validate.min.js"></script>
+    <script src="plugin/validate/messages_zh.min.js"></script>
+    <script src="js/form.js"></script>
+  </body>
+</html>

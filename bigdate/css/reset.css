@@ -1,0 +1,141 @@
+@charset "UTF-8";
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    font-family: "Microsoft Yahei", "微软雅黑", Tahoma, Arial, Helvetica, STHeiti;
+    vertical-align: baseline;
+    box-sizing:border-box;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+    content: '';
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+a{text-decoration: none;font-size: #000;}
+a:link{text-decoration:none;}
+a:visited{text-decoration:none;}
+a:hover{text-decoration:none;}
+a:active{text-decoration:none;}
+.hide{
+    display: none;
+}
+.show{
+    display: inline-block;
+}
+.center{
+    text-align: center;
+}
+.right{
+    text-align: right;
+
+}
+
+
+table th{
+    text-align: center;
+}
+table td{
+    text-align: center;
+}
+
+
+/* 添加进行提示框 */
+.opering-mask{position: fixed;height: 100%;width: 100%;z-index: 9999;top: 0;background-color: rgba(0,0,0,0.3);display: none}
+.opering-mask .main{height: 100px;width: 300px;position: absolute;top: 20%;left: 0;right: 0;margin:auto;background-color: #fff;z-index: 201;border-radius: 4px;}
+.opering-mask .main .tit{height: 40px;line-height: 40px;border-bottom: 1px solid #ddd;text-align: left;padding-left: 20px;position: relative;}
+.opering-mask .main .tit span{position: absolute;width: 30px;right: 0;text-align: center;cursor: pointer;}
+.opering-mask .main .tit span:hover{background: #ecc;font-size: 22px;}
+.opering-mask .main .con{padding: 10px;line-height: 30px;}
+
+/*状态弹窗样式重置*/
+.bootstrap-dialog .modal-dialog{width: 300px;text-align: center;}
+.bootstrap-dialog .modal-dialog .modal-footer{text-align: center;}
+body{
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    word-spacing:0px;
+}
+/*页面头部查询样式*/
+.demand_top{
+    height: 86px;
+    width: 97%;
+    padding: 20px 0 0 20px;
+    margin: 20px auto 0;
+    border: 1px solid #cccccc;
+    background: #fff;
+}
+.form_validator{
+    display: inline-block;
+    margin-right: 50px;
+}
+.form_validator label{
+    float: left;
+    padding: 10px 5px;
+    font-size: 14px;
+    color: #3d5275;
+}
+.form_validator select{
+    height: 34px;
+    width: 160px;
+    border: 1px solid #d3d7e2;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background:url(../images/xuankuangbeijing.png) no-repeat 130px 0px;
+    color: #666;
+}
+.form_btn{
+    display: inline-block;
+    width: 80px;
+    height: 34px;
+    background: #578fe6;
+    font-size: 16px;
+    color: #fff;
+    background:url(../images/yulan.png) no-repeat 50px 10px #578fe6;
+    line-height: 34px;
+    text-indent: 13px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.form_btn:hover{
+    background:url(../images/yulan.png) no-repeat 50px 10px #038dff;
+}
+
+
+
+
+

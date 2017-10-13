@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BI报表编辑模式</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="plugin/font-awesome-4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+    <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
+    <!--<link rel="stylesheet" href="plugin/basicContext/default.min.css" />
+    <link rel="stylesheet" href="css/basicContext.min.css" />-->
+    <!--<link rel="stylesheet" href="plugin/colorpicker/css/normalize.css" />-->
+    <link rel="stylesheet" href="plugin/context/context.standalone.css" />
+    <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
+    <link rel="stylesheet" href="css/default.min.css" />
+    <!--<link rel="stylesheet" href="plugin/colorpicker/css/htmleaf-demo.css" />-->
+    <link rel="stylesheet" href="css/form.css" />
+    <style type="text/css">
+	    .resize-item{
+					width: 150px;
+					height:150px;
+					border: 1px solid red;
+					position: absolute;
+					z-index: 10000;
+				}
+			/*图标部分样式*/
+			.axis path,
+			.axis line{
+				fill: none;
+				stroke: #000;
+				shape-rendering: crispEdges;
+			}
+			.line,.x_line{
+				fill: none;
+				stroke: rgb(0, 0, 0);
+				shape-rendering: crispEdges;
+			}
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: #000;
+				shape-rendering: crispEdges;
+			}
+			.bar {
+				fill: green;
+			}
+			.bar:hover {
+				fill: #ccc ;
+			}
+			.x.axis path {
+				display: none;
+			}
+			path {
+				stroke: #fff;
+				fill-rule: evenodd;
+			}
+			table{
+				width:98%;
+				height:100%;
+				margin: 0 auto;
+				border: 1px solid #e2e2e2;
+			}
+			table th,table td{
+				text-align: center;
+			}
+
+			/*	文本框样式	*/
+			.content-text{
+				width: 100%;
+				height: 100%;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+			.content-text.active{
+				background-color: #fff;
+				position: relative;
+				z-index: 10;
+			}
+			.content-text>div{
+				width: 100%;
+				height: 100%;
+				word-wrap: break-word;
+				text-align: left;
+			}
+			.image-class
+			,.image-class img{
+				width: 100%;
+				height: 100%;
+			}
+
+
+		</style>
+    <!--[if lt IE 9]>
+      <script src="common/html5shiv.min.js"></script>
+      <script src="common/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+					<!--BI报表编辑模式-->
+					<div class="edit-state">
+						<div class="top-bar clearfix clearX">
+							<img src="images/icon_save.png" alt="" />
+							<img src="images/icon_copy.png" alt="" />
+							<img src="images/icon_paste.png" alt="" />
+							<img src="images/icon_move.png" alt="" />
+							<img src="images/icon_preview.png" alt="" />
+							<img src="images/icon_temp.png" alt="" />
+							<img src="images/delete_01.png" alt="" />
+							<img src="images/icon_prev.png" alt="" />
+							<img src="images/icon_next.png" alt="" />
+							<img src="images/icon_fresh.png" alt="" />
+							<img src="images/icon_new.png" alt="" />
+							<div class="set-index-box fr">
+								<input type="checkbox" name="" id="" value="" />
+								<img src="images/xuankuang.png" alt="" />
+								<span>设为首页</span>
+							</div>
+						</div>
+						<div class="type-bar clearY">
+							<div class="fold-button">
+								<img src="images/btn_shouqi.png" alt="" />
+							</div>
+							<div class="chart-type-box">
+								<img src="images/bar.png" alt=""  data-type="chart" class="u-btn-class"/>
+								<img src="images/biaoge.png" alt=""  data-type="table" class="u-btn-class"/>
+								<img src="images/txt.png" alt=""  data-type="text" class="u-btn-class"/>
+								<form class="upload-img-box" id="fileForm">
+									<input type="file" id="uploadFile" onchange="imageUpload(this);"/>
+									<img src="images/img.png" alt=""  data-type="image" class="u-btn-class"/>
+								</form>
+								<img src="images/button.png" alt=""  data-type="button" class="u-btn-class"/>
+							</div>
+						</div>
+						<div class="drag-bar clearfix">
+							<div class="op-box1 op-box">
+								<!--图表 start-->
+								<div class="chart-attr-box">
+									<div class="title-box">
+										<h3>图表</h3>
+									</div>
+									<div class="set-axis-box">
+										<div class="set-x set-axis">
+											<p>X轴</p>
+											<div class="x-pills pills">
+												<ul>
+													<!--<li>
+														<span>年-月-日（发货日期）</span>
+													</li>
+													<li>
+														<span>国家</span>
+													</li>-->
+												</ul>
+											</div>
+											<div class="axis-empty empty">拖入字段</div>
+										</div>
+										<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
+										<div class="set-y set-axis">
+											<p>Y轴</p>
+											<div class="y-pills pills">
+												<ul>
+													<!--<li>
+														<span>度量值</span>
+													</li>
+													<li>
+														<span>邮寄方式</span>
+													</li>-->
+												</ul>
+											</div>
+											<div class="axis-empty empty">拖入字段</div>
+										</div>
+									</div>
+									<div class="opt-attr-box">
+										<p>属性</p>
+										<div class="opt-chart-type">
+											<div class="chart-type-val">
+												<span>饼图</span>
+												<i class="fa fa-caret-down fr"></i>
+											</div>
+											<div class="chart-type-lists">
+												<ul>
+													<li class="active">
+														<div>
+															<img src="images/icon_bar_on.png" alt="" class="fl"/>
+															<span>柱状图</span>
+														</div>
+													</li>
+													<li>
+														<div>
+															<img src="images/icon_pie_on.png" alt="" class="fl" />
+															<span>饼图</span>
+														</div>
+													</li>
+													<li>
+														<div>
+															<img src="images/icon_line_on.png" alt="" class="fl" />
+															<span>折线图</span>
+														</div>
+													</li>
+													<li>
+														<div>
+															<img src="images/icon_table_on.png" alt="" class="fl" />
+															<span>表格</span>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<!--数据筛选-->
+									<div class="data-screening">
+										<p>数据筛选</p>
+										<div class="datas-pills pills">
+												<ul>
+													<!--<li>
+														<span>度量值</span>
+													</li>
+													<li>
+														<span>邮寄方式</span>
+													</li>-->
+												</ul>
+											</div>
+											<div class="data-empty empty">拖入字段</div>
+									</div>
+									<!--保存刷新-->
+									<div class="data-refresh">
+										<a onclick="save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+									</div>
+								</div>
+								<!--图表 end-->
+								<!--表格 start-->
+								<div class="table-attr-box">
+									<div class="title-box">
+										<h3>表格</h3>
+									</div>
+									<div class="set-axis-box">
+										<div class="set-x set-axis">
+											<p>X轴</p>
+											<div class="x-pills pills">
+												<ul>
+													<!--<li>
+														<span>年-月-日（发货日期）</span>
+													</li>
+													<li>
+														<span>国家</span>
+													</li>-->
+												</ul>
+											</div>
+											<div class="axis-empty empty">拖入字段</div>
+										</div>
+										<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
+										<div class="set-y set-axis">
+											<p>Y轴</p>
+											<div class="y-pills pills">
+												<ul>
+													<!--<li>
+														<span>度量值</span>
+													</li>
+													<li>
+														<span>邮寄方式</span>
+													</li>-->
+												</ul>
+											</div>
+											<div class="axis-empty empty">拖入字段</div>
+										</div>
+									</div>
+									<!--数据筛选-->
+									<div class="data-screening">
+										<p>数据筛选</p>
+										<div class="datas-pills pills">
+												<ul>
+													<!--<li>
+														<span>度量值</span>
+													</li>
+													<li>
+														<span>邮寄方式</span>
+													</li>-->
+												</ul>
+											</div>
+											<div class="data-empty empty">拖入字段</div>
+									</div>
+									<!--保存刷新-->
+									<div class="data-refresh">
+										<a onclick="save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+									</div>
+								</div>
+								<!--表格 end-->
+								<!--文本 start-->
+								<div class="text-attr-box">
+									<div class="title-box">
+										<h3>文本</h3>
+										<div class="set-text-attr">
+											<p>字体段落</p>
+											<div class="set-text-attr-wrap">
+												<div class="set-text-color">
+													<div class="color-row">
+														<input type="hidden" name="unique-name-1" data-palette='["#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#00B8D4">
+													</div>
+												</div>
+												<div class="set-text-size sc-color">
+													<select name="" id="">
+														<option value="12">12</option>
+														<option value="14">14</option>
+														<option value="16">16</option>
+														<option value="20">20</option>
+														<option value="24">24</option>
+														<option value="32">32</option>
+														<option value="48">48</option>
+													</select>
+													<i class="fa fa-caret-down"></i>
+												</div>
+												<div class="set-text-family sc-color">
+													<select name="">
+														<option value="微软雅黑">微软雅黑</option>
+														<option value="中易宋体">中易宋体</option>
+														<option value="Helvetica">Helvetica</option>
+														<option value="Arial">Arial</option>
+														<option value="Lucida Family">Lucida Family</option>
+														<option value="Verdana">Verdana</option>
+														<option value="Tahoma">Tahoma</option>
+													</select>
+													<i class="fa fa-caret-down"></i>
+												</div>
+												<div class="set-text-weight wa-text">
+													<span>样式</span>
+													<img src="images/t_bold.png" alt="" title="font-size:bold" class="active"/>
+													<img src="images/t_italic.png" alt="" title="fotn-style:italic" />
+													<img src="images/t_underline.png" alt="" title="text-decoration:underline" />
+												</div>
+												<div class="set-text-align wa-text">
+													<span>对齐</span>
+													<img src="images/t_left.png" alt="" title="left" class="active"/>
+													<img src="images/t_center.png" alt="" title="center" />
+													<img src="images/t_right.png" alt="" title="right" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--文本 end-->
+								<!--按钮 start-->
+								<div class="button-attr-box">
+									<div class="title-box">
+										<h3>按钮</h3>
+									</div>
+								</div>
+								<!--按钮 end-->
+							</div>
+							<div class="op-box2 op-box">
+								<div class="title-box">
+									<h3>数据源</h3>
+								</div>
+								<div class="data-source-box">
+									<select name="" id="">
+										<!--<option value="选择数据源">选择数据源</option>
+										<option value="选择数据源">数据1</option>
+										<option value="选择数据源">数据2</option>
+										<option value="选择数据源">数据3</option>-->
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-param-box">
+									<!--维度-->
+									<div class="dimension-box same-resource">
+										<div class="dimension-title">
+											<p>维度</p>
+										</div>
+										<ul class="placeholder">
+											<!--<li>城市</li>
+											<li>省份</li>
+											<li>度量名称</li>
+											<li>年-月-日</li>-->
+										</ul>
+									</div>
+									<!--度量-->
+									<div class="metric-box same-resource">
+										<div class="dimension-title">
+											<p>度量</p>
+										</div>
+										<ul class="placeholder">
+											<!--<li>城市</li>
+											<li>省份</li>
+											<li>度量名称</li>-->
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="chart-main-box">
+							<div class="edit-content">
+								<div class="component-libs-box">
+									<div class="edit-libs-box"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+    <script src="plugin/jQuery/jquery.min.js"></script>
+   	<script src="plugin/validate/jquery.validate.min.js"></script>
+    <script src="plugin/validate/messages_zh.min.js"></script>
+    <script src="plugin/jQuery/jQuery_ui.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3.tip.js"></script>
+    <!--<script src="plugin/basicContext/basicContext.min.js"></script>-->
+    <script src="plugin/layer/layer.js"></script>
+    <script src="plugin/context/context.js"></script>
+    <script src="plugin/zSize/jquery_zsize.js"></script>
+    <script src="plugin/colorpicker/src/palette-color-picker.min.js"></script>
+	<!--存放3D转化封装的函数-->
+	<script src="js/graphical.js"></script>
+	<!--编辑器内的操作-->
+	<script src="js/operation.js"></script>
+    <script src="js/editbi.js"></script>
+    <script src="js/todo.js"></script>
+  </body>
+</html>
