@@ -1,0 +1,864 @@
+// 存放3D图形转化的函数
+
+//  一维圆饼图
+function circle(id, date, r1, r2) {
+    var margin = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+        },
+        width = $(id).width() - margin.left - margin.right,
+        height = $(id).height() - margin.top - margin.bottom;
+    var svg = d3.select(id)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("class", "pie")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    //    构造一个新的默认的饼布局
+    var pie = d3.layout.pie();
+    //进行数据的转换
+    var piedata = pie(date);
+    var color = d3.scale.category10(); //有十种颜色的颜色比例尺
+    var arc = d3.svg.arc() //弧生成器
+        .innerRadius(r2) //设置内半径
+        .outerRadius(r1); //设置外半径
+    var arcs = svg.selectAll("g")
+        .data(piedata)
+        .enter()
+        .append("g")
+        .attr("transform", "translate(" + (width / 2) + "," + (width / 2) + ")");
+    arcs.append("path")
+        .attr("fill", function (d, i) {
+            return color(i);
+        })
+        .attr("d", function (d) {
+            return arc(d); //调用弧生成器，得到路径值
+        });
+    arcs.append("text")
+        .attr("transform", function (d) {
+            //arc.centroid(d) 能算出弧线的中心。
+            return "translate(" + arc.centroid(d) + ")";
+        })
+        .style("fill", '#fff')
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d.data;
+        });
+}
+
+//  封装 多维饼图
+function pie(id,data){
+    var wid=$(id).width(),hei=$(id).height();
+    var radius = Math.min(wid, hei) / 2;
+//宽度，高度，数据
+    var x = d3.scale.linear().range([0, 2 * Math.PI]);
+    var y = d3.scale.sqrt().range([0, radius]);
+    var color = d3.scale.category20c();
+    var svg = d3.select(id)
+        .append("svg")
+        .attr("width", wid)
+        .attr("height", hei)
+        .append("g")
+        .attr("transform", "translate(" + wid / 2 + "," + (hei / 2) + ")");
+    var partition = d3.layout.partition()
+        .sort(null)
+        .value(function(d,i) { return d/i; });
+    var arc = d3.svg.arc()
+        .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+        .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+        .innerRadius(function(d) { return Math.max(0, y(d.y)); })
+        .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
+    var node;
+    d3.json(data, function(error, root) {
+        node = root;
+        var path = svg.datum(root).selectAll("path")
+            .data(partition.nodes)
+            .enter().append("path")
+            .attr("d", arc)
+            .style("fill", function(d,i) {
+                return color(i);
+            })
+            .on("click", click)
+            .each(stash);
+        var value = function(d) { return d.size; };
+        path.data(partition.value(value).nodes)
+            .transition()
+            .duration(1000)
+            .attrTween("d", arcTweenData);
+        function click(d) {
+            node = d;
+            path.transition()
+                .duration(1000)
+                .attrTween("d", arcTweenZoom(d));
+        }
+        $(".tooltip").css("opacity",0);
+        path .on("mouseover",function(d,i){
+            /*
+             鼠标移入时，
+             （1）通过 selection.html() 来更改提示框的文字
+             （2）通过更改样式 left 和 top 来设定提示框的位置
+             （3）设定提示框的透明度为1.0（完全不透明）
+             */
+//      console.log(d.data[0]+"的出货量为"+"<br />"+d.data[1]+" 百万台")
+            if(d.size !== undefined) {
+                $(".tooltip").css({"left":(d3.event.pageX+10)+"px","top":(d3.event.pageY+10)+"px","opacity":1,"background":"#000"}).text(d.name+":"+d.size).show();
+            }
+        })
+            .on("mouseout",function(d){
+//鼠标移除 透明度设为0
+                $(".tooltip").css("opacity",0).text("").hide();
+            })
+    });
+
+    d3.select(self.frameElement).style("height", hei + "px");
+    function stash(d) {
+        d.x0 = d.x;
+        d.dx0 = d.dx;
+    }
+    function arcTweenData(a, i) {
+        var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+        function tween(t) {
+            var b = oi(t);
+            a.x0 = b.x;
+            a.dx0 = b.dx;
+            return arc(b);
+        }
+        if (i == 0) {
+            var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+            return function(t) {
+                x.domain(xd(t));
+                return tween(t);
+            };
+        } else {
+            return tween;
+        }
+    }
+    function arcTweenZoom(d) {
+        var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+            yd = d3.interpolate(y.domain(), [d.y, 1]),
+            yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+        return function(d, i) {
+            return i
+                ? function(t) { return arc(d); }
+                : function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
+        };
+    }
+}
+
+//  封装好的折线函数
+function line(id, tit, sub, data, mark, lin) {
+    var lines = []; //保存折线图对象
+    var lineColor = ["#F00", "#09F", "#0F0", "#ccc"];
+    var padding = 40;
+    var currentLineNum = 0;
+    //用一个变量计算底部的高度，如果不是多系列，就为0
+    var foot_height = padding;
+    //用一个变量存储标题和副标题的高度，如果没有标题什么的，就为0
+    var head_height = padding;
+    var w = $(id).width();
+
+    var h = $(id).height();
+    //标题，副标题,数据种类，数据时间，数据名称
+    //判断是否多维数组，如果不是，则转为多维数组，这些处理是为了处理外部传递的参数设置的，现在数据标准，没什么用
+    if (!(data[0] instanceof Array)) {
+        var tempArr = [];
+        tempArr.push(data);
+        data = tempArr;
+    }
+
+    //保存数组长度，也就是系列的个数
+    currentLineNum = data.length;
+    //图例的预留位置
+    foot_height += 25;
+    //定义画布
+    var svg = d3.select(id)
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h);
+
+    //添加背景
+    svg.append("g")
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", w)
+        .attr("height", h)
+        .style("fill", "#FFF")
+        .style("stroke-width", 2)
+        .style("stroke", "#E7E7E7");
+
+    //添加标题
+    if (tit != "") {
+        svg.append("g")
+            .append("text")
+            .text(tit)
+            .attr("class", "title")
+            .attr("x", w / 2)
+            .attr("y", head_height);
+        head_height += 30;
+    }
+    //添加副标题
+    if (sub != "") {
+        svg.append("g")
+            .append("text")
+            .text(sub)
+            .attr("class", "subtitle")
+            .attr("x", w / 2)
+            .attr("y", head_height);
+
+        head_height += 20;
+    }
+
+    var maxdata = getMaxdata(data);
+
+    //横坐标轴比例尺
+    var xScale = d3.scale.linear()
+        .domain([0, data[0].length - 1])
+        .range([padding, w - padding]);
+
+    //纵坐标轴比例尺
+    var yScale = d3.scale.linear()
+        .domain([0, maxdata])
+        .range([h - foot_height, head_height]);
+
+    //定义横轴网格线
+    var xInner = d3.svg.axis()
+        .scale(xScale)
+        .tickSize(-(h - head_height - foot_height), 0, 0)
+        .tickFormat("")
+        .orient("bottom")
+        .ticks(data[0].length);
+
+    //添加横轴网格线
+    var xInnerBar = svg.append("g")
+        .attr("class", "inner_line")
+        .attr("transform", "translate(0," + (h - padding) + ")")
+        .call(xInner);
+
+    //定义纵轴网格线
+    var yInner = d3.svg.axis()
+        .scale(yScale)
+        .tickSize(-(w - padding * 2), 0, 0)
+        .tickFormat("")
+        .orient("left")
+        .ticks(10);
+
+    //添加纵轴网格线
+    var yInnerBar = svg.append("g")
+        .attr("class", "inner_line")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(yInner);
+
+    //定义横轴
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom")
+        .ticks(data[0].length);
+
+    //添加横坐标轴
+    var xBar = svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (h - foot_height) + ")")
+        .call(xAxis);
+
+    //通过编号获取对应的横轴标签
+    xBar.selectAll("text")
+        .text(function (d) {
+            return mark[d];
+        });
+
+    //定义纵轴
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left")
+        .ticks(10);
+
+    //添加纵轴
+    var yBar = svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(yAxis);
+
+    //添加图例
+    var legend = svg.append("g");
+
+    addLegend();
+
+    //添加折线
+    lines = [];
+    for (var i = 0; i < currentLineNum; i++) {
+        var newLine = new CrystalLineObject();
+        newLine.init(i);
+        lines.push(newLine);
+    }
+
+    //定义折线类
+
+    function CrystalLineObject() {
+        this.group = null;
+        this.path = null;
+        this.oldData = [];
+
+        this.init = function (id) {
+            var arr = data[id];
+            this.group = svg.append("g");
+
+            var line = d3.svg.line()
+                .x(function (d, i) {
+                    return xScale(i);
+                })
+                .y(function (d) {
+                    return yScale(d);
+                });
+
+            //添加折线
+            this.path = this.group.append("path")
+                .attr("d", line(arr))
+                .style("fill", "none")
+                .style("stroke-width", 1)
+                .style("stroke", lineColor[id])
+                .style("stroke-opacity", 0.9);
+
+            //添加系列的小圆点
+            this.group.selectAll("circle")
+                .data(arr)
+                .enter()
+                .append("circle")
+                .attr("cx", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d);
+                })
+                .attr("r", 5)
+                .attr("cursor", "pointer")
+                .attr("fill", lineColor[id])
+            this.group.selectAll("circle")
+                .on("mouseover", function (d, i) {
+                    var tx = parseFloat(d3.select(this).attr("cx"));
+                    var ty = parseFloat(d3.select(this).attr("cy"));
+                    var tips = svg.append("g")
+                        .attr("id", "tips");
+                    var tipRect = tips.append("rect")
+                        .attr("x", tx + 10)
+                        .attr("y", ty + 10)
+                        .attr("width", 120)
+                        .attr("height", 30)
+                        .attr("fill", "#FFF")
+                        .attr("stroke-width", 1)
+                        .attr("stroke", "#CCC");
+                    var tipText = tips.append("text")
+                        .attr("class", "tiptools")
+                        .text(lin[id] + "\r\n" + mark[i] + "\r\n" + d)
+                        .attr("x", tx + 20)
+                        .attr("y", ty + 30);
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select("#tips").remove();
+                });
+            this.oldData = arr;
+        };
+
+        //动画初始化方法
+        this.movieBegin = function (id) {
+            var arr = data[i];
+            //补足/删除路径
+            var olddata = this.oldData;
+            var line = d3.svg.line()
+                .x(function (d, i) {
+                    if (i >= olddata.length) return w - padding;
+                    else return xScale(i);
+                })
+                .y(function (d, i) {
+                    if (i >= olddata.length) return h - foot_height;
+                    else return yScale(olddata[i]);
+                });
+
+            //路径初始化
+            this.path.attr("d", line(arr));
+
+            //截断旧数据
+            var tempData = olddata.slice(0, arr.length);
+            var circle = this.group.selectAll("circle").data(tempData);
+
+            //删除多余的圆点
+            circle.exit().remove();
+
+            //圆点初始化，添加圆点,多出来的到右侧底部
+            this.group.selectAll("circle")
+                .data(arr)
+                .enter()
+                .append("circle")
+                .attr("cx", function (d, i) {
+                    if (i >= olddata.length) return w - padding;
+                    else return xScale(i);
+                })
+                .attr("cy", function (d, i) {
+                    if (i >= olddata.length) return h - foot_height;
+                    else return yScale(d);
+                })
+                .attr("r", 5)
+                .attr("fill", lineColor[id]);
+
+            this.oldData = arr;
+        };
+
+        //重绘加动画效果
+        this.reDraw = function (id, _duration) {
+            var arr = data[i];
+            var line = d3.svg.line()
+                .x(function (d, i) {
+                    return xScale(i);
+                })
+                .y(function (d) {
+                    return yScale(d);
+                });
+
+            //路径动画
+            this.path.transition().duration(_duration).attr("d", line(arr));
+
+            //圆点动画
+            this.group.selectAll("circle")
+                .transition()
+                .duration(_duration)
+                .attr("cx", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d);
+                })
+        };
+
+        //从画布删除折线
+        this.remove = function () {
+            this.group.remove();
+        };
+    }
+
+    //添加图例
+
+    function addLegend() {
+        var textGroup = legend.selectAll("text")
+            .data(lin);
+
+        textGroup.exit().remove();
+
+        legend.selectAll("text")
+            .data(lin)
+            .enter()
+            .append("text")
+            .text(function (d) {
+                return d;
+            })
+            .attr("class", "legend")
+            .attr("x", function (d, i) {
+                return i * 100;
+            })
+            .attr("y", 0)
+            .attr("fill", function (d, i) {
+                return lineColor[i];
+            });
+
+        var rectGroup = legend.selectAll("rect")
+            .data(lin);
+
+        rectGroup.exit().remove();
+
+        legend.selectAll("rect")
+            .data(lin)
+            .enter()
+            .append("rect")
+            .attr("x", function (d, i) {
+                return i * 100 - 20;
+            })
+            .attr("y", -10)
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("fill", function (d, i) {
+                return lineColor[i];
+            });
+
+        legend.attr("transform", "translate(" + ((w - lin.length * 100) / 2) + "," + (h - 10) + ")");
+    }
+
+    //取得多维数组最大值
+
+    function getMaxdata(arr) {
+        maxdata = 0;
+        for (i = 0; i < arr.length; i++) {
+            maxdata = d3.max([maxdata, d3.max(arr[i])]);
+        }
+        return maxdata;
+    }
+}
+
+// 封装一维柱状图
+function bar(id,num){
+    var margin = {top: 40, right: 20, bottom: 30, left: 80};
+    var hei=$(id).height() - margin.top - margin.bottom;
+    var wid=$(id).width()- margin.left - margin.right;
+    //宽度，高度，数据
+    var yData = [];
+    for(var i=0;i<num.length;i++) {
+        yData.push(num[i].frequency);
+    }
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, wid], .1);
+    var y = d3.scale.linear()
+        .domain([0,d3.max(yData)])
+        .range([hei, 0]);
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<strong>数量:</strong> <span style='color:#ddd'>" + d.frequency + "</span>";
+        });
+    var svg = d3.select(id).append("svg")
+        .attr("width", wid + margin.left + margin.right)
+        .attr("height", hei + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    svg.call(tip);
+    x.domain(num.map(function(d) { return d.letter; }));
+    y.domain([0, d3.max(num, function(d) { return d.frequency; })]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + hei + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Frequency");
+
+    svg.selectAll(".bar")
+        .data(num)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("width", x.rangeBand())
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide)
+        .attr("fill","red")
+        .transition()
+        .duration(3000)
+        .ease("bounce")
+        .delay(function(d,i){
+            return 200*i;
+        })
+        .attr("x", function(d,i){
+            return x(d.letter)
+            30 + xScale(i);
+        } )
+        .attr("y",function(d,i){
+            return y(d.frequency)
+            50 + 500 - yScale(d) ;
+        })
+        .attr("height",function(d) { return hei - y(d.frequency); })
+        .attr("fill","steelblue");
+
+}
+
+//    封装的二维柱状图
+function chart(id,icon,max){
+    var figure=1;
+    var  dim_width=20;//每列维度之间的间距
+    var  dim_height=10;//每行维度之间的间距
+    var dim1_num=null;//保存最高维度的个数
+    var dim2_num=null;//保存第二维度的个数
+    var margin = {top: 40, right: 40, bottom: 40, left: 40},
+        width = $("#chart").width() - margin.left - margin.right,
+        height = $("#chart").height() - margin.top - margin.bottom;
+    var color=d3.scale.category20();
+    //柱状图之间的间距
+    var rangeBand=4;
+    var svg=d3.select(id).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("class", "graph")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    d3.json(icon,function(error,data){
+        if (error) throw error;
+//            Y轴的多个维度
+        var y_axials=data.data.dim.dimY;
+        var x_axials=data.data.dim.dimX;
+        var y_axises=data.data.charts;
+        var max=null;
+        var newArr_title=[];
+        $.each(y_axials,function(index,item){
+            var newArr=[];
+            newArr_title.push(item.title);
+            $.each(item.names,function(index,icon){
+                newArr.push(icon);
+            });
+//                绘制最高级维度  Y轴
+            if(index==0){
+                dim1_num=newArr.length;
+                var texts_g=svg.append("g")
+                    .attr("class", "dim"+figure)
+                    .attr("transform", "translate(-"+margin.left/2+",0)");
+                texts_g.selectAll(".dim"+figure)
+                    .data(newArr)
+                    .enter()
+                    .append("text")
+                    .attr("fill","#333")
+                    .attr("x", (-margin.left/2))
+                    .attr("y", function(d,i) {return (height/newArr.length)*i+(height/newArr.length/2)+dim_height;})
+                    .text(function(d){return d;})
+                    .attr("text-anchor", "top");
+                figure++;
+            }
+//                绘制下级维度  是根据上级维度的length觉得下级维度绘制个数
+            for(var r=0;r<newArr.length;r++){
+                if(index==1){
+                    dim2_num=newArr.length;
+//                        绘制第二级维度
+                    var texts_g=svg.append("g")
+                        .attr("class", "dim"+figure)
+                        .attr("transform", "translate(0,0)");
+                    texts_g.selectAll(".dim"+figure)
+                        .data(newArr)
+                        .enter()
+                        .append("text")
+                        .attr("fill","red")
+                        .attr("x", dim_width)
+                        .attr("y", function(d,i) {return (height/dim1_num)*r+height/dim1_num/newArr.length*i+height/dim1_num/newArr.length/2+dim_height; })
+                        .text(function(d){return d;})
+                        .attr("text-anchor", "top");
+                }
+            }
+        });
+        var hint='',icon='';
+        var newArr=[],newArr2=[];
+        $.each(x_axials,function(index,item){
+            icon=index!=(x_axials.length-1)?"/":"";
+            hint+=item.title+icon;
+            $.each(item.names,function(num,icon){
+                index==0&&newArr.push(icon);
+                index!=0&&newArr2.push(icon);
+            });
+            index==0&&chart_x_axis(newArr,index,width);
+            if(index!=0){
+                for(var r=0;r<newArr.length;r++){
+                    var texts_g=svg.append("g")
+                        .attr("class", "titles"+r)
+                        .attr("transform", "translate("+(width/newArr.length*r+60)+","+dim_height/2+")");
+                    texts_g.selectAll(".titles"+r)
+                        .data(newArr2)
+                        .enter()
+                        .append("text")
+                        .attr("fill","red")
+                        .attr("x", function(d,i) {return (width/newArr.length/newArr2.length)*i+ (width/newArr.length/newArr2.length)/2; })
+                        .attr("y", 0)
+                        .text(function(d){return d;})
+                        .attr("text-anchor", "top");
+                }
+            }
+        });
+        var y_axis=[],dataset=[],num= 0,meaTitle='';
+        $.each(y_axises,function(index,item){
+            max=item.maxValue+100;
+            num++;
+            $.each(item.names,function(r,icon){
+                y_axis.push(icon);
+            });
+            $.each(item.values,function(r,icon){
+                dataset.push(icon);
+            });
+            meaTitle=item.meaTitle;
+        });
+        var x = d3.scale.linear()
+            .domain([0,max])
+            .range([0, width/dataset[0].length]);
+        for(var t=0;t<dim1_num*dim2_num;t++){
+            var texts_g=svg.append("g")
+                .attr("class", "y_axis")
+                .attr("transform", "translate("+dim_width+","+dim_height+")");
+            texts_g.selectAll(".y_axis")
+                .data(y_axis)
+                .enter()
+                .append("text")
+                .attr("fill","red")
+                .attr("x", dim_width*2)
+                .attr("y", function(d,i) {
+                    return height/dim1_num/dim2_num*t+height/dim1_num/dim2_num/y_axis.length*i+dim_height+rangeBand/2;
+                })
+                .text(function(d){return d;})
+                .attr("text-anchor", "top");
+
+        }
+        //绘制横向线条
+        var lines=svg.append("g")
+            .attr("class", "x_line")
+            .attr("transform", "translate("+(-margin.left)+",0)");
+        for(var i=0;i<=dim1_num;i++){
+            lines.append("line")
+                .attr("x1", 0)
+                .attr("y1", height/dim1_num*i+dim_height)
+                .attr("x2", width+margin.left+margin.right)
+                .attr("y2",height/dim1_num*i+dim_height)
+                .attr('fill',color(i));
+        }
+//            绘制X轴的坐标轴
+        for(var h=0;h<dataset[0].length;h++) {
+            var x2 = d3.scale.linear()
+                .domain([0, max])
+                .range([(width / dataset[0].length) * h, (width / dataset[0].length) * (h + 1)])
+                .nice();
+            var xAxis2 = d3.svg.axis()
+                .scale(x2)
+                .orient("bottom")
+                .ticks(5);
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(" + (margin.left+70) + "," + (height+dim_height) + ")")
+                .call(xAxis2);
+        }
+        for(var e=0;e<dataset.length;e++){
+            for(var r=0;r<dataset[e].length;r++){
+                var rect_g=svg.append("g")
+                    .attr("class", "rect")
+                    .attr("transform", "translate("+(width/dataset[e].length*r+(margin.left+70))+",0)");
+                rect_g.selectAll(".rect")
+                    .data(dataset[e][r])
+                    .enter()
+                    .append("rect")
+                    .attr("x", 0)
+                    .attr("y", function(d,i) {
+                        return height/dim1_num/dim2_num*e+height/dim1_num/dim2_num/y_axis.length*i+dim_height;
+                    })
+                    .attr("width",function(d,i){return  x(d);})
+                    .attr("height", (height-margin.top)/dim1_num/dim2_num/y_axis.length-rangeBand/2)
+                    .attr('fill',function(d,i){return color(i)})
+                    .on("mouseover",function(d,i){
+                        d3.select(this).attr("fill",'#e439ca');
+                        var tx=parseFloat(d3.event.pageX);
+                        var ty=parseFloat(d3.event.pageY);
+                        $(".hint").css({"left":(tx+10)+"px","top":(ty+10)+"px"});
+                        $(".hint").text(meaTitle+"："+d).show();
+                    })
+                    .on("mouseout",function(d,i){
+                        $(".hint").text("").hide();
+                        d3.select(this).attr("fill",color(i));
+                    });
+            }
+        }
+
+//            绘制X轴维度title
+        var texts_g=svg.append("g")
+            .attr("class", "title")
+            .attr("transform", "translate(-"+margin.left+",-"+margin.top+")")
+            .append("text")
+            .attr("x", width/2)
+            .attr("y", 20)
+            .text(hint)
+            .attr("fill","red")
+            .attr("text-anchor", "top");
+        function chart_x_axis(date,i,width){
+            var texts_g=svg.append("g")
+                .attr("class", "x_texts"+i)
+                .attr("transform", "translate(60,0)");
+            texts_g.selectAll(".x_texts"+i)
+                .data(date)
+                .enter()
+                .append("text")
+                .attr("fill","red")
+                .attr("x", function(d,i) {return (width/date.length)*i+ (width/date.length)/2; })
+                .attr("y", -margin.top/4)
+                .text(function(d){return d;})
+                .attr("text-anchor", "top");
+        }
+
+    });
+
+}
+
+// 表格
+function chart_table(id,date){
+    var th='',tds='';
+    $.each(date,function(index,item){
+        var td='';
+        for(var key in item){
+            if(index==0)th+='<th>'+key+'</th>';
+            td+='<td>'+item[key]+'</td>';
+        }
+        tds+='<tr>'+td+'</tr>';
+    });
+    $("#"+id).find("table").remove();
+    var table_text='<table><thead>'+th+'</thead><tbody>'+tds+'</tbody></table>';
+    $("#"+id).append(table_text);
+}
+
+// 存放数据格式
+// 0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
+var gpData = [
+    {
+        "name":"表格",
+        "shux":"table",
+        "type":0
+    },
+    {
+        "name":"柱状图",
+        "shux":"chart",
+        "type":101
+    },
+    {
+        "name":"折线图",
+        "shux":"chart",
+        "type":102
+    },
+    {
+        "name":"饼图",
+        "shux":"chart",
+        "type":103
+    },
+    {
+        "name":"文本",
+        "shux":"text",
+        "type":201
+    },
+    {
+        "name":"图片",
+        "shux":"image",
+        "type":202
+    },
+    {
+        "name":"按钮",
+        "shux":"button",
+        "type":203
+    },
+];
+// 根据传入，返回name或者type
+function eachGPdata(data){
+    var z = null;
+    if(isNaN(data)){
+        $.each(gpData,function(index,val){
+            if(data === val["name"]){
+                z =  val["type"];
+            }
+        });
+    }else{
+        $.each(gpData,function(index,val){
+            if(data === val["type"]){
+                z =  val["name"];
+            }
+        });
+    }
+    return z ;
+}

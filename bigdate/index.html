@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>首页</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="plugin/font-awesome-4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+    <!--<link rel="stylesheet" href="plugin/layui-v2.1.3/layui/css/layui.css" />-->
+    <!--<link rel="stylesheet" href="plugin/zTree/css/demo.css" />-->
+    <link rel="stylesheet" href="plugin/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <!--<link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />-->
+    <!--<link rel="stylesheet" href="plugin/basicContext/default.min.css" />-->
+    <link rel="stylesheet" href="plugin/context/context.standalone.css" />
+    <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
+    <link rel="stylesheet" href="css/form.css" />
+    <style type="text/css">
+	    .resize-item{
+					width: 150px;
+					height:150px;
+					border: 1px solid red;
+					position: absolute;
+					z-index: 10000;
+				}
+				.set-cur-env {
+					position: absolute;
+					right: 353px;
+					top: 45px;
+					width: 150px;
+					height: 30px;
+					background-color: #FFFFFF;
+				}
+				.set-cur-env select {
+					width: 150px;
+					height: 30px;
+					position: absolute;
+					left: 0;
+					border: none;
+					padding-left: 15px;
+					background-color: transparent;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+				}
+				.set-cur-env .fa {
+					position: absolute;
+					right: 10px;
+					top: 7px;
+				}
+				ul.ztree {
+					margin-top: 0;
+					border: none;
+					width: auto;
+					background-color: transparent;
+					padding: 0;
+				}
+				/*a:hover {
+					background: transparent;
+				}*/
+				.ztree * {font-size: 10pt;font-family:"Microsoft Yahei",Verdana,Simsun,"Segoe UI Web Light","Segoe UI Light","Segoe UI Web Regular","Segoe UI","Segoe UI Symbol","Helvetica Neue",Arial}
+				.ztree li ul{ margin:0; padding:0}
+				.ztree li {line-height:30px;}
+				.ztree li a {/*width:200px;*/height:30px;padding-top: 0px;}
+				.ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
+				.ztree li a span.button.switch {visibility:hidden}
+				.ztree.showIcon li a span.button.switch {visibility:visible}
+				.ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
+				.ztree li span {line-height:30px;}
+				.ztree li span.button {margin-top: -7px;}
+				.ztree li span.button.switch {width: 16px;height: 16px;}
+				
+				.ztree li a.level0 span {font-size: 100%;font-weight: bold;}
+				.ztree li span.button {background-image:url("./images/left_menuForOutLook.png"); *background-image:url("./images/left_menuForOutLook.gif")}
+				.ztree li span.button.switch.level0 {width: 20px; height:20px}
+				.ztree li span.button.switch.level1 {width: 20px; height:20px}
+				.ztree li span.button.noline_open {background-position: 0 0;}
+				.ztree li span.button.noline_close {background-position: -18px 0;}
+				.ztree li span.button.noline_open.level0 {background-position: 0 -18px;}
+				.ztree li span.button.noline_close.level0 {background-position: -18px -18px;}
+		</style>
+    <!--[if lt IE 9]>
+      <script src="common/html5shiv.min.js"></script>
+      <script src="common/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+		<div class="wrapper">
+				<div class="ban-box">
+					<div class="ban-main">
+						<img src="images/ban.png" alt="" />
+						<div class="user-box">
+							<div class="msg-unread">
+								<img src="images/bell.png" alt="" />
+								<span class="unread-msg">1</span>
+							</div>
+							<div class="user-info">
+								<img src="images/dog.png" alt="" class="headimg"/>
+								<img src="images/down.png" alt="" class="rdown"/>
+								<ul>
+									<li><a href="#">个人中心</a></li>
+									<li><a href="#" class="active">退出</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="set-cur-env">
+							<select name="" id="">
+								<option value="">开发环境</option>
+								<option value="">测试环境</option>
+								<option value="">生产环境</option>
+							</select>
+							<i class="fa fa-caret-down"></i>
+						</div>
+					</div>
+				</div>
+				<div class="menu-top">
+					<ul>
+						<li class="active"><a href="#">项目管理</a></li>
+						<li><a href="#">系统管理</a></li>
+					</ul>
+				</div>
+				<div class="bd">
+					<div class="bd-body bd-body-1">
+						<div class="sider">
+							<div class="tree-nav">
+								<div class="new-project">
+									<a href="javascript:;" id="create-proj-btn">创建项目</a>
+								</div>
+								<div class="m-folder-wrap">
+									  <div class="g-folders">
+									  	<!--<ul data-level="1">
+									  		<li>
+									  			<a href="javascript:;" class="icon-file">我的项目</a>
+									  			
+									  		</li>
+									  	</ul>-->
+									  	<ul id="treeDemo" class="ztree"></ul>
+									  </div>
+								</div>
+							</div>
+						</div>
+						<div class="content-col">
+							<div class="content-wrapper">
+								<iframe id="iframepage" src="html/biTemplet.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+							</div>
+						</div>
+					</div>
+					<div class="bd-body bd-body-2">
+						<div class="sider">
+							<div class="sider-nav">
+								<ul>
+									<li>
+										<a href="javascript:;">系统管理</a>
+										<ul>
+											<li><a href="#">账号管理</a></li>
+											<li><a href="#">角色管理</a></li>
+											<li><a href="#">日志管理</a></li>
+											<li><a href="#">企业中心</a></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="content-col">
+							<div class="content-wrapper">
+								<iframe id="iframepage" src="html/loglist.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+		<!--模态框-->
+		<!--创建文件夹-->
+		<div class="file-mod modal">
+			<h3>新建文件夹<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="select-tree-box">
+				
+			</div>
+			<p class="file-name-after">
+				<label for="">文件夹名称：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<button>新建文件夹</button>
+				<span class="fr">
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--创建子模块-->
+		<div class="submodule modal">
+			<h3>创建子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="select-tree-box">
+				
+			</div>
+			<p class="file-name-after">
+				<label for="">子模块名称：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--创建最终子模块-->
+		<div class="subfinalmodule modal">
+			<h3>创建最终子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="select-tree-box">
+				
+			</div>
+			<p class="file-name-after">
+				<label for="">最终子模块名称：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--新建etl文件-->
+		<div class="etlfile modal">
+			<h3>创建最终子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="select-tree-box">
+				
+			</div>
+			<p class="file-name-after">
+				<label for="">最终子模块名称：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--新建作业流文件-->
+		<div class="jobstream modal">
+			<h3>新建作业流文件<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="select-tree-box">
+				
+			</div>
+			<p class="file-name-after">
+				<label for="">新建作业流文件：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--新建bi文件-->
+		<div class="bifile modal">
+			<h3>创建最终子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="select-tree-box">
+				
+			</div>
+			<p class="file-name-after">
+				<label for="">最终子模块名称：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--切换版本-->
+		<div class="cut-version modal">
+			<h3>切换版本<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="version-lists-box">
+				<ul>
+					<li>
+						<img src="images/icon_circle_on.png" alt="" />
+						<input type="radio" name="version-name" checked="true"/>
+						<span>版本1.0.0</span>
+					</li>
+					<li>
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="version-name"/>
+						<span>版本1.0.0</span>
+					</li>
+					<li>
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="version-name"/>
+						<span>版本1.0.0</span>
+					</li>
+				</ul>
+			</div>
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--项目属性-->
+		<div class="proj-attr modal">
+			<h3>项目属性<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="proj-attr-detail">
+				<div class="item1 item">
+					<p>项目名称：<span>迪庆大数据</span></p>
+					<p>项目ID：<span>迪庆大数据</span></p>
+				</div>
+				<div class="item2 item">
+					<p>上级项目：<span>迪庆大数据</span></p>
+					<p>创建人：<span>迪庆</span></p>
+					<p>创建时间：<span>2017.09.13</span></p>
+					<p>最后修改时间：<span>2017.11.20</span></p>
+				</div>
+				<div class="item3 item">
+					<p>当前版本：<span>1.0.0</span></p>
+					<p>项目描述：<span>迪庆大数据</span></p>
+					<p>代码库路径：<span>迪庆大数据</span></p>
+					<p>调度类型：<span>迪庆大数据</span></p>
+				</div>
+			</div>
+		</div>
+		
+		<!--创建项目-->
+		<div class="creat-new-projs modal">
+			<h3>添加项目<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="create-proj-detail">
+					<div>
+						<label for=""><em>*</em>项目名称：</label>
+						<input type="text" name="projname" id="projname"/>
+					</div>
+					<div>
+						<label for=""><em>*</em>项目描述：</label>
+						<textarea name="projdesp" placeholder="20个字以内" id="projdesp" maxlength="20"></textarea>
+					</div>
+					<div>
+						<label for=""><em>*</em>代码库路径：</label>
+						<input type="text" name="projpath" id="projpath"/>
+					</div>
+					<div>
+						<label for=""><em>*</em>调度类型：</label>
+						<input type="text" name="projtype" id="projtype"/>
+					</div>
+					<div class="file-btns-col">
+						<span>
+							<button id="cre-proj-btn">确定</button>
+							<button id="del-cre-proj-btn">取消</button>
+						</span>
+					</div>
+			</div>
+		</div>
+		
+		<!--修改显示名称-->
+		<div class="modify-param-name modal">
+			<h3>修改显示名称<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<p class="file-name-after">
+				<label for="">显示名称：</label>
+				<input type="text" />
+			</p>
+			<div class="file-btns-col">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--提交测试-->
+		<div class="submit-test modal">
+			<h3>提交测试<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<input type="text" placeholder="请输入版本号" />
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--数据源配置-->
+		<div class="data-source-config modal">
+			<h3>数据源配置<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<ul class="da-source-type clearfix">
+				<li class="fl">
+						<img src="images/icon_circle_on.png" alt="" />
+						<input type="radio" name="da" checked="true"/>
+						<span>原始数据表</span>
+					</li>
+					<li class="fr">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="da"/>
+						<span>ETL数据表</span>
+					</li>
+			</ul>
+			<div class="da-source-origin">
+				<ul>
+					<li>
+						<span>数据源：</span>
+						<div class="da-sele-box">
+							<select name="" id="">
+								<option value="数据0">数据0</option>
+								<option value="数据1">数据1</option>
+							</select>
+							<i class="fa fa-caret-down"></i>
+						</div>
+					</li>
+					<li>
+						<span>数据库：</span>
+						<div class="da-sele-box">
+							<select name="" id="">
+								<option value="数据库0">数据库0</option>
+								<option value="数据库1">数据库1</option>
+							</select>
+							<i class="fa fa-caret-down"></i>
+						</div>
+					</li>
+				</ul>
+				<div class="da-source-account">
+					<p>账号：<span>231456</span></p>
+					<p>密码：<span>231456</span></p>
+					<p>端口：<span>2314</span></p>
+				</div>
+			</div>
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--数据筛选(求和)-->
+		<div class="data-filter-mod modal">
+			<h3>数据筛选（求和（值））<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="s-data-val">
+				<ul class="clearfix">
+					<li class="fl">
+						<img src="images/icon_circle_on.png" alt="" />
+						<input type="radio" name="range" checked="true"/>
+						<span>范围</span>
+					</li>
+					<li class="fl">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="range"/>
+						<span>至少</span>
+					</li>
+					<li class="fr">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="range"/>
+						<span>至多</span>
+					</li>
+				</ul>
+				<div class="s-range-val">
+					<input type="text" class="min"/>
+					<input type="text" class="max"/>
+				</div>
+				<button class="s-more-btn">加载范围</button>
+				<div class="s-slider-box">
+					<div id="slider-range" class="s-slider-range"></div>
+				</div>
+			</div>
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+		<!--项目过滤属性-->
+		<div class="filter-attr modal">
+			<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="f-attr-box clearfix">
+				<div class="f-attr-left fl">
+					<ul class="f-name clearfix">
+						<li class="active"><a href="javascript:;">列表筛选</a></li>
+						<li><a href="javascript:;">文本筛选</a></li>
+						<li><a href="javascript:;">条件筛选</a></li>
+						<li><a href="javascript:;">高级筛选</a></li>
+					</ul>
+					<div class="f-box">
+						<div class="f-box1">
+							<ul class="clearfix">
+								<li class="fl">
+									<img src="images/icon_circle_on.png" alt="" />
+									<input type="radio" name="methods" checked="true"/>
+									<span>列表</span>
+								</li>
+								<li class="fl">
+									<img src="images/icon_circle.png" alt="" />
+									<input type="radio" name="methods"/>
+									<span>自动</span>
+								</li>
+							</ul>
+							<div class="f-search-box">
+								<input type="text" placeholder="请输入您要添加的内容，并回车确认"/>
+							</div>
+							<div class="f-select-cont">
+								<ul>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>上海</span>
+									</li>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>北京</span>
+									</li>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>天津</span>
+									</li>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>重庆</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="f-box2">
+							<div class="f-select-box1">
+								<select name="">
+									<option value="">包含以下所有条件</option>
+									<option value="">不包含</option>
+									<option value="">可选择</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+							<div class="f-select-box2">
+								<div class="f-subselect">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input type="text" class="f-subselect-val" />
+								<img src="images/delete_01.png" alt="" class="f-del-btn"/>
+							</div>
+							<div class="f-addbtn-box">
+								<button><i class="fa fa-plus"></i>添加</button>
+							</div>
+						</div>
+						<div class="f-box3">
+							<div class="f-subbox1 clearfix">
+								按照
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								和
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+							</div>
+							<div class="f-subbox2">
+								<button>加载范围</button>
+								<ul class="f-load-range">
+									<li>
+										<span>最小值：</span>
+										<input type="text" />
+									</li>
+									<li>
+										<span>最大值：</span>
+										<input type="text" />
+									</li>
+								</ul>
+							</div>
+							<div class="f-subbox3">
+								<div class="ff-select1 w180">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input type="text" class="ff-sele-val" value="值"/>
+							</div>
+						</div>
+						<div class="f-box4">
+							<div class="f-subbox1 clearfix">
+								按照
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								和
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+							</div>
+							<div class="f-subbox3">
+								<div class="ff-select1 w180">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input type="text" class="ff-sele-val" value="" placeholder="请输入数字"/>
+							</div>
+						</div>
+					</div>
+					<!--筛选类型-->
+					<ul class="f-select-methods clearfix">
+						<li class="fl">
+							<img src="images/icon_checked.png" alt="" />
+							<input type="checkbox"/>
+							<span>包含</span>
+						</li>
+						<li class="fl">
+							<img src="images/icon_checked.png" alt="" />
+							<input type="checkbox"/>
+							<span>排除</span>
+						</li>
+						<li class="fl">
+							<img src="images/icon_checked.png" alt="" />
+							<input type="checkbox"/>
+							<span>使用全部</span>
+						</li>
+					</ul>
+				</div>
+				<div class="f-attr-right fr">
+					<h3>筛选汇总</h3>
+					<div class="f-filter-result">
+						<ul>
+							<li>
+								筛选字段：<em>城市</em>
+							</li>
+							<li class="active">
+								列表筛选：<em>无</em>
+							</li>
+							<li>
+								文本筛选：<em>无</em>
+							</li>
+							<li>
+								条件筛选：<em>无</em>
+							</li>
+							<li>
+								高级筛选：<em>无</em>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+    <script src="plugin/jQuery/jquery.min.js"></script>
+    <script src="plugin/zTree/jquery.ztree.all.min.js"></script>
+   	<!--<script src="plugin/validate/jquery.validate.min.js"></script>-->
+    <!--<script src="plugin/validate/messages_zh.min.js"></script>-->
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="plugin/layer/layer.js"></script>
+    <!--<script src="plugin/layui-v2.1.3/layui/layui.js"></script>-->
+    <!--<script src="plugin/basicContext/basicContext.min.js"></script>-->
+    <script src="plugin/context/context.js"></script>
+    <script src="plugin/zSize/jquery_zsize.js"></script>
+    <script src="js/todo.js"></script>
+    <script src="js/tree.js"></script>
+  </body>
+</html>

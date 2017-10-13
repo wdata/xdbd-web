@@ -1,0 +1,136 @@
+/*页面流*/
+.chart-main-box {
+	left: 0px;
+	right: 202px;
+}
+.p-tabs-title {
+	height: 36px;
+	margin-bottom: 1px;
+}
+.p-tabs-title li {
+	display: inline-block;
+	width: 50%;
+	border-bottom: 1px solid #CCCCCC;
+}
+.p-tabs-title li.active {
+	border-bottom: 2px solid #038dff;
+}
+.p-tabs-title li.active a{
+	color: #038DFF;
+}
+.p-tabs-title li>a {
+	display: block;
+	height:35px;
+	text-align: center;
+	line-height: 35px;
+	font-size: 14px;
+	color: #666666;
+}
+.p-tabs-cont{
+	position: relative;
+	width: 100%;
+}
+.p-tabs-cont>div {
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: none;
+}
+.p-tabs-cont>div:first-of-type{
+	display: block;
+}
+.p-cont0>h3 {
+	height: 35px;
+	line-height: 35px;
+	border-bottom: 1px solid #CCCCCC;
+	text-align: center;
+	font-size: 12px;
+	color: #3D5275;
+}
+.p-setlink-box {
+	font-size: 14px;
+	color: #3D5275;
+}
+.p-setlink-box a {
+	font-size: 14px;
+	color: #3D5275;
+}
+.p-setlink-box>h4 {
+	padding: 0 10px;
+	margin: 14px 0;
+}
+.p-setlink-box>ul{
+	padding: 0 30px 0 25px;
+}
+.p-setlink-box li {
+	height: 14px;
+	margin: 12px 0;
+}
+.p-setlink-box li>span,.p-setlink-box li>a{
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+	float: left;
+}
+.p-setlink-box .p-btns button {
+	width: 88px;
+	height: 30px;
+	border: 1px solid #D9D9D9;
+	background-color: #f7f9fc;
+	font-size: 14px;
+	color: #3D5275;
+}
+.p-setlink-box .p-btns button:first-of-type {
+	margin-right: 3px;
+}
+.p-setlink-box .p-btns button img {
+	margin-top: 3px;
+	margin-right: 10px;
+}
+.p-setlink-box .p-btns {
+	text-align: center;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+.p-has-edited {
+	border-top: 1px solid #CCCCCC;
+	padding: 0 10px;
+}
+.p-has-edited>h4 {
+	margin: 14px 0;
+}
+.p-has-edited>ul {
+	padding-left:15px ;
+}
+.p-has-edited>ul>li+li {
+	margin-top: 10px;
+}
+.p-cont1>h4 {
+	text-align: center;
+	margin: 12px 0;
+}
+.p-opage-select {
+	height: 28px;
+	border-bottom: 1px solid #CCCCCC;
+	position: relative;
+	padding-bottom: 20px;
+}
+.p-opage-select select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 160px;
+	height: 28px;
+	padding: 0 10px;
+	border: 1px solid #D9D9D9;
+	background-color: transparent;
+	position: absolute;
+	z-index: 2;
+	margin-left: 20px;
+}
+.p-opage-select .fa {
+	position: absolute;
+	left: 160px;
+	top: 6px;
+}
