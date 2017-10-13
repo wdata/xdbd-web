@@ -805,6 +805,333 @@ function chart_table(id,date){
     $("#"+id).append(table_text);
 }
 
+// 正在修改的柱状图
+function chartComplex(id,icon,max){
+    var figure=1;
+    var  dim_width=20;//每列维度之间的间距
+    var  dim_height=10;//每行维度之间的间距
+    var dim2_num=null;//保存第二维度的个数
+    var margin = {top: 40, right: 40, bottom: 40, left: 40},
+        width = $("#chart").width() - margin.left - margin.right,
+        height = $("#chart").height() - margin.top - margin.bottom;
+    var color=d3.scale.category20();
+    //柱状图之间的间距
+    var rangeBand=4;
+    var svg=d3.select(id).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("class", "graph")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    d3.json(icon,function(error,data){
+        if (error) throw error;
+        var y_axials=data.data.dim.dimY;
+        var x_axials=data.data.dim.dimX;
+        var charts=data.data.charts;
+//            console.log(charts);
+//            console.log(x_axials);
+//            console.log(y_axials);
+        var max=null;
+        var isChart=true;
+        var y_axis1=[],x_axis1=[];//Y轴第一级维度数组
+        var dimValues = charts.dimValues;//坐标维度
+        var meaList = charts.meaList;//坐标度量
+        var dataset=[],y_axis2_len=[],dimValues_len=[];
+        var dim1_num=y_axials.valueTree.length;//保存最高维度的个数
+        //绘制Y轴维度
+        $.each(y_axials.valueTree,function(index,item){
+            y_axis1.push(item.value);
+            var y_axis2=[];//Y轴第二级维度数组
+            // 绘制Y轴第一级维度
+            if((index+1)==y_axials.valueTree.length) {
+                var texts_g = svg.append("g")
+                    .attr("class", " y_axis1" + index)
+                    .attr("transform", "translate(-" + margin.left / 2 + ",0)");
+                texts_g.selectAll(" y_axis1" + index)
+                    .data(y_axis1)
+                    .enter()
+                    .append("text")
+                    .attr("fill", "#333")
+                    .attr("x", (-margin.left / 2))
+                    .attr("y", function (d, i) {
+                        return (height / y_axis1.length) * i + (height / y_axis1.length / 2) + dim_height;
+                    })
+                    .text(function (d) {return d;})
+                    .attr("text-anchor", "top");
+            }
+            $.each(item.children,function(num,icon){
+                y_axis2.push(icon.value);
+                //绘制Y轴第二级维度
+                if((num+1)==item.children.length){
+                    y_axis2_len.push(y_axis2.length);
+                    var texts_g = svg.append("g")
+                        .attr("class", " y_axis2" + index)
+                        .attr("transform", "translate(0,10)");
+                    texts_g.selectAll(" y_axis2" + index)
+                        .data(y_axis2)
+                        .enter()
+                        .append("text")
+                        .attr("fill", "#333")
+                        .attr("x", (margin.left / 2))
+                        .attr("y", function (d, i) {
+                            return height / y_axials.valueTree.length*index+(height / y_axials.valueTree.length/y_axis2.length*i)+height / y_axials.valueTree.length/y_axis2.length/2;
+                        })
+                        .text(function (d) {return d;})
+                        .attr("text-anchor", "top");
+                }
+            });
+        });
+        //  绘制图形的坐标维度
+        if(charts.meaAxis=="x") {//当度量在x轴时
+            $.each(dimValues,function(dim_num,dim_item){
+                dimValues_len.push(dim_item.length);
+                if(dim_num==0||dim_num==1){
+                    var texts_g = svg.append("g")
+                        .attr("class", " dim" + figure)
+                        .attr("transform", "translate("+dim_width+",10)");
+                    texts_g.selectAll(" dim" + figure)
+                        .data(dim_item)
+                        .enter()
+                        .append("text")
+                        .attr("fill", "#333")
+                        .attr("x",dim_width*2)
+                        .attr("y",function(d,i) {return height/y_axials.valueTree.length/y_axis2_len[0]*dim_num+height/y_axials.valueTree.length/y_axis2_len[0]/dim_item.length*i+height/y_axials.valueTree.length/y_axis2_len[0]/dim_item.length/2;
+                        })
+                        .text(function (d) {return d;})
+                        .attr("text-anchor", "top");
+                }else if(dim_num==2||dim_num==3||dim_num==4){
+                    var texts_g = svg.append("g")
+                        .attr("class", " dim" + figure)
+                        .attr("transform", "translate("+dim_width+",10)");
+                    texts_g.selectAll(" dim" + figure)
+                        .data(dim_item)
+                        .enter()
+                        .append("text")
+                        .attr("fill", "#333")
+                        .attr("x",dim_width*2)
+                        .attr("y",function(d,i) {return height/y_axials.valueTree.length+height/y_axials.valueTree.length/y_axis2_len[1]*(dim_num-2)+height/y_axials.valueTree.length/y_axis2_len[1]/dim_item.length*i+height/y_axials.valueTree.length/y_axis2_len[1]/dim_item.length/2;
+                        })
+                        .text(function (d) {return d;})
+                        .attr("text-anchor", "top");
+                }
+                figure++;
+            });
+        }
+        //绘制X轴维度
+        $.each(x_axials.valueTree,function(index,item){
+            x_axis1.push(item.value);
+            var x_axis2=[];//Y轴第二级维度数组
+            // 绘制x轴第一级维度
+            if((index+1)==x_axials.valueTree.length) {
+                var texts_g = svg.append("g")
+                    .attr("class", " x_axis1" + index)
+                    .attr("transform", "translate(60,0)");
+                texts_g.selectAll( " x_axis1" + index)
+                    .data(x_axis1)
+                    .enter()
+                    .append("text")
+                    .attr("fill", "#333")
+                    .attr("x", function(d,i) {return (width/x_axis1.length)*i+ (width/x_axis1.length)/2; })
+                    .attr("y", -margin.top/4)
+                    .text(function (d) {return d;})
+                    .attr("text-anchor", "top");
+            }
+            $.each(item.children,function(num,icon){
+                x_axis2.push(icon.value);
+                //绘制x轴第二级维度
+                if((num+1)==item.children.length){
+                    var texts_g = svg.append("g")
+                        .attr("class", " x_axis2" + index)
+                        .attr("transform", "translate(60,0)");
+                    texts_g.selectAll(" x_axis2" + index)
+                        .data(x_axis2)
+                        .enter()
+                        .append("text")
+                        .attr("fill", "#333")
+                        .attr("x", function (d, i) {
+                            return width / x_axials.valueTree.length*index+(width / x_axials.valueTree.length/x_axis2.length*i)+width / x_axials.valueTree.length/x_axis2.length/2;
+                        })
+                        .attr("y",10)
+                        .text(function (d) {return d;})
+                        .attr("text-anchor", "top");
+                }
+            });
+        });
+        //绘制柱状图
+        var x =null,meaTitle;
+        $.each(meaList,function(index,item){
+            max=item.maxValue;
+            meaTitle=item.meaTitle;
+            x = d3.scale.linear()
+                .domain([0,max])
+                .range([0, width/6]);
+            dataset=item.meaValues;
+            for(var e=0;e<dataset.length;e++){
+                for(var r=0;r<dataset[e].length;r++){
+                    if(e==0||e==1){
+                        var rect_g=svg.append("g")
+                            .attr("class", "rect")
+                            .attr("transform", "translate("+(width/dataset[e].length*r+(margin.left+70))+",0)");
+                        rect_g.selectAll(".rect")
+                            .data(dataset[e][r])
+                            .enter()
+                            .append("rect")
+                            .attr("x", 0)
+                            .attr("y", function(d,i) {
+                                return height/dim1_num/y_axis2_len[0]*e+height/dim1_num/y_axis2_len[0]/dimValues_len[e]*i+dim_height;
+                            })
+                            .attr("width",function(d,i){return  x(d);})
+                            .attr("height", (height-margin.top)/dim1_num/y_axis2_len[0]/dimValues_len[e]-rangeBand/2)
+                            .attr('fill',function(d,i){return color(i)})
+                            .on("mouseover",function(d,i){
+                                d3.select(this).attr("fill",'#e439ca');
+                                var tx=parseFloat(d3.event.pageX);
+                                var ty=parseFloat(d3.event.pageY);
+                                $(".hint").css({"left":(tx+10)+"px","top":(ty+10)+"px"});
+                                $(".hint").text(meaTitle+"："+d).show();
+                            })
+                            .on("mouseout",function(d,i){
+                                $(".hint").text("").hide();
+                                d3.select(this).attr("fill",color(i));
+                            });
+                    } else if(e==2){
+                        var rect_g=svg.append("g")
+                            .attr("class", "rect")
+                            .attr("transform", "translate("+(width/dataset[e].length*r+(margin.left+70))+",0)");
+                        rect_g.selectAll(".rect")
+                            .data(dataset[e][r])
+                            .enter()
+                            .append("rect")
+                            .attr("x", 0)
+                            .attr("y", function(d,i) {
+                                return height/dim1_num+height/dim1_num/y_axis2_len[1]/dimValues_len[2]*i+dim_height;
+                            })
+                            .attr("width",function(d,i){return  x(d);})
+                            .attr("height", (height-margin.top)/dim1_num/y_axis2_len[1]/dimValues_len[2]-rangeBand/2)
+                            .attr('fill',function(d,i){return color(i)})
+                            .on("mouseover",function(d,i){
+                                d3.select(this).attr("fill",'#e439ca');
+                                var tx=parseFloat(d3.event.pageX);
+                                var ty=parseFloat(d3.event.pageY);
+                                $(".hint").css({"left":(tx+10)+"px","top":(ty+10)+"px"});
+                                $(".hint").text(meaTitle+"："+d).show();
+                            })
+                            .on("mouseout",function(d,i){
+                                $(".hint").text("").hide();
+                                d3.select(this).attr("fill",color(i));
+                            });
+                    }else if(e==3){
+                        var rect_g=svg.append("g")
+                            .attr("class", "rect")
+                            .attr("transform", "translate("+(width/dataset[e].length*r+(margin.left+70))+",0)");
+                        rect_g.selectAll(".rect")
+                            .data(dataset[e][r])
+                            .enter()
+                            .append("rect")
+                            .attr("x", 0)
+                            .attr("y", function(d,i) {
+                                return height/dim1_num+height/dim1_num/y_axis2_len[1]/dimValues_len[3]*2+height/dim1_num/y_axis2_len[1]/dimValues_len[3]*i+dim_height;
+                            })
+                            .attr("width",function(d,i){return  x(d);})
+                            .attr("height", (height-margin.top)/dim1_num/y_axis2_len[1]/dimValues_len[3]-rangeBand/2)
+                            .attr('fill',function(d,i){return color(i)})
+                            .on("mouseover",function(d,i){
+                                d3.select(this).attr("fill",'#e439ca');
+                                var tx=parseFloat(d3.event.pageX);
+                                var ty=parseFloat(d3.event.pageY);
+                                $(".hint").css({"left":(tx+10)+"px","top":(ty+10)+"px"});
+                                $(".hint").text(meaTitle+"："+d).show();
+                            })
+                            .on("mouseout",function(d,i){
+                                $(".hint").text("").hide();
+                                d3.select(this).attr("fill",color(i));
+                            });
+                    }else if(e==4){
+                        var rect_g=svg.append("g")
+                            .attr("class", "rect")
+                            .attr("transform", "translate("+(width/dataset[e].length*r+(margin.left+70))+",0)");
+                        rect_g.selectAll(".rect")
+                            .data(dataset[e][r])
+                            .enter()
+                            .append("rect")
+                            .attr("x", 0)
+                            .attr("y", function(d,i) {
+                                return height/dim1_num+height/dim1_num/y_axis2_len[1]/dimValues_len[4]*2+height/dim1_num/y_axis2_len[1]/dimValues_len[4]*i+dim_height;
+                            })
+                            .attr("width",function(d,i){return  x(d);})
+                            .attr("height", (height-margin.top)/dim1_num/y_axis2_len[1]/dimValues_len[4]-rangeBand/2)
+                            .attr('fill',function(d,i){return color(i)})
+                            .on("mouseover",function(d,i){
+                                d3.select(this).attr("fill",'#e439ca');
+                                var tx=parseFloat(d3.event.pageX);
+                                var ty=parseFloat(d3.event.pageY);
+                                $(".hint").css({"left":(tx+10)+"px","top":(ty+10)+"px"});
+                                $(".hint").text(meaTitle+"："+d).show();
+                            })
+                            .on("mouseout",function(d,i){
+                                $(".hint").text("").hide();
+                                d3.select(this).attr("fill",color(i));
+                            });
+                    }
+
+                }
+            }
+//            绘制X轴的坐标轴
+            for(var h=0;h<dataset[0].length;h++) {
+                var x2 = d3.scale.linear()
+                    .domain([0, max])
+                    .range([(width / dataset[0].length) * h, (width / dataset[0].length) * (h + 1)])
+                    .nice();
+                var xAxis2 = d3.svg.axis()
+                    .scale(x2)
+                    .orient("bottom")
+                    .ticks(5);
+                svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(" + (margin.left+70) + "," + (height+dim_height) + ")")
+                    .call(xAxis2);
+            }
+        });
+
+
+        var hint='',icon='';
+
+
+//            绘制X轴维度title
+        var texts_g=svg.append("g")
+            .attr("class", "title")
+            .attr("transform", "translate(-"+margin.left+",-"+margin.top+")")
+            .append("text")
+            .attr("x", width/2)
+            .attr("y", 20)
+            .text(hint)
+            .attr("fill","red")
+            .attr("text-anchor", "top");
+
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 存放数据格式
 // 0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
 var gpData = [
