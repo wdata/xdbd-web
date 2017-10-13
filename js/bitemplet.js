@@ -25,7 +25,7 @@ function getBiTemplet(projectId,type,industry){
             "type":type,
             "industry":industry
         },
-        success:function(res){console.log(res);
+        success:function(res){
           if(res.code===0){
           	var arr = new Array;
 	      	$.each(res.data,function(index,item) {
