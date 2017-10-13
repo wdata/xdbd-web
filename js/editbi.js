@@ -382,3 +382,4 @@ function typeHideShow(id,type){
             break;
     }
 }
+

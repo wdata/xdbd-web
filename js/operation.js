@@ -311,6 +311,7 @@ var DataIndexes = {
     // 根据数据索引，请求数据
     inAjax:function(d){
         var self = this;
+        console.log(JSON.stringify(d));
         $.ajax({
             type:"post",
             url:"/bi/report/v1/data.json",
@@ -341,7 +342,8 @@ var DataIndexes = {
                     case 101:
                         // 绘制柱状图
                         // histogramData(data);
-                        bar("#"+id,dataTsv);
+                        // bar("#"+id,dataTsv);
+                        chartComplex("#" +id,data,200 );
                         // bar("#"+id,dataTsv);
                         break;
                     case 102:
