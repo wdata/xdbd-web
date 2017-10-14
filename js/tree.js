@@ -1,5 +1,4 @@
 $(function(){
-	
 	/*
 	 
 	 * 创建项目
@@ -31,7 +30,7 @@ $(function(){
 	function createProjInfo(name,desp,path,type){
 		$.ajax({
 			type:'POST',
-            url:'/biddata/project/createProject',
+            url:'/bigdata/project/createProject',
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
@@ -56,19 +55,33 @@ $(function(){
 	 
 	 * 获取项目树名称
 	 * */
-	//getProjName(1);
+	var zNodes = [];
+	getProjName();
 	function getProjName(id){
 		$.ajax({
 			type:'POST',
-            url:'/bigdata/project/getProjectName',
+            url:'/bigdata/project/findProjectTree',
             dataType:'json',
-            contentType: "application/json",
+	          contentType: "application/json",
 			data:JSON.stringify({
-				"id":id
+				
 			}),
 			success:function(res){
               	if(res.code===0){
-					console.log(res.data);
+              		zNodes = res.data;
+					console.log(zNodes);
+					var treeObj = $("#treeDemo");
+					$.fn.zTree.init(treeObj, setting, zNodes);
+					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+					curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+					zTree_Menu.selectNode(curMenu);
+					treeObj.hover(function () {
+						if (!treeObj.hasClass("showIcon")) {
+							treeObj.addClass("showIcon");
+						}
+					}, function() {
+						treeObj.removeClass("showIcon");
+					});
 	            }
 			},
 			error:function(err){
@@ -101,7 +114,7 @@ $(function(){
 			}
 		};
 
-		var zNodes =[
+		/*var zNodes =[
 				{ id:1, pId:0, name:"我的项目", open:true},
 				{ id:11, pId:1, name:"迪庆大数据11",ppss:1,children:[
 							{ id:111, pId:11, ppss:3,name:"首页",children:[
@@ -120,10 +133,123 @@ $(function(){
 				]
 			},
 			{ id:12, pId:1, name:"迪庆大数据12",ppss:2}
+			
+		];*/
+		
+		/*
+		 
+		 * 目录类型定义
+		 * *
+		 * 1=项目目录,--items
+		 * 2=首页,
+		 * 3=菜单设置,
+		 * 4=页面流,
+		 * 5=页面,
+		 * 6=模块,---- items4
+		 * 7=最终模块,
+		 * 8=ETL,
+		 * 9=作业流,
+		 * 10=BI,
+		 * 11=ETL文件夹,--------------- items1 ETL右键目录
+		 * 12=BI文件夹,---------------- items2 BI右键目录
+		 * 13=作业流文件夹------------- items3 作业流文件夹
+		 * 
+		
+		* */
+		var createSubmodule = function(){
+			$(".submodule").show();
+		};
+		var createFinalSubmodule = function(){
+			$(".subfinalmodule").show();
+		};
+		var checkInTest = function(){
+			alert('checkInTest');
+		};
+		var switchVersion = function(){
+			$(".cut-version").show();
+		};
+		var leadingIn = function(){
+			alert('leadingIn');
+		};
+		var leadingOut = function(){
+			alert('leadingOut');
+		};
+		var dataSourceConfig = function(){
+			alert('dataSourceConfig');
+		};
+		var setProperty = function(){
+			$(".proj-attr").show();
+		};
+		var newFile = function(){
+	    	alert('新建文件夹');
+	   	};
+    	var newEtl = function(){
+    		alert('newEtl');
+    	};
+    	var newBi = function(){
+    		alert('newBi');
+    	};
+    	var newJob = function(){
+    		alert('newJob');
+    	};
+		var items = [];
+		var items0 = [
+			{ title: '创建子模块', fn: createSubmodule},
+			{ title: '创建最终子模块', fn: createFinalSubmodule },
+			{ title: '提交测试', fn: checkInTest },
+			{ title: '切换版本', fn: switchVersion },
+			{ title: '导入', fn: leadingIn },
+			{ title: '导出', fn: leadingOut},
+			{ title: '数据源配置', fn: dataSourceConfig },
+			{ title: '属性', fn: setProperty }
+		];
+		var items1 = [
+			{ title: '新建ETL', fn: newEtl},
+			{ title: '新建文件夹', fn: newFile }
+		];
+		var items2 = [
+			{ title: '新建BI文件', fn: newBi},
+			{ title: '新建文件夹', fn: newFile }
+		];
+		var item3 = [
+			{ title: '新建作业流', fn: newJob},
+			{ title: '新建文件夹', fn: newFile }
+		];
+		var item4 = [
+			{ title: '创建子模块', fn: createSubmodule},
+			{ title: '创建最终子模块', fn: createFinalSubmodule}
 		];
 		function zTreeOnClick(){
-			console.log($.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes());
+			var curClickedDom = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+			var dirType = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0].directoryType;
+			console.log(dirType);
+			switch(dirType){
+				case 1:
+					items = items0;
+				break;
+				case 11:
+					items = items1;
+				break;
+				case 12:
+					items = items2;
+				break;
+				case 13:
+					items = items3;
+				break;
+				case 6:
+					items = items4;
+				break;
+				default:
+					items = []
+			}
 		}
+		var onRightKey = function(e){
+				basicContext.show(items1, e);
+			}
+		$("#treeDemo").delegate("li","contextmenu",function(e){
+	    	onRightKey(e);
+	    });
+		
 		function addDiyDom(treeId, treeNode) {
 			var spaceWidth = 5;
 			var switchObj = $("#" + treeNode.tId + "_switch"),
@@ -147,7 +273,7 @@ $(function(){
 		}
 
 		$(document).ready(function(){
-			var treeObj = $("#treeDemo");
+			/*var treeObj = $("#treeDemo");
 			$.fn.zTree.init(treeObj, setting, zNodes);
 			zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
 			curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
@@ -158,6 +284,6 @@ $(function(){
 				}
 			}, function() {
 				treeObj.removeClass("showIcon");
-			});
+			});*/
 		});
 })//jq end

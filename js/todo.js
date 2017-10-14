@@ -62,106 +62,6 @@ $(function(){
 	});
 	
 	
-	//step2:创建项目的默认文件夹
-	var $pname = '陈亭歌项目';
-	$("#create-proj-btn").click(function(){
-		$(".creat-new-projs").show();
-		//创建项目
-		/*var $html = `
-			<ul data-level="2">
-				<li>
-					<a href="javascript:;" class="p-rkey icon-file">
-						<h4>${$pname}</h4>
-						<i class="fa fa-caret-down"></i>
-					</a>
-					<ul data-level="3">
-						<li>
-							<a href="javascript:;" class="icon-file">
-		  						<h4>1.首页</h4>
-		  						<i class="fa fa-caret-down"></i>
-		  					</a>
-		  					<ul  data-level="4">
-		  						<li>
-		  							<a href="javascript:;">
-		  								<h4>菜单设置</h4>
-		  								<i class="fa fa-caret-down"></i>
-		  							</a>
-		  						</li>
-		  						<li>
-		  							<a href="javascript:;">
-		  								<h4>页面流</h4>
-		  								<i class="fa fa-caret-down"></i>
-		  							</a>
-		  						</li>
-		  						<li>
-		  							<a href="javascript:;">
-		  								<h4>页面</h4>
-		  								<i class="fa fa-caret-down"></i>
-		  							</a>
-		  						</li>
-		  					</ul>
-						</li>
-						<!--终极子模块-->
-						<li>
-							<a href="javascript:;" class="icon-file">
-								<h4>2.终极子模块AAA</h4>
-								<i class="fa fa-caret-down"></i>
-							</a>
-							<ul data-level="4">
-								<li>
-									<a href="javascript:;" class="etlfile icon-file">
-										<h4>ETL</h4>
-		  								<i class="fa fa-caret-down"></i>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;" class="jobstream icon-file">
-										<h4>作业流</h4>
-		  								<i class="fa fa-caret-down"></i>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;" class="icon-file">
-										<h4>BI报表</h4>
-		  								<i class="fa fa-caret-down"></i>
-									</a>
-									<ul data-level="5">
-										<li>
-											<a href="javascript:;" class="bifile icon-file">
-												<h4>BI页面</h4>
-				  								<i class="fa fa-caret-down"></i>
-											</a>
-										</li>
-										<li>
-											<a href="javascript:;">
-												<h4>页面流</h4>
-				  								<i class="fa fa-caret-down"></i>
-											</a>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-						<!--子模块-->
-						<li>
-							<a href="javascript:;" class="submod icon-file">
-								<h4>3.子模块BBB</h4>
-								<i class="fa fa-caret-down"></i>
-							</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		`;
-		$(".g-folders>ul[data-level='1']").append($html);*/
-	});
-	
-	/*$(".g-folders").delegate("a","click",function(){
-		var $level = Number($(this).parent().parent().attr("data-level"));
-		console.log($level);
-		$(this).css({"text-indent":$level*20+4+"px","background-position":$level*20+"px,center"});
-	})*/
-	
 	//版本切换
 	$(".version-lists-box li").on("click",function(){
 		var s = $(this).find("input[name='version-name']:checked");
@@ -170,7 +70,7 @@ $(function(){
 	});
 	
 	//创建项目-->自定义右键
-	var createSubmodule = function(){
+	/*var createSubmodule = function(){
 		$(".submodule").show();
 	};
 	var createFinalSubmodule = function(){
@@ -208,7 +108,7 @@ $(function(){
 		];
 		basicContext.show(items, e);
 	};
-	$(".g-folders").delegate(".p-rkey","contextmenu",function(e){
+	$("#treeDemo").delegate("li","contextmenu",function(e){
     	onClick(e);
     });
     
@@ -274,7 +174,7 @@ $(function(){
     $(".g-folders").delegate(".submod","contextmenu",function(e){
     	biClick(e);
     });
-    
+    */
     //点击图标类型按钮--生成可拖拽缩放的div
  	$(".u-btn-class").draggable({
 		appendTo: "",
@@ -424,41 +324,7 @@ $(function(){
 	
 	//创建项目右键
 //	if($("#tree").length){
-		context.attach('#treeDemo ul li', [
-	        {text: '创建子模块', action:function(e){
-	        	var  ele = context.getClickEle();
-	            	 e.preventDefault();
-	        	 $(".submodule").show().siblings(".modal").hide();
-	        }},
-	        {text: '创建最终子模块',action:function(e){
-	        	e.preventDefault();
-	        	$(".subfinalmodule").show().siblings(".modal").hide();
-	        }},
-	        {text: '提交测试', action:function(e){
-	        	e.preventDefault();
-	        	$(".submit-test").show().siblings(".modal").hide();
-	        }},
-	        {text: '切换版本',action:function(e){
-	        	e.preventDefault();
-	        	$(".cut-version").show().siblings(".modal").hide();
-	        }},
-	        {divider: true},
-	        {text: '导入', action:function(e){
-	        	alert(导入);
-	        }},
-	        {text: '导出',action:function(e){
-	        	alert(导出);
-	        }},
-	        {divider: true},
-	        {text: '数据源配置', action:function(e){
-	        	e.preventDefault();
-	        	$(".data-source-config").show().siblings(".modal").hide();
-	        }},
-	        {text: '属性', action:function(e){
-	        	e.preventDefault();
-	        	$(".proj-attr").show().siblings(".modal").hide();
-	        }}
-	    ]);
+		
 //	}
 		
 	
