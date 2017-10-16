@@ -303,8 +303,9 @@ function pillsLi(){
 }
 function clear(id){
     var choose = true;
-    eleFocus();
+    eleFocus(); // 根据现在选中类型，变化
     $.each(save_arr,function(index,item) {
+        console.log(item.cid === id);
         if(item.cid === id) {
             var x_param='',y_param='',filter='';
             $.each(item.queryJson.x,function(x,item){

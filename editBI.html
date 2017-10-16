@@ -93,6 +93,24 @@
 				height: 100%;
 			}
 
+			.hint,.tooltip{
+				border: 1px solid #ddd;
+				background-color: #fff;
+				min-width:100px;
+				text-align: center;
+				border-radius: 5px;
+				padding:10px;
+				color:#666;
+				position: absolute;
+				display: none;
+			}
+
+		.axis path,
+			.axis line {
+				fill: none;
+				stroke: #000;
+				shape-rendering: crispEdges;
+			}
 
 		</style>
     <!--[if lt IE 9]>
@@ -400,12 +418,13 @@
 					</div>
 				</div>
 		</div>
+	<div class="hint"></div>
     <script src="plugin/jQuery/jquery.min.js"></script>
    	<script src="plugin/validate/jquery.validate.min.js"></script>
     <script src="plugin/validate/messages_zh.min.js"></script>
     <script src="plugin/jQuery/jQuery_ui.js"></script>
-    <script src="js/d3.v3.min.js"></script>
-    <script src="js/d3.tip.js"></script>
+	<script src="plugin/d3/d3.v3.min.js"></script>
+	<script  src="plugin/d3/d3.tip.js"></script>
     <!--<script src="plugin/basicContext/basicContext.min.js"></script>-->
     <script src="plugin/layer/layer.js"></script>
     <script src="plugin/context/context.js"></script>

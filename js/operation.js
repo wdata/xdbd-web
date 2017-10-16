@@ -155,7 +155,7 @@ var refresh = {
         this.dataSource(id,chart_date);   // 获取X,Y
         DataIndexes.inAjax(chart_date,id); // 请求数据
         this.only(index_arr,chart_date);  // 存入数组
-        console.log(index_arr);
+        // console.log(index_arr);
     },
     // 整体数据
     retrieve:function(id){
@@ -182,7 +182,7 @@ var refresh = {
         this.dataSource(id,chart_date);  // 获取X,Y
         this.whz(id,chart_date);         // 获取宽高
         this.only(save_arr,chart_date,id);  // 输入数组
-        console.log(save_arr);
+        // console.log(save_arr);
     },
     // 修改文本内容，并存入数据save_arr中
     textData:function(id){
@@ -312,6 +312,7 @@ var DataIndexes = {
     inAjax:function(d){
         var self = this;
         console.log(JSON.stringify(d));
+        $("#"+id_).find(".resize-panel").siblings().remove();  // 删除之前的图形
         $.ajax({
             type:"post",
             url:"/bi/report/v1/data.json",
@@ -330,7 +331,7 @@ var DataIndexes = {
     // 刷新，判断类型，选择图形绘制
     // 参数：id：元素ID
     draw:function(id,type,data){
-        $("#"+id).find("svg").remove();  // 删除之前的图形
+
         // 判断类型
         switch($("#"+id).attr("data-type")){
             case "chart":
@@ -343,7 +344,7 @@ var DataIndexes = {
                         // 绘制柱状图
                         // histogramData(data);
                         // bar("#"+id,dataTsv);
-                        chartComplex("#" +id,data,200 );
+                        manyChart("#" +id,data);
                         // bar("#"+id,dataTsv);
                         break;
                     case 102:
