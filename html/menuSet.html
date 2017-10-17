@@ -9,12 +9,11 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../plugin/font-awesome-4.7.0/css/font-awesome.css" />
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="../plugin/basicContext/basicContext.min.css" />
-    <link rel="stylesheet" href="../plugin/basicContext/default.min.css" />
+    <link rel="stylesheet" href="../plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="../plugin/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="../plugin/zTree/css/demo.css" />
     <link rel="stylesheet" href="../css/form.css" />
+    <link rel="stylesheet" href="../plugin/zTree/css/zTreeStyle/zTreeStyle.css" />
     <link rel="stylesheet" href="../css/menu.css" />
     <!--[if lt IE 9]>
       <script src="common/html5shiv.min.js"></script>
@@ -26,22 +25,12 @@
 		<div class="edit-state">
 			<div class="top-bar clearfix">
 				<img src="../images/icon_save.png" alt="" title=""/>
-				<img src="../images/icon_copy.png" alt="" title=""/>
-				<img src="../images/icon_paste.png" alt="" title=""/>
-				<img src="../images/icon_move.png" alt=""  title=""/>
-				<img src="../images/icon_preview.png" alt="" title="" />
-				<img src="../images/icon_temp.png" alt="" title="" />
-				<img src="../images/delete_01.png" alt="" title="" />
 				<img src="../images/icon_prev.png" alt="" title="" />
 				<img src="../images/icon_next.png" alt="" title="" />
 				<img src="../images/icon_fresh.png" alt="" title="" />
-				<img src="../images/icon_new.png" alt="" title="" />
-				<img src="../images/bianji_01.png" alt="" title="" />
-				<img src="../images/icon_set.png" alt="" title="" />
-				<img src="../images/icon_link.png" alt="" title="" />
+				<img src="../images/icon_preview.png" alt="" title="" />
 			</div>
 			<div class="drag-bar clearfix">
-				<!--<div class="op-box1 op-box"></div>-->
 				<div class="op-box">
 					<div class="title-box">
 						<h3>菜单设计</h3>
@@ -120,24 +109,25 @@
 							<div class="m-cont1">
 								<div class="m-set-navs">
 									<a href="javascript:;" class="active">顶部导航菜单</a>
-									<a href="javascript:;">左边菜单</a>
+									<a href="javascript:;" class="leftMenuBtn">左边菜单</a>
 								</div>
 								<div class="m-set-navscont">
 									<div class="m-navscont0">
 										<div class="m-tcont-box1">
 											<h3>顶部导航菜单内容</h3>
-											<input type="text" />
-											<input type="button" value="确定"/>
+											<input type="text" id="head-text" maxlength="50"/>
+											<input type="button" value="确定" id="head-text-btn" />
 										</div>
 										<div class="m-tcont-box2">
-											<h3>已添加顶部导航菜单<img src="../images/icon_sxp.png" alt="" /></h3>
-											<ul>
-												<li>
-													<span>财务</span>
+											<h3>已添加顶部导航菜单<img src="../images/icon_sxp.png" alt="" id="clearTopMenu"/></h3>
+											<ul class="top-menu-15">
+												<!--<li>
+													<span class="m-menu-tag">财务</span>
+													<input type="text" class="top-reedit"/>
 													<div class="m-navs-order-btns">
-														<img src="../images/t_up.png" alt="" />
-														<img src="../images/t_down.png" alt="" />
-														<img src="../images/icon_close_02.png" alt="" />
+														<img src="../images/t_up.png" alt="" class="t-up"/>
+														<img src="../images/t_down.png" alt="" class="t-down"/>
+														<img src="../images/icon_close_02.png" alt="" class="t-del" />
 													</div>
 												</li>
 												<li>
@@ -155,28 +145,35 @@
 														<img src="../images/t_down.png" alt="" />
 														<img src="../images/icon_close_02.png" alt="" />
 													</div>
-												</li>
+												</li>-->
 											</ul>
-											<input type="button" value="确定" />
+											<!--<input type="button" value="确定" />-->
 										</div>
 									</div>
 									<div class="m-navscont1">
 										<div class="m-lsetnav-btns">
-											<img src="../images/t_up.png" alt="" />
-											<img src="../images/t_down.png" alt="" />
-											<img src="../images/icon_close_02.png" alt="" />
-											<img src="../images/icon_sxp.png" alt="" />
+											<img src="../images/t_add.png" alt="" class="le-add"/>
+											<img src="../images/t_up.png" alt="" class="le-up"/>
+											<img src="../images/t_down.png" alt="" class="le-down"/>
+											<img src="../images/icon_close_02.png" alt="" class="le-close"/>
+											<img src="../images/icon_sxp.png" alt="" class="le-clear"/>
 										</div>
 										<div class="m-scroll-navs">
 											<div class="swiper-container">
-										    <div class="swiper-wrapper">
-										        <div class="swiper-slide">Slide 1</div>
+										    <div class="swiper-wrapper" id="scroll-topmenu">
+										        <!--<div class="swiper-slide">Slide 1</div>
 										        <div class="swiper-slide">Slide 2</div>
 										        <div class="swiper-slide">Slide 3</div>
-										        <div class="swiper-slide">Slide 4</div>
+										        <div class="swiper-slide">Slide 4</div>-->
 										    </div>
 										    <div class="swiper-button-prev"></div>
 										    <div class="swiper-button-next"></div>
+										  </div>
+										  <div class="match-menu-box">
+										  	<ul id="match-tree" class="ztree"></ul>
+										  	<!--<div class="le-menu-tree">
+										  		
+										  	</div>-->
 										  </div>
 										</div>
 									</div>
@@ -256,12 +253,10 @@
 	</div>
 		</div>
     <script src="../plugin/jQuery/jquery.min.js"></script>
-   	<script src="../plugin/validate/jquery.validate.min.js"></script>
-    <script src="../plugin/validate/messages_zh.min.js"></script>
-    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script src="../plugin/basicContext/basicContext.min.js"></script>
+    <script src="../plugin/zTree/jquery.ztree.all.min.js"></script>
+    <!--<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>-->
     <script src="../plugin/swiper/swiper.min.js"></script>
-    <script src="../js/todo.js"></script>
+    <script src="../plugin/layer/layer.js"></script>
     <script src="../js/menu.js"></script>
   </body>
 </html>

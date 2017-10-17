@@ -11,78 +11,11 @@
     <link rel="stylesheet" href="plugin/font-awesome-4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <!--<link rel="stylesheet" href="plugin/layui-v2.1.3/layui/css/layui.css" />-->
-    <link rel="stylesheet" href="plugin/zTree/css/demo.css" />
     <link rel="stylesheet" href="plugin/zTree/css/zTreeStyle/zTreeStyle.css" />
     <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
     <link rel="stylesheet" href="plugin/basicContext/default.min.css" />
-    <link rel="stylesheet" href="plugin/context/context.standalone.css" />
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/form.css" />
-    <style type="text/css">
-	    .resize-item{
-					width: 150px;
-					height:150px;
-					border: 1px solid red;
-					position: absolute;
-					z-index: 10000;
-				}
-				.set-cur-env {
-					position: absolute;
-					right: 353px;
-					top: 45px;
-					width: 150px;
-					height: 30px;
-					background-color: #FFFFFF;
-				}
-				.set-cur-env select {
-					width: 150px;
-					height: 30px;
-					position: absolute;
-					left: 0;
-					border: none;
-					padding-left: 15px;
-					background-color: transparent;
-					-webkit-appearance: none;
-					-moz-appearance: none;
-					appearance: none;
-				}
-				.set-cur-env .fa {
-					position: absolute;
-					right: 10px;
-					top: 7px;
-				}
-				ul.ztree {
-					margin-top: 0;
-					border: none;
-					width: auto;
-					background-color: transparent;
-					padding: 0;
-				}
-				/*a:hover {
-					background: transparent;
-				}*/
-				.ztree * {font-size: 10pt;font-family:"Microsoft Yahei",Verdana,Simsun,"Segoe UI Web Light","Segoe UI Light","Segoe UI Web Regular","Segoe UI","Segoe UI Symbol","Helvetica Neue",Arial}
-				.ztree li ul{ margin:0; padding:0}
-				.ztree li {line-height:30px;}
-				.ztree li a {/*width:200px;*/height:30px;padding-top: 0px;}
-				.ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
-				.ztree li a span.button.switch {visibility:hidden}
-				.ztree.showIcon li a span.button.switch {visibility:visible}
-				.ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
-				.ztree li span {line-height:30px;}
-				.ztree li span.button {margin-top: -7px;}
-				.ztree li span.button.switch {width: 16px;height: 16px;}
-				
-				.ztree li a.level0 span {font-size: 100%;font-weight: bold;}
-				.ztree li span.button {background-image:url("./images/left_menuForOutLook.png"); *background-image:url("./images/left_menuForOutLook.gif")}
-				.ztree li span.button.switch.level0 {width: 20px; height:20px}
-				.ztree li span.button.switch.level1 {width: 20px; height:20px}
-				.ztree li span.button.noline_open {background-position: 0 0;}
-				.ztree li span.button.noline_close {background-position: -18px 0;}
-				.ztree li span.button.noline_open.level0 {background-position: 0 -18px;}
-				.ztree li span.button.noline_close.level0 {background-position: -18px -18px;}
-		</style>
     <!--[if lt IE 9]>
       <script src="common/html5shiv.min.js"></script>
       <script src="common/respond.min.js"></script>
@@ -132,12 +65,6 @@
 								</div>
 								<div class="m-folder-wrap">
 									  <div class="g-folders">
-									  	<!--<ul data-level="1">
-									  		<li>
-									  			<a href="javascript:;" class="icon-file">我的项目</a>
-									  			
-									  		</li>
-									  	</ul>-->
 									  	<ul id="treeDemo" class="ztree"></ul>
 									  </div>
 								</div>
@@ -145,7 +72,7 @@
 						</div>
 						<div class="content-col">
 							<div class="content-wrapper">
-								<iframe id="iframepage" src="editBI.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+								<iframe id="iframepage1" src="html/menuSet.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
 							</div>
 						</div>
 					</div>
@@ -167,7 +94,7 @@
 						</div>
 						<div class="content-col">
 							<div class="content-wrapper">
-								<iframe id="iframepage" src="html/loglist.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+								<iframe id="iframepage2" src="html/loglist.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
 							</div>
 						</div>
 					</div>
@@ -175,141 +102,39 @@
 		</div>
 		<!--模态框-->
 		<!--创建文件夹-->
-		<div class="file-mod modal">
-			<h3>新建文件夹<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="select-tree-box">
-				
+		<div class="file-mod" style="display: none">
+			<div id="fileTrees" class="select-tree-box ztree">
 			</div>
 			<p class="file-name-after">
 				<label for="">文件夹名称：</label>
 				<input type="text" />
 			</p>
-			<div class="file-btns-col">
-				<button>新建文件夹</button>
-				<span class="fr">
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
 		</div>
 		
 		<!--创建子模块-->
-		<div class="submodule modal">
-			<h3>创建子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="select-tree-box">
-				
+		<div class="submodule" style="display: none;">
+			<div  id="subTrees" class="select-tree-box ztree">
 			</div>
 			<p class="file-name-after">
 				<label for="">子模块名称：</label>
 				<input type="text" />
 			</p>
-			<div class="file-btns-col">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
 		</div>
 		
 		<!--创建最终子模块-->
-		<div class="subfinalmodule modal">
-			<h3>创建最终子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="select-tree-box">
-				
+		<div class="subfinalmodule" style="display: none;">
+			<div id="finalSubTrees" class="select-tree-box ztree">
 			</div>
 			<p class="file-name-after">
 				<label for="">最终子模块名称：</label>
 				<input type="text" />
 			</p>
-			<div class="file-btns-col">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
-		</div>
-		
-		<!--新建etl文件-->
-		<div class="etlfile modal">
-			<h3>创建最终子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="select-tree-box">
-				
-			</div>
-			<p class="file-name-after">
-				<label for="">最终子模块名称：</label>
-				<input type="text" />
-			</p>
-			<div class="file-btns-col">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
-		</div>
-		
-		<!--新建作业流文件-->
-		<div class="jobstream modal">
-			<h3>新建作业流文件<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="select-tree-box">
-				
-			</div>
-			<p class="file-name-after">
-				<label for="">新建作业流文件：</label>
-				<input type="text" />
-			</p>
-			<div class="file-btns-col">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
-		</div>
-		
-		<!--新建bi文件-->
-		<div class="bifile modal">
-			<h3>创建最终子模块<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="select-tree-box">
-				
-			</div>
-			<p class="file-name-after">
-				<label for="">最终子模块名称：</label>
-				<input type="text" />
-			</p>
-			<div class="file-btns-col">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
 		</div>
 		
 		<!--切换版本-->
-		<div class="cut-version modal">
-			<h3>切换版本<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="cut-version" style="display: none;">
 			<div class="version-lists-box">
-				<ul>
-					<li>
-						<img src="images/icon_circle_on.png" alt="" />
-						<input type="radio" name="version-name" checked="true"/>
-						<span>版本1.0.0</span>
-					</li>
-					<li>
-						<img src="images/icon_circle.png" alt="" />
-						<input type="radio" name="version-name"/>
-						<span>版本1.0.0</span>
-					</li>
-					<li>
-						<img src="images/icon_circle.png" alt="" />
-						<input type="radio" name="version-name"/>
-						<span>版本1.0.0</span>
-					</li>
-				</ul>
-			</div>
-			<div class="file-btns-col mcenter">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
+				<ul></ul>
 			</div>
 		</div>
 		
@@ -337,8 +162,7 @@
 		</div>
 		
 		<!--创建项目-->
-		<div class="creat-new-projs modal">
-			<h3>添加项目<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="creat-new-projs" style="display: none;">
 			<div class="create-proj-detail">
 					<div>
 						<label for=""><em>*</em>项目名称：</label>
@@ -356,40 +180,27 @@
 						<label for=""><em>*</em>调度类型：</label>
 						<input type="text" name="projtype" id="projtype"/>
 					</div>
-					<div class="file-btns-col">
-						<span>
-							<button id="cre-proj-btn">确定</button>
-							<button id="del-cre-proj-btn">取消</button>
-						</span>
-					</div>
 			</div>
 		</div>
 		
 		<!--修改显示名称-->
-		<div class="modify-param-name modal">
-			<h3>修改显示名称<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="modify-param-name" style="display: none;">
+			<!--<h3>修改显示名称<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>-->
 			<p class="file-name-after">
 				<label for="">显示名称：</label>
 				<input type="text" />
 			</p>
-			<div class="file-btns-col">
+			<!--<div class="file-btns-col">
 				<span>
 					<button>确定</button>
 					<button>取消</button>
 				</span>
-			</div>
+			</div>-->
 		</div>
 		
 		<!--提交测试-->
-		<div class="submit-test modal">
-			<h3>提交测试<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="submit-test" style="display:none">
 			<input type="text" placeholder="请输入版本号" />
-			<div class="file-btns-col mcenter">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>
 		</div>
 		
 		<!--数据源配置-->
@@ -691,14 +502,9 @@
 		</div>
     <script src="plugin/jQuery/jquery.min.js"></script>
     <script src="plugin/zTree/jquery.ztree.all.min.js"></script>
-   	<!--<script src="plugin/validate/jquery.validate.min.js"></script>-->
-    <!--<script src="plugin/validate/messages_zh.min.js"></script>-->
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script src="plugin/layer/layer.js"></script>
-    <!--<script src="plugin/layui-v2.1.3/layui/layui.js"></script>-->
     <script src="plugin/basicContext/basicContext.min.js"></script>
-    <!--<script src="plugin/context/context.js"></script>-->
-    <script src="plugin/zSize/jquery_zsize.js"></script>
     <script src="js/todo.js"></script>
     <script src="js/tree.js"></script>
   </body>

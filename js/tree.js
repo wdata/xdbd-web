@@ -1,31 +1,50 @@
 $(function(){
+	
+	/*
+	 
+	 * 常用参数说明
+	 * projectId -- 项目id
+	 * versionId -- 版本id
+	 * version   -- 版本
+	 * publishType  发布环境（1-测试发布，2-提交发布）
+	 * 
+	 * */
+	var projectId = "";
+	var versionId = "";
+	var version = "";
+	var publishType = 1;
+	
 	/*
 	 
 	 * 创建项目
 	 * */
-	//step1:提交创建项目信息
-	$("#cre-proj-btn").click(function(){
-		var $projname = $.trim($("#projname").val()),
-			$projdesp = $.trim($("#projdesp").val()),
-			$projpath = $.trim($("#projpath").val()),
-			$projtype = $.trim($("#projtype").val());
-		if($projname&&$projdesp&&$projpath&&$projtype){
-			$(this).parents(".modal").hide();
-			createProjInfo($projname,$projdesp,$projpath,$projtype);
-			$("#projdesp").val("");
-			$("#projpath").val("");
-			$("#projtype").val("");
-			$("#projname").val("");
-		}else{
-			layer.msg("不能有空字段", {icon: 5});
-		}
-	});
-	$("#del-cre-proj-btn").click(function(){
-		$(this).parents(".modal").hide();
-		$("#projdesp").val("");
-		$("#projpath").val("");
-		$("#projtype").val("");
-		$("#projname").val("");
+	$("#create-proj-btn").click(function(){
+		var index = layer.open({
+		      type: 1,
+		      btn: ['确定', '取消'],
+		      area: ['660px', '530px'],
+		      title:'创建项目',
+		      shadeClose: true, //点击遮罩关闭
+		      content:$(".creat-new-projs"),
+		      yes: function(index, layero){
+		      	var $projname = $.trim($("#projname").val()),
+					$projdesp = $.trim($("#projdesp").val()),
+					$projpath = $.trim($("#projpath").val()),
+					$projtype = $.trim($("#projtype").val());
+				if($projname&&$projdesp&&$projpath&&$projtype){
+					createProjInfo($projname,$projdesp,$projpath,$projtype);
+				}else{
+					layer.msg("不能有空字段", {icon: 5});
+				}
+		      	layer.close(index);
+		      },
+		      btn2:function(){
+		      	layer.close(index);
+		      },
+		      cancel:function(){
+		      	layer.close(index);
+		      }
+		   });
 	});
 	function createProjInfo(name,desp,path,type){
 		$.ajax({
@@ -42,6 +61,7 @@ $(function(){
 			success:function(res){
 				console.log(res);
               	if(res.code===0){
+              		getProjName(0);//刷新项目树
 					layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -56,20 +76,22 @@ $(function(){
 	 * 获取项目树名称
 	 * */
 	var zNodes = [];
-	getProjName();
+	var dirType = "";//目录类型
+	var directoryId ="";//目录id
+	var directoryName = "";//目录名称
+	getProjName(0);
 	function getProjName(id){
 		$.ajax({
 			type:'POST',
             url:'/bigdata/project/findProjectTree',
             dataType:'json',
-	          contentType: "application/json",
+	        contentType: "application/json",
 			data:JSON.stringify({
-				
+				"id":id
 			}),
 			success:function(res){
               	if(res.code===0){
-              		zNodes = res.data;
-					console.log(zNodes);
+              		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
 					var treeObj = $("#treeDemo");
 					$.fn.zTree.init(treeObj, setting, zNodes);
 					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
@@ -95,47 +117,45 @@ $(function(){
 	 * 项目树初始化
 	 * */
 	var curMenu = null, zTree_Menu = null;
-		var setting = {
-			view: {
-				showLine: false,
-				showIcon: false,
-				selectedMulti: false,
-				dblClickExpand: false,
-				addDiyDom: addDiyDom
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				beforeClick: beforeClick,
-				onClick: zTreeOnClick
+	var setting = {
+		view: {
+			showLine: false,
+			showIcon: false,
+			selectedMulti: false,
+			dblClickExpand: false,
+			addDiyDom: addDiyDom
+		},
+		data: {
+			simpleData: {
+				enable: true
 			}
-		};
-
-		/*var zNodes =[
-				{ id:1, pId:0, name:"我的项目", open:true},
-				{ id:11, pId:1, name:"迪庆大数据11",ppss:1,children:[
-							{ id:111, pId:11, ppss:3,name:"首页",children:[
-							{ id:112, ppss:31,name:"菜单设计"},
-							{ id:113, ppss:32,name:"页面"},
-							{ id:114, ppss:33,name:"页面流"}
-						]
-					},
-					{ id:116, pId:11, ppss:4,name:"子模块"},
-					{ id:117, pId:11, ppss:5,name:"最终子模块",children:[
-							{ id:118,ppss:51,name:"ETL"},
-							{ id:119,ppss:52,name:"作业流"},
-							{ id:1110,ppss:53,name:"BI"}
-						]
-					},
-				]
-			},
-			{ id:12, pId:1, name:"迪庆大数据12",ppss:2}
-			
-		];*/
-		
+		},
+		callback: {
+			beforeClick: beforeClick,
+			onClick: zTreeOnClick
+		}
+	};
+	
+	//弹出框项目树设置
+	var subSetting = {
+		view: {
+			showLine: false,
+			showIcon: false,
+			selectedMulti: false,
+			dblClickExpand: false,
+			addDiyDom: addDiyDom
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			beforeClick: beforeClick,
+			onClick: leftKeyClick
+		}
+	};
+	
 		/*
 		 
 		 * 目录类型定义
@@ -144,36 +164,350 @@ $(function(){
 		 * 2=首页,
 		 * 3=菜单设置,
 		 * 4=页面流,
-		 * 5=页面,
+		 * 5=页面,(首页目录下边子目录)---可 创建文件夹类型和（14）
 		 * 6=模块,---- items4
 		 * 7=最终模块,
-		 * 8=ETL,
-		 * 9=作业流,
-		 * 10=BI,
-		 * 11=ETL文件夹,--------------- items1 ETL右键目录
-		 * 12=BI文件夹,---------------- items2 BI右键目录
-		 * 13=作业流文件夹------------- items3 作业流文件夹
+		 * 8=ETL文件夹,--------------- items1 ETL右键目录
+		 * 9=作业流文件夹,------------- items3 作业流文件夹
+		 * 10=BI报表
+		 * 11=BI页面---------------- items2 BI右键目录
+		 * 12=ETL文件,
+		 * 13=作业流文件,
+		 * 14=页面文件（首页5目录下创建的页面的类型）
+		 * 15=BI页面文件
 		 * 
-		
+
 		* */
+		
 		var createSubmodule = function(){
-			$(".submodule").show();
+			findCurTree("subTrees",directoryId);
+			var index = layer.open({
+			      type: 1,
+			      btn: ['确定', '取消'],
+			      area: ['490px', '530px'],
+			      title:'创建子模块',
+			      shadeClose: true, //点击遮罩关闭
+			      content:$(".submodule"),
+			      yes: function(index, layero){
+			      	var submoduleName = $.trim($(".submodule input").val());
+			      	if(submoduleName){
+			      		confirmCreateSubmodule(directoryId,submoduleName);//创建子模块
+			      		getProjName(0);//刷新左侧树数据
+			      	}else{
+			      		layer.msg("请输入文件夹名称", {icon: 5});
+			      	}
+			      	layer.close(index);
+			      },
+			      btn2:function(){
+			      	layer.close(index);
+			      },
+			      cancel:function(){
+			      	layer.close(index);
+			      }
+			   });
 		};
+		//确认创建子模块、文件夹
+		function confirmCreateSubmodule(directoryId,name){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/project/createSubProject',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"directoryId":directoryId,
+					"name":name
+				}),
+				success:function(res){
+	              	if(res.code===0){
+	              		getProjName(0);//刷新左侧树数据
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
 		var createFinalSubmodule = function(){
-			$(".subfinalmodule").show();
+			findCurTree("finalSubTrees",directoryId);
+			var index = layer.open({
+			      type: 1,
+			      btn: ['确定', '取消'],
+			      area: ['490px', '530px'],
+			      title:'创建最终子模块',
+			      shadeClose: true, //点击遮罩关闭
+			      content:$(".subfinalmodule"),
+			      yes: function(index, layero){
+			      	var subfinalmoduleName = $.trim($(".subfinalmodule input").val());
+			      	if(subfinalmoduleName){
+			      		confirmCreateFinalSubmodule(directoryId,subfinalmoduleName);//创建最终子模块
+			      		getProjName(0);//刷新左侧树数据
+			      	}else{
+			      		layer.msg("请输入文件夹名称", {icon: 5});
+			      	}
+			      	layer.close(index);
+			      },
+			      btn2:function(){
+			      	layer.close(index);
+			      },
+			      cancel:function(){
+			      	layer.close(index);
+			      }
+			   });
 		};
+		function confirmCreateFinalSubmodule(directoryId,name){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/project/createEndProject',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"directoryId":directoryId,
+					"name":name
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+	              		getProjName(0);//刷新左侧树数据
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
 		var checkInTest = function(){
-			alert('checkInTest');
+			var index = layer.open({
+			      type: 1,
+			      btn: ['确定', '取消'],
+			      area: ['490px', '200px'],
+			      title:'提交发布',
+			      shadeClose: true, //点击遮罩关闭
+			      content:$(".submit-test"),
+			      yes: function(index, layero){
+			      	var version = $.trim($(".submit-test input").val());
+			      	if(version){
+			      		confirmCheckedInTest(projectId,versionId,version,publishType);
+			      	}else{
+			      		layer.msg("请输入版本号", {icon: 5});
+			      	}
+			      	layer.close(index);
+			      },
+			      btn2:function(){
+			      	layer.close(index);
+			      },
+			      cancel:function(){
+			      	layer.close(index);
+			      }
+			   });
 		};
+		//publishType 1-测试发布  2-提交发布
+		function confirmCheckedInTest(projectId,versionId,version,publishType){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/project/publishProject',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"projectId":projectId,
+					"versionId":versionId,
+					"version":version,
+					"publishType":publishType
+				}),
+				success:function(res){
+					//console.log(res);
+	              	if(res.code===0){
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
 		var switchVersion = function(){
-			$(".cut-version").show();
+			findProjVersion(projectId);
+//			$(".cut-version").show();
+			var index = layer.open({
+			      type: 1,
+			      btn: ['确定', '取消'],
+			      area: ['490px', '330px'],
+			      title:'切换版本',
+			      shadeClose: true, //点击遮罩关闭
+			      content:$(".cut-version"),
+			      yes: function(index, layero){
+			      	var $curLi = $(".cut-version li input:checked").parent("li"),
+			      		curVersion = $curLi.attr("version"),
+			      		curVersionId = $curLi.attr("versionid"),
+			      		curProjectId = $curLi.attr("projectid"),
+			      		curRemark = $curLi.attr("remark");
+			      		console.log(curVersionId);
+			      		//switchProjVersion(curVersionId);
+			      	layer.close(index);
+			      },
+			      btn2:function(){
+			      	layer.close(index);
+			      },
+			      cancel:function(){
+			      	layer.close(index);
+			      }
+			   });
+			
 		};
+		
+		//查询版本
+		function findProjVersion(projectId){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/projectVersion/findVersion',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"projectId":projectId
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						var data = res.data;
+						var html = "";
+						$.each(data, function(i,item) {
+							html += `
+								<li projectId="${item.projectId}" versionId="${item.versionId}" version="${item.version}" isRelease="${item.isRelease}" isActive="${item.isActive}" status="${item.status}" remark="${item.remark}">
+									<img src="${i===0?'images/icon_circle_on.png':'images/icon_circle.png'}" alt="" />
+									<input type="radio" name="version-name" ${i===0?"checked":""}/>
+									<span>${item.version}</span>
+								</li>
+							`
+						});
+						$(".version-lists-box ul").empty().append(html);
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
+		//是否保存版本
+		function saveProjVersion(versionId,version,remark){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/projectVersion/saveVersion',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"versionId":versionId,
+					"version":version,
+					"remark":remark
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
+		//切换版本
+		function switchProjVersion(versionId){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/projectVersion/saveVersion',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"versionId":versionId
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
+		//版本切换样式
+		$(".cut-version ul").delegate("li","click",function(){
+			var $s = $(this).find("input[name]:checked"),
+				$idx = $s.parent().index();
+				$s.prev("img").attr("src","images/icon_circle_on.png");
+				$s.parent("li").siblings().find("img").attr("src","images/icon_circle.png");
+			
+		})
+		
 		var leadingIn = function(){
-			alert('leadingIn');
+			var index = layer.confirm('确认导入文件?', {
+			  btn: ['确定','取消'] //按钮
+			}, function(index){
+ //			  confirmLeadingIn();
+ 				alert('导入文件');
+			  layer.close(index);
+			  
+			}, function(index){
+			 	layer.close(index);
+			});
 		};
+		
+		function confirmLeadingIn(){
+			$.ajax({
+				type:'POST',
+	            url:'/biddata/project/exportProject',
+	            dataType:'json',
+	            contentType: "application/json",
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
 		var leadingOut = function(){
-			alert('leadingOut');
+			var index = layer.confirm('确认导出项目?', {
+			  btn: ['确定','取消'] //按钮
+			}, function(index){
+ 			  confirmLeadingOut(projectId);
+ 				alert('导出项目');
+			  layer.close(index);
+			  
+			}, function(index){
+			 	layer.close(index);
+			});
 		};
+		
+		function confirmLeadingOut(projectId){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/project/importProject',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"projectId":projectId
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						layer.msg(res.message, {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
 		var dataSourceConfig = function(){
 			alert('dataSourceConfig');
 		};
@@ -181,17 +515,45 @@ $(function(){
 			$(".proj-attr").show();
 		};
 		var newFile = function(){
-	    	alert('新建文件夹');
+	    	findCurTree("fileTrees",directoryId);
+			var index = layer.open({
+			      type: 1,
+			      btn: ['确定', '取消'],
+			      area: ['490px', '530px'],
+			      title:'创建文件夹',
+			      shadeClose: true, //点击遮罩关闭
+			      content:$(".file-mod"),
+			      yes: function(index, layero){
+			      	var filesName = $.trim($(".file-mod input").val());
+			      	if(filesName){
+			      		confirmCreateSubmodule(directoryId,filesName);//创建文件夹
+			      		getProjName(0);//刷新左侧树数据
+			      	}else{
+			      		layer.msg("请输入文件夹名称", {icon: 5});
+			      	}
+			      	layer.close(index);
+			      },
+			      btn2:function(){
+			      	layer.close(index);
+			      },
+			      cancel:function(){
+			      	layer.close(index);
+			      }
+			   });
 	   	};
+	   	
     	var newEtl = function(){
-    		alert('newEtl');
+    		$("#iframepage1").attr("src","html/stencilmanage.html");
     	};
     	var newBi = function(){
-    		alert('newBi');
+    		$("#iframepage1").attr("src","html/biTemplet.html");
     	};
     	var newJob = function(){
     		alert('newJob');
     	};
+    	var createFpage = function(){
+    		alert('Fpage');
+    	}
 		var items = [];
 		var items0 = [
 			{ title: '创建子模块', fn: createSubmodule},
@@ -211,40 +573,74 @@ $(function(){
 			{ title: '新建BI文件', fn: newBi},
 			{ title: '新建文件夹', fn: newFile }
 		];
-		var item3 = [
+		var items3 = [
 			{ title: '新建作业流', fn: newJob},
 			{ title: '新建文件夹', fn: newFile }
 		];
-		var item4 = [
+		var items4 = [
 			{ title: '创建子模块', fn: createSubmodule},
 			{ title: '创建最终子模块', fn: createFinalSubmodule}
 		];
+		var items5 = [
+			{ title: '新建文件夹', fn: newFile},
+			{ title: '创建页面', fn: createFpage}
+		];
 		function zTreeOnClick(){
-			var curClickedDom = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
-			var dirType = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0].directoryType;
+			var curTreeObj = $.fn.zTree.getZTreeObj("treeDemo");
+			var curClickedDom = curTreeObj.getSelectedNodes();
+			dirType = curTreeObj.getSelectedNodes()[0].directoryType;//目录类型
+			directoryId = curTreeObj.getSelectedNodes()[0].directoryId;//目录id
+			directoryName = curTreeObj.getSelectedNodes()[0].name;//目录名称
+			projectId = curTreeObj.getSelectedNodes()[0].projectId;//项目id
+			versionId = curTreeObj.getSelectedNodes()[0].versionId;//版本id
+			//version = curTreeObj.getSelectedNodes()[0].version;//版本
+			
+			localStorage.setItem("projectId",projectId);
+			localStorage.setItem("versionId",versionId);
+			console.log(localStorage.getItem("projectId"));
+			console.log(localStorage.getItem("versionId"));
 			console.log(dirType);
 			switch(dirType){
-				case 1:
+				case "1":
 					items = items0;
 				break;
-				case 11:
+				case "8":
 					items = items1;
 				break;
-				case 12:
+				case "11":
 					items = items2;
 				break;
-				case 13:
+				case "9":
 					items = items3;
 				break;
-				case 6:
+				case "6":
 					items = items4;
 				break;
+				case "5":
+					items = items5;
+					break;
+				case "3":
+					$("#iframepage1").attr("src","html/menuSet.html");//菜单设置
+					break;
+				case "4":
+					$("#iframepage1").attr("src","html/pageFlow.html");//页面流
+					break;
 				default:
 					items = []
 			}
+			console.log("1="+items);
 		}
-		var onRightKey = function(e){
-				basicContext.show(items1, e);
+		
+		//弹出框树
+		function leftKeyClick(){
+			var curTreeObj = $.fn.zTree.getZTreeObj("subTrees");
+			var curClickedDom = curTreeObj.getSelectedNodes();
+			directoryId = curTreeObj.getSelectedNodes()[0].directoryId;//目录id
+			console.log("1=="+directoryId)
+		}
+		
+		var onRightKey = function(e){console.log("2="+items);
+				basicContext.show(items, e);
 			}
 		$("#treeDemo").delegate("li","contextmenu",function(e){
 	    	onRightKey(e);
@@ -271,19 +667,47 @@ $(function(){
 			}
 			return true;
 		}
-
-		$(document).ready(function(){
-			/*var treeObj = $("#treeDemo");
-			$.fn.zTree.init(treeObj, setting, zNodes);
-			zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-			curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
-			zTree_Menu.selectNode(curMenu);
-			treeObj.hover(function () {
-				if (!treeObj.hasClass("showIcon")) {
-					treeObj.addClass("showIcon");
+		
+		/*
+		 
+		 * 根据目录 Id 查询树
+		 * 
+		 * 参数说明
+		 * selectorId--树容器的id选择器
+		 * dirId-------目录id
+		 * 
+		 * */
+		
+		function findCurTree(selectorId,dirId){
+			$.ajax({
+				type:'POST',
+	            url:'/bigdata/project/findProjectTreeById',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"id":dirId
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						var treeObj = $("#"+selectorId+"");
+						$.fn.zTree.init(treeObj, setting, res.data);
+						zTree_Menu = $.fn.zTree.getZTreeObj(""+selectorId+"");
+						curMenu = zTree_Menu.getNodes()[0];
+						zTree_Menu.selectNode(curMenu);
+						treeObj.hover(function () {
+							if (!treeObj.hasClass("showIcon")) {
+								treeObj.addClass("showIcon");
+							}
+						}, function() {
+							treeObj.removeClass("showIcon");
+						});
+		            }
+				},
+				error:function(err){
+					console.log(err);
 				}
-			}, function() {
-				treeObj.removeClass("showIcon");
-			});*/
-		});
+			});
+		}
+
 })//jq end
