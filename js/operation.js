@@ -4,7 +4,8 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,copy_data = {} // 复制后保存数据；
     ,data_type = ""  // 作为判断图形的；
     ,number=0   // 层级
-    ,modelId = null; // 记录dataModelId值；
+    ,modelId = null // 记录dataModelId值；
+    ,url = "http://192.168.1.15:8023"
 
 var projectId = "95263f4682354ce6aa7a904f1394d381",
     pageId = "dbfad73bd6c0447bb9efaa5037e7a3b3",
@@ -382,11 +383,52 @@ function histogramData(data){
 var textEdit = {
   color:function(){
       $(document).on("click",".color-row span",function(){
-          console.log($(this).attr("data-color"))
+          $("#"+id_).find(".content-text").css('color',)
+          // document.execCommand("foreColor",false,$(this).attr("data-color"));
+      })
+  },
+  fontSize:function(){
+      $(".set-text-size select").on("change",function(){
+          document.execCommand("fontSize",false,$(this).val());
+      })
+  },
+  fontFamily:function(){
+      $(".set-text-family select").on("change",function(){
+          document.execCommand("fontName",false,$(this).val());
+      })
+  },
+  fontStyle:function(){
+      $(".set-text-weight img").on("click",function(){
+          $(this).addClass("active").siblings().removeClass("active");
+          if($(this).is(".bold")){
+              document.execCommand("bold",false);
+          }else if($(this).is(".italic")){
+              document.execCommand("italic",false);
+          }else if($(this).is(".underline")){
+              document.execCommand("underline",false);
+          }
+      })
+  },
+  textAlign:function(){
+      $(".set-text-align img").on("click",function(){
+          $(this).addClass("active").siblings().removeClass("active");
+          if($(this).is(".justifyLeft")){
+              document.execCommand("justifyLeft",false);
+          }else if($(this).is(".justifyCenter")){
+              document.execCommand("justifyCenter",false);
+          }else if($(this).is(".justifyRight")){
+              document.execCommand("justifyRight",false);
+          }
+          console.log(document.execCommand("bold"));
       })
   }
 };
 textEdit.color();
+textEdit.fontSize();
+textEdit.fontFamily();
+textEdit.fontStyle();
+textEdit.textAlign();
+
 
 
 
@@ -471,11 +513,10 @@ function imageUpload (_this){
 }
 /*  上传图片预览  */
 function imgPreview(_this){
-    var isAllow = false;
     if(_this.value==='')return false;
     var $file = $(_this);
     var fileObj = $file[0];
-    var windowURL = window.URL || window.webkitURL;
+    // var windowURL = window.URL || window.webkitURL;
     var dataURL;
 
     if(fileObj && fileObj.files && fileObj.files[0]) {
@@ -488,67 +529,66 @@ function imgPreview(_this){
         form.append("cid",cahrt_type + number);  // 控件ID
 
         // 上传图片
-        // $.ajax({
-        //     type:"post",
-        //     url:"/bi/report/v1/file.json",
-        //     data:form,
-        //     contentType: false,
-        //     processData: false,
-        //     success:function(data){
-        //         console.log(data);
-        //     },
-        //     error:function(){
-        //
-        //     }
-        // });
+        $.ajax({
+            type:"post",
+            url:" /bi/report/v1/controlImage.json",
+            data:form,
+            contentType: false,
+            processData: false,
+            success:function(data){
+                // dataURL = windowURL.createObjectURL(fileObj.files[0]);
+                dataURL = url + data.data.url;
+                //读取图片数据
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    //加载图片获取图片真实宽度和高度
+                    var image = new Image();
+                    image.onload = function(){
+                        // 这部分是显示图片
+                        var width = image.width;
+                        var height = image.height;
+                        var p =  ( height / width ).toFixed(2);   // 宽高比例，小数点后两位
+                        var c = $(".edit-libs-box");  // 内容区
+                        var cW = parseInt(c.css("width"));  // 内容区宽度
+                        var cH = parseInt(c.css("height"));  // 内容区宽度
+                        var w = width;  // 元素宽度
+                        var h = height;  // 元素高度
+                        var left =  (cW - w) / 2; // 距离左边距离
+                        var top =   (cH - h) / 2; // 距离顶部边距离
 
 
-        dataURL = windowURL.createObjectURL(fileObj.files[0]);
-        //读取图片数据
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var data = e.target.result;
-            //加载图片获取图片真实宽度和高度
-            var image = new Image();
-            image.onload = function(){
-                // 这部分是显示图片
-                var width = image.width;
-                var height = image.height;
-                var p =  ( height / width ).toFixed(2);   // 宽高比例，小数点后两位
-                var c = $(".edit-libs-box");  // 内容区
-                var cW = parseInt(c.css("width"));  // 内容区宽度
-                var cH = parseInt(c.css("height"));  // 内容区宽度
-                var w = width;  // 元素宽度
-                var h = height;  // 元素高度
-                var left =  (cW - w) / 2; // 距离左边距离
-                var top =   (cH - h) / 2; // 距离顶部边距离
+                        if(width >= cW){
+                            // 如果图片真实大小大于内容区，则最大宽度为内容区宽度；
+                            w = cW;
+                            h = cW * p;
+                            left = 0;
+                            top =   (cH - h) / 2;
+                        }
+                        // console.log("图片宽度：" + width,"内容区宽度：" + cW,"元素宽度：" + w,"元素高度：" + h,"图片宽度：" + height,"比例：" + p,"距离左边距离：" + left,"距离顶部边距离：" + top);
+                        c.append('<div data-type="'+ cahrt_type +'" type="'+ cahrt_type +'" style=" z-index:'+ number +'; left:'+ left +'px;top:'+ top +'px;width:'+ w +'px;height:'+ h +'px;" id="'+ cahrt_type + number +'" class="resize-item"><div class="image-class"><img src="'+ dataURL +'"></div></div>');
+
+                        id_ = cahrt_type + number;
+                        number++;
+                        new ZResize({
+                            stage: '.edit-libs-box', //舞台
+                            itemClass: 'resize-item'//可缩放的类名
+                        });
+
+                        // 将图片存入数据库
 
 
-                if(width >= cW){
-                    // 如果图片真实大小大于内容区，则最大宽度为内容区宽度；
-                    w = cW;
-                    h = cW * p;
-                    left = 0;
-                    top =   (cH - h) / 2;
-                }
-                // console.log("图片宽度：" + width,"内容区宽度：" + cW,"元素宽度：" + w,"元素高度：" + h,"图片宽度：" + height,"比例：" + p,"距离左边距离：" + left,"距离顶部边距离：" + top);
-                c.append('<div data-type="'+ cahrt_type +'" type="'+ cahrt_type +'" style=" z-index:'+ number +'; left:'+ left +'px;top:'+ top +'px;width:'+ w +'px;height:'+ h +'px;" id="'+ cahrt_type + number +'" class="resize-item"><div class="image-class"><img src="'+ dataURL +'"></div></div>');
-
-                id_ = cahrt_type + number;
-                number++;
-                new ZResize({
-                    stage: '.edit-libs-box', //舞台
-                    itemClass: 'resize-item'//可缩放的类名
-                });
-
-                // 将图片存入数据库
+                    };
+                    image.src= data;
+                };
+                reader.readAsDataURL(fileObj.files[0]);
 
 
-            };
-            image.src= data;
-        };
-        reader.readAsDataURL(fileObj.files[0]);
+            },
+            error:function(){
 
+            }
+        });
 
     } else {
         dataURL = $file.val();
