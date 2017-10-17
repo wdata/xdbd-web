@@ -1,3 +1,9 @@
+a:hover {
+	background-color: transparent;
+}
+li {
+	list-style-type: none;
+}
 .drag-bar {
 	width: auto;
 }
@@ -269,7 +275,26 @@
 }
 .m-tcont-box2>ul li {
 	position: relative;
+	height: 26px;
 	line-height: 26px;
+}
+.m-menu-tag {
+	display: inline-block;
+	width: 120px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.top-reedit {
+	position: absolute;
+	left: 0;
+	z-index: 2;
+	/*background-color: transparent;*/
+	border: 1px solid #ccc;
+	width: 100px;
+	height: 14px;
+	padding:5px 9px;
+	font-size: 12px;
+	display: none;
 }
 .m-navs-order-btns {
 	height: 26px;
@@ -279,6 +304,7 @@
 }
 .m-navs-order-btns>img {
 	padding: 6px 5px;
+	cursor: pointer;
 }
 .m-tcont-box2>input:last-of-type{
 	width: 59px;
@@ -502,7 +528,57 @@
 	left: 0;
 }
 .swiper-button-next, .swiper-button-prev{
-	width: 30px;
+	width: 36px;
     height: 30px;
     margin-top: -15px;
 }
+.swiper-slide.active{
+	color: #007AFF;
+}
+
+.le-add-menu {
+	border:1px solid #ddd;
+	display:block;
+	margin:40px auto 10px;
+	padding:5px 9px;
+	width:180px;
+	height:14px;
+	font-size:12px;
+}
+/*.ztree li span.button.add {
+	margin-left:2px; 
+	margin-right: -1px; 
+	background-position:-144px 0; 
+	vertical-align:top; 
+	*vertical-align:middle;
+}*/
+.ztree li a {
+	/*display: block;*/
+	/*width: 100%;*/
+}
+.ztree li ul{ 
+	margin:0; 
+	padding:0;
+	overflow-x: hidden;
+}
+.ztree li ul {
+}
+.ztree li {line-height:30px;}
+.ztree li a {display:block;height:30px;padding-top: 0px;}
+.ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
+.ztree li a span.button.switch {visibility:hidden}
+.ztree.showIcon li a span.button.switch {visibility:visible}
+.ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
+.ztree li span.button{
+	background-image: url(../images/left_menuForOutLook.png);
+}
+.ztree li span {line-height:30px;}
+.ztree li span.button {margin-top: -7px;}
+.ztree li span.button.switch {width: 16px;height: 16px;}
+.ztree li a.level0 span {font-size: 100%;font-weight: bold;}
+.ztree li span.button.switch.level0 {width: 20px; height:20px}
+.ztree li span.button.switch.level1 {width: 20px; height:20px}
+.ztree li span.button.noline_open {background-position: 0 0;}
+.ztree li span.button.noline_close {background-position: -18px 0;}
+.ztree li span.button.noline_open.level0 {background-position: 0 -18px;}
+.ztree li span.button.noline_close.level0 {background-position: -18px -18px;}

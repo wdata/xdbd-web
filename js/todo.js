@@ -69,112 +69,7 @@ $(function(){
 		s.parent("li").siblings().find("img").attr("src","images/icon_circle.png");
 	});
 	
-	//创建项目-->自定义右键
-	/*var createSubmodule = function(){
-		$(".submodule").show();
-	};
-	var createFinalSubmodule = function(){
-		$(".subfinalmodule").show();
-	};
-	var onClick = function(e) {
-		var checkInTest = function(){
-			alert('checkInTest');
-		};
-		var switchVersion = function(){
-			$(".cut-version").show();
-		};
-		var leadingIn = function(){
-			alert('leadingIn');
-		};
-		var leadingOut = function(){
-			alert('leadingOut');
-		};
-		var dataSourceConfig = function(){
-			alert('dataSourceConfig');
-		};
-		var setProperty = function(){
-			$(".proj-attr").show();
-		};
-
-		var items = [
-			{ title: '创建子模块', fn: createSubmodule},
-			{ title: '创建最终子模块', fn: createFinalSubmodule },
-			{ title: '提交测试', fn: checkInTest },
-			{ title: '切换版本', fn: switchVersion },
-			{ title: '导入', fn: leadingIn },
-			{ title: '导出', fn: leadingOut},
-			{ title: '数据源配置', fn: dataSourceConfig },
-			{ title: '属性', fn: setProperty }
-		];
-		basicContext.show(items, e);
-	};
-	$("#treeDemo").delegate("li","contextmenu",function(e){
-    	onClick(e);
-    });
-    
-    //创建项目-->ETL自定义右键-etlfile
-    var newFile = function(){
-    	alert('新建文件夹');
-    };
-    var etlClick = function(e){
-    	var newEtl = function(){
-    		alert('newEtl');
-    	};
-    	var items = [
-			{ title: '新建ETL', fn: newEtl},
-			{ title: '新建文件夹', fn: newFile }
-		];
-		basicContext.show(items, e);
-    };
-    $(".g-folders").delegate(".etlfile","contextmenu",function(e){
-    	etlClick(e);
-    });
-    
-    //创建项目-->作业流自定义右键-jobstream
-    var jobClick = function(e){
-    	var newJob = function(){
-    		alert('newJob');
-    	};
-    	var items = [
-			{ title: '新建作业流', fn: newJob},
-			{ title: '新建文件夹', fn: newFile }
-		];
-		basicContext.show(items, e);
-    };
-    $(".g-folders").delegate(".jobstream","contextmenu",function(e){
-    	jobClick(e);
-    });
-    
-    //创建项目-->BI页面自定义右键-bifile
-    var biClick = function(e){
-    	var newBi = function(){
-    		alert('newBi');
-    	};
-    	var items = [
-			{ title: '新建BI文件', fn: newBi},
-			{ title: '新建文件夹', fn: newFile }
-		];
-		basicContext.show(items, e);
-    };
-    $(".g-folders").delegate(".bifile","contextmenu",function(e){
-    	biClick(e);
-    });
-    
-    //创建项目-->创建子模块右键
-    var biClick = function(e){
-    	var newBi = function(){
-    		alert('newBi');
-    	};
-    	var items = [
-			{ title: '创建子模块', fn: createSubmodule },
-			{ title: '创建最终子模块', fn: createFinalSubmodule }
-		];
-		basicContext.show(items, e);
-    };
-    $(".g-folders").delegate(".submod","contextmenu",function(e){
-    	biClick(e);
-    });
-    */
+	
     //点击图标类型按钮--生成可拖拽缩放的div
  	$(".u-btn-class").draggable({
 		appendTo: "",
@@ -213,31 +108,6 @@ $(function(){
             });
         }
 	});
-	
-	//维度和度量的拖拽交换
-	/*$( ".placeholder li").draggable({
-	    appendTo: "body",
-	    helper: "clone"
-	});*/
-	/*$( ".placeholder" ).droppable({
-      drop: function( event, ui ) {
-      	this.appendChild(ui.helper.context)
-      }
-   	});*/
-	//拖拽度量和维度拖拽到x/y轴
-	/*$(".axis-empty").droppable({
-		accept: ".placeholder li",
-		drop: function( event, ui ) {
-			console.log($(this));
-			var text='';
-			$(this).prev().children("ul").find("li").each(function(){
-				text+=$(this).text();
-			});
-			if(text.indexOf(ui.draggable.text())==-1){
-				$("<li></li>").html( ui.draggable.html() ).appendTo( $(this).prev().children("ul"));
-			}
-		}
-	})*/
 	
 	//拖拽度量和维度到数据筛选框
 	$(".data-empty").droppable({
@@ -322,11 +192,6 @@ $(function(){
 		$(".f-box"+($idx+1)).show().siblings().hide();
 	});
 	
-	//创建项目右键
-//	if($("#tree").length){
-		
-//	}
-		
 	
 	
 });
