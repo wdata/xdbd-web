@@ -305,18 +305,23 @@ function clear(id){
     var choose = true;
     eleFocus(); // 根据现在选中类型，变化
     $.each(save_arr,function(index,item) {
-        console.log(item.cid === id);
-        if(item.cid === id) {
+        if(item.cid === id && item.queryJson) {
             var x_param='',y_param='',filter='';
-            $.each(item.queryJson.x,function(x,item){
-                x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
-            });
-            $.each(item.queryJson.y,function(y,item){
-                y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
-            });
-            $.each(item.queryJson.filter,function(y,item){
-                filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
-            });
+            if(item.queryJson.x){
+                $.each(item.queryJson.x,function(x,item){
+                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                });
+            }
+            if(item.queryJson.y){
+                $.each(item.queryJson.y,function(y,item){
+                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                });
+            }
+            if(item.queryJson.filter){
+                $.each(item.queryJson.filter,function(y,item){
+                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                });
+            }
             $(".x-pills ul").empty().html(x_param);
             $(".y-pills ul").empty().html(y_param);
             $(".datas-pills ul").empty().html(filter);

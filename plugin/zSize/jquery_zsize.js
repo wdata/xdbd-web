@@ -386,7 +386,7 @@
                     data_type = $(this).attr("data-type");
                     clear(id_);
                 }
-                shutDownC();  //    关闭文本编辑区
+                // shutDownC();  //    关闭文本编辑区
             });
             el.on('dblclick', function(e) {
                 e.stopPropagation();

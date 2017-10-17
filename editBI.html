@@ -87,6 +87,9 @@
 				word-wrap: break-word;
 				text-align: left;
 			}
+			.content-text>div i{
+				font-style:italic;
+			}
 			.image-class
 			,.image-class img{
 				width: 100%;
@@ -308,7 +311,7 @@
 								</div>
 								<!--表格 end-->
 								<!--文本 start-->
-								<div class="text-attr-box">
+								<div class="text-attr-box" style="display: none">
 									<div class="title-box">
 										<h3>文本</h3>
 										<div class="set-text-attr">
@@ -320,14 +323,14 @@
 													</div>
 												</div>
 												<div class="set-text-size sc-color">
-													<select name="" id="">
-														<option value="12">12</option>
-														<option value="14">14</option>
-														<option value="16">16</option>
-														<option value="20">20</option>
-														<option value="24">24</option>
-														<option value="32">32</option>
-														<option value="48">48</option>
+													<select name="">
+														<option value="1">9</option>
+														<option value="2">10</option>
+														<option selected value="3">12</option>
+														<option value="4">14</option>
+														<option value="5">16</option>
+														<option value="6">20</option>
+														<option value="7">24</option>
 													</select>
 													<i class="fa fa-caret-down"></i>
 												</div>
@@ -345,15 +348,15 @@
 												</div>
 												<div class="set-text-weight wa-text">
 													<span>样式</span>
-													<img src="images/t_bold.png" alt="" title="font-size:bold" class="active"/>
-													<img src="images/t_italic.png" alt="" title="fotn-style:italic" />
-													<img src="images/t_underline.png" alt="" title="text-decoration:underline" />
+													<img src="images/t_bold.png" alt="" title="font-size:bold" class="bold"/>
+													<img src="images/t_italic.png" alt="" title="fotn-style:italic"  class="italic" />
+													<img src="images/t_underline.png" alt="" title="text-decoration:underline" class="underline" />
 												</div>
 												<div class="set-text-align wa-text">
 													<span>对齐</span>
-													<img src="images/t_left.png" alt="" title="left" class="active"/>
-													<img src="images/t_center.png" alt="" title="center" />
-													<img src="images/t_right.png" alt="" title="right" />
+													<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
+													<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
+													<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
 												</div>
 											</div>
 										</div>

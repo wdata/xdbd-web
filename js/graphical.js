@@ -1118,7 +1118,7 @@ function manyChart (id,data){
     var  dim_height=10;//每行维度之间的间距
     var dim2_num=null;//保存第二维度的个数
     var idA = $(id);
-    var margin = {top: 20, right: 40, bottom: 20, left: 20},
+    var margin = {top: 40, right: 40, bottom: 20, left: 20},
         width = idA.width() - margin.left - margin.right,
         height = idA.height() - margin.top - margin.bottom;
     var color=d3.scale.category20();
@@ -1149,10 +1149,14 @@ function manyChart (id,data){
 
     var XLeft = 0;
     var YTop = 0;
+    var XRight = 0;
+
+
     var record = [];
 
 
     var Yfq = 0;
+    console.log(height);
     var ma = cale(JSON.parse(JSON.stringify(y_axials.valueTree)),height - YTop);
     YAxis(ma);
     function YAxis(data){
@@ -1185,7 +1189,7 @@ function manyChart (id,data){
                     }
                 }
                 var c = d.cale * d.count?d.cale * d.count:0;
-                var h = d.calePar + c + d.cale/2 + dim_height;
+                var h = d.calePar + c + d.cale/2;
                 s += d.cale;
                 len.push((d.value + "").length);
                 return h;
@@ -1214,7 +1218,7 @@ function manyChart (id,data){
 
     //绘制X轴维度
     var Xfq = 0;
-    var maX = cale(JSON.parse(JSON.stringify(x_axials.valueTree)),width - XLeft);
+    var maX = cale(JSON.parse(JSON.stringify(x_axials.valueTree)),width - XLeft - 90 );
     Xaxis(maX);
     function Xaxis(data){
         var s = 0;
@@ -1500,52 +1504,64 @@ function manyChart (id,data){
             ,ticks = 2;
         if(charts.meaAxis === "y"){
             mX = width - margin.right;
-            if(maxLength > 6) mX = mX - 12 * (maxLength - 6);
-            mY = dim_height + YTop - margin.top/2;
+//                if(maxLength > 6) mX = mX - 12 * (maxLength - 6);
+//                console.log( 12 * (maxLength - 6));
+            mY = dim_height + YTop;
+//                range = height - YTop - dim_height - (data.length-1) * mY;
             range = height - YTop - dim_height;
             orient = "right";
-            ticks = 2;
+            ticks = 3;
             mXY = mY;
         }else{
             mX = XLeft;
             mY = height;
+//                range = width - XLeft - (data.length-1) * mY;
             range = width - XLeft;
             orient = "bottom";
             ticks = 5;
             mXY = mX;
         }
         for(var h=0;h<data.length;h++) {
+//                measureLength.push([(range / data.length) * h + (data.length-1) * mY , (range / data.length) * (h + 1)  + (data.length-1) * mY,mXY,max]);
             measureLength.push([(range / data.length) * h , (range / data.length) * (h + 1),mXY,max]);
             var x2 = d3.scale.linear()
                 .domain([0, max])
+                //                    .range([(range / data.length) * h + (data.length-1) * mY , (range / data.length) * (h + 1) + (data.length-1) * mY])
                 .range([(range / data.length) * h , (range / data.length) * (h + 1)])
                 .nice();
             var xAxis2 = d3.svg.axis()
                 .scale(x2)
                 .orient(orient)
-                .ticks(ticks);
+                .ticks(ticks)
+                .tickFormat(d3.format("s"));             // 数字后面格式
             svg.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(" + mX + "," + mY + ")")
+                .attr("transform", function(d,i){
+//                        return "translate(" + mX + "," + mY * h + ")";
+                    return "translate(" + mX + "," + mY + ")";
+                })
                 .call(xAxis2);
         }
         return measureLength;
     }
 
 
-    var hint='',icon='';
-
-
 //            绘制X轴维度title
-//            var texts_g=svg.append("g")
-//                .attr("class", "title")
-//                .attr("transform", "translate(-"+margin.left+",-"+margin.top+")")
-//                .append("text")
-//                .attr("x", width/2)
-//                .attr("y", 20)
-//                .text(hint)
-//                .attr("fill","red")
-//                .attr("text-anchor", "top");
+    var texts_g = svg.append("g")
+        .attr("class", "title")
+        .attr("transform", "translate(-"+margin.left+",-"+margin.top+")")
+        .append("text")
+        .attr("x", width/2)
+        .attr("y", height)
+        .attr("fill","red")
+        .attr("text-anchor", "top");
+    texts_g.selectAll()
+        .data(meaList)
+        .enter()
+        .append("text")
+        .text(function(d,i){
+            return d.meaTitle;
+        });
 
 }
 
