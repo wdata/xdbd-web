@@ -83,7 +83,7 @@ $(function(){
              }
             },
             error:function(res){
-                console.log(1);
+                // console.log(1);
             }
         });
 	}
@@ -282,6 +282,9 @@ $(function(){
 
     //文本的颜色初始化
     $('[name="unique-name-1"]').paletteColorPicker();
+    $('[name="unique-name-2"]').paletteColorPicker();
+    $('[name="unique-name-3"]').paletteColorPicker();
+    $('[name="unique-name-4"]').paletteColorPicker();
 
 
 });//jquery end 
@@ -305,7 +308,7 @@ function clear(id){
     var choose = true;
     eleFocus(); // 根据现在选中类型，变化
     $.each(save_arr,function(index,item) {
-        if(item.cid === id && item.queryJson) {
+        if(item.cid === id && item.queryJson && (item.customData.dataType === "chart" || item.customData.dataType === "table" )) {
             var x_param='',y_param='',filter='';
             if(item.queryJson.x){
                 $.each(item.queryJson.x,function(x,item){
@@ -331,7 +334,7 @@ function clear(id){
             // 全部属性
             var type = eachGPdata(item.type);
             $(".chart-type-val span").text(type);
-            // 遍历修改颜色
+            // 遍历修改属性颜色
             $.each($(".chart-type-lists ul li "),function(index,val){
                if($(val).find("span").text() === type){
                     $(val).addClass("active")
@@ -348,6 +351,43 @@ function clear(id){
                 $(".chart-type-val span").text("饼图");
             }
         }
+        // 图片
+        if(item.customData.dataType === "price"){
+            var price = item.customData.price;
+            if(price.ratio){
+                $(".set-price-prop input").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");
+            }else{
+                $(".set-price-prop input").removeattr("checked").siblings("img").attr("src","images/xuankuang.png");
+            }
+            var style = "";
+            switch(price["border-style"]){
+                case "dotted":style = "点线";
+                    break;
+                case "dashed":style = "虚线";
+                    break;
+                case "solid":style = "实线";
+                    break;
+                case "none":style = "实线";
+                    break;
+            }
+            $(".set-price-border-style select").val(style);
+            $(".set-price-border select").val(price["border-width"]);
+            $(".set-price-radius input").val(price["border-radius"]);
+        }
+        // 文本
+        if(item.customData.dataType === "text"){
+            var text = item.customData.text;
+            $(".set-text-attr-wrap .palette-color-picker-button").css("background-color",text.color);
+        }
+        // 按钮
+        if(item.customData.dataType === "button"){
+            var button = item.customData.button;
+            $("#buttonText").val(button.content);
+            $(".set-button-color .palette-color-picker-button").css("background-color",text["background-color"]);
+            $(".set-button-size select").val(parseInt(text['font-size']));
+            $(".set-button-SizeColor .palette-color-picker-button").css("background-color",text["font-size"]);
+        }
+
     });
     
 }
@@ -369,7 +409,6 @@ function eleFocus(){
 
 // 根据type判断是图形、表格、文本、图片、按钮
 function typeHideShow(id,type){
-    var ele = $("#" + id);
     switch(type){
         case "chart":
             $(".chart-attr-box").show().siblings().hide();
@@ -381,6 +420,9 @@ function typeHideShow(id,type){
             $(".text-attr-box").show().siblings().hide();
             break;
         case "image":
+            $(".price-attr-box").show().siblings().hide();
+            break;
+        case "button":
             $(".button-attr-box").show().siblings().hide();
             break;
         default:
