@@ -102,7 +102,7 @@ $(document).ready(function() {
             {
                 text: '置于低层',
                 action: function (e) {
-                    context.getClickEle().css("z-index",-1);
+                    context.getClickEle().css("z-index",0);
                 }
             },
             {
@@ -127,7 +127,6 @@ $(document).ready(function() {
         }}
     ]);
 });
-
 
 function save_config(id){
 
@@ -155,7 +154,7 @@ var refresh = {
         chart_date.type = this.typeData($("#"+ id +"").attr("data-type"),$(".chart-type-val span").text());
         this.dataSource(id,chart_date);   // 获取X,Y
         DataIndexes.inAjax(chart_date,id); // 请求数据
-        this.only(index_arr,chart_date);  // 存入数组
+        this.only(index_arr,chart_date);  // // 数据根据ID唯一，并将数据添加进入保存数组
         // console.log(index_arr);
     },
     // 整体数据
@@ -164,8 +163,6 @@ var refresh = {
         var chart_date={
             'cid':id,
             "style":{},
-            // "type":$("#chart_type").val(),
-            // "displayLevel":0,
             // "linkPageId":null,    // 点击控件要跳转的页面ID
             "customData":null,    // 各控件类型自定义的数据
             "queryJson":{
@@ -181,8 +178,8 @@ var refresh = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 类型
         };
         this.dataSource(id,chart_date);  // 获取X,Y
-        this.whz(id,chart_date);         // 获取宽高
-        this.only(save_arr,chart_date,id);  // 输入数组
+        this.whz(id,chart_date);         // // 根据ID返回宽、高、度、定位、层级、控件类型type值
+        this.only(save_arr,chart_date,id);  // 数据根据ID唯一，并将数据添加进入保存数组
         // console.log(save_arr);
     },
     // 修改文本内容，并存入数据save_arr中
@@ -191,8 +188,6 @@ var refresh = {
         var chart_date= {
             'cid': id,
             "style": {},
-            // "type":$("#chart_type").val(),
-            // "displayLevel":0,
             // "linkPageId":null,    // 点击控件要跳转的页面ID
             "customData": null,    // 各控件类型自定义的数据
             "queryJson": null
@@ -202,17 +197,69 @@ var refresh = {
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "text":{
-                "fontSize":text.css("font-size"),                      // 大小
+                "content":$(text).html(),                    // 对齐方式
                 "color":text.css("color"),                             // 颜色
-                "fontFamily":text.css("font-family"),                 // 字体
-                "fontWeight":text.css("font-weight"),                  // 加粗
-                "fontStyle":text.css("font-style"),                    // 斜体
-                "textDecorationLine":text.css("text-decoration-line"),        // 下划线
-                "textAlign":text.css("text-align"),                    // 对齐方式
+                // "fontSize":text.css("font-size"),                      // 大小       (这些全部包含在HTML中，和富文本编辑器类似，因为选择颜色会修改焦点，所以没有办法在HTML中修改颜色)
+                // "fontFamily":text.css("font-family"),                 // 字体
+                // "fontWeight":text.css("font-weight"),                  // 加粗
+                // "fontStyle":text.css("font-style"),                    // 斜体
+                // "textDecorationLine":text.css("text-decoration-line"),        // 下划线
+                // "textAlign":text.css("text-align"),                    // 对齐方式
             }
         };
-        this.whz(id,chart_date);
-        this.only(save_arr,chart_date,id);
+        this.whz(id,chart_date);// 根据ID返回宽、高、度、定位、层级、控件类型type值
+        this.only(save_arr,chart_date,id);// 数据根据ID唯一，并将数据添加进入保存数组
+        // console.log(chart_date);
+    },
+    // 修改图片内容时，保存数据到svae_arr中
+    priceData:function(id){
+        var chart_date= {
+            'cid': id,
+            "style": {},
+            // "linkPageId":null,    // 点击控件要跳转的页面ID
+            "customData": null,    // 各控件类型自定义的数据
+            "queryJson": null
+        };
+        // 自定义数据
+        var ele = $("#" + id).find(".image-class");
+        chart_date.customData = {
+            "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
+            "price":{
+                "url":$(ele).html(), // 图片路径
+                "ratio":$(".set-price-prop input").is(":checked"), //是否保存宽高比缩放
+                "border-color":$(ele).css("border-color"), //边框颜色
+                "border-style":$(ele).css("border-style"), //边框样式
+                "border-width":$(ele).css("border-width"), //边框宽度
+                "border-radius":$(ele).css("border-radius"), //边框圆角
+            }
+        };
+        this.whz(id,chart_date);// 根据ID返回宽、高、度、定位、层级、控件类型type值
+        this.only(save_arr,chart_date,id);// 数据根据ID唯一，并将数据添加进入保存数组
+        // console.log(chart_date);
+    },
+    // 修改按钮内容时，保存数据到svae_arr中
+    buttonData:function(id){
+        var chart_date= {
+            'cid': id,
+            "style": {},
+            // "linkPageId":null,    // 点击控件要跳转的页面ID
+            "customData": null,    // 各控件类型自定义的数据
+            "queryJson": null
+        };
+        // 自定义数据
+        var ele = $("#" + id).find(".content-button button");
+        var color = $(ele).css("font-color")?$(ele).css("font-color"):"#000";
+        chart_date.customData = {
+            "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
+            "button":{
+                "content":$(ele).html(), // 按钮文本内容
+                "background-color":$(ele).css("background-color"), // 背景颜色和边框颜色
+                "font-size":$(ele).css("font-size"), // 文本字体大小
+                "font-color":color, // 文本字体颜色
+            }
+        };
+        this.whz(id,chart_date);// 根据ID返回宽、高、度、定位、层级、控件类型type值
+        this.only(save_arr,chart_date,id);// 数据根据ID唯一，并将数据添加进入保存数组
         // console.log(chart_date);
     },
     // 获取右侧维度、度量、数据筛选
@@ -291,6 +338,7 @@ var refresh = {
         }
         return type;
     },
+    // 数据根据ID唯一，并将数据添加进入保存数组
     only:function(d,chart_date,id){
         // 根据ID唯一活动数据唯一
         var bur = true;
@@ -372,31 +420,28 @@ var DataIndexes = {
     }
 };
 
-// 编辑柱状图数据
-function histogramData(data){
-    var z = [];
-    $.each(data.dim.dimX,function(index,val){
-
-    })
-}
 // 文本编辑器
 var textEdit = {
+    // 文本字体颜色
   color:function(){
-      $(document).on("click",".color-row span",function(){
-          $("#"+id_).find(".content-text").css('color',)
+      $(document).on("click",".set-price-color .color-row span",function(){
+          $("#"+id_).find(".content-text").css('color',$(this).attr("data-color"))
           // document.execCommand("foreColor",false,$(this).attr("data-color"));
       })
   },
+    // 文本字体大小 1-7尺寸
   fontSize:function(){
       $(".set-text-size select").on("change",function(){
           document.execCommand("fontSize",false,$(this).val());
       })
   },
+    // 文本字体类型
   fontFamily:function(){
       $(".set-text-family select").on("change",function(){
           document.execCommand("fontName",false,$(this).val());
       })
   },
+    // 文本字体：加粗、斜体、下划线
   fontStyle:function(){
       $(".set-text-weight img").on("click",function(){
           $(this).addClass("active").siblings().removeClass("active");
@@ -409,6 +454,7 @@ var textEdit = {
           }
       })
   },
+    // 文本对齐方式：向左、居中、向右
   textAlign:function(){
       $(".set-text-align img").on("click",function(){
           $(this).addClass("active").siblings().removeClass("active");
@@ -423,12 +469,127 @@ var textEdit = {
       })
   }
 };
-textEdit.color();
-textEdit.fontSize();
-textEdit.fontFamily();
-textEdit.fontStyle();
-textEdit.textAlign();
+textEdit.color();// 文本字体颜色
+textEdit.fontSize();// 文本字体大小 1-7尺寸
+textEdit.fontFamily();// 文本字体类型
+textEdit.fontStyle();// 文本字体：加粗、斜体、下划线
+textEdit.textAlign(); // 文本对齐方式：向左、居中、向右
 
+// 按钮编辑
+var buttonEdit = {
+    main:function(){
+        refresh.buttonData(id_);
+    },
+    // 按钮文字
+    ButtonText:function(){
+        $("#buttonText").on("change",function(){
+            $("#"+id_).find("button").text($(this).val())
+            buttonEdit.main();
+        })
+    },
+    // 按钮背景颜色和边框线颜色
+    BackColor:function(){
+        $(document).on("click",".set-button-color .color-row span",function(){
+            $("#"+id_).find("button").css({
+                'background-color':$(this).attr("data-color"),
+                'border-color':$(this).attr("data-color")
+            })
+            buttonEdit.main();
+        });
+    },
+    // 按钮文字
+    ButtonSize:function(){
+        $(".set-button-size select").on("change",function(){
+            $("#"+id_).find("button").css("font-size",$(this).val() + "px")
+            buttonEdit.main();
+        })
+    },
+    // 按钮字体颜色
+    BackSizeColor:function(){
+        $(document).on("click",".set-button-SizeColor .color-row span",function(){
+            $("#"+id_).find("button").css('color',$(this).attr("data-color"))
+            buttonEdit.main();
+        })
+    }
+};
+buttonEdit.ButtonText();// 按钮文字
+buttonEdit.BackColor();// 按钮背景颜色和边框线颜色
+buttonEdit.ButtonSize();// 按钮文字
+buttonEdit.BackSizeColor();// 按钮字体颜色
+
+// 图片编辑
+var priceEdit = {
+    main:function(){
+        refresh.priceData(id_);
+    },
+    // 保持宽高比
+    ratio:function(){
+        $(".set-price-prop input").on("click",function(){
+            priceEdit.main();
+        })
+    },
+    // 边框 样式
+    borderStyle:function(){
+        var self = this;
+        $(".set-price-border-style select").on("change",function(){
+            // dotted	定义点状边框。在大多数浏览器中呈现为实线。       dashed	定义虚线。在大多数浏览器中呈现为实线。     solid	定义实线。
+            var style = self.borderStyleJud($(this).val());
+            $("#"+id_).find(".image-class").css("border-style",style);
+            priceEdit.main();
+        })
+    },
+    // 边框 颜色
+    borderColor:function(){
+        $(document).on("click",".set-price-color .color-row span",function(){
+            $("#"+id_).find(".image-class").css("border-color",$(this).attr("data-color"))
+            priceEdit.main();
+        });
+    },
+    // 边框 宽度
+    borderWidth:function(){
+        var self = this;
+        $(".set-price-border select").on("change",function(){
+            var color = $(".set-price-color .palette-color-picker-button").css("background-color") + " ";
+            var style = self.borderStyleJud($(".set-price-border-style select").val()) + " ";
+            var width = $(this).val() + "px ";
+            console.log(width + style + color);
+            $("#"+id_).find(".image-class").css("border",width + style + color);
+            priceEdit.main();
+        })
+    },
+    // 边框 圆角
+    borderRadius:function(){
+        $(".set-price-radius input").on("change",function(){
+            $("#"+id_).find(".image-class").css("border-radius",$(this).val() + "px")
+            priceEdit.main();
+        })
+    },
+    borderStyleJud:function(data){
+        var style = null;
+        switch(data){
+            case "点线":style = "dotted";
+                break;
+            case "虚线":style = "dashed";
+                break;
+            case "实线":style = "solid";
+                break;
+        }
+        return style;
+    }
+
+};
+priceEdit.ratio();// 保持宽高比
+priceEdit.borderStyle();// 边框 样式
+priceEdit.borderColor();// 边框 颜色
+priceEdit.borderWidth();// 边框 宽度
+priceEdit.borderRadius();// 边框 圆角
+
+var operating = {
+    // 保存
+    save:function(){
+        console.log(save_arr);
+    },
+};
 
 
 
@@ -481,7 +642,7 @@ function paste(){
 
 // 图片
 /*  上传图片大小格式验证  */
-function imageUpload (_this){
+function imageUpload(_this){
     var fileSize = 0;
     var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
     var name=_this.value;
@@ -576,7 +737,8 @@ function imgPreview(_this){
                         });
 
                         // 将图片存入数据库
-
+                        $(_this).val("");   // 清空input的内容
+                        refresh.priceData(id_);   // 保存图片数据
 
                     };
                     image.src= data;
