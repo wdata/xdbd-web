@@ -2,7 +2,7 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>工作流</title>
+    <title>ETL</title>
     <!--[if lt IE 9]>
     <?import namespace="v" implementation="#default#VML" ?>
     <![endif]-->
@@ -14,24 +14,44 @@
         .myForm .form_content{padding:4px;background:#fff;}
         .myForm .form_content table{border:0px}
         .myForm .form_content table td{border:0px}
-        .myForm .form_content table .th{text-align:right;font-weight:bold}
+        .myForm .form_content table .th{text-align:right;font-weight:bold;width: 139px;}
+        .myForm .form_content .form_profile tr td{width: 140px;}
+        .myForm .form_content .form_profile tr td.add_Btn{display:inline-block;width:18px;height:18px;line-height: 18px;
+            color: #fff;text-align: center;background: #40AFFE;border-radius: 50%;
+            cursor: pointer;}
+        .myForm .form_content .form_profile tr td.add_Btn:hover{background: #2e8ded}
         .myForm .form_btn_div{text-align:center;border-top:#ccc 1px solid;background:#f5f5f5;padding:4px;border-radius:0px 0px 3px 3px;}
-        #propertyForm{float:left;width:260px}
+        #propertyForm{overflow: hidden}
+        .hide{display: none;}
     </style>
     <script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/child.js"></script>
+    <!--<script type="text/javascript" src="../plugin/gooflow/childs.js"></script>-->
     <script type="text/javascript" src="../plugin/gooflow/GooFunc.js"></script>
     <!--<script type="text/javascript" src="../plugin/gooflow/json2.js"></script>-->
-    <script type="text/javascript" src="../plugin/gooflow/GooFlow.js"></script>
+    <script type="text/javascript" src="../plugin/gooflow/GooFlows.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/GooFlow.color.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/promise.min.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/html2canvas.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/GooFlow.export.js"></script>
+    <script type="text/javascript" src="../plugin/webContent/squel.min.js"></script>
+    <script src="../plugin/layer/layer.js"></script>
     <script>
+      var tables = {};
+      var actionComps;
+      var this_dsId = sessionStorage.getItem('dsid');
+      var this_actionId = sessionStorage.getItem('id');
+      var this_versionId = sessionStorage.getItem('verid');
+      var this_webComponentId;
+      var this_actionCompType;
+
+      init_dataSourceTables();
+      init_actionComp();
+      init_getAction();
+
       var property={
         width:1230,
         height:800,
-        toolBtns:["start round mix","end round","task","node","chat","state","plug","join","fork","complex mix"],
+        toolBtns:["groups","sort","where","output","input","join"],
         haveHead:true,
         headLabel:true,
         initLabelText:'流程图',
@@ -45,24 +65,43 @@
         cursor:"选择指针",
         direct:"结点连线",
         dashed:"关联虚线",
-        start:"入口结点",
-        "end":"结束结点",
-        "task":"任务结点",
-        node:"自动结点",
-        chat:"决策结点",
-        state:"状态结点",
-        plug:"附加插件",
-        fork:"分支结点",
-        "join":"联合结点",
-        "complex":"复合结点",
+//        start:"开始结点",
+//        "end":"结束结点",
+        //"task":"求和结点",
+        //node:"平均数结点",
+        groups:"分组结点",
+        sort:"排序结点",
+        where:"过滤结点",
+        output:"表输出结点",
+        input:"表输入结点",
+       // plug:"总行数结点",
+        join:"关联结点",
         group:"组织划分框编辑开关"
       };
       var demo;
-      $(document).ready(function(){
+      function showDag(actionDag){
         demo=$.createGooFlow($("#demo"),property);
         demo.setNodeRemarks(remark);
         demo.onItemDel=function(id,type){
           if(confirm("确定要删除该单元吗?")){
+            var delActionComp = {
+              actionId: this_actionId,
+              webComponentId: id
+            };
+            $.ajax({
+              type:"POST",
+              url:"/api/action/v1/delActionComp",
+              dataType:"json",
+              contentType:"application/json",
+              data:JSON.stringify(delActionComp),
+              success:function(data){
+                if(data.code == 0) {
+                  console.log('删除成功')
+                }
+              },error:function(data){
+                console.log(JSON.stringify(data))
+              }
+            })
             this.blurItem();
             return true;
           }else{
@@ -71,15 +110,18 @@
         };
         //导出图片功能 END
         var exportName="流程图";
-        demo.loadData(jsondata);
+        //alert(JSON.stringify(actionDag));
+        demo.loadData(actionDag);
         demo.onPrintClick=function(){demo.exportDiagram(exportName);}
         //demo.loadData(jsondata);
         demo.onItemFocus=function(id,model){
           var obj;
+
           $("#ele_model").val(model);
           $("#ele_id").val(id);
           if(model=="line"){
             obj=this.$lineData[id];
+            /**
             $("#ele_type").val(obj.M);
             $("#ele_left").val("");
             $("#ele_top").val("");
@@ -87,28 +129,36 @@
             $("#ele_height").val("");
             $("#ele_from").val(obj.from);
             $("#ele_to").val(obj.to);
+             */
           }else if(model=="node"){
             obj=this.$nodeData[id];
-            var bbb = [];
-            console.log(obj)
-            for(i in obj) {
-              bbb.push("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>");
-              console.log(i,obj[i])
-              console.log("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>")
-            }
-            $(".aaa").html(bbb);
-            console.log($(".aaa").html());
-            $("#ele_type").val(obj.type);
-            $("#ele_left").val(obj.left);
-            $("#ele_top").val(obj.top);
-            $("#ele_width").val(obj.width);
-            $("#ele_height").val(obj.height);
-            $("#ele_from").val("");
-            $("#ele_to").val("");
+            this_webComponentId=id;
+            this_actionCompType=obj.type;
+
+            //导入模板
+            $('.propertys').empty().load("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".html",function(){
+              $.getScript("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".js");
+            });
+//            var bbb = [];
+//            console.log(obj)
+//            for(i in obj) {
+//              bbb.push("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>");
+//              console.log(i,obj[i])
+//              console.log("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>")
+//            }
+//            $(".aaa").html(bbb);
+//            console.log($(".aaa").html());
+//            $("#ele_type").val(obj.type);
+//            $("#ele_left").val(obj.left);
+//            $("#ele_top").val(obj.top);
+//            $("#ele_width").val(obj.width);
+//            $("#ele_height").val(obj.height);
+//            $("#ele_from").val("");
+//            $("#ele_to").val("");
           }else if(model=="area") {
             console.log(model)
           }
-          $("#ele_name").val(obj.name);
+//          $("#ele_name").val(obj.name);
           return true;
         };
         demo.onItemBlur=function(id,model){
@@ -132,11 +182,13 @@
         demo.onFreshClick=function() {
           location.reload();
         };
-      });
+      };
       var out;
+//      dags = JSON.stringify(demo.exportData());
       function Export(){
-        console.log(demo.exportData())
-        document.getElementById("result").value=JSON.stringify(demo.exportData());
+        console.log(JSON.stringify(demo.exportData()))
+//          document.getElementById("result").value=JSON.stringify(demo.exportData());
+          return JSON.stringify(demo.exportData());
       }
       function ResetScale(){
         demo.resetScale( parseFloat(document.getElementById("wheelDelta").value) );
@@ -176,41 +228,259 @@
       //}//W3C
       //window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome
 
-      function updataBtn() {
-        console.log("aaaa")
+
+      function trigger_click_comp(id){
+        $('#'+id).trigger('click');
       }
+
+
+
+      //根据webComponentId获取actionComp
+      function fn_get_actionComp_by_webComponentId(webComponentId){
+        var actionComp;
+        $.each(actionComps,function(){
+          if(this.webComponentId==webComponentId){
+            actionComp = this;
+            return true;
+          }
+        });
+        return actionComp;
+      }
+
+      //根据fromTable获取fields
+      function fn_get_fields_by_fromTable(fromTable){
+        var fieldOut;
+        $.each(actionComps,function(){
+          if(this.tableOut==fromTable){
+            fieldOut = this.fieldOut;
+            return true;
+          }
+        });
+        return eval("("+fieldOut+")");
+      }
+
+      //根据fromTable获取sqlOut
+      function fn_get_sqlOut_by_fromTable(fromTable){
+        var sqlOut;
+        //alert(fromTable)
+        $.each(actionComps,function(){
+          if(this.tableOut==fromTable){
+            sqlOut = this.sqlOut;
+            return true;
+          }
+        });
+        return sqlOut;
+      }
+
+
+
+    //初始化数据表
+      function init_dataSourceTables(){
+        var parameter = {
+          'dsId':this_dsId
+        };
+        $.ajax({
+          type:"POST",
+          url:"http://192.168.1.149:2001/api/datasource/v1/getTableDetailList",
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify(parameter),
+          success:function(data){
+            var data = data.data;
+            //console.log(data);
+            $.each(data,function(){
+              tables[this.tableName] = this;
+            });
+          }
+        });
+      }
+
+      function fn_get_fromTable(){
+        return $('.fromTable').val();
+      }
+
+      function fn_set_fromTable(name){
+        $('.fromTable').val(name);
+      }
+
+      function fn_get_stepName(){
+        return $('.stepName').val();
+      }
+
+      function fn_set_stepName(name){
+        $('.stepName').val(name);
+      }
+
+      function fn_get_sqlOut(){
+        return $('.showSql').html();
+      }
+
+      function fn_set_sqlOut(sqlOut){
+        $('.showSql').html(sqlOut);
+      }
+
+      function fn_get_tableOut(tableOut){
+        return $('.tableOut').val();
+      }
+
+      function fn_set_tableOut(tableOut){
+        $('.tableOut').val(tableOut);
+      }
+
+      function fn_set_extractFields(extractFields){
+        var extractFieldHtml = $('.extractField').prop('outerHTML');
+        $('.extractField').remove();
+        $.each(extractFields,function(){
+          var table = this.table;
+          var field = this.field;
+          var alias = this.alias;
+          var fn = this.fn;
+          //alert(extractFieldHtml)
+          $('.extractFields').append(extractFieldHtml);
+
+          var extractField = $('.extractField:last');
+          extractField.find('.table').val(table);
+          extractField.find('.field').val(field);
+          extractField.find('.alias').val(alias);
+          extractField.find('.fn').val(fn);
+
+        });
+      }
+
+      function fn_get_extractFields(){
+        var ary = [];
+        $('.extractField').each(function(){
+          var data  = {};
+          var table = $(this).find('.table').val();
+          var field = $(this).find('.field').val();
+          var alias = $(this).find('.alias').val();
+          var fn = $(this).find('.fn').val();
+          if(table!=null){
+            data['table'] = table;
+          }
+          data['field'] = field;
+          data['alias'] = alias;
+          data['fn'] = fn;
+          ary.push(data);
+        });
+        return ary;
+      }
+
+      function fn_saveActionComp(val){
+        $.ajax({
+          type:"POST",
+          url:"/api/action/v1/saveActionComp",
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify(val),
+          success:function(data){
+            if(data.success){
+              init_actionComp();
+            }
+            alert(data.message);
+          }
+        });
+      }
+
+      //初始化任务组件
+      function init_actionComp(){
+        var parameter = {
+          'actionId':this_actionId,
+          'versionId':this_versionId
+        };
+        $.ajax({
+          type:"POST",
+          url:"/api/action/v1/getActionCompList",
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify(parameter),
+          success:function(data){
+            actionComps = data.data;
+          }
+        });
+      }
+    //展示有线无环图
+      function init_getAction() {
+        var parameter = {
+          'actionId':this_actionId,
+          'versionId':this_versionId
+        };
+        $.ajax({
+          type:"POST",
+          url:"/api/action/v1/getAction", //http://192.168.1.149:2001/api/action/v1/getAction
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify(parameter),
+          success:function(data){
+            var actionDag = {};
+            if(data.data != '' && data.data != null) {
+              actionDag = JSON.parse(data.data.dag);
+            }
+            showDag(actionDag);
+          }
+        });
+      }
+
+      //上传数据源
+        function fn_upload_parquet() {
+          var load = {
+            "actionId":this_actionId,
+            "versionId":this_versionId,
+            "webComponentId":this_webComponentId
+          }
+          $.ajax({
+            type:"POST",
+            url:"/api/action/v1/uploadParquet",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify(load),
+            success:function(data){
+              if(data.code == 0) {
+                layer.msg('上传成功')
+              }
+            }
+          });
+        }
+
+
+
     </script>
 </head>
 <body>
-<div id="demo" style="float:left"></div>
-<form class="myForm" id="propertyForm">
-    <div class="form_title">属性设置</div>
-    <div class="form_content">
-        <table>
-            <tr><td class="th">Id：</td><td><input type="text" style="width:120px" id="ele_id"/></td></tr>
-            <tr><td class="th">Name：</td><td><input type="text" style="width:120px" id="ele_name"/></td></tr>
-            <tr><td class="th">Type：</td><td><input type="text" style="width:120px" id="ele_type"/></td></tr>
-            <tr><td class="th">Model：</td><td><input type="text" style="width:120px" id="ele_model"/></td></tr>
-            <tr><td class="th">Left-r：</td><td><input type="text" style="width:120px" id="ele_left"/></td></tr>
-            <tr><td class="th">Top-r：</td><td><input type="text" style="width:120px" id="ele_top"/></td></tr>
-            <tr><td class="th">Width：</td><td><input type="text" style="width:120px" id="ele_width"/></td></tr>
-            <tr><td class="th">Height：</td><td><input type="text" style="width:120px" id="ele_height"/></td></tr>
-            <tr><td class="th">From：</td><td><input type="text" style="width:120px" id="ele_from"/></td></tr>
-            <tr><td class="th">To：</td><td><input type="text" style="width:120px" id="ele_to"/></td></tr>
-            <!--<tr><td class="th">：</td><td><input type="text" style="width:120px" id="ele_aa"/></td></tr>-->
-        </table>
-        <table class="aaa"></table>
-    </div>
-    <div class="form_btn_div">
-        <input type="reset" value="重置"/>
-        <input type="button" value="确定" onclick="updataBtn()"/>
-    </div>
-</form>
-<div style="clear:both">
-    <label for="wheelDelta">滚动值：</label><input type="text" id="wheelDelta" value="1">
-    <label for="detail">滚动值：</label><input type="text" id="detail" value="1"/>
-    <input id="submit" type="button" value='导出结果' onclick="Export()"/>
-    <textarea id="result" row="6"></textarea>
+<div style="min-width: 1610px">
+    <div id="demo" style="float:left"></div>
+    <form class="myForm propertys" id="propertyForm">
+        <!--<div class="form_title">属性设置</div>-->
+        <!--<div class="form_content">-->
+            <!--<table>-->
+                <!--<tr><td class="th">程序ID：</td><td><input type="text" style="width:120px" id="ele_id"/></td></tr>-->
+                <!--&lt;!&ndash;<tr><td class="th">Name：</td><td><input type="text" style="width:120px" id="ele_name" placeholder="name值"/></td></tr>&ndash;&gt;-->
+                <!--<tr><td class="th">数据类型：</td><td><input type="text" style="width:120px" id="ele_type"/></td></tr>-->
+                <!--&lt;!&ndash;<tr><td class="th">Model：</td><td><input type="text" style="width:120px" id="ele_model"/></td></tr>&ndash;&gt;-->
+                <!--&lt;!&ndash;<tr><td class="th">开始名称：</td><td><input type="text" style="width:120px" id="ele_start"/></td></tr>&ndash;&gt;-->
+                <!--&lt;!&ndash;<tr><td class="th">结束名称：</td><td><input type="text" style="width:120px" id="ele_end"/></td></tr>&ndash;&gt;-->
+                <!--&lt;!&ndash;<tr><td class="th">Left-r：</td><td><input type="text" style="width:120px" id="ele_left"/></td></tr>&ndash;&gt;-->
+                <!--&lt;!&ndash;<tr><td class="th">Top-r：</td><td><input type="text" style="width:120px" id="ele_top"/></td></tr>&ndash;&gt;-->
+                <!--&lt;!&ndash;<tr><td class="th">Width：</td><td><input type="text" style="width:120px" id="ele_width"/></td></tr>&ndash;&gt;-->
+                <!--&lt;!&ndash;<tr><td class="th">Height：</td><td><input type="text" style="width:120px" id="ele_height"/></td></tr>&ndash;&gt;-->
+                <!--<tr><td class="th">连接线初始点：</td><td><input type="text" style="width:120px" id="ele_from"/></td></tr>-->
+                <!--<tr><td class="th">连接线结束点：</td><td><input type="text" style="width:120px" id="ele_to"/></td></tr>-->
+                <!--<tr><td class="th">选择任务：</td><td><select type="text" style="width:125px" id="ele_genre"></select></td></tr>-->
+            <!--</table>-->
+            <!--<table class="form_profile"></table>-->
+        <!--</div>-->
+        <!--<div class="form_btn_div">-->
+            <!--<input type="reset" value="重置"/>-->
+            <!--<input type="button" value="确定" onclick="updataBtn()"/>-->
+        <!--</div>-->
+    </form>
+    <!--<div style="clear:both">-->
+        <!--<label for="wheelDelta">滚动值：</label><input type="text" id="wheelDelta" value="1">-->
+        <!--<label for="detail">滚动值：</label><input type="text" id="detail" value="1"/>-->
+        <!--<input id="submit" type="button" value='导出结果' onclick="Export()"/>-->
+        <div class="showSql"></div>
+        <!--<textarea id="result" row="6"></textarea>-->
 </div>
+</body>
 </body>
 </html>

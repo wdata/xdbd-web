@@ -2,9 +2,16 @@
  * Created by qiangxl on 2017/9/25.
  */
 var popups;
+var this_versionId = localStorage.getItem("versionId");
+var this_projectId = localStorage.getItem("projectId");
+var this_directoryId = localStorage.getItem("directoryId");
+var this_companyId = localStorage.getItem("companyId");
+var this_createUser = localStorage.getItem("createUser");
+var this_updateUser = localStorage.getItem("updataeUser");
+var this_rootPath = localStorage.getItem("rootPath");
 //调用工作流列表
 var getAll = {
-  projectId: 'proj0002'
+  projectId: this_projectId
 };
 $.ajax({
   type:"POST",
@@ -35,7 +42,8 @@ function outBtn(_this) {
 function deleteBtn(_this) {
   var parans = {
     ids:[$(_this).parents(".new_demand").attr("id")],
-    id: $(_this).attr("class")
+    id: $(_this).attr("class"),
+    versionId: this_versionId
   }
   $.ajax({
     type:"POST",
@@ -58,7 +66,8 @@ function deleteBtn(_this) {
 function demandBtn(_this) {
   console.log(_this)
   var demandId = {
-    id: $(_this).parents(".new_demand").attr("id")
+    id: $(_this).parents(".new_demand").attr("id"),
+    versionId: this_versionId
   }
   $.ajax({
     type:"POST",
@@ -113,13 +122,14 @@ function newBtn(popups) {
   } else {
     var res = {
       name: newName,
-      directoryId: 'dir0002',
-      projectId: 'proj0002',
-      createUser: '10001',
-      rotPath: '10001',
+      directoryId: this_directoryId,
+      projectId: this_projectId,
+      companyId: this_companyId,
+      createUser: this_createUser,
+      rotPath: this_rootPath,
       remark: newDescribe,
       businesss_type: newType,
-      versionId: 'v1'
+      versionId: this_versionId
     };
     $.ajax({
       type:"POST",
