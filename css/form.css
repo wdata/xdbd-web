@@ -1937,11 +1937,61 @@ div.tree-nav {
 	background-color: powderblue;
 	position: relative;
 }
+/*按钮 end*/
+.set-button-price-text p{
+	text-align: left;
+	padding-left: 12px;
+}
+.set-button-price-text input
+,.set-price-radius input{
+	width: 176px;
+	height: 28px;
+	box-sizing: border-box;
+	padding: 5px;
+	font-size: 12px;
+	border: 1px solid #CCCCCC;
+}
+.set-button,.set-price{
+	display: flex;
+	padding: 5px 12px;
+	align-items: center;
+}
+.set-button .set-text-size
+,.set-price-border .sc-color
+,.set-price-border-style .sc-color{
+	display: flex;
+	margin-left: 10px;
+}
+.set-price-border .sc-color
+,.set-price-border-style .sc-color
+,.set-price-border .sc-color select
+,.set-price-border-style .sc-color select{
+	width: 82px;
+}
+/*图片 end*/
+.set-price-prop{
+	padding: 5px 12px;
+}
+.set-price-prop input{
+	left: 12px;
+	top: 14px;
+}
+.set-price-prop img{
+	float: left;
+}
+.set-price-prop span{
+	float: left;
+	margin-left: 6px;
+}
+.set-price-radius input{
+	width: 82px;
+	margin-left: 36px;
+}
 /*index style*/
 .resize-item{
 	width: 150px;
 	height:150px;
-	border: 1px solid red;
+	/*border: 1px solid red;*/
 	position: absolute;
 	z-index: 10000;
 }
@@ -1987,7 +2037,7 @@ div.ztree {
 .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
 .ztree li a span.button.switch {visibility:hidden}
 .ztree.showIcon li a span.button.switch {visibility:visible}
-.ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
+.ztree li a.curSelectedNode {color: #FFFFFF;background-color: #038DFF;border:0;height:30px;}
 .ztree li span {line-height:30px;}
 .ztree li span.button {margin-top: -7px;}
 .ztree li span.button.switch {width: 16px;height: 16px;}

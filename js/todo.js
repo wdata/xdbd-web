@@ -92,6 +92,10 @@ $(function(){
                 case "table":
                     type="table";
                     break;
+                case "button":
+                    type="button";
+                    html = '<div class="content-button"><button></button></div>';
+                    break;
                 case "text":
                     html = '<div class="content-text"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
                     break;

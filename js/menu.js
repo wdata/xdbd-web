@@ -1,10 +1,53 @@
 $(function(){
+	
+	/*
+	 
+	 * 常用参数设置
+	 * 
+	 * projectId = localStorage.getItem("projectId")
+	 * projectVersionId = localStorage.getItem("versionId")
+	 * createUser
+	 * updateUser
+	 * 
+	 * parentId
+	 * */
+	
+	var projectId = "2c747fa149ca4efe9831a4bb85be00bd";
+	var projectVersionId = "1a93a112fa3d4b8aab436560fdd77ce0";
+	var dirId = "5305c5256ad74b86aede5e4414caa4de";
+	var createUser = "c1";
+	var updateUser ="c2"
+	var topMenu = [];//顶部导航菜单
+	var topMenuId = 0;//topMenu--id
+	var projectMenuId;//projectMenuId
+	var zNodes = [];//存放子菜单的数据
+	var LeftMenu = [];//存放左侧所有菜单
+	var pageId = [];//链接页面的id
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
 		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".m-cont"+$idx).show().siblings().hide();
-		
+		if($idx===2){
+			getTopMenu(projectId,projectVersionId);
+			var html = "";
+			console.log(topMenu);
+			$.each(topMenu, function(i,item) {
+				html += `
+					<div class="swiper-slide ${i===0?'active':''}" id="${item.id}" parentId="${item.parentId}" sortIndex="${item.sortIndex}">${item.menuName}</div>
+				`;
+			});
+			$("#link-scrollmenu").empty().append(html);
+			topMenuId = $("#link-scrollmenu").find(".active").attr("id");
+			findLeftMenu(projectId,projectVersionId,topMenuId);//查询左侧菜单
+			
+			var swiper = new Swiper('.swiper-container', {
+		        nextButton: '.swiper-button-next',
+		        prevButton: '.swiper-button-prev',
+		       	loop:true,
+		       	slidesPerView: 3
+		   });
+		}
 	    e.preventDefault()
 	})
 	
@@ -30,25 +73,6 @@ $(function(){
 		 e.preventDefault()
 	})
 	
-	/*
-	 
-	 * 常用参数设置
-	 * 
-	 * projectId = localStorage.getItem("projectId")
-	 * projectVersionId = localStorage.getItem("versionId")
-	 * createUser
-	 * updateUser
-	 * 
-	 * parentId
-	 * */
-	
-	var projectId = "2c747fa149ca4efe9831a4bb85be00bd";
-	var projectVersionId = "1a93a112fa3d4b8aab436560fdd77ce0";
-	var createUser = "c1";
-	var updateUser ="c2"
-	var topMenu = [];//顶部导航菜单
-	var parentId;//topMenu--id
-	var projectMenuId;//projectMenuId
 	//顶部菜单
 	$("#head-text-btn").click(function(){
 		var headText = $.trim($("#head-text").val());
@@ -96,6 +120,7 @@ $(function(){
               	if(res.code===0){
               		var data = res.data.slice(0,5);
               		var html = "";
+              		var html2 = "";//页面展示
               		topMenu = data;              		
               		$.each(data, function(i,item) {
               			html += `
@@ -109,9 +134,13 @@ $(function(){
 								</div>
 							</li>
               			`;
+              			html2 += `
+              				<li class="${i===0?'active':''}" id="${item.id}"><a href="javascript:;">${item.menuName}</a></li>
+              			`;
               		});
               		
               		$(".top-menu-15").empty().append(html);
+              		$(".mn-menu").empty().append(html2);
               		
 	            }
 			},
@@ -127,7 +156,7 @@ $(function(){
 	});
 	
 	
-	//blur或者enter的状态下判断input的value是否修改,修改则提交修改信息
+	//enter的状态下判断input的value是否修改,修改则提交修改信息
 	$(document).keydown(function(e){
 		if(e.which===13){
 			if(e.target.nodeName==='INPUT'&&$(e.target).attr("class")==="top-reedit"){
@@ -223,11 +252,33 @@ $(function(){
 		});
 	}
 	
+	$("#clearTopMenu").click(function(){
+		clearTopMenu(projectId,projectVersionId);
+	})
+	//清空顶部菜单
+	function clearTopMenu(projectId,projectVersionId){
+		$.ajax({
+			type:'GET',
+            url:'/api/v1/deleteProjectMenuAll',
+			data:{
+				"projectId":projectId,
+				"projectVersionId":projectVersionId
+			},
+			success:function(res){
+              	if(res.code===0){
+              		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
+              		layer.msg(res.message, {icon: 6});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
 	
 	//左边菜单
 	$(".leftMenuBtn").click(function(){
 		getTopMenu(projectId,projectVersionId);
-		console.log(topMenu);
 		var html = "";
 		$.each(topMenu, function(i,item) {
 			html += `
@@ -235,26 +286,19 @@ $(function(){
 			`;
 		});
 		$("#scroll-topmenu").empty().append(html);
-		parentId = $("#scroll-topmenu").find(".active").attr("id");
-		findLeftMenu(projectId,projectVersionId,parentId);//查询左侧菜单
+		topMenuId = $("#scroll-topmenu").find(".active").attr("id");
+		findLeftMenu(projectId,projectVersionId,topMenuId);//查询左侧菜单
 	});
-	
-	//点击头部菜单展示对应的左部菜单
-	$("#scroll-topmenu").delegate(".swiper-slide","click",function(){
-		$(this).addClass("active").siblings().removeClass("active");
-		parentId = $(this).attr("id");
-		findLeftMenu(projectId,projectVersionId,parentId)
-	})
 	
 	
 	
 	//顶部菜单相应匹配的左侧菜单
 	var setting = {
 		view: {
-			addHoverDom: addHoverDom,
-			removeHoverDom: removeHoverDom,
 			selectedMulti: false,
-			showIcon: false
+			showIcon: false,
+			showLine: false,
+			addDiyDom: addDiyDom
 		},
 		edit: {
 			enable: true
@@ -265,39 +309,30 @@ $(function(){
 			}
 		},
 		callback: {
-//			beforeEditName: beforeEditName,
-//			beforeRemove: beforeRemove,
-//			beforeRename: beforeRename,
-//			onRemove: onRemove,
-//			onRename: onRename
 			onClick: selectLeftMenu,
 			onRename:renameLeftMenu
 		}
 	};
-	var zNodes = [];//存放子菜单的数据
-	/*zNodes =[
-		{ id:1, pId:0, name:"父节点 1", open:true},
-		{ id:11, pId:1, name:"叶子节点 1-1"},
-		{ id:12, pId:1, name:"叶子节点 1-2"},
-		{ id:13, pId:1, name:"叶子节点 1-3"},
-		{ id:2, pId:0, name:"父节点 2", open:true},
-		{ id:21, pId:2, name:"叶子节点 2-1"},
-		{ id:22, pId:2, name:"叶子节点 2-2"},
-		{ id:23, pId:2, name:"叶子节点 2-3"},
-		{ id:3, pId:0, name:"父节点 3", open:true},
-		{ id:31, pId:3, name:"叶子节点 3-1"},
-		{ id:32, pId:3, name:"叶子节点 3-2"},
-		{ id:33, pId:3, name:"叶子节点 3-3"}
-	];*/
-		/*{
-            "id":"111",
-            "pId":"11",
-            "name":"子菜单111",
-            "checked":null,
-            "open":null,
-            "pageId":null,
-            "projectMenuId":24
-        }*/
+	
+	var setting1 = {
+		view: {
+			selectedMulti: false,
+			showIcon: false,
+			showLine: false,
+			addDiyDom: addDiyDom
+		},
+		edit: {
+			enable: true
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			onClick:createLink
+		}
+	};
 	
 	//添加
 	$(".le-add").click(function(){
@@ -309,10 +344,9 @@ $(function(){
 		      shade: 0, 
 		      content:'<input type="text" placeholder="请输入菜单名称" class="le-add-menu"/>',
 		      yes: function(index, layero){
-		      	var name = $.trim($(".le-add-menu").val());
-		      		if(name){
-				        addLeftMenu(createUser,name,projectMenuId);
-				        console.log(createUser,name,projectMenuId);
+		      	var menuName = $.trim($(".le-add-menu").val());
+		      		if(menuName){
+				        addLeftMenu(menuName,0,topMenuId,createUser);
 		      		}else{
 		      			layer.msg("菜单名称不能为空", {icon: 5});
 		      		}
@@ -327,18 +361,27 @@ $(function(){
 		   });
 	})
 	
+	//点击头部菜单展示对应的左部菜单
+	$("#scroll-topmenu").delegate(".swiper-slide","click",function(){
+		$(this).addClass("active").siblings().removeClass("active");
+		topMenuId = $(this).attr("id");
+		findLeftMenu(projectId,projectVersionId,topMenuId);
+	})
+	
 	//添加左侧菜单
-	function addLeftMenu(createUser,menuName,projectMenuId){
+	function addLeftMenu(menuName,projectMenuId,topMenuId,createUser){
 		$.ajax({
 			type:'POST',
             url:'/api/v1/saveProjectMenuLeft',
 			data:{
-				"createUser":createUser,
 				"menuName":menuName,
-				"projectMenuId":projectMenuId
+				"projectMenuId":projectMenuId,
+				"topMenuId":topMenuId,
+				"createUser":createUser
 			},
 			success:function(res){
               	if(res.code===0){
+              		findLeftMenu(projectId,projectVersionId,topMenuId);
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -350,22 +393,22 @@ $(function(){
 	
 //	findLeftMenu(projectId,projectVersionId,0);
 	//查询左侧菜单
-	function findLeftMenu(projectId,projectVersionId,parentId){
+	function findLeftMenu(projectId,projectVersionId,topMenuId){
 		$.ajax({
 			type:'GET',
             url:'/api/v1/findProjectMenuLeft',
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
-				"parentId":parentId
+				"parentId":topMenuId
 			},
 			success:function(res){
               	if(res.code===0){
               		zNodes = res.data;
-              		console.log(zNodes);
-              		$.fn.zTree.init($("#match-tree"), setting, zNodes);
-
-//            		layer.msg(res.message, {icon: 6});
+//            		if(zNodes){
+              			$.fn.zTree.init($("#match-tree"), setting, zNodes);
+              			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
+//            		}
 	            }
 			},
 			error:function(err){
@@ -374,15 +417,16 @@ $(function(){
 		});
 	}
 	
+	$(".le-close").click(function(){
+		deleteLeftMenu(projectMenuId);
+		findLeftMenu(projectId,projectVersionId,topMenuId);
+	});
 	
 	//删除左侧菜单
 	function deleteLeftMenu(id){
 		$.ajax({
-			type:'POST',
-            url:'/api/v1/deleteProjectMenuLeftById',
-			data:{
-				"id":id
-			},
+			type:'DELETE',
+            url:'/api/v1/deleteProjectMenuLeftById/'+id,
 			success:function(res){
               	if(res.code===0){
               		layer.msg(res.message, {icon: 6});
@@ -394,10 +438,25 @@ $(function(){
 		});
 	}
 	
+	//上移
+	$(".le-up").click(function(){
+		var upOrDown = "up";
+		orderLeftMenu(projectMenuId,updateUser,upOrDown)
+		findLeftMenu(projectId,projectVersionId,topMenuId)
+	})
+	
+	//下移
+	$(".le-down").click(function(){
+		var upOrDown = "down";
+		orderLeftMenu(projectMenuId,updateUser,upOrDown);
+		findLeftMenu(projectId,projectVersionId,topMenuId);
+	})
+	
+	
 	//排序左侧菜单
-	function modifyLeftMenu(projectMenuId,updateUser,upOrDown){
+	function orderLeftMenu(projectMenuId,updateUser,upOrDown){
 		$.ajax({
-			type:'POST',
+			type:'PUT',
             url:'/api/v1/updateProjectMentSortIndexLeftById',
 			data:{
 				"id":projectMenuId,
@@ -415,16 +474,64 @@ $(function(){
 		});
 	}
 	
+	//清空--topMenuId对应的 leftMenu
+	$(".le-clear").click(function(){
+		clearTopMenu(topMenuId);
+		findLeftMenu(projectId,projectVersionId,topMenuId)//刷新左部菜单列表
+	})
+	//清空左部菜单
+	function clearTopMenu(topMenuId){
+		$.ajax({
+			type:'GET',
+            url:'/api/v1/deleteProjectMenuLeftALlById',
+			data:{
+				"topMenuId":topMenuId
+			},
+			success:function(res){
+              	if(res.code===0){
+              		findLeftMenu(projectId,projectVersionId,topMenuId)//刷新左部菜单列表
+              		layer.msg(res.message, {icon: 6});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
 	function selectLeftMenu(){
 		var zTree = $.fn.zTree.getZTreeObj("match-tree");
 		var curDom = zTree.getSelectedNodes();
 		var name = curDom[0].name;
-		var id = curDom[0].id;
+			topMenuId = curDom[0].id;
 		var pId = curDom[0].pId;
 		var pageId = curDom[0].pageId;
-		var projectMenuId = curDom[0].projectMenuId;
-		addLeftMenu(createUser,name,projectMenuId);
-		console.log(name,id,pId,pageId,projectMenuId);
+			projectMenuId = curDom[0].projectMenuId;
+		var menuName = '';
+		var index = layer.open({
+		      type: 1,
+		      btn: ['确定', '取消'],
+		      area: ['300px', '200px'],
+		      title:'添加菜单的子菜单',
+		      shade: 0, 
+		      content:'<input type="text" placeholder="请输入子菜单名称" class="le-add-menu"/>',
+		      yes: function(index, layero){
+		      		menuName = $.trim($(".le-add-menu").val());
+		      		if(menuName){
+				        addLeftMenu(menuName,projectMenuId,topMenuId,createUser);
+				        console.log(menuName,projectMenuId,topMenuId,createUser);
+		      		}else{
+		      			layer.msg("菜单名称不能为空", {icon: 5});
+		      		}
+		      	layer.close(index);
+		      },
+		      btn2:function(){
+		      	layer.close(index);
+		      },
+		      cancel:function(){
+		      	layer.close(index);
+		      }
+		   });
 	}
 	
 	function renameLeftMenu(event, treeId, treeNode, isCancel){
@@ -434,60 +541,181 @@ $(function(){
 		var oldName = treeNode.name;
 	}
 	
-	function beforeEditName(treeId, treeNode) {
-		var zTree = $.fn.zTree.getZTreeObj("match-tree");
-		zTree.selectNode(treeNode);
-		setTimeout(function() {
-			//if (confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？")) {
-				setTimeout(function() {
-					zTree.editName(treeNode);
-				}, 0);
-			//}
-		}, 0);
-		return false;
+	function createLink(){
+		var zTree = $.fn.zTree.getZTreeObj("link-tree");
+		var curDom = zTree.getSelectedNodes();
+		projectMenuId = curDom[0].projectMenuId;
+		console.log(projectId);
 	}
-	function beforeRemove(treeId, treeNode) {
-		var zTree = $.fn.zTree.getZTreeObj("match-tree");
-		zTree.selectNode(treeNode);
-		//return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-	}
-	function onRemove(e, treeId, treeNode) {
-		//showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-	}
-	function beforeRename(treeId, treeNode, newName, isCancel) {
-		if (newName.length == 0) {
-			setTimeout(function() {
-				var zTree = $.fn.zTree.getZTreeObj("match-tree");
-				zTree.cancelEditName();
-				alert("节点名称不能为空.");
-			}, 0);
-			return false;
+	
+	var IDMark_A = "_a";
+	function addDiyDom(treeId, treeNode) {
+		var spaceWidth = 5;
+		var switchObj = $("#" + treeNode.tId + "_switch"),
+		icoObj = $("#" + treeNode.tId + "_ico");
+		switchObj.remove();
+		icoObj.before(switchObj);
+		if (treeNode.level > 1) {
+			var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+			switchObj.before(spaceStr);
 		}
-		return true;
-	}
-	function onRename(e, treeId, treeNode, isCancel) {
-		//showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+		
+		var aObj = $("#" + treeNode.tId + IDMark_A);
+		if(treeId==="link-tree"){
+			var editStr = "<a id='+treeNode.id+' style='' class='page-link-btn'>创建链接</a>";
+			aObj.append(editStr);
+		}
 	}
 	
-	var newCount = 1;
-	function addHoverDom(treeId, treeNode) {
-		var sObj = $("#" + treeNode.tId + "_span");
-		if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-		var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-			+ "' title='add node' onfocus='this.blur();'></span>";
-		sObj.after(addStr);
-		var btn = $("#addBtn_"+treeNode.tId);
-		if (btn) btn.bind("click", function(){
-			var zTree = $.fn.zTree.getZTreeObj("match-tree");
-			zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-			return false;
+	treeHover($("#match-tree"));
+	treeHover($("#link-tree"));
+	treeHover($("#modal-tree"));
+	function treeHover(treeObj){
+		treeObj.hover(function(){
+			if (!treeObj.hasClass("showIcon")){
+				treeObj.addClass("showIcon");
+			}
+		}, function(){
+			treeObj.removeClass("showIcon");
 		});
-	};
-	function removeHoverDom(treeId, treeNode) {
-		$("#addBtn_"+treeNode.tId).unbind().remove();
-	};
+	}
 	
-	$(document).ready(function(){
-//		$.fn.zTree.init($("#match-tree"), setting, zNodes);
+
+	/* 
+	 *样式
+	 */
+	$(".m-pageset-btns").on("click","button",function(){
+		$(this).addClass("active").siblings().removeClass("active");
+		var idx = $(this).index();
+		var oInput = $(this).parent().next().find("input[type]");
+		switch(idx){
+			case 0:
+				for(var i=0;i<oInput.length;i++){
+					$(oInput).eq([i]).attr("readonly","readonly");
+				};
+			break;
+			case 1:
+				for(var i=0;i<oInput.length;i++){
+					$(oInput).eq([i]).removeAttr("readonly");
+				};
+			break;
+		}
+	})
+	$("#ok-model").click(function(){
+		var typeCode = $(".m-cont-box1 li.active").index()+1,
+			topWidth = $(".mtop-width").val(),
+			topHeight = $(".mtop-height").val(),
+			leftWidth = $(".mleft-width").val(),
+			leftHeight = $(".mleft-height").val(),
+			navigationText = $(".mnavigation-text").val();
+		if($.trim(topWidth)&&$.trim(topHeight)&&$.trim(leftWidth)&&$.trim(leftHeight)&&$.trim(navigationText)){
+			addModel(projectId,projectVersionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,updateUser);
+		}else{
+			layer.msg("信息不能为空", {icon: 5});
+		}
+		
+	})
+	
+	function addModel(projectId,projectVersionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,user){
+		$.ajax({
+			type:'POST',
+            url:'/api/v1/saveTemplateStyle',
+			data:{
+				"projectId":projectId,
+				"projectVersionId":projectVersionId,
+				"typeCode":typeCode,
+				"topWidth":topWidth,
+				"topHeight":topHeight,
+				"leftWidth":leftWidth,
+				"leftHeight":leftHeight,
+				"navigationText":navigationText,
+				"user":user
+			},
+			success:function(res){
+              	if(res.code===0){
+              		layer.msg(res.message, {icon: 6});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
+	/* 
+	 * 链接
+	 */
+	//点击头部菜单展示对应的左部菜单
+	$("#link-scrollmenu").delegate(".swiper-slide","click",function(){
+		$(this).addClass("active").siblings().removeClass("active");
+		topMenuId = $(this).attr("id");
+		findLeftMenu(projectId,projectVersionId,topMenuId);
+	})
+		
+	$("#link-tree").delegate(".page-link-btn","click",function(){
+		getProjPages("95263f4682354ce6aa7a904f1394d381");
+		var index = layer.open({
+		      type: 1,
+		      btn: ['确定', '取消'],
+		      area: ['490px', '330px'],
+		      title:'链接页面',
+		      shadeClose: true, //点击遮罩关闭
+		      content:$(".link-modal"),
+		      yes: function(index, layero){
+		      	
+		      	layer.close(index);
+		      },
+		      btn2:function(){
+		      	layer.close(index);
+		      },
+		      cancel:function(){
+		      	layer.close(index);
+		      }
+		   	});
+	   	
+	   	
 	});
-});
+	
+	function getProjPages(projectId){
+		$.ajax({
+			type:'GET',
+            url:'/bi/report/v1/page/list.json',
+            dataType:'json',
+            contentType: 'application/json',
+			data:{
+				"projectId":projectId
+			},
+			success:function(res){
+				console.log(res);
+				if(res.code===0){
+//					zNodes = res.data;
+					$.fn.zTree.init($("#modal-tree"), setting1, zNodes);
+				}
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
+	function createPageLink(projectMenuId,updateUser,pageId){
+		$.ajax({
+			type:'POST',
+            url:'/api/v1/saveTemplateStyle',
+			data:{
+				"projectMenuId":projectMenuId,
+				"updateUser":updateUser,
+				"pageId":pageId
+			},
+			success:function(res){
+              	if(res.code===0){
+              		layer.msg(res.message, {icon: 6});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
+});//jq end

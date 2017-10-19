@@ -12,13 +12,9 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
-    <!--<link rel="stylesheet" href="plugin/basicContext/default.min.css" />
-    <link rel="stylesheet" href="css/basicContext.min.css" />-->
-    <!--<link rel="stylesheet" href="plugin/colorpicker/css/normalize.css" />-->
     <link rel="stylesheet" href="plugin/context/context.standalone.css" />
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/default.min.css" />
-    <!--<link rel="stylesheet" href="plugin/colorpicker/css/htmleaf-demo.css" />-->
     <link rel="stylesheet" href="css/form.css" />
     <style type="text/css">
 	    .resize-item{
@@ -90,10 +86,21 @@
 			.content-text>div i{
 				font-style:italic;
 			}
+			/*	按钮	*/
+			.content-button{
+				width: 100%;
+				height: 100%;
+			}
+			.content-button button{
+				width: 100%;
+				height: 100%;
+			}
 			.image-class
 			,.image-class img{
 				width: 100%;
 				height: 100%;
+				overflow: hidden;
+				box-sizing: border-box;
 			}
 
 			.hint,.tooltip{
@@ -125,7 +132,7 @@
 					<!--BI报表编辑模式-->
 					<div class="edit-state">
 						<div class="top-bar clearfix clearX">
-							<img src="images/icon_save.png" alt="" />
+							<img src="images/icon_save.png" alt=""  onclick="operating.save()" />
 							<img src="images/icon_copy.png" alt="" />
 							<img src="images/icon_paste.png" alt="" />
 							<img src="images/icon_move.png" alt="" />
@@ -311,7 +318,7 @@
 								</div>
 								<!--表格 end-->
 								<!--文本 start-->
-								<div class="text-attr-box" style="display: none">
+								<div class="text-attr-box" style="display: none;">
 									<div class="title-box">
 										<h3>文本</h3>
 										<div class="set-text-attr">
@@ -367,9 +374,94 @@
 								<div class="button-attr-box">
 									<div class="title-box">
 										<h3>按钮</h3>
+										<div class="set-button-price-text">
+											<p>设置按钮字体</p>
+											<input type="text" id="buttonText">
+										</div>
+										<div class="set-button-color set-button">
+											<div>按钮颜色</div>
+											<div class="set-text-color">
+												<div class="color-row">
+													<input type="hidden" name="unique-name-2" data-palette='["#DDDDDD","#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#DDDDDD">
+												</div>
+											</div>
+										</div>
+										<div class="set-button-size set-button">
+											<div>字体大小</div>
+											<div class="set-text-size sc-color">
+												<select name="">
+													<option selected value="12">12</option>
+													<option value="14">14</option>
+													<option selected value="16">16</option>
+													<option value="20">20</option>
+													<option value="24">24</option>
+													<option value="28">28</option>
+													<option value="32">32</option>
+												</select>
+												<i class="fa fa-caret-down"></i>
+											</div>
+										</div>
+										<div class="set-button-SizeColor set-button">
+											<div>字体颜色</div>
+											<div class="set-text-color">
+												<div class="color-row">
+													<input type="hidden" name="unique-name-3" data-palette='["#000","#ffffff","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000">
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 								<!--按钮 end-->
+								<!--图片 start-->
+								<div class="price-attr-box">
+									<div class="title-box">
+										<h3>图片</h3>
+										<div class="set-price-prop set-index-box">
+											<input type="checkbox"/>
+											<img src="images/xuankuang.png" alt="" />
+											<span>保持宽高比</span>
+										</div>
+										<div class="set-price-border-style set-price">
+											<div>边框样式</div>
+											<div class="set-text-size sc-color">
+												<select name="">
+													<option value="实线">实线</option>
+													<option value="点线">点线</option>
+													<option value="虚线">虚线</option>
+												</select>
+												<i class="fa fa-caret-down"></i>
+											</div>
+										</div>
+										<div class="set-price-color set-price">
+											<div>边框颜色</div>
+											<div class="set-text-color">
+												<div class="color-row">
+													<input type="hidden" name="unique-name-4" data-palette='["#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000000">
+												</div>
+											</div>
+										</div>
+										<div class="set-price-border set-price">
+											<div>边框宽度</div>
+											<div class="set-text-size sc-color">
+												<select name="">
+													<option value="0">0</option>
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+												</select>
+												<i class="fa fa-caret-down"></i>
+											</div>
+										</div>
+										<div class="set-price-radius set-price">
+											<div>圆角</div>
+											<input type="number" placeholder="0" maxlength="2">
+										</div>
+									</div>
+								</div>
+
+								<!--图片 end-->
 							</div>
 							<div class="op-box2 op-box">
 								<div class="title-box">
@@ -419,16 +511,263 @@
 							</div>
 						</div>
 					</div>
+			<!--	</div>-->
+			<!--</div>-->
+	
+		
+		<!--数据筛选(求和)-->
+		<div class="data-filter-mod modal">
+			<h3>数据筛选（求和（值））<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="s-data-val">
+				<ul class="clearfix">
+					<li class="fl">
+						<img src="images/icon_circle_on.png" alt="" />
+						<input type="radio" name="range" checked="true"/>
+						<span>范围</span>
+					</li>
+					<li class="fl">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="range"/>
+						<span>至少</span>
+					</li>
+					<li class="fr">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" name="range"/>
+						<span>至多</span>
+					</li>
+				</ul>
+				<div class="s-range-val">
+					<input type="text" class="min"/>
+					<input type="text" class="max"/>
 				</div>
+				<button class="s-more-btn">加载范围</button>
+				<div class="s-slider-box">
+					<div id="slider-range" class="s-slider-range"></div>
+				</div>
+			</div>
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
 		</div>
+		
+		<!--项目过滤属性-->
+		<div class="filter-attr modal">
+			<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="f-attr-box clearfix">
+				<div class="f-attr-left fl">
+					<ul class="f-name clearfix">
+						<li class="active"><a href="javascript:;">列表筛选</a></li>
+						<li><a href="javascript:;">文本筛选</a></li>
+						<li><a href="javascript:;">条件筛选</a></li>
+						<li><a href="javascript:;">高级筛选</a></li>
+					</ul>
+					<div class="f-box">
+						<div class="f-box1">
+							<ul class="clearfix">
+								<li class="fl">
+									<img src="images/icon_circle_on.png" alt="" />
+									<input type="radio" name="methods" checked="true"/>
+									<span>列表</span>
+								</li>
+								<li class="fl">
+									<img src="images/icon_circle.png" alt="" />
+									<input type="radio" name="methods"/>
+									<span>自动</span>
+								</li>
+							</ul>
+							<div class="f-search-box">
+								<input type="text" placeholder="请输入您要添加的内容，并回车确认"/>
+							</div>
+							<div class="f-select-cont">
+								<ul>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>上海</span>
+									</li>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>北京</span>
+									</li>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>天津</span>
+									</li>
+									<li>
+										<img src="images/icon_checked.png" alt="" />
+										<input type="checkbox"/>
+										<span>重庆</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="f-box2">
+							<div class="f-select-box1">
+								<select name="">
+									<option value="">包含以下所有条件</option>
+									<option value="">不包含</option>
+									<option value="">可选择</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+							<div class="f-select-box2">
+								<div class="f-subselect">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input type="text" class="f-subselect-val" />
+								<img src="images/delete_01.png" alt="" class="f-del-btn"/>
+							</div>
+							<div class="f-addbtn-box">
+								<button><i class="fa fa-plus"></i>添加</button>
+							</div>
+						</div>
+						<div class="f-box3">
+							<div class="f-subbox1 clearfix">
+								按照
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								和
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+							</div>
+							<div class="f-subbox2">
+								<button>加载范围</button>
+								<ul class="f-load-range">
+									<li>
+										<span>最小值：</span>
+										<input type="text" />
+									</li>
+									<li>
+										<span>最大值：</span>
+										<input type="text" />
+									</li>
+								</ul>
+							</div>
+							<div class="f-subbox3">
+								<div class="ff-select1 w180">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input type="text" class="ff-sele-val" value="值"/>
+							</div>
+						</div>
+						<div class="f-box4">
+							<div class="f-subbox1 clearfix">
+								按照
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								和
+								<div class="ff-select1 w160">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+							</div>
+							<div class="f-subbox3">
+								<div class="ff-select1 w180">
+									<select name="">
+										<option value="">包含</option>
+										<option value="">排除</option>
+										<option value="">全选</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input type="text" class="ff-sele-val" value="" placeholder="请输入数字"/>
+							</div>
+						</div>
+					</div>
+					<!--筛选类型-->
+					<ul class="f-select-methods clearfix">
+						<li class="fl">
+							<img src="images/icon_checked.png" alt="" />
+							<input type="checkbox"/>
+							<span>包含</span>
+						</li>
+						<li class="fl">
+							<img src="images/icon_checked.png" alt="" />
+							<input type="checkbox"/>
+							<span>排除</span>
+						</li>
+						<li class="fl">
+							<img src="images/icon_checked.png" alt="" />
+							<input type="checkbox"/>
+							<span>使用全部</span>
+						</li>
+					</ul>
+				</div>
+				<div class="f-attr-right fr">
+					<h3>筛选汇总</h3>
+					<div class="f-filter-result">
+						<ul>
+							<li>
+								筛选字段：<em>城市</em>
+							</li>
+							<li class="active">
+								列表筛选：<em>无</em>
+							</li>
+							<li>
+								文本筛选：<em>无</em>
+							</li>
+							<li>
+								条件筛选：<em>无</em>
+							</li>
+							<li>
+								高级筛选：<em>无</em>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="file-btns-col mcenter">
+				<span>
+					<button>确定</button>
+					<button>取消</button>
+				</span>
+			</div>
+		</div>
+		
+
 	<div class="hint"></div>
+	
     <script src="plugin/jQuery/jquery.min.js"></script>
-   	<script src="plugin/validate/jquery.validate.min.js"></script>
-    <script src="plugin/validate/messages_zh.min.js"></script>
     <script src="plugin/jQuery/jQuery_ui.js"></script>
 	<script src="plugin/d3/d3.v3.min.js"></script>
 	<script  src="plugin/d3/d3.tip.js"></script>
-    <!--<script src="plugin/basicContext/basicContext.min.js"></script>-->
     <script src="plugin/layer/layer.js"></script>
     <script src="plugin/context/context.js"></script>
     <script src="plugin/zSize/jquery_zsize.js"></script>
