@@ -547,14 +547,14 @@
 			</div>
 			<div class="file-btns-col mcenter">
 				<span>
-					<button>确定</button>
-					<button>取消</button>
+					<button onclick="swRag.save()">确定</button>
+					<button onclick="swRag.cancel()">取消</button>
 				</span>
 			</div>
 		</div>
 		
 		<!--项目过滤属性-->
-		<div class="filter-attr modal">
+		<div class="filter-attr modal" style="display: block;">
 			<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
 			<div class="f-attr-box clearfix">
 				<div class="f-attr-left fl">
@@ -579,7 +579,10 @@
 								</li>
 							</ul>
 							<div class="f-search-box">
-								<input type="text" placeholder="请输入您要添加的内容，并回车确认"/>
+								<input type="text" onchange="project.search(this)" placeholder="请输入您要添加的内容"/>
+							</div>
+							<div class="f-addbtn-box2" style="margin-left: 47px;display: none">
+								<button><i class="fa fa-plus"></i>添加</button>
 							</div>
 							<div class="f-select-cont">
 								<ul>
@@ -713,19 +716,19 @@
 					</div>
 					<!--筛选类型-->
 					<ul class="f-select-methods clearfix">
-						<li class="fl">
-							<img src="images/icon_checked.png" alt="" />
-							<input type="checkbox"/>
+						<li class="fl" onclick="project.contain(this)">
+							<img src="images/icon_circle_on.png" alt="" />
+							<input type="radio" checked />
 							<span>包含</span>
 						</li>
-						<li class="fl">
-							<img src="images/icon_checked.png" alt="" />
-							<input type="checkbox"/>
+						<li class="fl" onclick="project.filter(this)">
+							<img src="images/icon_circle.png" alt="" />
+							<input type="radio"/>
 							<span>排除</span>
 						</li>
-						<li class="fl">
-							<img src="images/icon_checked.png" alt="" />
-							<input type="checkbox"/>
+						<li class="fl" onclick="project.all(this)">
+							<img src="images/icon_circle.png" alt="" />
+							<input type="radio"/>
 							<span>使用全部</span>
 						</li>
 					</ul>

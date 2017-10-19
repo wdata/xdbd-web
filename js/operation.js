@@ -4,6 +4,7 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,copy_data = {} // 复制后保存数据；
     ,data_type = ""  // 作为判断图形的；
     ,number=0   // 层级
+    ,fieldid = null  // 记录数据筛选时候的ID
     ,modelId = null // 记录dataModelId值；
     ,url = "http://192.168.1.15:8023"
 
@@ -378,7 +379,7 @@ var DataIndexes = {
         $("#"+id_).find(".resize-panel").siblings().remove();  // 删除之前的图形
         $.ajax({
             type:"post",
-            url:"/bi/report/v1/data.json",
+            url:"/xdbd-bi/bi/report/v1/data.json",
             data:JSON.stringify(d),
             dataType:"json",
             contentType: 'application/json',
@@ -611,7 +612,342 @@ var operating = {
     },
 };
 
+var filter = {
+    numberDeal:function(){
 
+    }
+};
+
+
+
+// 项目属性（城市筛选）
+var project = {
+    "list":null,
+    textFilter:function(field){
+        $.ajax({
+            type:"get",
+            url:"/xdbd-bi/bi/report/v1/data/list.json",
+            dataType:'json',
+            data:{
+                "biSetId":$(".data-source-box option:selected").attr("bisetid"),
+                "field":field
+            },
+            success:function(data){
+                if(data.code === 0){
+                    project.list = data.data;   // 存储数据
+                    var html = '';
+                    var l = $(".f-select-cont ul").empty();
+                    $.each(data.data,function(index,val){
+                        html += `<li>
+                                    <img src="images/xuankuang.png" alt="">
+                                    <input type="checkbox">
+                                    <span>${ val }</span>
+                                </li>`;
+                    });
+                    l.append(html);
+                }
+            },
+            error:function(res){
+                console.log(res);
+            }
+        })
+    },
+    pjEvent:function(){
+        //项目（过滤)属性
+        $(".f-name").on("click","li",function(){
+            var $idx = $(this).index();
+            // 区分
+            if($idx >= 2){
+                layer.msg("暂未实现！");
+                return;
+            }
+            if($idx === 0){
+                $(".f-select-methods").show();
+            }else{
+                $(".f-select-methods").hide();
+            }
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".f-box"+($idx+1)).show().siblings().hide();
+        });
+
+        $(document).on("click",".f-select-cont li",function(){
+            if($(this).find("input").prop("checked")){
+                project.check($(this),0,0);
+                if($(".f-select-methods li").eq(1).find("input").prop("checked")){
+                    $(this).find("span").css("text-decoration","line-through");
+                }
+            }else{
+                project.check($(this),1,0);
+                $(this).find("span").css("text-decoration","none");
+            }
+        });
+        $(".f-box1:first li").on("click",function(){
+            $(this).parent().find("input").removeAttr('checked')
+                .siblings("img").attr("src","images/icon_circle.png");
+            project.check($(this),0,1);
+            if($(this).index() === 0){
+                $(".f-select-cont").show();
+                $(".f-addbtn-box2").hide();
+            }else{
+                $(".f-select-cont").hide();
+                $(".f-addbtn-box2").show();
+            }
+        })
+
+
+    },
+    // 勾选
+    check:function(ele,type,inType){
+        var imgA = ""
+            ,imgB = "";
+        switch(type){
+            case 0:
+                imgA = inType===0?"icon_checked":"icon_circle_on";
+                ele.find("input").attr('checked',"checked")
+                    .siblings("img").attr("src","images/"+ imgA +".png");
+                break;
+            case 1:
+                imgB = inType===0?"xuankuang":"icon_circle";
+                ele.find("input").removeAttr('checked')
+                    .siblings("img").attr("src","images/"+ imgB +".png");
+                break;
+        }
+    },
+    // 文本筛选 -- 包含
+    contain:function(_this){
+        project.chear(_this);
+        $.each($(".f-select-cont li"),function(index,val){
+            if($(val).find("input").prop("checked")){
+                $(val).find("span").css("text-decoration","none");
+            }
+        });
+        $(".f-select-methods").find("input").removeAttr("disabled","disabled");
+
+    },
+    // 文本筛选 -- 排除
+    filter:function(_this){
+        project.chear(_this);
+        $.each($(".f-select-cont li"),function(index,val){
+            if($(val).find("input").prop("checked")){
+                $(val).find("span").css("text-decoration","line-through");
+            }
+        });
+        $(".f-select-methods").find("input").removeAttr("disabled","disabled");
+    },
+    // 文本筛选 -- 使用全部
+    all:function(_this){
+        project.chear(_this);
+        project.check($(".f-select-cont li"),0,0);
+        $(".f-select-methods").find("input").attr("disabled","disabled");
+        $(".f-select-cont li span").css("text-decoration","none");
+    },
+    search:function(_this){
+        var text = $(_this).val();
+        if(text.length > 0){
+            $.each($(".f-select-cont li"),function(index,val){
+                if($(val).find("span").text().indexOf(text) === 0){
+                    $(val).show();
+                }else{
+                    $(val).hide();
+                }
+            });
+        }else{
+            $(".f-select-cont li").show();
+        }
+    },
+    chear:function(_this){
+        $(".f-select-methods").find("input").removeAttr('checked')
+            .siblings("img").attr("src","images/icon_circle.png");
+        project.check($(_this),0,1);
+    }
+};
+$.ready(function(){
+    project.pjEvent();   // 选择城市事件
+    project.textFilter("StrAddress");
+});
+
+
+
+
+
+
+
+
+
+//数据筛选(求和(值))
+//range 初始化
+var swRag = {
+    "min":$(".s-range-val .min"),
+    "max":$(".s-range-val .max"),
+    // 事件
+    ele:function(){
+        $(".s-data-val ul>li").on("click",function(){
+            var $s = $(this).find("input");
+            swRag.selec(($s));
+
+            // 重置加载范围
+            $(".s-slider-box").hide();
+            $(".s-more-btn").show();
+            // 清除数据
+            swRag.min.val("");swRag.max.val("");
+        });
+        //点击加载更多,显示范围
+        $(".s-more-btn").click(function(){
+            var index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
+            switch(index){
+                case 0 :
+                    if(!swRag.judgment(index)){	return	};
+                    swRag.range(index);
+                    break;
+                case 1:
+                    if(!swRag.judgment(index)){	return	};
+                    swRag.range(index);
+                    break;
+                case 2:
+                    if(!swRag.judgment(index)){	return	};
+                    swRag.range(index);
+                    break;
+            }
+            $(".s-slider-box").show();
+            $(this).hide();
+        });
+    },
+    // 根据不同的index变化
+    selec:function($s){
+        $s.attr("checked","checked");
+        var $idx = $s.parent().index();
+        $s.prev("img").attr("src","images/icon_circle_on.png");
+        $s.parent("li").siblings().find("img").attr("src","images/icon_circle.png");
+        swRag.switchRange($idx);
+    },
+    // 根据传递的元素赋值
+    ass:function(min,max){
+        swRag.min.val("");
+        swRag.max.val("");
+        swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
+        if(min && !max){
+            swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
+            swRag.min.val(min);
+        }
+        if(!min && max){
+            swRag.selec(($(".s-data-val ul>li").eq(2).find("input")));
+            swRag.max.val(max);
+        }
+        if(min && max){
+            swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
+            swRag.min.val(min);
+            swRag.max.val(max);
+        }
+    },
+    // 保存
+    save:function(){
+        var index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
+        if(!swRag.judgment(index)){	return	};
+        $(".data-filter-mod").hide();
+
+        // 根据记录的ID，作为判断
+        $.each($(".datas-pills li"),function(index,val){
+            if($(val).attr("fieldid") === fieldid){
+                $(val).attr("min",swRag.min.val());
+                $(val).attr("max",swRag.max.val());
+            }
+        })
+    },
+    // 取消
+    cancel:function(){
+        $(".data-filter-mod").hide();
+    },
+    // 判断
+    judgment:function(index){
+        switch(index){
+            case 0 :
+                if(swRag.min.val().length <= 0 || swRag.max.val().length <= 0){
+                    layer.msg("请先输入最小值和最大值！");
+                    return false;
+                }
+                if(swRag.min.val().length > swRag.max.val().length){
+                    layer.msg("最大值大于最小值！");
+                    return false;
+                }
+                return true;
+                break;
+            case 1:
+                if(swRag.min.val().length <= 0){
+                    layer.msg("请输入最小值！");
+                    return false;
+                }
+                return true;
+                break;
+            case 2:
+                if(swRag.max.val().length <= 0){
+                    layer.msg("请输入最大值！");
+                    return false;
+                }
+                return true;
+                break;
+        }
+    },
+    // 判断显示
+    switchRange:function(idx){
+        if(idx===0){ //范围
+            //input均不禁用
+            swRag.min.css("background-color","#FBFBFB").prop("readonly",false);
+            swRag.max.css("background-color","#FFFFFF").prop("readonly",false);
+        }else if(idx===1){ //至少
+            //input最大值禁用
+            swRag.min.css("background-color","#FBFBFB").prop("readonly",false);
+            swRag.max.css("background-color","#FFFFFF").prop("readonly",true);
+        }else if(idx===2){ //至多
+            //input最小值禁用
+            swRag.min.css("background-color","#FFFFFF").prop("readonly",true);
+            swRag.max.css("background-color","#FBFBFB").prop("readonly",false);
+        }
+    },
+    // 范围
+    range:function(type){
+        var slider = $( "#slider-range" );
+        var minD = parseInt(swRag.min.val());
+        var maxD = parseInt(swRag.max.val());
+        switch(type){
+            case 0:
+                slider.slider({
+                    range: true,
+                    min: minD,
+                    max: maxD,
+                    values: [ minD, maxD ],
+                    slide: function( event, ui ) {
+                        swRag.min.val(ui.values[ 0 ]);
+                        swRag.max.val(ui.values[ 1 ]);
+                    }
+                });
+                break;
+            case 1:
+                slider.slider({
+                    range: "min",
+                    value: minD,
+                    min: minD,
+                    max: minD *10 ,
+                    slide: function( event, ui ) {
+                        swRag.min.val(ui.value );
+                    }
+                });
+                break;
+            case 2:
+                slider.slider({
+                    range: "max",
+                    value: maxD,
+                    min: maxD /10,
+                    max: maxD,
+                    slide: function( event, ui ) {
+                        swRag.max.val(ui.value );
+                    }
+                });
+                break;
+        }
+    }
+};
+swRag.ele();
+swRag.switchRange();
 
 
 
@@ -705,7 +1041,7 @@ function imgPreview(_this){
         // 上传图片
         $.ajax({
             type:"post",
-            url:" /bi/report/v1/controlImage.json",
+            url:" /xdbd-bi/bi/report/v1/controlImage.json",
             data:form,
             contentType: false,
             processData: false,

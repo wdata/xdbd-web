@@ -4,7 +4,7 @@ $(function(){
 	function getBiSet(projectId){
 		$.ajax({
             type:'get',
-            url:'/bi/report/v1/biset/list.json',
+            url:'/xdbd-bi/bi/report/v1/biset/list.json',
             dataType:'json',
             data:{
                 "projectId":projectId,
@@ -43,7 +43,7 @@ $(function(){
 	function getBiDataModel(biSetId){
 		$.ajax({
             type:'get',
-            url:'/bi/report/v1/datamodel.json',
+            url:'/xdbd-bi/bi/report/v1/datamodel.json',
             dataType:'json',
             data:{
                 "projectId":projectId,
@@ -87,7 +87,50 @@ $(function(){
             }
         });
 	}
-	
+
+    //点击图标类型按钮--生成可拖拽缩放的div
+    $(".u-btn-class").draggable({
+        appendTo: "",
+        helper: "clone"
+    });
+    $(".edit-libs-box").droppable({
+        accept: ":not(.ui-sortable-helper)",
+        drop: function( event, ui ) {
+            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".component-libs-box").css("margin-left"));
+            var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
+            var cahrt_type = $(ui.draggable).attr("data-type");
+            var type = null;
+            var html = '';  // 当是文本框时
+
+            // 根据拖拽区的data-type来显示type
+            switch(cahrt_type){
+                case "chart":
+                    type="bar";
+                    break;
+                case "table":
+                    type="table";
+                    break;
+                case "button":
+                    type="button";
+                    html = '<div class="content-button"><button></button></div>';
+                    break;
+                case "text":
+                    html = '<div class="content-text"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
+                    break;
+            }
+
+            $(this).append('<div data-type="'+ cahrt_type +'" type="'+type+'" style="z-index:'+number+'; left:'+left+'px;top:'+top+'px;" id="'+cahrt_type+number+'" class="resize-item">'+ html +'</div>');
+            id_=cahrt_type+number;
+            //聚合方式
+            aggregation='';
+            number++;
+            new ZResize({
+                stage: '.edit-libs-box', //舞台
+                itemClass: 'resize-item'//可缩放的类名
+            });
+        }
+    });
+
 	//x Axis
 	$(".set-axis").droppable({
 		accept: ".placeholder li",
@@ -138,7 +181,7 @@ $(function(){
 			$(this).find("li").each(function(){
 				lis.push($(this).attr("fieldId"));
 			});
-			console.log($.inArray(ui.draggable.attr("fieldId"),lis)==-1);
+			// console.log($.inArray(ui.draggable.attr("fieldId"),lis)==-1);
 			if($.inArray(ui.draggable.attr("fieldId"),lis)==-1&&id_!=""){
                 $( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
 			}else if($.inArray(ui.draggable.attr("fieldId"),lis)!=-1&&id_!=""){
@@ -157,12 +200,33 @@ $(function(){
             }
         }
     });
-	
+
+    //拖拽度量和维度到数据筛选框
+    $(".data-empty").droppable({
+        drop:function(event,ui){
+            var uiEle = $(ui.draggable[0]);
+            var datatype= parseInt(uiEle.attr("datatype"));
+            fieldid = uiEle.attr("fieldid");
+            switch(datatype){
+                case 1:
+                    project.textFilter(uiEle.attr("fieldname"));
+                    $(".filter-attr").show();
+                    break;
+                case 2:
+                case 3:
+                    break;
+                case 4:
+                    swRag.ass(uiEle.attr("min"),uiEle.attr("max"));
+                    $(".data-filter-mod").show();       // 显示数字筛选框
+                    break;
+            }
+        }
+    });
 	//修改字段别名
 	function setBiFieldName(id,name){
 		$.ajax({
             type:'PUT',
-            url:'/bi/report/v1/dataModel/fieldAlias.json',
+            url:'/xdbd-bi/bi/report/v1/dataModel/fieldAlias.json',
             dataType:'json',
             data:{
                 "projectId":projectId,
@@ -242,14 +306,29 @@ $(function(){
         "filter":{
             text: '筛选器',
             action: function (e) {
-                var text="<li dataType="+context.getClickEle().attr("dataType")+" dim_mea="+context.getClickEle().attr("dim_mea")+" dis_con="+context.getClickEle().attr('dis_con')+" data_id='"+context.getClickEle().attr('data_id')+"' aggregation='"+context.getClickEle().attr('aggregation')+"'>"+context.getClickEle().html()+"</li>";
-                $("#filter .ui-widget-content ol").append(text);
+
+                // var text="<li dataType="+context.getClickEle().attr("dataType")+" dim_mea="+context.getClickEle().attr("dim_mea")+" dis_con="+context.getClickEle().attr('dis_con')+" data_id='"+context.getClickEle().attr('data_id')+"' aggregation='"+context.getClickEle().attr('aggregation')+"'>"+context.getClickEle().html()+"</li>";
+                // $("#filter .ui-widget-content ol").append(text);
+                // 数据类型：1-文本（字符串）；2-日期；3-日期和时间；4-数字；5-布尔；6-地理（用于地图）
+                var dataType = parseInt(context.getClickEle().attr("datatype"));
+                fieldid = context.getClickEle().attr("fieldid");
+                switch(dataType){
+                    case 1:$(".filter-attr").show();
+                        break;
+                    case 2:
+                    case 3:
+                        break;
+                    case 4:
+                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"));
+                        $(".data-filter-mod").show();       // 显示数字筛选框
+                        break;
+                }
             }
         },
         "nullVal":{
             text: '空值处理',
             action: function (e) {
-
+                layer.msg("暂未实现！");
             }
         },
         "remove": {
