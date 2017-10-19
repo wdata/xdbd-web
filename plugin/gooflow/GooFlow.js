@@ -775,7 +775,7 @@ GooFlow.prototype={
     var jobid = sessionStorage.getItem('jobid');
     var self = this;
 
-    $.post('/api/sysJobComp/v1/getByType',{
+    $.post('/xdbd-wf/api/sysJobComp/v1/getByType',{
       'webComponentId':id,
       'jobId':jobid,
       'type':type,
