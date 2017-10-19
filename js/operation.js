@@ -55,22 +55,16 @@ $(document).ready(function() {
                     }
                 }
                 if(item.cid + "" === id){
-                    console.log(item);
                     // 如果cid相同，则将item数据复制给copy_data
-                    // 如果是文本和图片，则复制内容不同
-                    switch(item.customData.dataType){
-                        case "text":
-                            // 保存文本内容
-                            item.customData.content = ele.find('.content-text').children().html();
-                            break;
-                        case "image":
-                            // 保存图片路径
-                            item.customData.image = ele.find(".image-class").children().attr("src");
-                            break;
+                    copy_data = JSON.parse(JSON.stringify(item));
+                    var dataType = item.customData.dataType;
+                    console.log(dataType);
+                    if(dataType === "text"|| dataType === "button" || dataType === "image" ){
+                        copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
                     }
                 }
             });
-            console.log(save_arr);
+            console.log(copy_data);
         }},
         {text: '粘贴',action: function(e){
             e.preventDefault();
@@ -139,7 +133,7 @@ function save_config(id){
 }
 
 var refresh = {
-    // 数据索引
+    // 数据索引-- 图表和表格的数据索引
     indexes:function(id){
         var chart_date={
             "queryJson":{
@@ -157,7 +151,7 @@ var refresh = {
         this.only(index_arr,chart_date);  // // 数据根据ID唯一，并将数据添加进入保存数组
         // console.log(index_arr);
     },
-    // 整体数据
+    // 图表和表格数据
     retrieve:function(id){
         var self = this;
         var chart_date={
@@ -262,6 +256,26 @@ var refresh = {
         this.only(save_arr,chart_date,id);// 数据根据ID唯一，并将数据添加进入保存数组
         // console.log(chart_date);
     },
+    // 根据不同的data-type类型，来执行不同的存储;以此减少存储的次数
+    storage:function(type){
+        switch(type){
+            case "chart":
+                refresh.retrieve(id_);
+                break;
+            case "table":
+                refresh.retrieve(id_);
+                break;
+            case "text":
+                refresh.textData(id_);
+                break;
+            case "image":
+                refresh.priceData(id_);
+                break;
+            case "button":
+                refresh.buttonData(id_);
+                break;
+        }
+    },
     // 获取右侧维度、度量、数据筛选
     // 图表：chart-attr-box 表格：table-attr-box
     dataSource:function(id,chart_date){
@@ -360,7 +374,7 @@ var DataIndexes = {
     // 根据数据索引，请求数据
     inAjax:function(d){
         var self = this;
-        console.log(JSON.stringify(d));
+        // console.log(JSON.stringify(d));
         $("#"+id_).find(".resize-panel").siblings().remove();  // 删除之前的图形
         $.ajax({
             type:"post",
@@ -525,6 +539,12 @@ var priceEdit = {
     // 保持宽高比
     ratio:function(){
         $(".set-price-prop input").on("click",function(){
+            // 判断是否开启
+            if($(this).is(":checked")){
+                $("#"+ id_).attr("data-ratio-bur", true);
+            }else{
+                $("#"+ id_).attr("data-ratio-bur", false);
+            }
             priceEdit.main();
         })
     },
@@ -599,35 +619,28 @@ var operating = {
 function paste(){
     // 判断是否为空对象！
     if(!(JSON.stringify(copy_data) === "{}")){
-        var id = copy_data.dataType + number;
+        var customData = copy_data.customData;
+        var id = customData.dataType + number;
         var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".component-libs-box").css("margin-left"));
         var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
 
         var z = '';
         // 如果是文本和图片，则复制内容不同
-        switch(copy_data.dataType){
-            case "text":
-                // 文本内容
-                z = '<div class="content-text"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true">'+ copy_data.content +'</div></div>';
-                break;
-            case "image":
-                // 保存图片路径
-                z = '<div class="image-class"><img src="'+ copy_data.image +'"></div>';
-                break;
+        if(customData.dataType === "text" || customData.dataType === "button" || customData.dataType === "image"){
+            z = customData.html;
         }
 
-
-        var html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ copy_data.dataType +'" style="height:'+ copy_data.style.height +';width:'+ copy_data.style.width +';top:'+ top+'px;left:'+left+'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
+        var html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ customData.dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
         $(".edit-libs-box").append(html);
 
-        // 判断是否有数据索引！
-        if(copy_data.retrieve){
-            var z = JSON.parse(JSON.stringify(copy_data.retrieve)); 	// 注意深拷贝和浅拷贝问题！！
+
+        // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
+        if(copy_data.queryJson && customData.dataType === "chart" || customData.dataType === "table" ){
+            var z = JSON.parse(JSON.stringify(copy_data));
             z.cid = id;
             save_arr.push(z);
-            DataIndexes.draw(id);  // 刷新数据；
         }
-
+        refresh.storage(customData.dataType); // 判断不同的TYPE执行不同的采取函数
         // 拖拽初始化！
         id_ = id; // 拖拽必须修改id_
         number++; // ID不重复！
@@ -709,7 +722,7 @@ function imgPreview(_this){
                         // 这部分是显示图片
                         var width = image.width;
                         var height = image.height;
-                        var p =  ( height / width ).toFixed(2);   // 宽高比例，小数点后两位
+                        var p =  ( width / height ).toFixed(2);   // 宽高比例，小数点后两位
                         var c = $(".edit-libs-box");  // 内容区
                         var cW = parseInt(c.css("width"));  // 内容区宽度
                         var cH = parseInt(c.css("height"));  // 内容区宽度
@@ -722,12 +735,12 @@ function imgPreview(_this){
                         if(width >= cW){
                             // 如果图片真实大小大于内容区，则最大宽度为内容区宽度；
                             w = cW;
-                            h = cW * p;
+                            h = cW / p;
                             left = 0;
                             top =   (cH - h) / 2;
                         }
                         // console.log("图片宽度：" + width,"内容区宽度：" + cW,"元素宽度：" + w,"元素高度：" + h,"图片宽度：" + height,"比例：" + p,"距离左边距离：" + left,"距离顶部边距离：" + top);
-                        c.append('<div data-type="'+ cahrt_type +'" type="'+ cahrt_type +'" style=" z-index:'+ number +'; left:'+ left +'px;top:'+ top +'px;width:'+ w +'px;height:'+ h +'px;" id="'+ cahrt_type + number +'" class="resize-item"><div class="image-class"><img src="'+ dataURL +'"></div></div>');
+                        c.append('<div data-ratio="'+ p +'" data-type="'+ cahrt_type +'" type="'+ cahrt_type +'" style=" z-index:'+ number +'; left:'+ left +'px;top:'+ top +'px;width:'+ w +'px;height:'+ h +'px;" id="'+ cahrt_type + number +'" class="resize-item"><div class="image-class"><img src="'+ dataURL +'"></div></div>');
 
                         id_ = cahrt_type + number;
                         number++;

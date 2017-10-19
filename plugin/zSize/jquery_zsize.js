@@ -272,6 +272,9 @@
                     org.css({
                         width: ow + x
                     });
+
+                    self.scaleScaling(el,org,(ow + x),"height");   // 等比缩放
+
                 } else if(smove) {
                     var y = (e.pageY - oy);
                     el.css({
@@ -280,6 +283,8 @@
                     org.css({
                         height: oh + y
                     });
+                    self.scaleScaling(el,org,(oh + y),"width");   // 等比缩放
+
                 } else if(wmove) {
                     var x = (e.pageX - ox);
                     el.css({
@@ -290,6 +295,7 @@
                         width: ow - x,
                         left: oleft + x
                     });
+                    self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
                 } else if(nmove) {
                     var y = (e.pageY - oy);
                     el.css({
@@ -300,6 +306,7 @@
                         height: oh - y,
                         top: otop + y
                     });
+                    self.scaleScaling(el,org,(oh - y),"width");   // 等比缩放
                 } else if(nemove) {
                     var x = e.pageX - ox;
                     var y = e.pageY - oy;
@@ -313,6 +320,7 @@
                         top: otop + y,
                         width: ow + x
                     });
+                    self.scaleScaling(el,org,(oh - y),"width");   // 等比缩放
                 } else if(nwmove) {
                     var x = e.pageX - ox;
                     var y = e.pageY - oy;
@@ -324,10 +332,18 @@
                     });
                     org.css({
                         height: oh - y,
-                        top: otop + y,
+                        top: Math.min(otop + y,otop + oh),
                         width: ow - x,
-                        left: oleft + x
+                        left: Math.min(oleft + x,oleft + ow)
                     });
+                    self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
+                    if(org.attr("data-ratio-bur") === "true") {
+                        var p = parseFloat(org.attr("data-ratio"));
+                        org.css({
+                            top: otop - (ow - x)/p + oh
+                        });
+                    }
+
                 } else if(semove) {
                     var x = e.pageX - ox;
                     var y = e.pageY - oy;
@@ -339,6 +355,7 @@
                         width: ow + x,
                         height: oh + y
                     });
+                    self.scaleScaling(el,org,(oh + y),"width");   // 等比缩放
                 } else if(swmove) {
                     var x = e.pageX - ox;
                     var y = e.pageY - oy;
@@ -352,6 +369,7 @@
                         left: oleft + x,
                         height: oh + y
                     });
+                    self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
                 } else if(drag) {
                     var x = e.pageX - ox;
                     var y = e.pageY - oy;
@@ -359,6 +377,7 @@
                         left: oleft + x,
                         top: otop + y
                     });
+                    refresh.storage($(org).attr("data-type")); // 判断不同的TYPE执行不同的采取函数
                 }
             }).on('mouseup', function(e) {
                 emove = false;
@@ -375,6 +394,23 @@
         /**
          *  点击item显示拖拽面板
          */
+        scaleScaling(el,org,data,me){
+            if(org.attr("data-ratio-bur") === "true"){
+                var p = parseFloat(org.attr("data-ratio"));
+                var z = null;
+                if(me === "height"){
+                    z = data/p;
+                }else{
+                    z = data*p;
+                }
+                el.css(
+                    ''+ me +'', z
+                );
+                org.css(
+                    ''+ me +'', z
+                );
+            }
+        },
         bindTrigger: function(el) {
             var self = this;
             el.on('click', function(e) {
