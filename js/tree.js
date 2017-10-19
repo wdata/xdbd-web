@@ -548,7 +548,7 @@ $(function(){
 	   	};
 	   	
     	var newEtl = function(){
-    		$("#iframepage1").attr("src","html/etlChartcil.html");
+    		$("#iframepage1").attr("src","html/etlStencil.html");
     	};
     	var newBi = function(){
     		$("#iframepage1").attr("src","html/biTemplet.html");

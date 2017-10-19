@@ -15,7 +15,7 @@ var getAll = {
 };
 $.ajax({
   type:"POST",
-  url:"/api/job/v1/getAll",
+  url:"/xdbd-wf/api/job/v1/getAll",
   dataType:"json",
   contentType:"application/json",
   data:JSON.stringify(getAll),
@@ -47,7 +47,7 @@ function deleteBtn(_this) {
   }
   $.ajax({
     type:"POST",
-    url:"/api/job/v1/deleteByIds",
+    url:"/xdbd-wf/api/job/v1/deleteByIds",
     dataType:"json",
     contentType:"application/json",
     data:JSON.stringify(parans),
@@ -71,7 +71,7 @@ function demandBtn(_this) {
   }
   $.ajax({
     type:"POST",
-    url:"/api/job/v1/getById",
+    url:"/xdbd-wf/api/job/v1/getById",
     dataType:"json",
     contentType:"application/json",
     data:JSON.stringify(demandId),
@@ -133,7 +133,7 @@ function newBtn(popups) {
     };
     $.ajax({
       type:"POST",
-      url:"/api/job/v1/save",
+      url:"/xdbd-wf/api/job/v1/save",
       dataType:"json",
       contentType:"application/json",
       data:JSON.stringify(res),

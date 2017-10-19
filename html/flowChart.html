@@ -90,7 +90,7 @@
             };
             $.ajax({
               type:"POST",
-              url:"/api/action/v1/delActionComp",
+              url:"/xdbd-etl/api/action/v1/delActionComp",
               dataType:"json",
               contentType:"application/json",
               data:JSON.stringify(delActionComp),
@@ -281,7 +281,7 @@
         };
         $.ajax({
           type:"POST",
-          url:"http://192.168.1.149:2001/api/datasource/v1/getTableDetailList",
+          url:"/xdbd-etl/api/datasource/v1/getTableDetailList",
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(parameter),
@@ -369,7 +369,7 @@
       function fn_saveActionComp(val){
         $.ajax({
           type:"POST",
-          url:"/api/action/v1/saveActionComp",
+          url:"/xdbd-etl/api/action/v1/saveActionComp",
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(val),
@@ -390,7 +390,7 @@
         };
         $.ajax({
           type:"POST",
-          url:"/api/action/v1/getActionCompList",
+          url:"/xdbd-etl/api/action/v1/getActionCompList",
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(parameter),
@@ -407,7 +407,7 @@
         };
         $.ajax({
           type:"POST",
-          url:"/api/action/v1/getAction", //http://192.168.1.149:2001/api/action/v1/getAction
+          url:"/xdbd-etl/api/action/v1/getAction", //http://192.168.1.149:2001/xdbd-etl/api/action/v1/getAction
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(parameter),
@@ -430,7 +430,7 @@
           }
           $.ajax({
             type:"POST",
-            url:"/api/action/v1/uploadParquet",
+            url:"/xdbd-etl/api/action/v1/uploadParquet",
             dataType:"json",
             contentType:"application/json",
             data:JSON.stringify(load),

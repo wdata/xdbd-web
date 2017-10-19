@@ -38,9 +38,10 @@
     <script src="../plugin/layer/layer.js"></script>
     <script>
       var jobid = sessionStorage.getItem('jobid');
-      var this_versionId = 'v1';
-      var this_projectId = 'proj0002';
-//      var demandDags =sessionStorage.getItem('demandDag');
+      var this_versionId = localStorage.getItem("versionId");
+      var this_projectId = localStorage.getItem("projectId");
+      var this_createUser = localStorage.getItem("createUser");
+
       var property={
         width:1230,
         height:800,
@@ -87,7 +88,7 @@
 //            return true;
             $.ajax({
               type:"POST",
-              url:"/api/jobComp/v1/deleteByIds",
+              url:"/xdbd-wf/api/jobComp/v1/deleteByIds",
               dataType:"json",
               contentType:"application/json",
               data:JSON.stringify(datas),
@@ -144,7 +145,7 @@
             console.log(obj)
             $.ajax({
               type:"POST",
-              url:"/api/action/v1/getActionList",
+              url:"/xdbd-wf/api/action/v1/getActionList",
               dataType:"json",
               contentType:"application/json",
               data:JSON.stringify(version),
@@ -303,7 +304,7 @@
         jsons.projectId = this_projectId;
         jsons.dag = JSON.stringify(demo.exportData());
         console.log(JSON.stringify(jsons))
-        $.post('/api/job/v1/update',{
+        $.post('/xdbd-wf/api/job/v1/update',{
             jsonStr: JSON.stringify(jsons)
         },function(data) {
           console.log(data)
@@ -580,12 +581,12 @@
           }
         }
         this.propertyAlter = false;
-        $.post('/api/jobComp/v1/save',{
+        $.post('/xdbd-wf/api/jobComp/v1/save',{
           webComponentId: $('#ele_id').val(),
           name:'拉了个并行',
           jobId:jobid,
           sysJobCompId:'comp0003',
-          createUser:'zhuzhu',
+          createUser: this_createUser,
           remark:'lalala',
           versionId: this_versionId,
           attValue:JSON.stringify(jsonStr)
