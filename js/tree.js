@@ -561,13 +561,13 @@ $(function(){
 	   	};
 	   	
     	var newEtl = function(){
-    		$("#iframepage1").attr("src","html/stencilmanage.html");
+    		$("#iframepage1").attr("src","html/etlStencil.html");
     	};
     	var newBi = function(){
     		$("#iframepage1").attr("src","html/biTemplet.html");
     	};
     	var newJob = function(){
-    		alert('newJob');
+        $("#iframepage1").attr("src","html/stencilmanage.html");
     	};
     	var createFpage = function(){
     		alert('Fpage');

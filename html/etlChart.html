@@ -2,7 +2,7 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ETL</title>
+    <title>工作流</title>
     <!--[if lt IE 9]>
     <?import namespace="v" implementation="#default#VML" ?>
     <![endif]-->
@@ -10,13 +10,21 @@
     <link rel="stylesheet" type="text/css" href="../css/gooflow/default.css"/>
     <style>
         .myForm{display:block;margin:0px;padding:0px;line-height:1.5;border:#ccc 1px solid;font: 12px Arial, Helvetica, sans-serif;margin:5px 5px 0px 0px;border-radius:4px;}
-        .myForm .form_title{background:#428bca;padding:4px;color:#fff;border-radius:3px 3px 0px 0px;}
-        .myForm .form_content{padding:4px;background:#fff;}
-        .myForm .form_content table{border:0px}
-        .myForm .form_content table td{border:0px}
-        .myForm .form_content table .th{text-align:right;font-weight:bold}
-        .myForm .form_btn_div{text-align:center;border-top:#ccc 1px solid;background:#f5f5f5;padding:4px;border-radius:0px 0px 3px 3px;}
-        #propertyForm{float:left;width:260px}
+        .myForm .form_title{background:#f7f9fc;font-size: 14px;color:#3D5275;height: 36px;line-height: 36px;  text-align: center;border-top: 1px solid #f1f1f1;  border-bottom: 1px solid #f1f1f1;}
+        .myForm .form_content .th{width:113px;text-align: right;font-size: 14px;color:#3d5275;}
+        .myForm .form_content tr{display: block;margin-top: 14px;}
+        .myForm .form_profile tr{margin-top: 14px;}
+        .myForm .form_content tr td input,.myForm .form_content tr td select{height: 26px;width: 260px;border:1px solid #ccc;border-radius: 2px;}
+        .myForm .form_profile tr td:first-child{width: 113px;text-align: right}
+        .myForm .form_profile tr td input{ display:block;height: 26px;width: 260px;border: 1px solid #ccc;border-radius: 2px;}
+        /*.myForm .form_content .form_profile tr td.add_Btn{display:inline-block;width:18px;height:18px;line-height: 18px;*/
+            /*color: #fff;text-align: center;background: #40AFFE;border-radius: 50%;*/
+            /*cursor: pointer;}*/
+        /*.myForm .form_content .form_profile tr td.add_Btn:hover{background: #2e8ded}*/
+        .myForm .form_btn_div{text-align:center;border-top:#ccc 1px solid;padding:4px;border-radius:0px 0px 3px 3px;}
+        .myForm .form_btn_div .reset_btn,.myForm .form_btn_div .save_btn{background: #fff;width: 60px;border: 1px solid #5e93e7;border-radius: 2px;font-size: 12px;height: 26px;color: #5e93e7}
+        #propertyForm{overflow: hidden}
+        .hide{display: none;}
     </style>
     <script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/child.js"></script>
@@ -27,11 +35,17 @@
     <script type="text/javascript" src="../plugin/gooflow/promise.min.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/html2canvas.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/GooFlow.export.js"></script>
+    <script src="../plugin/layer/layer.js"></script>
     <script>
+      var jobid = sessionStorage.getItem('jobid');
+      var this_versionId = localStorage.getItem("versionId");
+      var this_projectId = localStorage.getItem("projectId");
+      var this_createUser = localStorage.getItem("createUser");
+
       var property={
         width:1230,
         height:800,
-        toolBtns:["start round mix","end round","join","fork","java","shell","spark"],
+        toolBtns:["start round mix","end round mix","parallel","merge","decision","java","shell","spark"],
         haveHead:true,
         headLabel:true,
         initLabelText:'流程图',
@@ -45,10 +59,11 @@
         cursor:"选择指针",
         direct:"结点连线",
         dashed:"关联虚线",
-        start:"入口结点",
-        "end":"结束结点",
-        fork:"分支结点",
-        "join":"联合结点",
+        start:"开始结点",
+        end:"结束结点",
+        parallel: '并行结点',
+        merge:"合并结点",
+        decision:"分支结点",
         group:"组织划分框编辑开关",
         java:"java",
         shell:"shell",
@@ -59,8 +74,32 @@
         demo=$.createGooFlow($("#demo"),property);
         demo.setNodeRemarks(remark);
         demo.onItemDel=function(id,type){
+          console.log()
+          var arr =[];
+          arr.push(id);
+          var datas ={
+            id: jobid,
+            ids: arr,
+            versionId: this_versionId
+          };
           if(confirm("确定要删除该单元吗?")){
-            this.blurItem();
+            var self = this;
+//            this.blurItem();
+//            return true;
+            $.ajax({
+              type:"POST",
+              url:"/xdbd-wf/api/jobComp/v1/deleteByIds",
+              dataType:"json",
+              contentType:"application/json",
+              data:JSON.stringify(datas),
+              success:function(datas){
+                self.blurItem();
+                return true;
+              },error:function(data){
+                console.log(JSON.stringify(data))
+            }
+            })
+            self.blurItem();
             return true;
           }else{
             return false;
@@ -68,11 +107,14 @@
         };
         //导出图片功能 END
         var exportName="流程图";
+//        console.log(demandDags)
+//        console.log(JSON.parse(demandDags))
         demo.loadData(jsondata);
+        console.log(demo)
         demo.onPrintClick=function(){demo.exportDiagram(exportName);}
-        //demo.loadData(jsondata);
         demo.onItemFocus=function(id,model){
           var obj;
+          console.log(this.propertyAlter)
           $("#ele_model").val(model);
           $("#ele_id").val(id);
           if(model=="line"){
@@ -84,17 +126,8 @@
             $("#ele_height").val("");
             $("#ele_from").val(obj.from);
             $("#ele_to").val(obj.to);
-          }else if(model=="node"){
-            obj=this.$nodeData[id];
-            var bbb = [];
-            console.log(obj)
-            for(i in obj) {
-              bbb.push("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>");
-              console.log(i,obj[i])
-              console.log("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>")
-            }
-            $(".aaa").html(bbb);
-            console.log($(".aaa").html());
+          }else if(model=="node") {
+            obj = this.$nodeData[id];
             $("#ele_type").val(obj.type);
             $("#ele_left").val(obj.left);
             $("#ele_top").val(obj.top);
@@ -102,6 +135,139 @@
             $("#ele_height").val(obj.height);
             $("#ele_from").val("");
             $("#ele_to").val("");
+            //obj=this.$nodeData[id];
+          }else if(model=="dataSheet") {
+            obj=this.params[id];
+            var formProperty = [];
+            var version = {
+              versionId:this_versionId
+            };
+            console.log(obj)
+            $.ajax({
+              type:"POST",
+              url:"/xdbd-wf/api/action/v1/getActionList",
+              dataType:"json",
+              contentType:"application/json",
+              data:JSON.stringify(version),
+              success:function(data){
+                console.log(data)
+                if(data.code == 0) {
+                  $.each(data.data,function(index,item) {
+                    $("#ele_genre").html('<option id='+item.actionId+'>'+item.name+'</option>');
+                  })
+                }
+              },error:function(data){
+                console.log(JSON.stringify(data))
+              }
+            })
+            //java的详细属性
+            if(obj.type=='java') {
+                formProperty.push('' +
+                  '<tr class="hide"><td class="th">error：</td><td class="java_error"><input type="text" value='+obj.action.error+'></td></tr>' +
+                  '<tr style="display: block"><td class="th">名称</td><td class="java_name"><input type="text" placeholder="请输入java名称" value='+obj.action.name+'></td></tr>' +
+                  '<tr class="hide"><td class="th">ok：</td><td class="java_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
+                  '<tr class="hide"><td class="th">java-capture_output：</td><td class="java_output"><input type="text" value='+obj.action.java.capture_output+'></td></tr>' +
+                  '<tr class="hide"><td class="th">java-job_tracker：</td><td class="java_tracker"><input type="text" value='+obj.action.java.job_tracker+'></td></tr>' +
+                  '<tr style="display: block"><td class="th">传入java的名称</td><td class="java_class"><input type="text" placeholder="请输入java的calss值" value='+obj.action.java.main_class+'></td></tr>' +
+                  '<tr class="hide"><td class="th">java-name_node：</td><td class="java_node"><input type="text" value='+obj.action.java.name_node+'></td></tr>' +
+                  '<tr style="display: block"><td class="th">环境参数</td><td class="java_opts"><input type="text" placeholder="请输入环境参数" value='+obj.action.java.java_opts+'></td></tr>' +
+                  '');
+                  $.each(obj.action.java.archive,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">java-archive：</td><td class="son_archive java_archive"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.java.arg,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">java-arg：</td><td class="son_archive java_arg"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.java.file,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">java-file：</td><td class="son_archive java_file"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.java.configuration.property,function(i,item) {
+                    //for(var k in item) {
+                      formProperty.push('<tr class="archive hide"><td class="th">java-property：</td><td class="son_archive java_property"><input type="text" class="names" value='+item.name+'><input type="text" class="values" value='+item.value+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                   // }
+                  })
+                  $.each(obj.action.java.prepare.delete,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">java-prepare-delete：</td><td class="son_archive java_delete"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.java.prepare.mkdir,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">java-prepare-mkdir：</td><td class="son_archive java_mkdir"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+              };
+             //shell的详细属性
+            if(obj.type=="shell") {
+              formProperty.push('' +
+                '<tr class="hide"><td class="th">error：</td><td class="shell_error"><input type="text" value='+obj.action.error+'></td></tr>' +
+                '<tr style="display: block"><td class="th">名称</td><td class="shell_name"><input type="text" placeholder="请输入shell名称" value='+obj.action.name+'></td></tr>' +
+                '<tr class="hide"><td class="th">ok：</td><td class="shell_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
+//                '<tr class="hide"><td class="th">shell-capture_output：</td><td class="shell_output"><input type="text" value='+obj.action.shell.capture_output+'></td></tr>' +
+                '<tr style="display: block"><td class="th">文件路径</td><td class="shell_exec"><input type="text" placeholder="请输入shell文件路径" value='+obj.action.shell.exec+'></td></tr>' +
+                '<tr class="hide"><td class="th">shell-job_tracker：</td><td class="shell_tracker"><input type="text" value='+obj.action.shell.job_tracker+'></td></tr>' +
+                '<tr class="hide"><td class="th">shell-name_node：</td><td class="shell_node"><input type="text" value='+obj.action.shell.name_node+'></td></tr>' +
+                '<tr class="hide"><td class="th">shell-xmlns：</td><td class="shell_xmlns"><input type="text" value='+obj.action.shell.xmlns+'></td></tr>');
+                  $.each(obj.action.shell.argument,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">shell-argument：</td><td class="son_archive shell_argument"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.shell.env_var,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">shell-env_var：</td><td class="son_archive shell_env_var"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.shell.file,function(i,item) {
+                    formProperty.push('<tr class="archive" style="display: block"><td class="th">文件全路径</td><td class="son_archive shell_file"><input type="text" placeholder="请输入shell文件全路径" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.shell.configuration.property,function(i,item) {
+//                    for(var k in item) {
+                      formProperty.push('<tr class="archive hide"><td class="th">shell-property：</td><td class="son_archive shell_property"><input type="text" class="names" value='+item.name+'><input type="text" class="values" class="values" value='+item.value+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                    //}
+                  })
+                  $.each(obj.action.shell.prepare.delete,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">shell-prepare-delete：</td><td class="son_archive shell_delete"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+                  $.each(obj.action.shell.prepare.mkdir,function(i,item) {
+                    formProperty.push('<tr class="archive hide"><td class="th">shell-prepare-mkdir：</td><td class="son_archive shell_mkdir"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                  })
+            };
+            //spark的详细属性
+            if(obj.type=='spark') {
+              formProperty.push('' +
+                '<tr class="hide"><td class="th">error：</td><td class="spark_error"><input type="text" value='+obj.action.error+'></td></tr>' +
+                '<tr style="display: block"><td class="th">项目名称</td><td class="spark_name"><input type="text" placeholder="请输入spark项目名称" value='+obj.action.name+'></td></tr>' +
+                '<tr class="hide"><td class="th">ok：</td><td class="spark_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
+                '<tr style="display: block"><td class="th">class名</td><td class="spark_clazz"><input type="text" placeholder="请输入spark的class值" value='+obj.action.spark.clazz+'></td></tr>' +
+                '<tr style="display:block"><td class="th">jar包名</td><td class="spark_jar"><input type="text" placeholder="请输入spark的jar包名" value='+obj.action.spark.jar+'></td></tr>' +
+                '<tr class="hide"><td class="th">spark-jobtracker：</td><td class="spark_jobtracker"><input type="text" value='+obj.action.spark.jobtracker+'></td></tr>' +
+                '<tr class="hide"><td class="th">spark-master：</td><td class="spark_master"><input type="text" value='+obj.action.spark.master+'></td></tr>' +
+                '<tr class="hide"><td class="th">spark-mode：</td><td class="spark_mode"><input type="text" value='+obj.action.spark.mode+'></td></tr>' +
+                '<tr style="display: block"><td class="th">程序名称</td><td class="spark_name"><input type="text" placeholder="请输入当前程序名称" value='+obj.action.spark.name+'></td></tr>' +
+                '<tr class="hide"><td class="th">spark-namenode：</td><td class="spark_node"><input type="text" value='+obj.action.spark.namenode+'></td></tr>' +
+                '<tr class="hide"><td class="th">spark-sparkopts：</td><td class="spark_opts"><input type="text" value='+obj.action.spark.sparkopts+'></td></tr>' +
+                '<tr class="hide"><td class="th">spark-xmlns：</td><td class="spark_xmlns"><input type="text" value='+obj.action.spark.xmlns+'></td></tr>');
+              $.each(obj.action.spark.arg,function(i,item) {
+                formProperty.push('<tr class="archive hide"><td class="th">spark-arg：</td><td class="son_archive spark_arg"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+              })
+              $.each(obj.action.spark.file,function(i,item) {
+                formProperty.push('<tr class="archive hide"><td class="th">spark-file：</td><td class="son_archive spark_file"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+              })
+              $.each(obj.action.spark.configuration.property,function(i,item) {
+                //for(var k in item) {
+                  formProperty.push('<tr class="archive hide"><td class="th">spark-property：</td><td class="son_archive spark_property"><input class="names" type="text" value='+item.name+'><input class="values" type="text" value='+item.value+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+                //}
+              })
+              $.each(obj.action.spark.prepare.delete,function(i,item) {
+                formProperty.push('<tr class="archive hide"><td class="th">spark-prepare-delete：</td><td class="son_archive spark_delete"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+              })
+              $.each(obj.action.spark.prepare.mkdir,function(i,item) {
+                formProperty.push('<tr class="archive hide"><td class="th">spark-prepare-mkdir：</td><td class="son_archive spark_mkdir"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
+              })
+            }
+           if(obj.type=='start'){
+                $('#ele_start').val(obj.start);
+            } else if(obj.type=='end') {
+                $('#ele_end').val(obj.end);
+            } else if(obj.type=='decision') {
+
+            } else if(obj.type=='action') {
+
+            }
+            $(".form_profile").html(formProperty);
           }else if(model=="area") {
             console.log(model)
           }
@@ -132,8 +298,23 @@
       });
       var out;
       function Export(){
-        console.log(demo.exportData())
-        document.getElementById("result").value=JSON.stringify(demo.exportData());
+        var jsons = {};
+        jsons.jobId = jobid;
+        jsons.versionId = this_versionId;
+        jsons.projectId = this_projectId;
+        jsons.dag = JSON.stringify(demo.exportData());
+        console.log(JSON.stringify(jsons))
+        $.post('/xdbd-wf/api/job/v1/update',{
+            jsonStr: JSON.stringify(jsons)
+        },function(data) {
+          console.log(data)
+          if(data.code == 0) {
+            layer.msg('模板保存成功！');
+            window.location.href = 'stencilmanage.html';
+          }
+        },"json")
+//        console.log(demo.exportData())
+//        document.getElementById("result").value=JSON.stringify(demo.exportData());
       }
       function ResetScale(){
         demo.resetScale( parseFloat(document.getElementById("wheelDelta").value) );
@@ -174,41 +355,309 @@
       //window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome
 
       function updataBtn() {
-        console.log("aaaa")
-      }
 
+        var types = $('#ele_type').val();
+        var jsonStr = {};
+        if(types == 'start'){
+          jsonStr = {
+            "start": $('#ele_start').val()
+          }
+        }
+        if(types == 'end') {
+          jsonStr = {
+            "end": $('#ele_end').val()
+          }
+        }
+        if(types == 'parallel') {
+
+          jsonStr = {
+            "parallel": {
+              "forks": [
+                {
+                  "name": "fork1",
+                  "start": [
+                    "sparkMerge1",
+                    "sparkMerge2"
+                  ]
+                },
+                {
+                  "name": "fork2",
+                  "start": [
+                    "sparkMerge11",
+                    "sparkMerge22"
+                  ]
+                }
+              ],
+              "join": {
+                "name": "joining",
+                "to": "hiveSwitch"
+              }
+            }
+          }
+        }
+        if(types == 'spark') {
+          var sparkAgList = $('.spark_arg input');
+          var sparkFileList = $('.spark_file input');
+          var sparkArchiveList = $('.spark_archive input');
+          var sparkDeleteList = $('.spark_delete input');
+          var sparkMkdirList = $('.spark_mkdir input');
+          var sparkPropertyListName = $('.spark_property .names');
+          var sparkPropertyListValue = $('.spark_property .values');
+          var sparkArgs = [];
+          var sparkFiles = [];
+          var sparkArchives = [];
+          var sparkDeletes = [];
+          var sparkNkdirs = [];
+          var sparkPropertys = [];
+          ergodic(sparkArgs, sparkAgList);
+          ergodic(sparkFiles, sparkFileList);
+          ergodic(sparkArchives, sparkArchiveList);
+          ergodic(sparkDeletes, sparkDeleteList);
+          ergodic(sparkNkdirs, sparkMkdirList);
+          objArr(sparkPropertys, sparkPropertyListName, sparkPropertyListValue);
+
+          jsonStr = {
+            "action":
+              {
+                "actionId":$('#ele_genre option').attr('id'),
+                "type": $('#ele_type').val(),
+                "name": $('.spark_name input').val(),
+                "ok": $('.spark_ok input').val(),
+                "error": $('.spark_error input').val(),
+                "spark": {
+                  "xmlns": $('.spark_xmlns input').val(),
+                  "jobtracker": $('.spark_jobtracker input').val(),
+                  "namenode": $('.spark_node input').val(),
+                  "master": $('.spark_master input').val(),
+                  "mode": $('.spark_mode input').val(),
+                  "name": $('.spark_name input').val(),
+                  "clazz": $('.spark_clazz input').val(),
+                  "jar": $('.spark_jar input').val(),
+                  "sparkopts": $('.spark_opts input').val(),
+                  "arg": sparkArgs,
+                  "file": sparkFiles,
+                  "prepare": {
+                    "delete": sparkDeletes,
+                    "mkdir": sparkNkdirs
+                  },
+                  "configuration": {
+                    "property": sparkPropertys
+                  }
+                }
+              }
+          }
+          console.log($('.spark_name').find("input").val())
+          if ($('.spark_name').find("input").val() == '') {
+            layer.msg('请输入name的值！');
+            return false;
+          } else if ($('.spark_clazz').find("input").val() == '') {
+            layer.msg('请输入clazz的值！');
+            return false;
+          } else if ($('.spark_jar').find("input").val() == '') {
+            layer.msg('请输入jar的值！');
+            return false;
+          } else if ($('.spark_name').find("input").val() == '') {
+            layer.msg('请输入spark-name的值！');
+            return false;
+          }
+        }
+        if(types == 'java') {
+          var javaAgList = $('.java_arg input');
+          var javaFileList = $('.java_file input');
+          var javaArchiveList = $('.java_archive input');
+          var javaDeleteList = $('.java_delete input');
+          var javaMkdirList = $('.java_mkdir input');
+          var javaPropertyListName = $('.java_property .names');
+          var javaPropertyListValue = $('.java_property .values');
+          var javaArgs = [];
+          var javaFiles = [];
+          var javaArchives = [];
+          var javaDeletes = [];
+          var javaNkdirs = [];
+          var javaPropertys = [];
+          ergodic(javaArgs,javaAgList);
+          ergodic(javaFiles,javaFileList);
+          ergodic(javaArchives,javaArchiveList);
+          ergodic(javaDeletes,javaDeleteList);
+          ergodic(javaNkdirs,javaMkdirList);
+          objArr(javaPropertys,javaPropertyListName,javaPropertyListValue);
+          jsonStr = {
+            "action":
+              {
+                "actionId":$('#ele_genre option').attr('id'),
+                "type": $('#ele_type').val(),
+                "name": $('.java_name input').val(),
+                "ok": $('.java_ok input').val(),
+                "error": $('.java_error input').val(),
+                "java":{
+                  "job_tracker":$('.java_tracker input').val(),
+                  "name_node":$('.java_node input').val(),
+                  "main_class":$('.java_class input').val(),
+                  "capture_output":$('.java_output input').val(),
+                  "java_opts":$('.java_opts').find('input').val(),
+                  "arg":javaArgs,
+                  "file":javaFiles,
+                  "archive":javaArchives,
+                  "prepare":{
+                    "delete":javaDeletes,
+                    "mkdir":javaNkdirs
+                  },
+                  "configuration":{
+                    "property":javaPropertys
+                  }
+                }
+              },
+            "type":"java"
+          }
+          if($('.java_name').find("input").val() == '') {
+            layer.msg('请输入name的值！');
+            return false;
+          } else if($('.java_class').find("input").val()=='') {
+            layer.msg('请输入java-main_class的值！');
+            return false;
+          }
+        }
+        if(types == 'shell') {
+          var shellArgList = $('.shell_argument input');
+          var shellEnvList = $('.shell_env_var input');
+          var shellArchiveList = $('.shell_archive input');
+          var shellDeleteList = $('.shell_delete input');
+          var shellMkdirList = $('.shell_mkdir input');
+          var shellPropertyListName = $('.shell_property .names');
+          var shellPropertyListValue = $('.shell_property .values');
+          var shellFileList = $('.shell_file input');
+          var shellArgs = [];
+          var shellEnvs = [];
+          var shellArchives = [];
+          var shellDeletes = [];
+          var shellNkdirs = [];
+          var shellPropertys = [];
+          var shellFiles = [];
+          ergodic(shellArgs,shellArgList);
+          ergodic(shellEnvs,shellEnvList);
+          ergodic(shellArchives,shellArchiveList);
+          ergodic(shellDeletes,shellDeleteList);
+          ergodic(shellNkdirs,shellMkdirList);
+          ergodic(shellFiles,shellFileList);
+          objArr(shellPropertys,shellPropertyListName,shellPropertyListValue);
+
+          jsonStr = {
+            "action":
+              {
+                "actionId": $('#ele_genre option').attr('id'),
+                "type": $('#ele_type').val(),
+                "name": $('.shell_name input').val(),
+                "ok": $('.shell_ok input').val(),
+                "error": $('.shell_error input').val(),
+                "shell": {
+                  "xmlns": $('.shell_xmlns input').val(),
+                  "job_tracker": $('.shell_tracker input').val(),
+                  "name_node": $('.shell_node input').val(),
+                  "exec": $('.shell_exec input').val(),
+                  "capture_output": $('.shell_output input').val(),
+                  "argument": shellArgs,
+                  "env_var": shellEnvs,
+                  "file": shellFiles,
+                  "prepare": {
+                    "delete": shellDeletes,
+                    "mkdir": shellNkdirs
+                  },
+                  "configuration": {
+                    "property": shellPropertys
+                  }
+                }
+              },
+            "type": "shell"
+          }
+          if($('.shell_name').find("input").val() == '') {
+            layer.msg('请输入name的值！');
+            return false;
+          } else if( $('.shell_exec').find("input").val() == '') {
+            layer.msg('请输入shell-exec的值！');
+            return false;
+          } else if($('.shell_file').find("input").val() == '') {
+            layer.msg('请输入shell-file的值！');
+            return false;
+          }
+        }
+        this.propertyAlter = false;
+        $.post('/xdbd-wf/api/jobComp/v1/save',{
+          webComponentId: $('#ele_id').val(),
+          name:'拉了个并行',
+          jobId:jobid,
+          sysJobCompId:'comp0003',
+          createUser: this_createUser,
+          remark:'lalala',
+          versionId: this_versionId,
+          attValue:JSON.stringify(jsonStr)
+        },function(data) {
+          if(data.code == 0) {
+            console.log(data)
+            layer.msg('保存成功！');
+          }
+        })
+      }
+      function add(this_) {
+        console.log($(this_).parents(".archive"))
+        var td = '<input type="text"/>';
+        $(this_).parents(".archive").find('.son_archive').append(td)
+      }
+      function down(_this) {
+        if($(_this).parents(".archive").find(".son_archive input").length > 1) {
+          $(_this).parents(".archive").find(".son_archive input").last().remove();
+        }
+
+      }
+      //属性详情展示遍历方法
+      function ergodic(arr,list) {
+        for(var i=0;i<list.length;i++) {
+          arr.push(list[i].value)
+        }
+      }
+      function objArr(arr,names,values) {
+        for(var i=0;i<names.length;i++) {
+          var object = {};
+          object.name = names[i].value;
+          arr.push(object)
+        }
+        for(var j=0;j<values.length;j++) {
+          arr[j].value = values[j].value
+        }
+      }
     </script>
 </head>
 <body>
 <div id="demo" style="float:left"></div>
 <form class="myForm" id="propertyForm">
     <div class="form_title">属性设置</div>
-    <div class="form_content">
-        <table>
-            <tr><td class="th">Id：</td><td><input type="text" style="width:120px" id="ele_id"/></td></tr>
-            <tr><td class="th">Name：</td><td><input type="text" style="width:120px" id="ele_name"/></td></tr>
-            <tr><td class="th">Type：</td><td><input type="text" style="width:120px" id="ele_type"/></td></tr>
-            <tr><td class="th">Model：</td><td><input type="text" style="width:120px" id="ele_model"/></td></tr>
-            <tr><td class="th">Left-r：</td><td><input type="text" style="width:120px" id="ele_left"/></td></tr>
-            <tr><td class="th">Top-r：</td><td><input type="text" style="width:120px" id="ele_top"/></td></tr>
-            <tr><td class="th">Width：</td><td><input type="text" style="width:120px" id="ele_width"/></td></tr>
-            <tr><td class="th">Height：</td><td><input type="text" style="width:120px" id="ele_height"/></td></tr>
-            <tr><td class="th">From：</td><td><input type="text" style="width:120px" id="ele_from"/></td></tr>
-            <tr><td class="th">To：</td><td><input type="text" style="width:120px" id="ele_to"/></td></tr>
-            <!--<tr><td class="th">：</td><td><input type="text" style="width:120px" id="ele_aa"/></td></tr>-->
+    <div>
+        <table class="form_content">
+            <tr><td class="th">程序ID</td><td><input type="text" id="ele_id"/></td></tr>
+            <!--<tr><td class="th">Name：</td><td><input type="text" id="ele_name" placeholder="name值"/></td></tr>-->
+            <tr><td class="th">数据类型</td><td><input type="text" id="ele_type"/></td></tr>
+            <!--<tr><td class="th">Model：</td><td><input type="text" id="ele_model"/></td></tr>-->
+            <!--<tr><td class="th">开始名称：</td><td><input type="text" id="ele_start"/></td></tr>-->
+            <!--<tr><td class="th">结束名称：</td><td><input type="text" id="ele_end"/></td></tr>-->
+            <!--<tr><td class="th">Left-r：</td><td><input type="text" id="ele_left"/></td></tr>-->
+            <!--<tr><td class="th">Top-r：</td><td><input type="text" id="ele_top"/></td></tr>-->
+            <!--<tr><td class="th">Width：</td><td><input type="text" id="ele_width"/></td></tr>-->
+            <!--<tr><td class="th">Height：</td><td><input type="text" id="ele_height"/></td></tr>-->
+            <tr><td class="th">连接线初始点</td><td><input type="text" id="ele_from"/></td></tr>
+            <tr><td class="th">连接线结束点</td><td><input type="text" id="ele_to"/></td></tr>
+            <tr><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>
         </table>
-        <table class="aaa"></table>
+        <table class="form_profile"></table>
     </div>
     <div class="form_btn_div">
-        <input type="reset" value="重置"/>
-        <input type="button" value="确定" onclick="updataBtn()"/>
+        <input class="reset_btn" type="reset" value="重置"/>
+        <input class="save_btn" type="button" value="确定" onclick="updataBtn()"/>
     </div>
 </form>
 <div style="clear:both">
-    <label for="wheelDelta">滚动值：</label><input type="text" id="wheelDelta" value="1">
-    <label for="detail">滚动值：</label><input type="text" id="detail" value="1"/>
+    <!--<label for="wheelDelta">滚动值：</label><input type="text" id="wheelDelta" value="1">-->
+    <!--<label for="detail">滚动值：</label><input type="text" id="detail" value="1"/>-->
     <input id="submit" type="button" value='导出结果' onclick="Export()"/>
-    <textarea id="result" row="6"></textarea>
+    <!--<textarea id="result" row="6"></textarea>-->
 </div>
 </body>
 </html>

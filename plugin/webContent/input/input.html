@@ -1,0 +1,120 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <style>
+        .ensure{
+            position: absolute;
+            right: 20px;
+            top: 12px;
+        }
+        .ensure_load{
+            display: inline-block;
+            padding: 4px 5px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+        }
+        .ensure_save{
+            display: inline-block;
+            height: 12px;
+            width: 12px;
+            background: url(../../../images/save.png) no-repeat center;
+            cursor: pointer;
+        }
+        .ensure_create{
+            display: inline-block;
+            margin-left: 12px;
+            height: 12px;
+            width: 12px;
+            background: url(../../../images/shengchengSQL.png) no-repeat center;
+            cursor: pointer;
+        }
+        .fromInp {
+            margin: 0 12px 14px;
+            
+        }
+        .fromInp label {
+            font-size: 14px;
+            color: #3d5275;
+        }
+        .fromInp input{
+            display: inline-block;
+            height: 26px;
+            width: 260px;
+            margin-left: 10px;
+            border: 1px solid #cccccc;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+        }
+        .fromInp .iInput{
+            position: absolute;
+            width: 135px;
+            height: 24px;
+            left: 89px;
+            top: 89px;
+            border-bottom: 0px;
+            border-right: 0px;
+            border-left: 0px;
+            border-top: 0px;
+        }
+        .regulation{
+            display: inline-block;
+            width: 30px;
+            height: 26px;
+        }
+        .regulation span{
+            display: inline-block;
+            height: 10px;
+            width: 10px;
+            cursor: pointer;
+        }
+        .regulation .add{
+            background: url(../../../images/tianjia.png) no-repeat center;
+        }
+        .regulation .lessen{
+            background: url(../../../images/shanchu.png) no-repeat center;
+        }
+    </style>
+
+    <!--<div id="aaa" style="height: 100%; width: 400px; border: 1px solid #000;position: relative;">-->
+        <div class="ensure">
+            <span class="ensure_load loadParguet">上传数据源</span>
+            <span class="ensure_save saveActionComp"></span>
+            <span class="ensure_create generateSql"></span>
+
+        </div>
+        <div class="fromInp" style="margin-top: 44px;">
+            <label>步骤名称：</label>
+            <input type="text" class="stepName"/>
+        </div>
+        <!--<div class="fromInp">-->
+            <!--<label>输出表名：</label>-->
+            <!--<input type="text"/>-->
+        <!--</div>-->
+        <div class="fromInp">
+            <label>选择表：</label>
+            <select class="fromTable" style="width:160px;height: 28px;margin-left: 25px;">
+
+            </select>
+            <!--<input id="input" name="input" class="iInput">-->
+        </div>
+<!--
+        <div class="fromInp">
+            <label>列名：</label>
+            <input style="margin-left: 38px" type="text" />
+        </div>-->
+        <div class="fromInp">
+            <label style="float: left;">提取字段：</label>
+            <div class="extractFields" style="float: left;">
+
+                <div class="archive extractField">
+                    <input class="fields" style="width:160px;height: 28px;margin-left: 12px;"/>
+
+                    <div class="regulation">
+                        <span class="add"></span>
+                        <span class="lessen"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    <!--</div>-->
