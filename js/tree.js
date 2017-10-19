@@ -13,6 +13,11 @@ $(function(){
 	var versionId = "";
 	var version = "";
 	var publishType = 1;
+	var directoryId = "";
+	var companyId = "";
+	var createUser = "";
+	var updateUser = "";
+	var rootPath = "";
 	
 	/*
 	 
@@ -597,6 +602,11 @@ $(function(){
 			
 			localStorage.setItem("projectId",projectId);
 			localStorage.setItem("versionId",versionId);
+			localStorage.setItem("directoryId",directoryId);
+			localStorage.setItem("companyId",companyId);
+			localStorage.setItem("createUser",createUser);
+			localStorage.setItem("updateUser",updateUser);
+			localStorage.setItem("rootPath",rootPath);
 			console.log(localStorage.getItem("projectId"));
 			console.log(localStorage.getItem("versionId"));
 			console.log(dirType);
@@ -639,7 +649,7 @@ $(function(){
 			console.log("1=="+directoryId)
 		}
 		
-		var onRightKey = function(e){console.log("2="+items);
+		var onRightKey = function(e){
 				basicContext.show(items, e);
 			}
 		$("#treeDemo").delegate("li","contextmenu",function(e){
@@ -693,8 +703,8 @@ $(function(){
 						var treeObj = $("#"+selectorId+"");
 						$.fn.zTree.init(treeObj, setting, res.data);
 						zTree_Menu = $.fn.zTree.getZTreeObj(""+selectorId+"");
-						curMenu = zTree_Menu.getNodes()[0];
-						zTree_Menu.selectNode(curMenu);
+//						curMenu = zTree_Menu.getNodes()[0];
+//						zTree_Menu.selectNode(curMenu);
 						treeObj.hover(function () {
 							if (!treeObj.hasClass("showIcon")) {
 								treeObj.addClass("showIcon");

@@ -120,6 +120,7 @@ $(function(){
               	if(res.code===0){
               		var data = res.data.slice(0,5);
               		var html = "";
+              		var html2 = "";//页面展示
               		topMenu = data;              		
               		$.each(data, function(i,item) {
               			html += `
@@ -133,9 +134,13 @@ $(function(){
 								</div>
 							</li>
               			`;
+              			html2 += `
+              				<li class="${i===0?'active':''}" id="${item.id}"><a href="javascript:;">${item.menuName}</a></li>
+              			`;
               		});
               		
               		$(".top-menu-15").empty().append(html);
+              		$(".mn-menu").empty().append(html2);
               		
 	            }
 			},
