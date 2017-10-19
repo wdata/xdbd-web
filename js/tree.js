@@ -1,4 +1,17 @@
 $(function(){
+	/*
+	 
+	 * url地址变量
+	 * BI : http://192.168.1.42:8084/xdbd-bi
+	 * ETL: http://192.168.1.42:8084/xdbd-etl
+	 * PM: http://192.168.1.42:8084/xdbd-pm
+	 * WF: http://192.168.1.42:8084/xdbd-wf
+	 * 
+	 * */
+	var $url1 = "/xdbd-bi";
+	var $url2 = "/xdbd-etl";
+	var $url3 = "/xdbd-pm";
+	var $url4 = "/xdbd-wf";
 	
 	/*
 	 
@@ -54,7 +67,7 @@ $(function(){
 	function createProjInfo(name,desp,path,type){
 		$.ajax({
 			type:'POST',
-            url:'/bigdata/project/createProject',
+            url:$url3+'/bigdata/project/createProject',
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
@@ -88,7 +101,7 @@ $(function(){
 	function getProjName(id){
 		$.ajax({
 			type:'POST',
-            url:'/bigdata/project/findProjectTree',
+            url:$url3+'/bigdata/project/findProjectTree',
             dataType:'json',
 	        contentType: "application/json",
 			data:JSON.stringify({
@@ -100,7 +113,7 @@ $(function(){
 					var treeObj = $("#treeDemo");
 					$.fn.zTree.init(treeObj, setting, zNodes);
 					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-					curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+					curMenu = zTree_Menu.getNodes()[0].children[0];
 					zTree_Menu.selectNode(curMenu);
 					treeObj.hover(function () {
 						if (!treeObj.hasClass("showIcon")) {
@@ -215,7 +228,7 @@ $(function(){
 		function confirmCreateSubmodule(directoryId,name){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/project/createSubProject',
+	            url:$url3+'/bigdata/project/createSubProject',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -263,7 +276,7 @@ $(function(){
 		function confirmCreateFinalSubmodule(directoryId,name){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/project/createEndProject',
+	            url:$url3+'/bigdata/project/createEndProject',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -311,7 +324,7 @@ $(function(){
 		function confirmCheckedInTest(projectId,versionId,version,publishType){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/project/publishProject',
+	            url:$url3+'/bigdata/project/publishProject',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -365,7 +378,7 @@ $(function(){
 		function findProjVersion(projectId){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/projectVersion/findVersion',
+	            url:$url3+'/bigdata/projectVersion/findVersion',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -398,7 +411,7 @@ $(function(){
 		function saveProjVersion(versionId,version,remark){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/projectVersion/saveVersion',
+	            url:$url3+'/bigdata/projectVersion/saveVersion',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -422,7 +435,7 @@ $(function(){
 		function switchProjVersion(versionId){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/projectVersion/saveVersion',
+	            url:$url3+'/bigdata/projectVersion/saveVersion',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -465,7 +478,7 @@ $(function(){
 		function confirmLeadingIn(){
 			$.ajax({
 				type:'POST',
-	            url:'/biddata/project/exportProject',
+	            url:$url3+'/biddata/project/exportProject',
 	            dataType:'json',
 	            contentType: "application/json",
 				success:function(res){
@@ -496,7 +509,7 @@ $(function(){
 		function confirmLeadingOut(projectId){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/project/importProject',
+	            url:$url3+'/bigdata/project/importProject',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -607,9 +620,7 @@ $(function(){
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-			console.log(localStorage.getItem("projectId"));
-			console.log(localStorage.getItem("versionId"));
-			console.log(dirType);
+			console.log("=="+projectId);
 			switch(dirType){
 				case "1":
 					items = items0;
@@ -630,15 +641,16 @@ $(function(){
 					items = items5;
 					break;
 				case "3":
+					items = [];
 					$("#iframepage1").attr("src","html/menuSet.html");//菜单设置
 					break;
 				case "4":
+					items = [];
 					$("#iframepage1").attr("src","html/pageFlow.html");//页面流
 					break;
 				default:
-					items = []
+					items = [];
 			}
-			console.log("1="+items);
 		}
 		
 		//弹出框树
@@ -646,6 +658,7 @@ $(function(){
 			var curTreeObj = $.fn.zTree.getZTreeObj("subTrees");
 			var curClickedDom = curTreeObj.getSelectedNodes();
 			directoryId = curTreeObj.getSelectedNodes()[0].directoryId;//目录id
+//			localStorage.setItem("directoryId",directoryId);
 			console.log("1=="+directoryId)
 		}
 		
@@ -691,7 +704,7 @@ $(function(){
 		function findCurTree(selectorId,dirId){
 			$.ajax({
 				type:'POST',
-	            url:'/bigdata/project/findProjectTreeById',
+	            url:$url3+'/bigdata/project/findProjectTreeById',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
