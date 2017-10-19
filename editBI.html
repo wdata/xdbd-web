@@ -12,13 +12,9 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
-    <!--<link rel="stylesheet" href="plugin/basicContext/default.min.css" />
-    <link rel="stylesheet" href="css/basicContext.min.css" />-->
-    <!--<link rel="stylesheet" href="plugin/colorpicker/css/normalize.css" />-->
     <link rel="stylesheet" href="plugin/context/context.standalone.css" />
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/default.min.css" />
-    <!--<link rel="stylesheet" href="plugin/colorpicker/css/htmleaf-demo.css" />-->
     <link rel="stylesheet" href="css/form.css" />
     <style type="text/css">
 	    .resize-item{
@@ -87,12 +83,44 @@
 				word-wrap: break-word;
 				text-align: left;
 			}
+			.content-text>div i{
+				font-style:italic;
+			}
+			/*	按钮	*/
+			.content-button{
+				width: 100%;
+				height: 100%;
+			}
+			.content-button button{
+				width: 100%;
+				height: 100%;
+			}
 			.image-class
 			,.image-class img{
 				width: 100%;
 				height: 100%;
+				overflow: hidden;
+				box-sizing: border-box;
 			}
 
+			.hint,.tooltip{
+				border: 1px solid #ddd;
+				background-color: #fff;
+				min-width:100px;
+				text-align: center;
+				border-radius: 5px;
+				padding:10px;
+				color:#666;
+				position: absolute;
+				display: none;
+			}
+
+		.axis path,
+			.axis line {
+				fill: none;
+				stroke: #000;
+				shape-rendering: crispEdges;
+			}
 
 		</style>
     <!--[if lt IE 9]>
@@ -104,7 +132,7 @@
 					<!--BI报表编辑模式-->
 					<div class="edit-state">
 						<div class="top-bar clearfix clearX">
-							<img src="images/icon_save.png" alt="" />
+							<img src="images/icon_save.png" alt=""  onclick="operating.save()" />
 							<img src="images/icon_copy.png" alt="" />
 							<img src="images/icon_paste.png" alt="" />
 							<img src="images/icon_move.png" alt="" />
@@ -178,7 +206,7 @@
 										<p>属性</p>
 										<div class="opt-chart-type">
 											<div class="chart-type-val">
-												<span>饼图</span>
+												<span>柱状图</span>
 												<i class="fa fa-caret-down fr"></i>
 											</div>
 											<div class="chart-type-lists">
@@ -290,7 +318,7 @@
 								</div>
 								<!--表格 end-->
 								<!--文本 start-->
-								<div class="text-attr-box">
+								<div class="text-attr-box" style="display: none;">
 									<div class="title-box">
 										<h3>文本</h3>
 										<div class="set-text-attr">
@@ -302,14 +330,14 @@
 													</div>
 												</div>
 												<div class="set-text-size sc-color">
-													<select name="" id="">
-														<option value="12">12</option>
-														<option value="14">14</option>
-														<option value="16">16</option>
-														<option value="20">20</option>
-														<option value="24">24</option>
-														<option value="32">32</option>
-														<option value="48">48</option>
+													<select name="">
+														<option value="1">9</option>
+														<option value="2">10</option>
+														<option selected value="3">12</option>
+														<option value="4">14</option>
+														<option value="5">16</option>
+														<option value="6">20</option>
+														<option value="7">24</option>
 													</select>
 													<i class="fa fa-caret-down"></i>
 												</div>
@@ -327,15 +355,15 @@
 												</div>
 												<div class="set-text-weight wa-text">
 													<span>样式</span>
-													<img src="images/t_bold.png" alt="" title="font-size:bold" class="active"/>
-													<img src="images/t_italic.png" alt="" title="fotn-style:italic" />
-													<img src="images/t_underline.png" alt="" title="text-decoration:underline" />
+													<img src="images/t_bold.png" alt="" title="font-size:bold" class="bold"/>
+													<img src="images/t_italic.png" alt="" title="fotn-style:italic"  class="italic" />
+													<img src="images/t_underline.png" alt="" title="text-decoration:underline" class="underline" />
 												</div>
 												<div class="set-text-align wa-text">
 													<span>对齐</span>
-													<img src="images/t_left.png" alt="" title="left" class="active"/>
-													<img src="images/t_center.png" alt="" title="center" />
-													<img src="images/t_right.png" alt="" title="right" />
+													<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
+													<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
+													<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
 												</div>
 											</div>
 										</div>
@@ -346,9 +374,94 @@
 								<div class="button-attr-box">
 									<div class="title-box">
 										<h3>按钮</h3>
+										<div class="set-button-price-text">
+											<p>设置按钮字体</p>
+											<input type="text" id="buttonText">
+										</div>
+										<div class="set-button-color set-button">
+											<div>按钮颜色</div>
+											<div class="set-text-color">
+												<div class="color-row">
+													<input type="hidden" name="unique-name-2" data-palette='["#DDDDDD","#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#DDDDDD">
+												</div>
+											</div>
+										</div>
+										<div class="set-button-size set-button">
+											<div>字体大小</div>
+											<div class="set-text-size sc-color">
+												<select name="">
+													<option selected value="12">12</option>
+													<option value="14">14</option>
+													<option selected value="16">16</option>
+													<option value="20">20</option>
+													<option value="24">24</option>
+													<option value="28">28</option>
+													<option value="32">32</option>
+												</select>
+												<i class="fa fa-caret-down"></i>
+											</div>
+										</div>
+										<div class="set-button-SizeColor set-button">
+											<div>字体颜色</div>
+											<div class="set-text-color">
+												<div class="color-row">
+													<input type="hidden" name="unique-name-3" data-palette='["#000","#ffffff","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000">
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 								<!--按钮 end-->
+								<!--图片 start-->
+								<div class="price-attr-box">
+									<div class="title-box">
+										<h3>图片</h3>
+										<div class="set-price-prop set-index-box">
+											<input type="checkbox"/>
+											<img src="images/xuankuang.png" alt="" />
+											<span>保持宽高比</span>
+										</div>
+										<div class="set-price-border-style set-price">
+											<div>边框样式</div>
+											<div class="set-text-size sc-color">
+												<select name="">
+													<option value="实线">实线</option>
+													<option value="点线">点线</option>
+													<option value="虚线">虚线</option>
+												</select>
+												<i class="fa fa-caret-down"></i>
+											</div>
+										</div>
+										<div class="set-price-color set-price">
+											<div>边框颜色</div>
+											<div class="set-text-color">
+												<div class="color-row">
+													<input type="hidden" name="unique-name-4" data-palette='["#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000000">
+												</div>
+											</div>
+										</div>
+										<div class="set-price-border set-price">
+											<div>边框宽度</div>
+											<div class="set-text-size sc-color">
+												<select name="">
+													<option value="0">0</option>
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+												</select>
+												<i class="fa fa-caret-down"></i>
+											</div>
+										</div>
+										<div class="set-price-radius set-price">
+											<div>圆角</div>
+											<input type="number" placeholder="0" maxlength="2">
+										</div>
+									</div>
+								</div>
+
+								<!--图片 end-->
 							</div>
 							<div class="op-box2 op-box">
 								<div class="title-box">
@@ -398,8 +511,9 @@
 							</div>
 						</div>
 					</div>
-				</div>
-		</div>
+			<!--	</div>-->
+			<!--</div>-->
+	
 		
 		<!--数据筛选(求和)-->
 		<div class="data-filter-mod modal">
@@ -647,13 +761,13 @@
 			</div>
 		</div>
 		
+
+	<div class="hint"></div>
+	
     <script src="plugin/jQuery/jquery.min.js"></script>
-   	<script src="plugin/validate/jquery.validate.min.js"></script>
-    <script src="plugin/validate/messages_zh.min.js"></script>
     <script src="plugin/jQuery/jQuery_ui.js"></script>
-    <script src="js/d3.v3.min.js"></script>
-    <script src="js/d3.tip.js"></script>
-    <!--<script src="plugin/basicContext/basicContext.min.js"></script>-->
+	<script src="plugin/d3/d3.v3.min.js"></script>
+	<script  src="plugin/d3/d3.tip.js"></script>
     <script src="plugin/layer/layer.js"></script>
     <script src="plugin/context/context.js"></script>
     <script src="plugin/zSize/jquery_zsize.js"></script>
