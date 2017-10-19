@@ -374,7 +374,7 @@ li {
 }
 .mn-menu li>a {
 	display: inline-block;
-	width: 80px;
+	padding:0 20px;
 	height: 34px;
 	line-height: 34px;
 	text-align: center;
@@ -383,7 +383,7 @@ li {
 }
 .mn-sider {
 	float: left;
-	width: 200px;
+	width: 240px;
 	position: absolute;
 	top: 81px;
 	bottom: 0;
@@ -392,7 +392,7 @@ li {
 .mn-htmlmain {
 	position: absolute;
 	top: 81px;
-	left: 201px;
+	left: 241px;
 	right: 0;
 	bottom: 0;
 }
