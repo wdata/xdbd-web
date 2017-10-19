@@ -44,7 +44,7 @@
 								<a href="javascript:;">菜单</a>
 							</li>
 							<li class="fl">
-								<a href="javascript:;">链接</a>
+								<a href="javascript:;" class="menu-link-tab">链接</a>
 							</li>
 						</ul>
 						<div class="m-tabs-cont">
@@ -70,17 +70,36 @@
 									<h4>顶部导航栏设置</h4>
 									<div>
 										<p class="m-pageset-btns">
-											<button class="active">标准</button>
+											<button class="active" data-s=>标准</button>
 											<button>自定义</button>
 										</p>
-										<div class="m-pageset-param">
+										<div class="m-top-value m-pageset-param">
 											<p>
 												<label for="">宽度</label>
-												<input type="text" class="fr" value="1920"/>
+												<input type="text" class="mtop-width fr" value="1920" readonly/>
 											</p>
 											<p>
 												<label for="">高度</label>
-												<input type="text" class="fr" value="600"/>
+												<input type="text" class="mtop-height fr" value="60" readonly/>
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="m-cont-box2">
+									<h4>左侧导航栏设置</h4>
+									<div>
+										<p class="m-pageset-btns">
+											<button class="active">标准</button>
+											<button>自定义</button>
+										</p>
+										<div class="m-left-value m-pageset-param">
+											<p>
+												<label for="">宽度</label>
+												<input type="text" class="mleft-width fr" value="240" readonly/>
+											</p>
+											<p>
+												<label for="">高度</label>
+												<input type="text" class="mleft-height fr" value="600" readonly/>
 											</p>
 										</div>
 									</div>
@@ -99,10 +118,10 @@
 								</div>
 								<div class="m-cont-box4">
 									<p>导航栏添加文本</p>
-									<input type="text" />
+									<input type="text" class="mnavigation-text"/>
 									<div class="m-sethtxt-btns fr">
-										<input type="button" name="" id="" value="确定"/>
-										<input type="button" name="" id="" value="清空"/>
+										<input type="button" name="" value="确定" id="ok-model" />
+										<!--<input type="button" name="" id="" value="清空"/>-->
 									</div>
 								</div>
 							</div>
@@ -180,7 +199,25 @@
 								</div>
 							</div>
 							<div class="m-cont2">
-								33
+										<div class="m-scroll-navs">
+											<div class="swiper-container">
+										    <div class="swiper-wrapper" id="link-scrollmenu">
+										        <!--<div class="swiper-slide">Slide 1</div>
+										        <div class="swiper-slide">Slide 2</div>
+										        <div class="swiper-slide">Slide 3</div>
+										        <div class="swiper-slide">Slide 4</div>-->
+										    </div>
+										    <div class="swiper-button-prev"></div>
+										    <div class="swiper-button-next"></div>
+										  </div>
+										  <div class="desp-link-tree">
+										  	<span>左边菜单</span>
+										  	<span>创建链接</span>
+										  </div>
+										  <div class="match-menu-box">
+										  	<ul id="link-tree" class="ztree"></ul>
+										  </div>
+										</div>
 							</div>
 						</div>
 					</div>
@@ -250,7 +287,9 @@
 				</div>
 			</div>
 		</div>
-	</div>
+		<!--页面链接弹出框-->
+		<div class="link-modal">
+			<ul id="modal-tree" class="ztree"></ul>
 		</div>
     <script src="../plugin/jQuery/jquery.min.js"></script>
     <script src="../plugin/zTree/jquery.ztree.all.min.js"></script>
