@@ -1,0 +1,180 @@
+<style>
+    select{
+        text-indent: 5px;
+    }
+    .clear{
+        clear: both;
+        height: 1px;
+    }
+    .ensure{
+        position: absolute;
+        right: 20px;
+        top: 12px;
+    }
+    .ensure_save{
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+        background: url(../../../images/save.png) no-repeat center;
+        cursor: pointer;
+    }
+    .ensure_create{
+        display: inline-block;
+        margin-left: 12px;
+        height: 12px;
+        width: 12px;
+        background: url(../../../images/shengchengSQL.png) no-repeat center;
+        cursor: pointer;
+    }
+    .fromInp {
+        margin: 0 12px 14px;
+
+    }
+    .fromInp label {
+        font-size: 14px;
+        color: #3d5275;
+    }
+    .fromInp input{
+        display: inline-block;
+        height: 26px;
+        width: 260px;
+        margin-left: 10px;
+        border: 1px solid #cccccc;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+    }
+    .fromInp .iInput{
+        position: absolute;
+        width: 135px;
+        height: 24px;
+        left: 89px;
+        top: 89px;
+        border-bottom: 0px;
+        border-right: 0px;
+        border-left: 0px;
+        border-top: 0px;
+    }
+    .regulation{
+        display: block;
+        width: 30px;
+        height: 26px;
+    }
+    .regulation span{
+        display: inline-block;
+        height: 10px;
+        width: 10px;
+        cursor: pointer;
+    }
+    .regulation .add{
+        background: url(../../../images/tianjia.png) no-repeat center;
+    }
+    .regulation .lessen{
+        background: url(../../../images/shanchu.png) no-repeat center;
+    }
+    .related_tit{
+        border-top: 1px solid #d9d9d9;
+        font-size: 14px;
+        color: #3d5275;
+        padding: 20px 0 10px 12px;
+    }
+    .extract_field{
+        border: 1px solid #d9d9d9;
+        font-size: 14px;
+        color: #3d5275;
+        margin: 0 12px 10px;
+    }
+    .related{
+        display: inline-block;
+        float:left;
+        margin-top: 12px;
+    }
+    .related label{
+        font-size: 14px;
+        text-indent: 10px;
+        line-height: 26px;
+        color: #3D5275;
+    }
+    .related select{
+        height: 26px;
+        width: 100px;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+    }
+    .related_tab{
+        margin-top: 22px;
+        text-align: center;
+        border-collapse:collapse;
+        width: 100%;
+    }
+    .related_tab thead tr{
+        border: 1px solid #e6e6e6;
+        background: #f7f9fc;
+        font-size: 12px;
+        color: #3D5275;
+        height: 26px;
+        line-height: 26px;
+    }
+    .related_tab tbody tr td select{
+        width: 100%;
+        text-align: center;
+        height: 26px;
+        margin-top: 8px;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+    }
+    .alias{
+        width: 100%;
+        height: 26px;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+    }
+
+</style>
+<div class="ensure">
+    <span class="ensure_save saveActionComp"></span>
+    <span class="ensure_create generateSql"></span>
+
+</div>
+<div class="fromInp" style="margin-top: 44px;">
+    <label>步骤名称：</label>
+    <input type="text" class="stepName"/>
+</div>
+<div class="fromInp">
+    <label>表输出：</label>
+    <input type="text" class="tableOut" style="margin-left: 23px;"/>
+</div>
+<div class="fromInp">
+    <label>选择表：</label>
+    <select class="fromTable" style="width:160px;height: 28px;margin-left: 25px;">
+    </select>
+</div>
+<div class="related_tit">排序字段</div>
+<div class="extract_field">
+    <table class="related_tab" cellspacing="0">
+        <thead>
+        <tr>
+            <th>列名</th>
+            <th>排序</th>
+        </tr>
+        </thead>
+        <tbody class="sortFields">
+        <tr class="sortField">
+            <td><select class="field"></select></td>
+            <td>
+                <select class="sort">
+                    <option>asc</option>
+                    <option>desc</option>
+                </select>
+            </td>
+            <td class="regulation"><span class="add sortAdd"></span><span class="lessen sortLessen"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

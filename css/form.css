@@ -2046,7 +2046,7 @@ div.ztree {
 .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
 .ztree li a span.button.switch {visibility:hidden}
 .ztree.showIcon li a span.button.switch {visibility:visible}
-.ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
+.ztree li a.curSelectedNode {color: #FFFFFF;background-color: #038DFF;border:0;height:30px;}
 .ztree li span {line-height:30px;}
 .ztree li span.button {margin-top: -7px;}
 .ztree li span.button.switch {width: 16px;height: 16px;}

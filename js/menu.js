@@ -1,4 +1,18 @@
 $(function(){
+	/*
+	 
+	 * url地址变量
+	 * BI : http://192.168.1.42:8084/xdbd-bi
+	 * ETL: http://192.168.1.42:8084/xdbd-etl
+	 * PM: http://192.168.1.42:8084/xdbd-pm
+	 * WF: http://192.168.1.42:8084/xdbd-wf
+	 * 
+	 * */
+	var $url1 = "/xdbd-bi";
+	var $url2 = "/xdbd-etl";
+	var $url3 = "/xdbd-pm";
+	var $url4 = "/xdbd-wf";
+	
 	
 	/*
 	 
@@ -87,7 +101,7 @@ $(function(){
 	function setHeadText(projectId,projectVersionId,createUser,menuName){
 		$.ajax({
 			type:'POST',
-            url:'/api/v1/saveProjectMenuTop',
+            url:$url1+'/api/v1/saveProjectMenuTop',
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -111,7 +125,7 @@ $(function(){
 	function getTopMenu(projectId,projectVersionId){
 		$.ajax({
 			type:'GET',
-            url:'/api/v1/findProjectMenuTop',
+            url:$url1+'/api/v1/findProjectMenuTop',
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId
@@ -120,6 +134,7 @@ $(function(){
               	if(res.code===0){
               		var data = res.data.slice(0,5);
               		var html = "";
+              		var html2 = "";//页面展示
               		topMenu = data;              		
               		$.each(data, function(i,item) {
               			html += `
@@ -133,9 +148,13 @@ $(function(){
 								</div>
 							</li>
               			`;
+              			html2 += `
+              				<li class="${i===0?'active':''}" id="${item.id}"><a href="javascript:;">${item.menuName}</a></li>
+              			`;
               		});
               		
               		$(".top-menu-15").empty().append(html);
+              		$(".mn-menu").empty().append(html2);
               		
 	            }
 			},
@@ -170,7 +189,7 @@ $(function(){
 	function modifyTopMenuName(id,menuName,updateUser){
 		$.ajax({
 			type:'PUT',
-            url:'/api/v1/updateMenuNameById',
+            url:$url1+'/api/v1/updateMenuNameById',
 			data:{
 				"id":id,
 				"menuName":menuName,
@@ -208,7 +227,7 @@ $(function(){
 	function modifyTopMenuPosition(id,updateUser,upOrDown){
 		$.ajax({
 			type:'PUT',
-            url:'/api/v1/updateProjectMentSortIndexTopById',
+            url:$url1+'/api/v1/updateProjectMentSortIndexTopById',
 			data:{
 				"id":id,
 				"updateUser":updateUser,
@@ -234,7 +253,7 @@ $(function(){
 	function deleteTopMenu(id){
 		$.ajax({
 			type:'DELETE',
-            url:'/api/v1/deleteProjectMenuTopById/'+id,
+            url:$url1+'/api/v1/deleteProjectMenuTopById/'+id,
 			success:function(res){
               	if(res.code===0){
               		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
@@ -254,7 +273,7 @@ $(function(){
 	function clearTopMenu(projectId,projectVersionId){
 		$.ajax({
 			type:'GET',
-            url:'/api/v1/deleteProjectMenuAll',
+            url:$url1+'/api/v1/deleteProjectMenuAll',
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId
@@ -328,6 +347,22 @@ $(function(){
 			onClick:createLink
 		}
 	};
+	var setting2 = {
+		view: {
+			selectedMulti: false,
+			showIcon: false,
+			showLine: false,
+			addDiyDom: addDiyDom
+		},
+		edit: {
+			enable: true
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		}
+	};
 	
 	//添加
 	$(".le-add").click(function(){
@@ -361,13 +396,20 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("id");
 		findLeftMenu(projectId,projectVersionId,topMenuId);
+	});
+	
+	//点击页面头部获取左部菜单
+	$(".mn-menu").delegate("li","click",function(){
+		$(this).addClass("active").siblings().removeClass("active");
+		topMenuId = $(this).attr("id");
+		findLeftMenu(projectId,projectVersionId,topMenuId);
 	})
 	
 	//添加左侧菜单
 	function addLeftMenu(menuName,projectMenuId,topMenuId,createUser){
 		$.ajax({
 			type:'POST',
-            url:'/api/v1/saveProjectMenuLeft',
+            url:$url1+'/api/v1/saveProjectMenuLeft',
 			data:{
 				"menuName":menuName,
 				"projectMenuId":projectMenuId,
@@ -386,12 +428,12 @@ $(function(){
 		});
 	}
 	
-//	findLeftMenu(projectId,projectVersionId,0);
+	findLeftMenu(projectId,projectVersionId,0);
 	//查询左侧菜单
 	function findLeftMenu(projectId,projectVersionId,topMenuId){
 		$.ajax({
 			type:'GET',
-            url:'/api/v1/findProjectMenuLeft',
+            url:$url1+'/api/v1/findProjectMenuLeft',
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -403,6 +445,7 @@ $(function(){
 //            		if(zNodes){
               			$.fn.zTree.init($("#match-tree"), setting, zNodes);
               			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
+              			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
 //            		}
 	            }
 			},
@@ -421,7 +464,7 @@ $(function(){
 	function deleteLeftMenu(id){
 		$.ajax({
 			type:'DELETE',
-            url:'/api/v1/deleteProjectMenuLeftById/'+id,
+            url:$url1+'/api/v1/deleteProjectMenuLeftById/'+id,
 			success:function(res){
               	if(res.code===0){
               		layer.msg(res.message, {icon: 6});
@@ -452,7 +495,7 @@ $(function(){
 	function orderLeftMenu(projectMenuId,updateUser,upOrDown){
 		$.ajax({
 			type:'PUT',
-            url:'/api/v1/updateProjectMentSortIndexLeftById',
+            url:$url1+'/api/v1/updateProjectMentSortIndexLeftById',
 			data:{
 				"id":projectMenuId,
 				"updateUser":updateUser,
@@ -478,7 +521,7 @@ $(function(){
 	function clearTopMenu(topMenuId){
 		$.ajax({
 			type:'GET',
-            url:'/api/v1/deleteProjectMenuLeftALlById',
+            url:$url1+'/api/v1/deleteProjectMenuLeftALlById',
 			data:{
 				"topMenuId":topMenuId
 			},
@@ -514,7 +557,6 @@ $(function(){
 		      		menuName = $.trim($(".le-add-menu").val());
 		      		if(menuName){
 				        addLeftMenu(menuName,projectMenuId,topMenuId,createUser);
-				        console.log(menuName,projectMenuId,topMenuId,createUser);
 		      		}else{
 		      			layer.msg("菜单名称不能为空", {icon: 5});
 		      		}
@@ -565,6 +607,7 @@ $(function(){
 	treeHover($("#match-tree"));
 	treeHover($("#link-tree"));
 	treeHover($("#modal-tree"));
+	treeHover($("#sidebar-tree"));
 	function treeHover(treeObj){
 		treeObj.hover(function(){
 			if (!treeObj.hasClass("showIcon")){
@@ -614,7 +657,7 @@ $(function(){
 	function addModel(projectId,projectVersionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,user){
 		$.ajax({
 			type:'POST',
-            url:'/api/v1/saveTemplateStyle',
+            url:$url1+'/api/v1/saveTemplateStyle',
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -674,7 +717,7 @@ $(function(){
 	function getProjPages(projectId){
 		$.ajax({
 			type:'GET',
-            url:'/bi/report/v1/page/list.json',
+            url:$url1+'/bi/report/v1/page/list.json',
             dataType:'json',
             contentType: 'application/json',
 			data:{
@@ -684,7 +727,7 @@ $(function(){
 				console.log(res);
 				if(res.code===0){
 //					zNodes = res.data;
-					$.fn.zTree.init($("#modal-tree"), setting1, zNodes);
+					$.fn.zTree.init($("#modal-tree"), setting, zNodes);
 				}
 			},
 			error:function(err){
@@ -696,7 +739,7 @@ $(function(){
 	function createPageLink(projectMenuId,updateUser,pageId){
 		$.ajax({
 			type:'POST',
-            url:'/api/v1/saveTemplateStyle',
+            url:$url1+'/api/v1/saveTemplateStyle',
 			data:{
 				"projectMenuId":projectMenuId,
 				"updateUser":updateUser,
