@@ -552,7 +552,7 @@ var table_date=[
     //                    "华北"
     //                ]
     //            },
-    //            "textFilter": [  文本筛选条件
+    //            "TextFilter": [  文本筛选条件
     //                {
     //                    "operator": "CONTAIN/NOT CONTAIN/START WITH/END WITH/EQUAL",
     //                    "value": "华东"
@@ -630,7 +630,7 @@ var table_date=[
     //                    "华北"
     //                ]
     //            },
-    //            "textFilter": [
+    //            "TextFilter": [
     //                {
     //                    "operator": "CONTAIN/NOT CONTAIN/START WITH/END WITH/EQUAL",
     //                    "value": "华东"

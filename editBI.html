@@ -468,7 +468,7 @@
 									<h3>数据源</h3>
 								</div>
 								<div class="data-source-box">
-									<select name="" id="">
+									<select name="">
 										<!--<option value="选择数据源">选择数据源</option>
 										<option value="选择数据源">数据1</option>
 										<option value="选择数据源">数据2</option>
@@ -554,7 +554,7 @@
 		</div>
 		
 		<!--项目过滤属性-->
-		<div class="filter-attr modal" style="display: block;">
+		<div class="filter-attr modal"  style="left:10%;display: block;">
 			<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
 			<div class="f-attr-box clearfix">
 				<div class="f-attr-left fl">
@@ -566,7 +566,7 @@
 					</ul>
 					<div class="f-box">
 						<div class="f-box1">
-							<ul class="clearfix">
+							<ul class="clearfix f-category">
 								<li class="fl">
 									<img src="images/icon_circle_on.png" alt="" />
 									<input type="radio" name="methods" checked="true"/>
@@ -581,8 +581,12 @@
 							<div class="f-search-box">
 								<input type="text" onchange="project.search(this)" placeholder="请输入您要添加的内容"/>
 							</div>
-							<div class="f-addbtn-box2" style="margin-left: 47px;display: none">
-								<button><i class="fa fa-plus"></i>添加</button>
+							<div class="f-addbtn-box f-addbtn-box-1" style="margin-left: 47px;display: none">
+								<button onclick="project.textAdd()"><i class="fa fa-plus"></i>添加</button>
+							</div>
+							<div class="f-addbtn-box-auto">
+								<ul>
+								</ul>
 							</div>
 							<div class="f-select-cont">
 								<ul>
@@ -612,26 +616,29 @@
 						<div class="f-box2">
 							<div class="f-select-box1">
 								<select name="">
-									<option value="">包含以下所有条件</option>
-									<option value="">不包含</option>
-									<option value="">可选择</option>
+									<option value="AND">包含以下所有条件</option>
+									<option value="OR">包含以下任一条件</option>
 								</select>
 								<i class="fa fa-caret-down"></i>
 							</div>
 							<div class="f-select-box2">
-								<div class="f-subselect">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
+								<div>
+									<div class="f-subselect">
+										<select onchange="project.textData()" name="">
+											<option value="CONTAIN">包含</option>
+											<option value="START WITH">开头是</option>
+											<option value="END WITH">结尾是</option>
+											<option value="NOT CONTAIN">不包含</option>
+											<option value="EQUAL">等于</option>
+										</select>
+										<i class="fa fa-caret-down"></i>
+									</div>
+									<input onchange="project.textData()" type="text" class="f-subselect-val" />
+									<img onclick="project.textDelete(this)" src="images/delete_01.png" alt="" class="f-del-btn"/>
 								</div>
-								<input type="text" class="f-subselect-val" />
-								<img src="images/delete_01.png" alt="" class="f-del-btn"/>
 							</div>
 							<div class="f-addbtn-box">
-								<button><i class="fa fa-plus"></i>添加</button>
+								<button onclick="project.textAddTo();"><i class="fa fa-plus"></i>添加</button>
 							</div>
 						</div>
 						<div class="f-box3">
@@ -721,7 +728,7 @@
 							<input type="radio" checked />
 							<span>包含</span>
 						</li>
-						<li class="fl" onclick="project.filter(this)">
+						<li class="fl fl-automatic" onclick="project.filter(this)">
 							<img src="images/icon_circle.png" alt="" />
 							<input type="radio"/>
 							<span>排除</span>
@@ -738,19 +745,19 @@
 					<div class="f-filter-result">
 						<ul>
 							<li>
-								筛选字段：<em>城市</em>
+								<span>筛选字段：</span><em>城市</em>
 							</li>
 							<li class="active">
-								列表筛选：<em>无</em>
+								<span>列表筛选：</span><em>无</em>
 							</li>
 							<li>
-								文本筛选：<em>无</em>
+								<span>文本筛选：</span><em>无</em>
 							</li>
 							<li>
-								条件筛选：<em>无</em>
+								<span>条件筛选：</span><em>无</em>
 							</li>
 							<li>
-								高级筛选：<em>无</em>
+								<span>高级筛选：</span><em>无</em>
 							</li>
 						</ul>
 					</div>
@@ -758,9 +765,74 @@
 			</div>
 			<div class="file-btns-col mcenter">
 				<span>
-					<button>确定</button>
-					<button>取消</button>
+					<button onclick="project.saveData()">确定</button>
+					<button onclick="project.close()">取消</button>
 				</span>
+			</div>
+		</div>
+		<div class="filter-attr data-filter-time modal">
+			<h3>数据筛选（日期）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+			<div class="f-attr-box clearfix">
+				<div class="f-attr-left fl">
+					<div class="relative-time">
+						<div class="radio">
+							<img src="images/icon_circle_on.png" alt="" />
+							<input type="radio" checked="checked"/>
+							<span>相对时间</span>
+						</div>
+						<div class="select">
+							<select name="" >
+								<option>上季度</option>
+							</select>
+							<i class="fa fa-caret-down"></i>
+							<div class="radio">
+								<img src="images/icon_checked.png" alt="" />
+								<input type="checkbox" checked="checked"/>
+								<span>相对时间</span>
+							</div>
+						</div>
+					</div>
+					<div class="">
+						<div class="radio">
+							<img src="images/icon_circle_on.png" alt="" />
+							<input type="radio" checked="checked"/>
+							<span>日期范围</span>
+						</div>
+						<div class="">
+							<div class=""></div><span>-</span><div class=""></div>
+							<i class="fa fa-caret-down"></i>
+							<i class="fa fa-caret-down"></i>
+						</div>
+					</div>
+				</div>
+				<div class="f-attr-right fr">
+					<h3>筛选汇总</h3>
+					<div class="f-filter-result">
+						<ul>
+							<li>
+								<span>筛选字段：</span><em>城市</em>
+							</li>
+							<li class="active">
+								<span>列表筛选：</span><em>无</em>
+							</li>
+							<li>
+								<span>文本筛选：</span><em>无</em>
+							</li>
+							<li>
+								<span>条件筛选：</span><em>无</em>
+							</li>
+							<li>
+								<span>高级筛选：</span><em>无</em>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="file-btns-col mcenter">
+	<span>
+		<button onclick="project.saveData()">确定</button>
+		<button onclick="project.close()">取消</button>
+	</span>
 			</div>
 		</div>
 		

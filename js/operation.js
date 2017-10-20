@@ -2,6 +2,7 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,save_arr=[]  // 保存全部数据；
     ,index_arr=[]  // 保存索引数据；
     ,copy_data = {} // 复制后保存数据；
+    ,screen_data = [] // 用以保存筛选后的数据,以fieldid作为指引
     ,data_type = ""  // 作为判断图形的；
     ,number=0   // 层级
     ,fieldid = null  // 记录数据筛选时候的ID
@@ -291,6 +292,7 @@ var refresh = {
                 'disCon': $(icon).attr("disCon"),
                 'aggregation': $(icon).attr("defaultaggregation")
             };
+            refresh.screen(icon,search_attr,0); // 筛选项
             chart_date.queryJson.x.push(search_attr);
         });
         $.each($("."+ type +"-attr-box .y-pills ul li"),function(index,icon){
@@ -303,6 +305,7 @@ var refresh = {
                 'disCon':$(icon).attr("disCon"),
                 'aggregation':$(icon).attr("defaultaggregation")
             };
+            refresh.screen(icon,search_attr,1); // 筛选项
             chart_date.queryJson.y.push(search_attr);
         });
         $.each($("."+ type +"-attr-box .datas-pills ul li"),function(index,icon){
@@ -315,9 +318,24 @@ var refresh = {
                 'disCon':$(icon).attr("disCon")||'',
                 'aggregation':$(icon).attr("defaultaggregation")||''
             };
+            refresh.screen(icon,search_attr,2); // 筛选项
             chart_date.queryJson.filter.push(search_attr);
         });
         return chart_date;
+    },
+    // 搜索匹配项（匹配：fieldid 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
+    screen:function(icon,search_attr,number){
+        // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
+        $.each(screen_data,function(x,y){
+            if($(icon).attr("fieldid") === y.fieldid && y.number === number ){
+                search_attr.listFilter = y.listFilter;
+                search_attr.textFilter = y.textFilter;
+                if(y.numericFilter.aggregation){
+                    search_attr.numericFilter = y.numericFilter;
+                }
+            }
+        });
+        return search_attr;
     },
     // 根据ID返回宽、高、度、定位、层级、控件类型type值
     whz:function(id,chart_date){
@@ -623,7 +641,94 @@ var filter = {
 // 项目属性（城市筛选）
 var project = {
     "list":null,
-    textFilter:function(field){
+    "fieldid": null,
+    "number":null,
+    "listFilter":{},
+    "textFilter":{},
+    "listFilterB":[],
+    // ajax
+    TFilter:function(field, name,fieldid,number){
+        var self = this;
+        this.fieldid = fieldid;    // 保存fieldid作为索引
+        this.number = number;
+
+        console.log(screen_data);
+        // 判断之前是否有筛选数据
+        // 先清除数据;
+        $(".f-select-box2").empty();
+        this.textAddTo();
+        $(".f-addbtn-box-auto ul").empty();
+        $(".f-filter-result li em").text("");
+        $(".f-filter-result li:first em").text(name);
+
+        $.each(screen_data,function(index,val){
+            if(fieldid === val.fieldid && val.number === number){
+                this.listFilter = val.listFilter;
+                this.textFilter = val.textFilter;
+                //
+                if(val.listFilter.operator === "NOT CONTAIN"){
+                    project.chear($(".f-select-methods li").eq(1));
+                }else if(val.listFilter.operator === "all"){
+                    project.chear($(".f-select-methods li").eq(2));
+                }else{
+                    project.chear($(".f-select-methods li").eq(0));
+                }
+
+                var html = '';
+                $.each(val.listFilterB,function(x,y){
+                    var c = '';
+                    if(val.listFilter.operator === "NOT CONTAIN"){
+                        c = 'style="text-decoration: line-through;"'
+                    }
+                    html = '<li><p '+ c +'>'+ y +'</p><span onclick="project.textDelete(this)">删除</span></li>';
+                });
+                $(".f-addbtn-box-auto ul").empty().append(html);
+
+                var htmlA = '';
+                var z1 = '';
+                $.each(val.textFilter.items,function(x,y){
+                    var a1,a2,a3,a4,a5;
+                    switch(y.operator){
+                        case "CONTAIN":a1="selected='true'";
+                            break;
+                        case "START WITH":a2="selected='true'";
+                            break;
+                        case "END WITH":a3="selected='true'";
+                            break;
+                        case "NOT CONTAIN":a4="selected='true'";
+                            break;
+                        case "EQUAL":a5="selected='true'";
+                            break;
+                    }
+                     htmlA += `<div>
+                        <div class="f-subselect">
+                            <select onchange="project.textData()" name="" >
+                                <option ${ a1 } value="CONTAIN">包含</option>
+                                <option ${ a2 } value="START WITH">开头是</option>
+                                <option ${ a3 } value="END WITH">结尾是</option>
+                                <option ${ a4 } value="NOT CONTAIN">不包含</option>
+                                <option ${ a5 } value="EQUAL">等于</option>
+                            </select>
+                            <i class="fa fa-caret-down"></i>
+                        </div>
+                        <input onchange="project.textData()" type="text" class="f-subselect-val" value="${ y.value }" />
+                        <img onclick="project.textDelete(this)" src="images/delete_01.png" alt="" class="f-del-btn"/>
+                    </div>`;
+                     z1 += y.operator + " " + y.value + " ";
+                });
+                $(".f-filter-result li").eq(2).find("em").text(z1);
+                $(".f-select-box2").empty().append(htmlA);
+
+                var z2 = '';
+                $.each(self.listFilter.value,function(x,y){
+                    z2 += self.listFilter.operator +  y + ' ';
+                })
+                $(".f-filter-result li").eq(1).find("em").text(z2);
+
+
+            }
+        });
+
         $.ajax({
             type:"get",
             url:"/xdbd-bi/bi/report/v1/data/list.json",
@@ -638,10 +743,30 @@ var project = {
                     var html = '';
                     var l = $(".f-select-cont ul").empty();
                     $.each(data.data,function(index,val){
+                        var a = "xuankuang"
+                            ,b = ""
+                            ,c = ''
+                            ,z1= ''
+                        // 重置数据
+                        if(self.listFilter.value){
+                            $.each(self.listFilter.value,function(x,y){
+                                if(val === y){
+                                    a = 'icon_checked';
+                                    b = "checked='checked'";
+                                    if(self.listFilter.operator === "NOT CONTAIN"){
+                                        c = 'style="text-decoration: line-through;"';
+                                    }
+                                }
+                                if(self.listFilter.operator === "all"){
+                                    a = 'icon_checked';
+                                    b = "checked = 'checked'";
+                                }
+                            });
+                        }
                         html += `<li>
-                                    <img src="images/xuankuang.png" alt="">
-                                    <input type="checkbox">
-                                    <span>${ val }</span>
+                                    <img src="images/${ a }.png" alt="">
+                                    <input ${ b } type="checkbox">
+                                    <span ${ c } >${ val }</span>
                                 </li>`;
                     });
                     l.append(html);
@@ -652,6 +777,7 @@ var project = {
             }
         })
     },
+    // 事件
     pjEvent:function(){
         //项目（过滤)属性
         $(".f-name").on("click","li",function(){
@@ -666,6 +792,8 @@ var project = {
             }else{
                 $(".f-select-methods").hide();
             }
+            $(".f-filter-result li").eq($idx+1).addClass("active")
+                .siblings().removeClass("active");
             $(this).addClass("active").siblings().removeClass("active");
             $(".f-box"+($idx+1)).show().siblings().hide();
         });
@@ -680,23 +808,27 @@ var project = {
                 project.check($(this),1,0);
                 $(this).find("span").css("text-decoration","none");
             }
+            project.listData();
         });
-        $(".f-box1:first li").on("click",function(){
+        $(".f-category li").on("click",function(){
             $(this).parent().find("input").removeAttr('checked')
                 .siblings("img").attr("src","images/icon_circle.png");
             project.check($(this),0,1);
             if($(this).index() === 0){
-                $(".f-select-cont").show();
-                $(".f-addbtn-box2").hide();
+                $(".f-select-cont").show().find("li").show();// 列表的列表
+                $(".f-addbtn-box-1").hide();// 自动的添加按钮
+                $(".f-addbtn-box-auto").hide();// 自动的列表
+                $(".f-select-methods li").show();
             }else{
                 $(".f-select-cont").hide();
-                $(".f-addbtn-box2").show();
+                $(".f-addbtn-box-1").show();
+                $(".f-addbtn-box-auto").show();
+                $(".fl-automatic").show().siblings().hide();
             }
+            $(".f-search-box input").val("");
         })
-
-
     },
-    // 勾选
+    // 列表筛选 -- 列表 -- 勾选
     check:function(ele,type,inType){
         var imgA = ""
             ,imgB = "";
@@ -713,7 +845,7 @@ var project = {
                 break;
         }
     },
-    // 文本筛选 -- 包含
+    // 列表筛选 -- 列表 -- 包含
     contain:function(_this){
         project.chear(_this);
         $.each($(".f-select-cont li"),function(index,val){
@@ -722,9 +854,9 @@ var project = {
             }
         });
         $(".f-select-methods").find("input").removeAttr("disabled","disabled");
-
+        this.listData();
     },
-    // 文本筛选 -- 排除
+    // 列表筛选 -- 列表 -- 排除
     filter:function(_this){
         project.chear(_this);
         $.each($(".f-select-cont li"),function(index,val){
@@ -733,17 +865,20 @@ var project = {
             }
         });
         $(".f-select-methods").find("input").removeAttr("disabled","disabled");
+        this.listData();
     },
-    // 文本筛选 -- 使用全部
+    // 列表筛选 -- 列表 -- 使用全部
     all:function(_this){
         project.chear(_this);
         project.check($(".f-select-cont li"),0,0);
         $(".f-select-methods").find("input").attr("disabled","disabled");
         $(".f-select-cont li span").css("text-decoration","none");
+        this.listData();
     },
+    // 列表筛选 -- 列表 -- 搜索
     search:function(_this){
         var text = $(_this).val();
-        if(text.length > 0){
+        if(text.length > 0 && text !== " "){
             $.each($(".f-select-cont li"),function(index,val){
                 if($(val).find("span").text().indexOf(text) === 0){
                     $(val).show();
@@ -755,30 +890,139 @@ var project = {
             $(".f-select-cont li").show();
         }
     },
+    // 列表筛选 -- 自动 -- 添加
+    textAdd:function(){
+        var text = $(".f-search-box input").val();
+        if(text.length >0 && text !== " "){
+            var html = '<li><p>'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
+            if($(".fl-automatic input").prop("checked")){
+                html = '<li><p style="text-decoration: line-through;">'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
+            }
+            $(".f-addbtn-box-auto ul").append(html);
+            $(".f-search-box input").val("");
+        }
+        this.listData();
+    },
+    // 列表筛选 -- 添加 -- 删除
+    textDelete:function(_this){
+        $(_this).parent().remove();
+        this.listData();
+        this.textData();
+    },
+    // 列表筛选 -- 保存数据
+    listData:function(){
+        project.listFilter.value = [];
+        project.listFilterB = [];
+        var text = ""
+            ,index = $(".f-select-methods li input:checked").parent().index();
+        if(index === 0 || index === 1){
+            var r = "",n = '';
+            if(index === 0){
+                r = "包含";
+                project.listFilter.operator = "CONTAIN"
+            }else{
+                r = "排除";
+                project.listFilter.operator = "NOT CONTAIN"
+            }
+            $.each($(".f-select-cont li"),function(x,y){
+                if($(y).find("input").prop("checked")){
+                    n += $(y).find("span").text();
+                    project.listFilter.value.push($(y).find("span").text());  // 保存数据
+                }
+            });
+            $.each($(".f-addbtn-box-auto li"),function(index,val){
+                n += $(val).find("p").text();
+                project.listFilter.value.push($(val).find("p").text());  // 保存数据
+                project.listFilterB.push($(val).find("p").text());
+            });
+            text = r + " " + n;
+        }else{
+            text = "使用全部";
+            project.listFilter.operator = "all";
+            project.listFilter.value = [];
+        }
+        $(".f-filter-result li").eq(1).find("em").empty().text(text);
+    },
+    // 文本筛选 -- 添加
+    textAddTo:function(){
+        var html = `<div>
+                        <div class="f-subselect">
+                            <select onchange="project.textData()" name="">
+                                <option value="CONTAIN">包含</option>
+                                <option value="START WITH">开头是</option>
+                                <option value="END WITH">结尾是</option>
+                                <option value="NOT CONTAIN">不包含</option>
+                                <option value="EQUAL">等于</option>
+                            </select>
+                            <i class="fa fa-caret-down"></i>
+                        </div>
+                        <input onchange="project.textData()" type="text" class="f-subselect-val" />
+                        <img onclick="project.textDelete(this)" src="images/delete_01.png" alt="" class="f-del-btn"/>
+                    </div>`;
+        $(".f-select-box2").append(html);
+    },
+    // 文本筛选 -- 修改（并保存）
+    textData:function(){
+        var x = "";
+        project.textFilter.items = [];
+        $.each($(".f-select-box2>div"),function(index,val){
+            var text = $(val).find("input").val();
+            var operator = $(val).find("select").val();
+            if(text.length > 0 && text !== ""){
+                x +=  operator + " " + text + " ";
+                var  p = {
+                    "value":text,
+                    "operator":operator
+                };
+                project.textFilter.items.push(p);
+            }
+        });
+        project.textFilter.andOr = $(".f-select-box1 select").val();
+        $(".f-filter-result li").eq(2).find("em").empty().text(x);
+    },
+    // 勾选变化
     chear:function(_this){
         $(".f-select-methods").find("input").removeAttr('checked')
             .siblings("img").attr("src","images/icon_circle.png");
         project.check($(_this),0,1);
-    }
+    },
+    // 保存
+    saveData:function(){
+        var self = this;
+        var data = {
+            "fieldid":this.fieldid,
+            "number":this.number,
+            "listFilter":this.listFilter,
+            "listFilterB":this.listFilterB,
+            "textFilter":this.textFilter,
+        };
+
+        var bur = true;
+        $.each(screen_data,function(index,val){
+           if(val.fieldid === self.fieldid && val.number === self.number) {
+               screen_data.splice(index,1,data);
+               bur = false;
+           }
+        });
+        if(bur){
+            screen_data.push(data);
+        }
+        $(".filter-attr").hide();
+    },
+    // 关闭弹出框
+    close:function(){
+        $(".filter-attr").hide();
+    },
 };
-$.ready(function(){
-    project.pjEvent();   // 选择城市事件
-    project.textFilter("StrAddress");
-});
+project.pjEvent();   // 选择城市事件
 
 
-
-
-
-
-
-
-
-//数据筛选(求和(值))
-//range 初始化
+//数据筛选(求和(值))range 初始化
 var swRag = {
     "min":$(".s-range-val .min"),
     "max":$(".s-range-val .max"),
+    "fieldid":null,
+    "number":null,
     // 事件
     ele:function(){
         $(".s-data-val ul>li").on("click",function(){
@@ -821,10 +1065,23 @@ var swRag = {
         swRag.switchRange($idx);
     },
     // 根据传递的元素赋值
-    ass:function(min,max){
+    ass:function(min,max,fieldid,number){
+        this.fieldid = fieldid;
+        this.number = number;
+
+        // 先重置，在按照数据添加进去
         swRag.min.val("");
         swRag.max.val("");
         swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
+
+        $.each(screen_data,function(index,val){
+           if(val.fieldid === fieldid && val.number === number){
+               swRag.min.val(val.numericFilter.range.min);
+               swRag.max.val(val.numericFilter.range.max);
+               swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
+           }
+        });
+
         if(min && !max){
             swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
             swRag.min.val(min);
@@ -841,17 +1098,36 @@ var swRag = {
     },
     // 保存
     save:function(){
+        var self = this;
         var index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
         if(!swRag.judgment(index)){	return	};
-        $(".data-filter-mod").hide();
 
         // 根据记录的ID，作为判断
-        $.each($(".datas-pills li"),function(index,val){
-            if($(val).attr("fieldid") === fieldid){
-                $(val).attr("min",swRag.min.val());
-                $(val).attr("max",swRag.max.val());
+        var data = {
+            "fieldid":this.fieldid,
+            "number":this.number,
+            "select":$(".s-data-val ul>li input:checked").parent().index(),
+            "numericFilter":{
+                "aggregation": "SUM",
+                "range":{
+                    "min":swRag.min.val(),
+                    "max":swRag.max.val()
+                }
             }
-        })
+        };
+        var bur = true;
+        $.each(screen_data,function(index,val){
+            if(val.fieldid === self.fieldid && val.number === self.number) {
+                screen_data.splice(index,1,data);
+                bur = false;
+            }
+        });
+        if(bur){
+            screen_data.push(data);
+        }
+        console.log(screen_data);
+
+        $(".data-filter-mod").hide();
     },
     // 取消
     cancel:function(){
