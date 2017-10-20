@@ -132,15 +132,12 @@ $(function(){
 		operationalContext = $("#operate-txt").val();
 		locationMenu = $("#location-menu").val();
 		searchLogLists(pageNum,pageSize,userAccount,operationalContext,locationMenu,startTime,endTime);
-		console.log(pageNum,pageSize,userAccount,operationalContext,locationMenu,startTime,endTime);
 	})
 	//搜索日志
 	function searchLogLists(pageNum,pageSize,userAccount,operationalContext,locationMenu,startTime,endTime){
 		$.ajax({
 			type:'POST',
             url:$url1+'/api/v1/logs/search',
-            dataType:'json',
-            contentType: 'application/json',
 			data:{
 				"page":pageNum,
 				"size":pageSize,
@@ -159,7 +156,7 @@ $(function(){
  					pageNum = data.pageNum;
  					pageSize = data.pageSize;
  					totalCount = data.totalCount;
-              		console.log(data);
+      
               		$.each(items, function(i,item) {
               			html += `
               				<tr id="${item.id}">
