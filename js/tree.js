@@ -31,6 +31,7 @@ $(function(){
 	var createUser = "";
 	var updateUser = "";
 	var rootPath = "";
+	var lv1DirId = "";
 	
 	/*
 	 
@@ -686,10 +687,12 @@ $(function(){
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-			console.log("=="+projectId);
+			console.log("1="+dirType);
 			switch(dirType){
 				case "1":
 					items = items0;
+					lv1DirId = curTreeObj.getSelectedNodes()[0].directoryId;
+					localStorage.setItem("lv1DirId",lv1DirId);
 				break;
 				case "8":
 					items = items1;
@@ -713,6 +716,18 @@ $(function(){
 				case "4":
 					items = [];
 					$("#iframepage1").attr("src","html/pageFlow.html");//页面流
+					break;
+				case "12":
+					items = [];
+					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//etl页面
+					break;
+				case "13":
+					items = [];
+					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//作业流页面
+					break;
+				case "15":
+					items = [];
+					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
 					break;
 				default:
 					items = [];

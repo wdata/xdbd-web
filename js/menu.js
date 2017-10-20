@@ -26,17 +26,19 @@ $(function(){
 	 * parentId
 	 * */
 	
-	var projectId = "2c747fa149ca4efe9831a4bb85be00bd";
-	var projectVersionId = "1a93a112fa3d4b8aab436560fdd77ce0";
-	var dirId = "5305c5256ad74b86aede5e4414caa4de";
-	var createUser = "c1";
-	var updateUser ="c2"
+	var projectId = localStorage.getItem("projectId");
+	var projectVersionId = localStorage.getItem("versionId");
+	var dirId = localStorage.getItem("directoryId");
+	var createUser = localStorage.getItem("createUser");
+	var updateUser = localStorage.getItem("updateUser");
 	var topMenu = [];//顶部导航菜单
 	var topMenuId = 0;//topMenu--id
 	var projectMenuId;//projectMenuId
 	var zNodes = [];//存放子菜单的数据
 	var LeftMenu = [];//存放左侧所有菜单
 	var pageId = [];//链接页面的id
+	var lv1DirId = localStorage.getItem("lv1DirId");//一级目录id
+
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
 		var $idx = $(this).index();
@@ -691,21 +693,22 @@ $(function(){
 	})
 		
 	$("#link-tree").delegate(".page-link-btn","click",function(){
-		//getProjPages("95263f4682354ce6aa7a904f1394d381");
+		getProjPages(lv1DirId);
+		console.log(lv1DirId);
 		var index = layer.open({
 		      type: 1,
-		      btn: ['确定', '取消'],
+//		      btn: ['确定', '取消'],
 		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
 		      content:$(".link-modal"),
-		      yes: function(index, layero){
-		      	
-		      	layer.close(index);
-		      },
-		      btn2:function(){
-		      	layer.close(index);
-		      },
+//		      yes: function(index, layero){
+//		      	
+//		      	layer.close(index);
+//		      },
+//		      btn2:function(){
+//		      	layer.close(index);
+//		      },
 		      cancel:function(){
 		      	layer.close(index);
 		      }
@@ -714,22 +717,20 @@ $(function(){
 	   	
 	});
 	
-	function getProjPages(projectId){
+	function getProjPages(lv1DirId){
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectDirTreeById',
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
-				"name":name,
-				"remark":desp,
-				"path":path,
-				"scheduledType":type
+				"id":lv1DirId
 			}),
 			success:function(res){
-				console.log(res);
+				console.log(res.data);
               	if(res.code===0){
-              		getProjName(0);//刷新项目树
+              		zNodes = res.data;
+              		$.fn.zTree.init($("#modal-tree"), setting1, zNodes);
 					layer.msg(res.message, {icon: 6});
 	            }
 			},
