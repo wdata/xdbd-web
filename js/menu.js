@@ -22,7 +22,7 @@ $(function(){
 	 * projectVersionId = localStorage.getItem("versionId")
 	 * createUser
 	 * updateUser
-	 * 
+	 * directoryId 根据 directoryId 查询
 	 * parentId
 	 * */
 	
@@ -84,7 +84,7 @@ $(function(){
 	       	loop:true,
 	       	slidesPerView: 3
 	    });
-		 e.preventDefault()
+		 e.preventDefault();
 	})
 	
 	//顶部菜单
@@ -691,7 +691,7 @@ $(function(){
 	})
 		
 	$("#link-tree").delegate(".page-link-btn","click",function(){
-		getProjPages("95263f4682354ce6aa7a904f1394d381");
+		//getProjPages("95263f4682354ce6aa7a904f1394d381");
 		var index = layer.open({
 		      type: 1,
 		      btn: ['确定', '取消'],
@@ -716,19 +716,22 @@ $(function(){
 	
 	function getProjPages(projectId){
 		$.ajax({
-			type:'GET',
-            url:$url1+'/bi/report/v1/page/list.json',
+			type:'POST',
+            url:$url3+'/bigdata/project/findProjectDirTreeById',
             dataType:'json',
-            contentType: 'application/json',
-			data:{
-				"projectId":projectId
-			},
+            contentType: "application/json",
+			data:JSON.stringify({
+				"name":name,
+				"remark":desp,
+				"path":path,
+				"scheduledType":type
+			}),
 			success:function(res){
 				console.log(res);
-				if(res.code===0){
-//					zNodes = res.data;
-					$.fn.zTree.init($("#modal-tree"), setting, zNodes);
-				}
+              	if(res.code===0){
+              		getProjName(0);//刷新项目树
+					layer.msg(res.message, {icon: 6});
+	            }
 			},
 			error:function(err){
 				console.log(err);
