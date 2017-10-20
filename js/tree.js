@@ -31,6 +31,7 @@ $(function(){
 	var createUser = "";
 	var updateUser = "";
 	var rootPath = "";
+	var lv1DirId = "";
 	
 	/*
 	 
@@ -527,8 +528,69 @@ $(function(){
 			});
 		}
 		var dataSourceConfig = function(){
-			alert('dataSourceConfig');
+			$('.data-source-config').css('display','block');
 		};
+		// 添加数据源
+		$('.addBtn').click(function() {
+      var dbType = $('#db_type').val();
+      var dbName = $('.db_name').val();
+      var dbSite = $('.db_site').val();
+      var dbPort = $('.db_port').val();
+      var dbDatabase = $('.db_database').val();
+      var dbUser = $('.db_user').val();
+      var dbPassword = $('.db_password').val();
+      if (dbName == '') {
+        layer.msg('请输入名称');
+      } else if (dbSite == '') {
+        layer.msg('请输入数据库地址');
+      } else if (dbPort == '') {
+        layer.msg('请输入端口');
+      } else if (dbDatabase == '') {
+        layer.msg('请输入数据库')
+      } else if (dbUser == '') {
+        layer.msg('请输入用户名')
+      } else if (dbPassword == '') {
+        layer.msg('请输入密码')
+      } else {
+        $.ajax({
+          type: 'POST',
+          url: $url2 +'/api/datasource/v1/saveDataSource', //$url2 +
+          dataType: 'json',
+          contentType: "application/json",
+          data: JSON.stringify({
+            "projectId": projectId,
+            "name": dbName,
+            "conHost": dbSite,
+            "conPort": dbPort,
+            "conType": "jdbc",
+            "dbName": dbDatabase,
+            "dbType": dbType,
+            "password": dbPassword,
+            "username": dbUser,
+            "dsId": "",
+            "companyId":companyId
+          }),
+          success: function (res) {
+            console.log(res);
+            if (res.code === 0) {
+              $('.data-source-config').css('display', 'none');
+              layer.msg('成功添加数据源');
+            }
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+      }
+    });
+		// 链接测试
+		$('.linkBtn').click(function() {
+        layer.msg('此功能暂未实现')
+    });
+		// 关闭数据源
+		$('.closeBtn').click(function() {
+      $('.data-source-config').css('display','none');
+    });
 		var setProperty = function(){
 			$(".proj-attr").show();
 		};
@@ -612,18 +674,25 @@ $(function(){
 			projectId = curTreeObj.getSelectedNodes()[0].projectId;//项目id
 			versionId = curTreeObj.getSelectedNodes()[0].versionId;//版本id
 			//version = curTreeObj.getSelectedNodes()[0].version;//版本
-			
-			localStorage.setItem("projectId",projectId);
+
+      companyId = curTreeObj.getSelectedNodes()[0].companyId;
+      createUser = curTreeObj.getSelectedNodes()[0].createUser;
+      updateUser = curTreeObj.getSelectedNodes()[0].updateUser;
+      rootPath = curTreeObj.getSelectedNodes()[0].rootPath;
+
+      localStorage.setItem("projectId",projectId);
 			localStorage.setItem("versionId",versionId);
 			localStorage.setItem("directoryId",directoryId);
 			localStorage.setItem("companyId",companyId);
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-			console.log("=="+projectId);
+			console.log("1="+dirType);
 			switch(dirType){
 				case "1":
 					items = items0;
+					lv1DirId = curTreeObj.getSelectedNodes()[0].directoryId;
+					localStorage.setItem("lv1DirId",lv1DirId);
 				break;
 				case "8":
 					items = items1;
@@ -647,6 +716,18 @@ $(function(){
 				case "4":
 					items = [];
 					$("#iframepage1").attr("src","html/pageFlow.html");//页面流
+					break;
+				case "12":
+					items = [];
+					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//etl页面
+					break;
+				case "13":
+					items = [];
+					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//作业流页面
+					break;
+				case "15":
+					items = [];
+					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
 					break;
 				default:
 					items = [];

@@ -873,6 +873,7 @@ div.tree-nav {
 	color: #666666;
 	background-color: #FBFBFB;
 	border-bottom: 1px solid #F1F1F1;
+    text-align: center;
 }
 .modal>h3 img {
 	margin-right: 12px;
@@ -1568,6 +1569,7 @@ div.f-addbtn-box-auto li{
 	display: inline-block;
 	position: relative;
 	width: 160px;
+    margin-left: 16px;
 	height: 28px;
 }
 .da-sele-box>select {
@@ -1593,8 +1595,19 @@ div.f-addbtn-box-auto li{
 .da-source-account>p+p{
 	margin-top: 20px;
 }
-.da-source-account>p>span {
+.da-source-account>p>label{
+    display: inline-block;
+    width: 90px;
+    text-align: right;
+}
+.da-source-account>p>input {
 	margin-left: 15px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    height: 26px;
 }
 /*BI报表操作界面布局*/
 .top-bar {
