@@ -1096,15 +1096,24 @@ div.tree-nav {
 	left: 0;
 	top: 0;
 	display: none;
+	height: 100%;
+	overflow: hidden;
 }
 .f-box>div:first-of-type {
 	display: block;
 }
 .f-box1 ul{
-	height: 16px;
+	/*height: 16px;*/
 	line-height: 16px;
 	margin-top: 20px;
 	margin-bottom: 26px;
+}
+.f-select-cont{
+	height: 64%;
+}
+.f-select-cont ul{
+	height: 100%!important;
+	overflow: auto;
 }
 .f-box1 ul>li {
 	position: relative;
