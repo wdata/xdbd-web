@@ -61,7 +61,7 @@
 .demand_name label span{
     color: red;
 }
-.demand_name .new_name,.demand_name .new_type{
+.demand_name .new_name,.demand_name .new_type,.demand_name .new_ds{
     width: 310px;
     display: block;
     float: left;
