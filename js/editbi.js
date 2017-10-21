@@ -12,7 +12,7 @@ $(function(){
             },
             success:function(res){
               if(res.code===0){
-              	if(res.message){
+              	if(res.message && res.data.length >0){
               		var data = res.data,
               		html = '+',
               		biSetId = '';
@@ -457,7 +457,7 @@ function clear(id){
         }
         // 图片
         if(item.cid === id && item.customData.dataType === "image"){
-            var price = item.customData.price;
+            var price = item.customData.controls;
             if(price.ratio){
                 $(".set-price-prop input").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");
             }else{
@@ -481,12 +481,12 @@ function clear(id){
         }
         // 文本
         if(item.cid === id && item.customData.dataType === "text"){
-            var text = item.customData.text;
+            var text = item.customData.controls;
             $(".set-text-attr-wrap .palette-color-picker-button").css("background-color",text.color);
         }
         // 按钮
         if(item.cid === id && item.customData.dataType === "button"){
-            var button = item.customData.button;
+            var button = item.customData.controls;
             $("#buttonText").val(button.content);
             $(".set-button-color .palette-color-picker-button").css("background-color",button["background-color"]);
             $(".set-button-size select").val(parseInt(button['font-size']));
