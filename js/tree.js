@@ -31,7 +31,8 @@ $(function(){
 	var createUser = "";
 	var updateUser = "";
 	var rootPath = "";
-	var lv1DirId = "";
+	var lv1DirId = "";//一级目录id
+	var pageFlowId = "";//页面流父级->目录 id
 	
 	/*
 	 
@@ -674,20 +675,20 @@ $(function(){
 			projectId = curTreeObj.getSelectedNodes()[0].projectId;//项目id
 			versionId = curTreeObj.getSelectedNodes()[0].versionId;//版本id
 			//version = curTreeObj.getSelectedNodes()[0].version;//版本
+      		companyId = curTreeObj.getSelectedNodes()[0].companyId;
+      		createUser = curTreeObj.getSelectedNodes()[0].createUser;
+      		updateUser = curTreeObj.getSelectedNodes()[0].updateUser;
+      		rootPath = curTreeObj.getSelectedNodes()[0].rootPath;
 
-      companyId = curTreeObj.getSelectedNodes()[0].companyId;
-      createUser = curTreeObj.getSelectedNodes()[0].createUser;
-      updateUser = curTreeObj.getSelectedNodes()[0].updateUser;
-      rootPath = curTreeObj.getSelectedNodes()[0].rootPath;
-
-      localStorage.setItem("projectId",projectId);
+      		localStorage.setItem("projectId",projectId);
 			localStorage.setItem("versionId",versionId);
 			localStorage.setItem("directoryId",directoryId);
 			localStorage.setItem("companyId",companyId);
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-			console.log("1="+dirType);
+//			console.log("1="+dirType);
+//			console.log("2="+directoryId);
 			switch(dirType){
 				case "1":
 					items = items0;
@@ -711,23 +712,29 @@ $(function(){
 					break;
 				case "3":
 					items = [];
-					$("#iframepage1").attr("src","html/menuSet.html");//菜单设置
+					$("#iframepage1").attr("src","html/menuSet.html?directoryId="+directoryId);//菜单设置
 					break;
 				case "4":
 					items = [];
-					$("#iframepage1").attr("src","html/pageFlow.html");//页面流
+					$("#iframepage1").attr("src","html/pageFlow.html?directoryId="+directoryId);//页面流
 					break;
 				case "12":
 					items = [];
-					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//etl页面
+					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
 					break;
 				case "13":
 					items = [];
-					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//作业流页面
+					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
 					break;
 				case "15":
 					items = [];
 					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
+					break;
+				case "2":
+				case "10":
+					items = [];
+					pageFlowId = directoryId;
+					localStorage.setItem("pageFlowId",pageFlowId);
 					break;
 				default:
 					items = [];

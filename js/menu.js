@@ -36,8 +36,10 @@ $(function(){
 	var projectMenuId;//projectMenuId
 	var zNodes = [];//存放子菜单的数据
 	var LeftMenu = [];//存放左侧所有菜单
-	var pageId = [];//链接页面的id
+	var pageId;//链接页面的id
 	var lv1DirId = localStorage.getItem("lv1DirId");//一级目录id
+	var index;//layer弹出框
+	var dirType;//目录类型（12/13/15）
 
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
@@ -365,6 +367,25 @@ $(function(){
 			}
 		}
 	};
+	var setting3 = {
+		view: {
+			selectedMulti: false,
+			showIcon: false,
+			showLine: false,
+			addDiyDom: addDiyDom
+		},
+		edit: {
+			enable: true
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			onClick:fpageLink
+		}
+	};
 	
 	//添加
 	$(".le-add").click(function(){
@@ -584,8 +605,30 @@ $(function(){
 		var zTree = $.fn.zTree.getZTreeObj("link-tree");
 		var curDom = zTree.getSelectedNodes();
 		projectMenuId = curDom[0].projectMenuId;
-		console.log(projectId);
 	}
+	function fpageLink(){
+		var zTree = $.fn.zTree.getZTreeObj("modal-tree");
+		var curDom = zTree.getSelectedNodes();
+//		projectMenuId = curDom[0].projectMenuId;
+		dirType = curDom[0].directoryType;
+		switch(dirType){
+			case "12":
+			case "13":
+			case "15":
+				pageId = curDom[0].directoryId;
+			break;
+			default:
+				pageId = "";	
+		}
+		if(pageId){
+			createPageLink(projectMenuId,createUser,pageId);
+			console.log(projectMenuId,createUser,pageId);
+			layer.close(index);
+		}else{
+			layer.msg("请选择页面", {icon: 0});
+		}
+	}
+	
 	
 	var IDMark_A = "_a";
 	function addDiyDom(treeId, treeNode) {
@@ -682,6 +725,15 @@ $(function(){
 		});
 	}
 	
+	//上传图片
+//	$('.m-uploadimg-box input[type="file"]').on(change,upLoadImg)
+	function upLoadImg(){
+		var file = this.files[0];
+		if(!/image\/\w+)
+		console.log(file);
+	}
+	//删除图片
+	
 	/* 
 	 * 链接
 	 */
@@ -695,7 +747,7 @@ $(function(){
 	$("#link-tree").delegate(".page-link-btn","click",function(){
 		getProjPages(lv1DirId);
 		console.log(lv1DirId);
-		var index = layer.open({
+		index = layer.open({
 		      type: 1,
 //		      btn: ['确定', '取消'],
 		      area: ['490px', '330px'],
@@ -720,7 +772,7 @@ $(function(){
 	function getProjPages(lv1DirId){
 		$.ajax({
 			type:'POST',
-            url:$url3+'/bigdata/project/findProjectDirTreeById',
+            url:$url3+'/bigdata/project/findProjectTreeById',
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
@@ -730,8 +782,7 @@ $(function(){
 				console.log(res.data);
               	if(res.code===0){
               		zNodes = res.data;
-              		$.fn.zTree.init($("#modal-tree"), setting1, zNodes);
-					layer.msg(res.message, {icon: 6});
+              		$.fn.zTree.init($("#modal-tree"), setting3, zNodes);
 	            }
 			},
 			error:function(err){
@@ -740,13 +791,13 @@ $(function(){
 		});
 	}
 	
-	function createPageLink(projectMenuId,updateUser,pageId){
+	function createPageLink(projectMenuId,createUser,pageId){
 		$.ajax({
-			type:'POST',
-            url:$url1+'/api/v1/saveTemplateStyle',
+			type:'PUT',
+            url:$url1+'/api/v1/creatProjectMenuLinkPage',
 			data:{
-				"projectMenuId":projectMenuId,
-				"updateUser":updateUser,
+				"id":projectMenuId,
+				"createUser":createUser,
 				"pageId":pageId
 			},
 			success:function(res){
