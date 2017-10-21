@@ -529,69 +529,70 @@ $(function(){
 			});
 		}
 		var dataSourceConfig = function(){
-			$('.data-source-config').css('display','block');
+      $("#iframepage1").attr("src","html/origin.html");
+			// $('.data-source-config').css('display','block');
 		};
-		// 添加数据源
-		$('.addBtn').click(function() {
-      var dbType = $('#db_type').val();
-      var dbName = $('.db_name').val();
-      var dbSite = $('.db_site').val();
-      var dbPort = $('.db_port').val();
-      var dbDatabase = $('.db_database').val();
-      var dbUser = $('.db_user').val();
-      var dbPassword = $('.db_password').val();
-      if (dbName == '') {
-        layer.msg('请输入名称');
-      } else if (dbSite == '') {
-        layer.msg('请输入数据库地址');
-      } else if (dbPort == '') {
-        layer.msg('请输入端口');
-      } else if (dbDatabase == '') {
-        layer.msg('请输入数据库')
-      } else if (dbUser == '') {
-        layer.msg('请输入用户名')
-      } else if (dbPassword == '') {
-        layer.msg('请输入密码')
-      } else {
-        $.ajax({
-          type: 'POST',
-          url: $url2 +'/api/datasource/v1/saveDataSource', //$url2 +
-          dataType: 'json',
-          contentType: "application/json",
-          data: JSON.stringify({
-            "projectId": projectId,
-            "name": dbName,
-            "conHost": dbSite,
-            "conPort": dbPort,
-            "conType": "jdbc",
-            "dbName": dbDatabase,
-            "dbType": dbType,
-            "password": dbPassword,
-            "username": dbUser,
-            "dsId": "",
-            "companyId":companyId
-          }),
-          success: function (res) {
-            console.log(res);
-            if (res.code === 0) {
-              $('.data-source-config').css('display', 'none');
-              layer.msg('成功添加数据源');
-            }
-          },
-          error: function (err) {
-            console.log(err);
-          }
-        });
-      }
-    });
-		// 链接测试
-		$('.linkBtn').click(function() {
-        layer.msg('此功能暂未实现')
-    });
-		// 关闭数据源
-		$('.closeBtn').click(function() {
-      $('.data-source-config').css('display','none');
-    });
+    // // 添加数据源
+    // $('.addBtn').click(function() {
+    //   var dbType = $('#db_type').val();
+    //   var dbName = $('.db_name').val();
+    //   var dbSite = $('.db_site').val();
+    //   var dbPort = $('.db_port').val();
+    //   var dbDatabase = $('.db_database').val();
+    //   var dbUser = $('.db_user').val();
+    //   var dbPassword = $('.db_password').val();
+    //   if (dbName == '') {
+    //     layer.msg('请输入名称');
+    //   } else if (dbSite == '') {
+    //     layer.msg('请输入数据库地址');
+    //   } else if (dbPort == '') {
+    //     layer.msg('请输入端口');
+    //   } else if (dbDatabase == '') {
+    //     layer.msg('请输入数据库')
+    //   } else if (dbUser == '') {
+    //     layer.msg('请输入用户名')
+    //   } else if (dbPassword == '') {
+    //     layer.msg('请输入密码')
+    //   } else {
+    //     $.ajax({
+    //       type: 'POST',
+    //       url: $url2 +'/api/datasource/v1/saveDataSource', //$url2 +
+    //       dataType: 'json',
+    //       contentType: "application/json",
+    //       data: JSON.stringify({
+    //         "projectId": projectId,
+    //         "name": dbName,
+    //         "conHost": dbSite,
+    //         "conPort": dbPort,
+    //         "conType": "jdbc",
+    //         "dbName": dbDatabase,
+    //         "dbType": dbType,
+    //         "password": dbPassword,
+    //         "username": dbUser,
+    //         "dsId": "",
+    //         "companyId":companyId
+    //       }),
+    //       success: function (res) {
+    //         console.log(res);
+    //         if (res.code === 0) {
+    //           $('.data-source-config').css('display', 'none');
+    //           layer.msg('成功添加数据源');
+    //         }
+    //       },
+    //       error: function (err) {
+    //         console.log(err);
+    //       }
+    //     });
+    //   }
+    // });
+    // // 链接测试
+    // $('.linkBtn').click(function() {
+    //     layer.msg('此功能暂未实现')
+    // });
+    // // 关闭数据源
+    // $('.closeBtn').click(function() {
+    //   $('.data-source-config').css('display','none');
+    // });
 		var setProperty = function(){
 			$(".proj-attr").show();
 		};

@@ -55,7 +55,7 @@
         haveHead:true,
         headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["new","undo","redo","reload","print","save"],//如果haveHead=true，则定义HEAD区的按钮  "save",
         haveTool:true,
         haveDashed:true,
         haveGroup:true,
@@ -86,7 +86,8 @@
           if(confirm("确定要删除该单元吗?")){
             var delActionComp = {
               actionId: this_actionId,
-              webComponentId: id
+              webComponentId: id,
+              versionId: this_versionId
             };
             $.ajax({
               type:"POST",
@@ -413,7 +414,7 @@
           data:JSON.stringify(parameter),
           success:function(data){
             var actionDag = {};
-            if(data.data != '' && data.data != null) {
+            if(data.data != '' && data.data != null && data.data.dag != null) {
               actionDag = JSON.parse(data.data.dag);
             }
             showDag(actionDag);
