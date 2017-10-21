@@ -12,7 +12,7 @@ $(function(){
             },
             success:function(res){
               if(res.code===0){
-              	if(res.message){
+              	if(res.message && res.data.length >0){
               		var data = res.data,
               		html = '+',
               		biSetId = '';

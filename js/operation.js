@@ -7,11 +7,10 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,number=0   // 层级
     ,fieldid = null  // 记录数据筛选时候的ID
     ,modelId = null // 记录dataModelId值；
-    ,url = "http://192.168.1.15:8023"
+    ,url = "http://192.168.1.42:8084/xdbd-bi"
 
-var projectId = "95263f4682354ce6aa7a904f1394d381",
-    pageId = "dbfad73bd6c0447bb9efaa5037e7a3b3",
-    dirId = "5305c5256ad74b86aede5e4414caa4de";
+var projectId = localStorage.getItem("projectId"),
+    pageId = localStorage.getItem("directoryId");
 
 
 
@@ -60,13 +59,11 @@ $(document).ready(function() {
                     // 如果cid相同，则将item数据复制给copy_data
                     copy_data = JSON.parse(JSON.stringify(item));
                     var dataType = item.customData.dataType;
-                    console.log(dataType);
                     if(dataType === "text"|| dataType === "button" || dataType === "image" ){
                         copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
                     }
                 }
             });
-            console.log(copy_data);
         }},
         {text: '粘贴',action: function(e){
             e.preventDefault();
@@ -195,7 +192,8 @@ var refresh = {
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "text":{
-                "content":$(text).html(),                    // 对齐方式
+                "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),                    // 对齐方式
+                "text":$(text).html(),                    // 对齐方式
                 "color":text.css("color"),                             // 颜色
                 // "fontSize":text.css("font-size"),                      // 大小       (这些全部包含在HTML中，和富文本编辑器类似，因为选择颜色会修改焦点，所以没有办法在HTML中修改颜色)
                 // "fontFamily":text.css("font-family"),                 // 字体
@@ -224,6 +222,7 @@ var refresh = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "price":{
                 "url":$(ele).html(), // 图片路径
+                "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),
                 "ratio":$(".set-price-prop input").is(":checked"), //是否保存宽高比缩放
                 "border-color":$(ele).css("border-color"), //边框颜色
                 "border-style":$(ele).css("border-style"), //边框样式
@@ -250,7 +249,8 @@ var refresh = {
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "button":{
-                "content":$(ele).html(), // 按钮文本内容
+                "text":$(ele).html(), // 按钮文本内容
+                "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),
                 "background-color":$(ele).css("background-color"), // 背景颜色和边框颜色
                 "font-size":$(ele).css("font-size"), // 文本字体大小
                 "font-color":color, // 文本字体颜色
@@ -629,15 +629,21 @@ priceEdit.borderRadius();// 边框 圆角
 var operating = {
     // 保存
     save:function(){
-        console.log(save_arr);
+        var isIndex = null;
+        if($(".set-index-box input").prop("checked")){
+            isIndex = 1;
+        }else{
+            isIndex = 0
+        }
         var data = {
-            "htmlJson":save_arr,
+            "isIndex":isIndex,
+            "controls":save_arr,
             // "jsFile":jsFile,
             // "cssFile":cssFile,
         };
         $.ajax({
             type:"PUT",
-            url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex=1",
+            url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex="+ isIndex +"",
             data:JSON.stringify(data),
             dataType:"json",
             contentType: 'application/json',
@@ -652,6 +658,8 @@ var operating = {
     },
 };
 
+
+
 // 获取页面，编辑成编辑页面
 var obtain = {
     // 根据pageId获取数据
@@ -660,21 +668,36 @@ var obtain = {
             type:"get",
             url:"/xdbd-bi/bi/report/v1/page.json",
             data:{
-                // "rootBiDirId":rootBiDirId,
                 "pageId":pageId
             },
             dataType:"json",
             success:function(data){
-
+                if(data.code === 0){
+                    obtain.reduction(data);
+                }
             },
             error:function(res){
                 // console.log(res);
             }
         })
     },
+    reduction:function(data){
+        // 赋值数据
+        // save_arr = data;
+        // 遍历数据,生成图形
+        var html = '';
+        $.each(data.htmlJson.controls,function(index,val){
+            // 判断图形、表格、文本、图片、按钮
+            var z = '';
+            // 如果是文本和图片，则复制内容不同
+            // if(customData.dataType === "text" || customData.dataType === "button" || customData.dataType === "image"){
+            //     z = customData.html;
+            // }
+        })
+    },
 };
 obtain.request();  // 根据pageId获取数据
-
+obtain.reduction(ces);   // 根据数据
 
 
 
