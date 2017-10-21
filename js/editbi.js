@@ -190,15 +190,14 @@ $(function(){
                 fieldid = uiEle.attr("fieldid");
                 switch(datatype){
                     case 1:
-                        project.TFilter(uiEle.attr("fieldname"),uiEle.text(),uiEle.attr("fieldid"),2);
-                        $(".filter-attr").show();
+                        project.TFilter(uiEle.attr("fieldname"),uiEle.text(),uiEle.attr("fieldid"),2); // 文本筛选框
                         break;
                     case 2:
                     case 3:
+                        timeSng.quotes(context.getClickEle().attr("fieldid"),n);  // 时间筛选框
                         break;
                     case 4:
-                        swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldid"),2);
-                        $(".data-filter-mod").show();       // 显示数字筛选框
+                        swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldid"),2);  // 数值筛选框
                         break;
                 }
 
@@ -323,15 +322,14 @@ $(function(){
 
                 switch(dataType){
                     case 1:
-                        project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldid"),n);
-                        $(".filter-attr").show();
+                        project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldid"),n); // 文本筛选框
                         break;
                     case 2:
                     case 3:
+                        timeSng.quotes(context.getClickEle().attr("fieldid"),n);  // 时间筛选框
                         break;
                     case 4:
-                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldid"),n);
-                        $(".data-filter-mod").show();       // 显示数字筛选框
+                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldid"),n);  // 数值筛选框
                         break;
                 }
             }

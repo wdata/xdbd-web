@@ -554,7 +554,7 @@
 		</div>
 		
 		<!--项目过滤属性-->
-		<div class="filter-attr modal"  style="left:10%;display: block;">
+		<div id="filter-attr" class="filter-attr  modal" >
 			<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
 			<div class="f-attr-box clearfix">
 				<div class="f-attr-left fl">
@@ -775,33 +775,45 @@
 			<div class="f-attr-box clearfix">
 				<div class="f-attr-left fl">
 					<div class="relative-time">
-						<div class="radio">
+						<div class="radio time-select">
 							<img src="images/icon_circle_on.png" alt="" />
 							<input type="radio" checked="checked"/>
 							<span>相对时间</span>
 						</div>
 						<div class="select">
 							<select name="" >
-								<option>上季度</option>
+								<option value="">前7天</option>
+								<option value="">前14天</option>
+								<option value="">前28天</option>
+								<option value="">前30天</option>
+								<option value="">今天</option>
+								<option value="">昨天</option>
+								<option value="">本周</option>
+								<option value="">上周</option>
+								<option value="">本月</option>
+								<option value="">本季度</option>
+								<option value="">上季度</option>
+								<option value="">本年</option>
+								<option value="">去年</option>
 							</select>
 							<i class="fa fa-caret-down"></i>
-							<div class="radio">
+							<div class="radio" onclick="timeSng.IldToday(this)">
 								<img src="images/icon_checked.png" alt="" />
 								<input type="checkbox" checked="checked"/>
-								<span>相对时间</span>
+								<span>包含今天</span>
 							</div>
 						</div>
 					</div>
-					<div class="">
-						<div class="radio">
-							<img src="images/icon_circle_on.png" alt="" />
+					<div class="date-range">
+						<div class="radio time-select">
+							<img src="images/icon_circle.png" alt="" />
 							<input type="radio" checked="checked"/>
 							<span>日期范围</span>
 						</div>
-						<div class="">
-							<div class=""></div><span>-</span><div class=""></div>
-							<i class="fa fa-caret-down"></i>
-							<i class="fa fa-caret-down"></i>
+						<div class="time">
+							<input id="start" type="text" class="start" /><span></span><input id="end" type="text" class="end" />
+							<img onclick="timeSng.timeDelete(this)" class="delete-icon" src="images/icon_close_02.png" alt="">
+							<img class="time-icon" src="images/biaoge.png" alt="">
 						</div>
 					</div>
 				</div>
@@ -810,19 +822,10 @@
 					<div class="f-filter-result">
 						<ul>
 							<li>
-								<span>筛选字段：</span><em>城市</em>
+								<span>所选字段：</span><em>时间</em>
 							</li>
 							<li class="active">
-								<span>列表筛选：</span><em>无</em>
-							</li>
-							<li>
-								<span>文本筛选：</span><em>无</em>
-							</li>
-							<li>
-								<span>条件筛选：</span><em>无</em>
-							</li>
-							<li>
-								<span>高级筛选：</span><em>无</em>
+								<span>时间范围：</span><em>无</em>
 							</li>
 						</ul>
 					</div>
@@ -830,8 +833,8 @@
 			</div>
 			<div class="file-btns-col mcenter">
 	<span>
-		<button onclick="project.saveData()">确定</button>
-		<button onclick="project.close()">取消</button>
+		<button onclick="timeSng.save();">确定</button>
+		<button onclick="timeSng.clone();">取消</button>
 	</span>
 			</div>
 		</div>
