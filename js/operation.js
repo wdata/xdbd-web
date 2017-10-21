@@ -191,7 +191,7 @@ var refresh = {
         var text = $("#" + id).find(".content-text>div");
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
-            "text":{
+            "controls":{
                 "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),                    // 对齐方式
                 "text":$(text).html(),                    // 对齐方式
                 "color":text.css("color"),                             // 颜色
@@ -220,7 +220,7 @@ var refresh = {
         var ele = $("#" + id).find(".image-class");
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
-            "price":{
+            "controls":{
                 "url":$(ele).html(), // 图片路径
                 "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),
                 "ratio":$(".set-price-prop input").is(":checked"), //是否保存宽高比缩放
@@ -248,7 +248,7 @@ var refresh = {
         var color = $(ele).css("font-color")?$(ele).css("font-color"):"#000";
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
-            "button":{
+            "controls":{
                 "text":$(ele).html(), // 按钮文本内容
                 "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),
                 "background-color":$(ele).css("background-color"), // 背景颜色和边框颜色
@@ -673,7 +673,7 @@ var obtain = {
             dataType:"json",
             success:function(data){
                 if(data.code === 0){
-                    obtain.reduction(data);
+                    obtain.reduction(data.data);
                 }
             },
             error:function(res){
@@ -683,21 +683,36 @@ var obtain = {
     },
     reduction:function(data){
         // 赋值数据
-        // save_arr = data;
+        save_arr = data.htmlJson.controls;
         // 遍历数据,生成图形
         var html = '';
         $.each(data.htmlJson.controls,function(index,val){
             // 判断图形、表格、文本、图片、按钮
-            var z = '';
+            var text = '';
             // 如果是文本和图片，则复制内容不同
-            // if(customData.dataType === "text" || customData.dataType === "button" || customData.dataType === "image"){
-            //     z = customData.html;
-            // }
-        })
+            var style =  val.style;
+            var controls = val.customData.controls;
+            if(val.customData.dataType === "text" || val.customData.dataType === "button" || val.customData.dataType === "image"){
+                text = controls.html;
+
+            }
+            id_ = val.cid; // 拖拽必须修改id_
+            number++; // ID不重复！
+            html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+
+            $(".edit-libs-box").append(html);
+            // 拖拽初始化！
+            new ZResize({
+                stage: '.edit-libs-box', //舞台
+                itemClass: 'resize-item'//可缩放的类名
+            });
+
+        });
+
+
     },
 };
 obtain.request();  // 根据pageId获取数据
-obtain.reduction(ces);   // 根据数据
 
 
 
