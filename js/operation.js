@@ -124,6 +124,7 @@ $(document).ready(function() {
     ]);
 });
 
+// 刷新按钮
 function save_config(id){
 
     console.log(id_);
@@ -134,6 +135,7 @@ function save_config(id){
     refresh.retrieve(id);
 }
 
+// 保存数据，保存数据索引
 var refresh = {
     // 数据索引-- 图表和表格的数据索引
     indexes:function(id){
@@ -388,7 +390,7 @@ var refresh = {
     }
 };
 
-
+// 根据数据索引请求数据，并调用图形函数
 var DataIndexes = {
     // 根据数据索引，请求数据
     inAjax:function(d){
@@ -623,22 +625,60 @@ priceEdit.borderColor();// 边框 颜色
 priceEdit.borderWidth();// 边框 宽度
 priceEdit.borderRadius();// 边框 圆角
 
+// BI左上角，一排功能项
 var operating = {
     // 保存
     save:function(){
         console.log(save_arr);
+        var data = {
+            "htmlJson":save_arr,
+            // "jsFile":jsFile,
+            // "cssFile":cssFile,
+        };
+        $.ajax({
+            type:"PUT",
+            url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex=1",
+            data:JSON.stringify(data),
+            dataType:"json",
+            contentType: 'application/json',
+            success:function(data){
+                layer.msg("保存成功！");
+            },
+            error:function(res){
+                // console.log(res);
+            }
+        })
+
     },
 };
 
-var filter = {
-    numberDeal:function(){
+// 获取页面，编辑成编辑页面
+var obtain = {
+    // 根据pageId获取数据
+    request:function(){
+        $.ajax({
+            type:"get",
+            url:"/xdbd-bi/bi/report/v1/page.json",
+            data:{
+                // "rootBiDirId":rootBiDirId,
+                "pageId":pageId
+            },
+            dataType:"json",
+            success:function(data){
 
-    }
+            },
+            error:function(res){
+                // console.log(res);
+            }
+        })
+    },
 };
+obtain.request();  // 根据pageId获取数据
 
 
 
-// 项目属性（城市筛选）
+
+// 文本筛选和列表筛选
 var project = {
     "list":null,
     "fieldid": null,
@@ -776,6 +816,10 @@ var project = {
                 console.log(res);
             }
         })
+
+        // 初始化
+        $("#filter-attr").show();
+        project.pjEvent();   // 选择城市事件
     },
     // 事件
     pjEvent:function(){
@@ -1007,22 +1051,57 @@ var project = {
         if(bur){
             screen_data.push(data);
         }
-        $(".filter-attr").hide();
+        self.close(); // 关闭
     },
     // 关闭弹出框
     close:function(){
-        $(".filter-attr").hide();
+        $("#filter-attr").hide();
     },
 };
-project.pjEvent();   // 选择城市事件
 
-
-//数据筛选(求和(值))range 初始化
+// 数据筛选(求和(值))range 初始化
 var swRag = {
     "min":$(".s-range-val .min"),
     "max":$(".s-range-val .max"),
     "fieldid":null,
     "number":null,
+    // 根据传递的元素赋值
+    ass:function(min,max,fieldid,number){
+        this.fieldid = fieldid;
+        this.number = number;
+
+        // 先重置，在按照数据添加进去
+        swRag.min.val("");
+        swRag.max.val("");
+        swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
+
+        $.each(screen_data,function(index,val){
+            if(val.fieldid === fieldid && val.number === number){
+                swRag.min.val(val.numericFilter.range.min);
+                swRag.max.val(val.numericFilter.range.max);
+                swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
+            }
+        });
+
+        if(min && !max){
+            swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
+            swRag.min.val(min);
+        }
+        if(!min && max){
+            swRag.selec(($(".s-data-val ul>li").eq(2).find("input")));
+            swRag.max.val(max);
+        }
+        if(min && max){
+            swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
+            swRag.min.val(min);
+            swRag.max.val(max);
+        }
+
+        // 初始化
+        $(".data-filter-mod").show();       // 显示数字筛选框
+        swRag.ele();
+        swRag.switchRange();
+    },
     // 事件
     ele:function(){
         $(".s-data-val ul>li").on("click",function(){
@@ -1064,38 +1143,6 @@ var swRag = {
         $s.parent("li").siblings().find("img").attr("src","images/icon_circle.png");
         swRag.switchRange($idx);
     },
-    // 根据传递的元素赋值
-    ass:function(min,max,fieldid,number){
-        this.fieldid = fieldid;
-        this.number = number;
-
-        // 先重置，在按照数据添加进去
-        swRag.min.val("");
-        swRag.max.val("");
-        swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
-
-        $.each(screen_data,function(index,val){
-           if(val.fieldid === fieldid && val.number === number){
-               swRag.min.val(val.numericFilter.range.min);
-               swRag.max.val(val.numericFilter.range.max);
-               swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
-           }
-        });
-
-        if(min && !max){
-            swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
-            swRag.min.val(min);
-        }
-        if(!min && max){
-            swRag.selec(($(".s-data-val ul>li").eq(2).find("input")));
-            swRag.max.val(max);
-        }
-        if(min && max){
-            swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
-            swRag.min.val(min);
-            swRag.max.val(max);
-        }
-    },
     // 保存
     save:function(){
         var self = this;
@@ -1125,13 +1172,7 @@ var swRag = {
         if(bur){
             screen_data.push(data);
         }
-        console.log(screen_data);
-
-        $(".data-filter-mod").hide();
-    },
-    // 取消
-    cancel:function(){
-        $(".data-filter-mod").hide();
+        self.cancel();
     },
     // 判断
     judgment:function(index){
@@ -1220,10 +1261,173 @@ var swRag = {
                 });
                 break;
         }
-    }
+    },
+    // 取消
+    cancel:function(){
+        $(".data-filter-mod").hide();
+    },
 };
-swRag.ele();
-swRag.switchRange();
+
+// 时间筛选器
+var timeSng = {
+    "fieldid":null,
+    "number":null,
+    // 引用
+    quotes:function(fieldid,number){
+        this.fieldid = fieldid;
+        this.number = number;
+
+        // 初始化
+        $(".data-filter-time").show();
+        timeSng.selectRadio(); // 事件和时间插件
+    },
+    // 相对时间 和 日期范围 单选按钮
+    selectRadio:function(){
+        $(".data-filter-time .time-select").on("click",function(){
+            $(this).find("input").attr("checked","checked").siblings("img").attr("src","images/icon_circle_on.png");  // 选中
+            $(this).parent().siblings().find(".time-select input").removeAttr("checked").siblings("img").attr("src","images/icon_circle.png");  // 清除
+        });
+
+        $.datepicker.regional['zh-CN'] = {
+
+            clearText: '清除',
+
+            clearStatus: '清除已选日期',
+
+            closeText: '关闭',
+
+            closeStatus: '不改变当前选择',
+
+            prevText: '<上月',
+
+            prevStatus: '显示上月',
+
+            prevBigText: '<<',
+
+            prevBigStatus: '显示上一年',
+
+            nextText: '下月>',
+
+            nextStatus: '显示下月',
+
+            nextBigText: '>>',
+
+            nextBigStatus: '显示下一年',
+
+            currentText: '今天',
+
+            currentStatus: '显示本月',
+
+            monthNames: ['一月','二月','三月','四月','五月','六月', '七月','八月','九月','十月','十一月','十二月'],
+
+            monthNamesShort: ['一','二','三','四','五','六', '七','八','九','十','十一','十二'],
+
+            monthStatus: '选择月份',
+
+            yearStatus: '选择年份',
+
+            weekHeader: '周',
+
+            weekStatus: '年内周次',
+
+            dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+
+            dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
+
+            dayNamesMin: ['日','一','二','三','四','五','六'],
+
+            dayStatus: '设置 DD 为一周起始',
+
+            dateStatus: '选择 m月 d日, DD',
+
+            dateFormat: 'yy-mm-dd',
+
+            firstDay: 1,
+
+            initStatus: '请选择日期',
+
+            isRTL: false};
+        $.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+
+        // 时间插件初始化
+        $( "#start" ).datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeYear:true,
+            yearRange:"1950:2050",
+            onClose: function( selectedDate ) {
+                $( "#end" ).datepicker( "option", "minDate", selectedDate );
+            }
+        });
+
+        $( "#end" ).datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            changeYear:true,
+            numberOfMonths: 1,
+            yearRange:"1950:2050",
+            onClose: function( selectedDate ) {
+                $( "#start" ).datepicker( "option", "maxDate", selectedDate );
+            }
+        });
+
+    },
+    // 包含今天
+    IldToday:function(_this){
+        // 必选先有选中相对时间
+        if($(".data-filter-time .time-select:first input").prop("checked")){
+            // 判断是否选中
+            if($(_this).find("input").prop("checked")){
+                // 选中状态
+                $(_this).find("input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");  // 清除
+            }else{
+                $(_this).find("input").attr("checked","checked").siblings("img").attr("src","images/icon_circle_on.png");  // 选中
+            }
+        }
+    },
+    // 日期范围 -- 删除图标
+    timeDelete:function(_this){
+        $(_this).siblings("input").val("");  // 清除时间值
+    },
+    // 修改，则保存数据
+    timeData:function(){
+
+    },
+    // 保存按钮
+    save:function(){
+    // 根据记录的ID，作为判断
+        var data = {
+            "fieldid":this.fieldid,
+            "number":this.number,
+            "select":$(".s-data-val ul>li input:checked").parent().index(),
+            "numericFilter":{
+                "aggregation": "SUM",
+                "range":{
+                    "min":swRag.min.val(),
+                    "max":swRag.max.val()
+                }
+            }
+        };
+        var bur = true;
+        $.each(screen_data,function(index,val){
+            if(val.fieldid === self.fieldid && val.number === self.number) {
+                screen_data.splice(index,1,data);
+                bur = false;
+            }
+        });
+        if(bur){
+            screen_data.push(data);
+        }
+    },
+    // 关闭弹出框
+    clone:function(){
+        $(".data-filter-time").hide();
+    },
+
+};
+
+
 
 
 
@@ -1385,6 +1589,7 @@ function imgPreview(_this){
     }
     return true;
 }
+
 
 // 输入监听，只调用一次; 参数为JS元素
 function enterListen(z){

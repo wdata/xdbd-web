@@ -1375,7 +1375,9 @@ div.f-addbtn-box-auto li{
 }
 /*时间筛选*/
 .data-filter-time{
-	display: block!important;
+	/*display: block;*/
+	color: #333;
+	font-size: 14px;
 }
 .data-filter-time .relative-time{
 	margin-bottom: 90px;
@@ -1393,6 +1395,7 @@ div.f-addbtn-box-auto li{
 	display: flex;
 	align-items: center;
 	margin-bottom: 15px;
+	width: 18%;
 }
 .data-filter-time .radio img{
 	margin-right: 6px;
@@ -1408,6 +1411,41 @@ div.f-addbtn-box-auto li{
 	position: absolute;
 	left: 206px;
 	top: 7px;
+}
+.date-range .time{
+	width: 280px;
+	height:28px;
+	border: 1px solid #ddd;
+	position: relative;
+	display:flex;
+	align-items: center;
+}
+.date-range .time>input{
+	width: 90px;
+	padding: 0 10px;
+	text-align: center;
+	height: inherit;
+	line-height: 28px;
+	border: 0;
+}
+.date-range .time>span{
+	display: inline-block;
+	width: 10px;
+	height: 1px;
+	border-top: 1px solid #000;
+}
+.date-range .time .time-icon{
+	width: 16px;
+	height: 17px;
+	position: absolute;
+	right: 8px;
+	padding: 8px 5px;
+}
+.date-range .time .delete-icon{
+	width: 11px;
+	height: 12px;
+	position: absolute;
+	right: 33px;
 }
 /*创建项目*/
 .creat-new-projs {
