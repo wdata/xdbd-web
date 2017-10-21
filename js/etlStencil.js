@@ -77,7 +77,7 @@ function newEtlBtn() {
     type: 1,
     title: '新建',
     //skin: 'layui-layer-rim', //加上边框
-    area: ['660px', '460px'], //宽高
+    area: ['660px', '560px'], //宽高
     content: '' +
     '<div class="demand_name"><label>ETL名称：<span>*</span></label><input class="new_name" type="text" ></div>' +
     '<div class="demand_name"><label>数据源:<span>*</span></label><select class="new_ds"></select></div>'+
@@ -86,15 +86,15 @@ function newEtlBtn() {
     '<p class="hint">20个字以内</p>' +
     '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
   });
+  get_dataSource();
 }
-get_dataSource();
 function get_dataSource() {
   var source = {
-    dsId: this_projectId
+    projectId: this_projectId
   }
   $.ajax({
     type: "POST",
-    url: "/xdbd-etl/api/datasource/v1/getDataSourceList",
+    url: "/xdbd-etl/api/datasource/v1/getDataSourceList",  ///xdbd-etl
     dataType: "json",
     contentType: "application/json",
     data: JSON.stringify(source),

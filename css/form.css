@@ -2148,3 +2148,55 @@ div.ztree {
 .ztree li span.button.noline_close {background-position: -18px 0;}
 .ztree li span.button.noline_open.level0 {background-position: 0 -18px;}
 .ztree li span.button.noline_close.level0 {background-position: -18px -18px;}
+
+/*数据源样式*/
+.origin_tit{
+    background: #fff;
+    font-size: 30px;
+    color: #3D5275;
+    text-align: center;
+    padding: 30px 0;
+}
+.add_origin{
+    padding: 10px 0;
+    background: #fff;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+.add_origin button{
+    height: 34px;
+    padding: 0 10px;
+    margin-left: 10px;
+    border: none;
+    background: #578FE6;
+    color: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    font-size: 14px;
+    cursor:pointer;
+}
+.list_tab{
+    width: 100%;
+    font-size: 14px;
+    color: #3D5275;
+}
+.list_tab thead tr{
+    height: 36px;
+    background: #e2e2e2;
+}
+.list_tab thead tr th,.list_tab tbody tr td{
+    text-align: center;
+    height: 60px;
+}
+.list_tab tbody tr td botton{
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #fff;
+    background: #578FE6;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    cursor: pointer;
+}

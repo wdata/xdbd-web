@@ -154,102 +154,122 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 }
 
 .GooFlow_area i,.GooFlow .GooFlow_line_oper i,
-.ico_cursor,.ico_start,.ico_end,.ico_fork,.ico_join,.ico_direct,.ico_dashed,.ico_group,
-.ico_complex,.ico_node,.ico_task,.ico_chat,.ico_state,.ico_plug,.ico_menu,.ico_sound,
-.ico_open,.ico_new,.ico_reload,.ico_save,.ico_undo,.ico_redo,.ico_print,.ico_java,.ico_spark,.ico_shell {
-  font-family:"iconflow" !important;
-  font-size:16px;line-height:19px;
-  font-style:normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale;
+.ico_cursor,.ico_start,.ico_end,.ico_decision,.ico_merge,.ico_direct,.ico_dashed,.ico_join,
+.ico_groups,.ico_node,.ico_task,.ico_input,.ico_output,.ico_plug,.ico_menu,.ico_sound,
+.ico_open,.ico_new,.ico_reload,.ico_save,.ico_undo,.ico_redo,.ico_print,.ico_java,
+.ico_spark,.ico_shell,ico_parallel,ico_sort,ico_where,.ico_group {
+    font-family:"iconflow" !important;
+    font-size:16px;line-height:19px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
 }
 /*.GooFlow .ico_cursor:before{ content:"\e602"; }*/
 /*.GooFlow .ico_start:before{ content:"\e700"; }*/
 /*.GooFlow .ico_end:before{ content:"\e609"; }*/
-/*.GooFlow .ico_fork:before{ content:"\e60c"; }*/
-/*.GooFlow .ico_join:before{ content:"\e606"; }*/
+/*.GooFlow .ico_decision:before{ content:"\e60c"; }*/
+/*.GooFlow .ico_merge:before{ content:"\e606"; }*/
 /*.GooFlow .ico_direct:before{ content:"\e605"; }*/
 /*.GooFlow .ico_dashed:before{ content:"\e675"; }*/
-/*.GooFlow .ico_group:before{ content:"\e663";color: #00B4E1 }*/
+/*.GooFlow .ico_join:before{ content:"\e663";color: #00B4E1 }*/
 /*e663*/
-/*.GooFlow .ico_complex:before{ content:"\e872"; }*/
+/*.GooFlow .ico_groups:before{ content:"\e872"; }*/
 /*.GooFlow .ico_node:before{ content:"\e678"; }*/
 /*.GooFlow .ico_task:before{ content:"\e6af"; color: #080808}*/
-/*.GooFlow .ico_chat:before{ content:"\e61b"; color: #2b542c}*/
-/*.GooFlow .ico_state:before{ content:"\e633"; color: #d0e9c6}*/
+/*.GooFlow .ico_input:before{ content:"\e61b"; color: #2b542c}*/
+/*.GooFlow .ico_output:before{ content:"\e633"; color: #d0e9c6}*/
 /*.GooFlow .ico_plug:before{ content:"\e66c"; color: #FF7865}*/
 .GooFlow .ico_menu:before{ content:"\e649"; color: #d0e9c6}
 .GooFlow .ico_sound:before{ content:"\e62b";color: #8a6d3b }
 .GooFlow .ico_cursor {
-     background: url(../../images//arrow.png) no-repeat center;
-     background-size: 18px 18px;
- }
+    background: url(../../images/arrow.png) no-repeat center;
+    background-size: 18px 18px;
+}
 .GooFlow .ico_direct {
-    background: url(../../images//shixian.png) no-repeat center;
+    background: url(../../images/shixian.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_dashed {
-    background: url(../../images//xuxian.png) no-repeat center;
+    background: url(../../images/xuxian.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_start{
-    background: url(../../images//kaishi.png) no-repeat center;
+    background: url(../../images/kaishi.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_end {
-    background: url(../../images//jieshu.png) no-repeat center;
+    background: url(../../images/jieshu.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_task {
-    background: url(../../images//btn_icon_sum.png) no-repeat center;
+    background: url(../../images/btn_icon_sum.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_node {
-    background: url(../../images//btn_pingjunshu.png) no-repeat center;
+    background: url(../../images/btn_pingjunshu.png) no-repeat center;
     background-size: 18px 18px;
 }
-.GooFlow .ico_chat {
-    background: url(../../images//btn_zongshu.png) no-repeat center;
+.GooFlow .ico_input {
+    background: url(../../images/biaoshuchu.png) no-repeat center;
     background-size: 18px 18px;
 }
-.GooFlow .ico_state {
-    background: url(../../images//btn_Max.png) no-repeat center;
+.GooFlow .ico_output {
+    background: url(../../images/biaoshuru-.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_plug {
-    background: url(../../images//btn_Min.png) no-repeat center;
+    background: url(../../images/zonghangshu.png) no-repeat center;
     background-size: 18px 18px;
 }
-.GooFlow .ico_join {
-    background: url(../../images//hebing.png) no-repeat center;
+.GooFlow .ico_merge {
+    background: url(../../images/hebing.png) no-repeat center;
     background-size: 18px 18px;
 }
-.GooFlow .ico_fork {
-    background: url(../../images//fenzhi.png) no-repeat center;
+.GooFlow .ico_decision {
+    background: url(../../images/fenzhi.png) no-repeat center;
     background-size: 18px 18px;
 }
-.GooFlow .ico_complex {
-    background: url(../../images//btn_fenzu.png) no-repeat center;
+.GooFlow .ico_groups {
+    background: url(../../images/btn_fenzu.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_java {
-    background: url(../../images//java.png) no-repeat center;
+    background: url(../../images/java.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_shell {
-    background: url(../../images//shell.png) no-repeat center;
+    background: url(../../images/shell.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_spark {
-    background: url(../../images//spark.png) no-repeat center;
+    background: url(../../images/spark.png) no-repeat center;
     background-size: 18px 18px;
 }
 .GooFlow .ico_group {
-    background: url(../../images//guanlian.png) no-repeat center;
+    background: url(../../images/guanlian.png) no-repeat center;
     background-size: 18px 18px;
 }
-
+.GooFlow .ico_parallel {
+    background: url(../../images/bingxing.png) no-repeat center;
+    -webkit-background-size: 18px 18px;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_sort{
+    background: url(../../images/btn_paixu.png) no-repeat center;
+    -webkit-background-size: 18px 18px;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_where{
+    background: url(../../images/btn_guolv.png) no-repeat center;
+    -webkit-background-size: 18px 18px;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_join{
+    background: url(../../images/join.png) no-repeat center;
+    -webkit-background-size: 18px 18px;
+    background-size: 18px 18px;
+}
 
 /*以下是内部用头部工具栏的样式*/
 .GooFlow .ico_open:before{ content:"\e7a0";color:#FFD300 }
