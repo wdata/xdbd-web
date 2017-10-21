@@ -152,24 +152,32 @@
   //删除数据源
   function cancelBtn(_this) {
     ds = $(_this).parents('.list_origin').attr('id');
-    $.ajax({
-      type: 'POST',
-      url: $url+'/api/datasource/v1/delDataSource', //$url2 +
-      dataType: 'json',
-      contentType: "application/json",
-      data: JSON.stringify({
-        "dsId": ds
-      }),
-      success: function (res) {
-        console.log(res);
-        if (res.code === 0) {
-          layer.msg('成功删除数据源');
-          get_dataSource();
+    layer.confirm('是否要删除该数据源？', {
+      btn: ['是','否'] //按钮
+    }, function(){
+      $.ajax({
+        type: 'POST',
+        url: $url+'/api/datasource/v1/delDataSource', //$url2 +
+        dataType: 'json',
+        contentType: "application/json",
+        data: JSON.stringify({
+          "dsId": ds
+        }),
+        success: function (res) {
+          console.log(res);
+          if (res.code === 0) {
+            layer.msg('成功删除数据源');
+            get_dataSource();
+          }
+        },
+        error: function (err) {
+          console.log(err);
         }
-      },
-      error: function (err) {
-        console.log(err);
-      }
+      });
+    }, function(){
+      layer.msg('已保留该数据源', {
+        time: 20000 //20s后自动关闭
+      });
     });
   }
   // 链接测试
