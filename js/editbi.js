@@ -139,7 +139,6 @@ $(function(){
 			$(this).find("li").each(function(){
 				lis.push($(this).attr("fieldId"));
 			});
-			console.log(id_);
 			if($.inArray(ui.draggable.attr("fieldId"),lis)===-1 && id_!==""){
 				$( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
                 pillsLi();
@@ -174,6 +173,7 @@ $(function(){
 	// });
 
 	//定义接收筛选器的元素
+    //拖拽度量和维度到数据筛选框
 	$( ".data-screening" ).droppable({
 		accept: ".placeholder li",
 		drop: function( event, ui ) {
@@ -181,9 +181,27 @@ $(function(){
 			$(this).find("li").each(function(){
 				lis.push($(this).attr("fieldId"));
 			});
-			// console.log($.inArray(ui.draggable.attr("fieldId"),lis)==-1);
 			if($.inArray(ui.draggable.attr("fieldId"),lis)==-1&&id_!=""){
                 $( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
+
+
+                var uiEle = $(ui.draggable[0]);
+                var datatype= parseInt(uiEle.attr("datatype"));
+                fieldid = uiEle.attr("fieldid");
+                switch(datatype){
+                    case 1:
+                        project.TFilter(uiEle.attr("fieldname"),uiEle.text(),uiEle.attr("fieldid"),2);
+                        $(".filter-attr").show();
+                        break;
+                    case 2:
+                    case 3:
+                        break;
+                    case 4:
+                        swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldid"),2);
+                        $(".data-filter-mod").show();       // 显示数字筛选框
+                        break;
+                }
+
 			}else if($.inArray(ui.draggable.attr("fieldId"),lis)!=-1&&id_!=""){
                 layer.alert('已存在！！！')
             }else{
@@ -201,27 +219,6 @@ $(function(){
         }
     });
 
-    //拖拽度量和维度到数据筛选框
-    $(".data-empty").droppable({
-        drop:function(event,ui){
-            var uiEle = $(ui.draggable[0]);
-            var datatype= parseInt(uiEle.attr("datatype"));
-            fieldid = uiEle.attr("fieldid");
-            switch(datatype){
-                case 1:
-                    project.textFilter(uiEle.attr("fieldname"));
-                    $(".filter-attr").show();
-                    break;
-                case 2:
-                case 3:
-                    break;
-                case 4:
-                    swRag.ass(uiEle.attr("min"),uiEle.attr("max"));
-                    $(".data-filter-mod").show();       // 显示数字筛选框
-                    break;
-            }
-        }
-    });
 	//修改字段别名
 	function setBiFieldName(id,name){
 		$.ajax({
@@ -312,14 +309,28 @@ $(function(){
                 // 数据类型：1-文本（字符串）；2-日期；3-日期和时间；4-数字；5-布尔；6-地理（用于地图）
                 var dataType = parseInt(context.getClickEle().attr("datatype"));
                 fieldid = context.getClickEle().attr("fieldid");
+                var z = context.getClickEle().parent().parent();
+                var n = null;
+                if(z.is(".datas-pills")){
+                    n = 2;
+                }else if(z.is(".y-pills")){
+                    n = 1;
+                }else if(z.is(".x-pills")){
+                    n = 0;
+                }
+
+
+
                 switch(dataType){
-                    case 1:$(".filter-attr").show();
+                    case 1:
+                        project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldid"),n);
+                        $(".filter-attr").show();
                         break;
                     case 2:
                     case 3:
                         break;
                     case 4:
-                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"));
+                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldid"),n);
                         $(".data-filter-mod").show();       // 显示数字筛选框
                         break;
                 }
