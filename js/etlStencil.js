@@ -41,7 +41,8 @@ function outBtn(_this) {
 //删除ETL列表模板
 function deletesBtn(_this) {
   var parans = {
-    actionId: $(_this).parents(".new_demand").attr("id")
+    actionId: $(_this).parents(".new_demand").attr("id"),
+    versionId: this_versionId
   }
   $.ajax({
     type:"POST",

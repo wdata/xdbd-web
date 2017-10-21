@@ -273,9 +273,9 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 
 /*以下是内部用头部工具栏的样式*/
 .GooFlow .ico_open:before{ content:"\e7a0";color:#FFD300 }
-.GooFlow .ico_new:before{ content:"\e659"; }
+.GooFlow .ico_new:before{ content:"\e659"; color:#00B4E1 }
 .GooFlow .ico_reload:before{ content:"\e607";color:#669900 }
-/*.GooFlow .ico_save:before{ content:"\e63d";color:#0099cc }*/
 .GooFlow .ico_undo:before{ content:"\e673";color:#ff8800 }
 .GooFlow .ico_redo:before{ content:"\e672";color:#ff8800 }
-.GooFlow .ico_print:before{ content:"\e671"; }
+.GooFlow .ico_print:before{ content:"\e671";color: #a90329 }
+/*.GooFlow .ico_save:before{  content: '\267B ';color: #080808 }*/
