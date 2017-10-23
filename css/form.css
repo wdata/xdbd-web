@@ -864,7 +864,7 @@ div.tree-nav {
 	/*border-radius: 3px;*/
 	box-shadow: 0 0 1px 2px #dadada;
 	display: none;
-	z-index: 3;
+	z-index: 1000;
 }
 .modal>h3 {
 	line-height: 40px;
@@ -1665,6 +1665,16 @@ div.f-addbtn-box-auto li{
 .top-bar>img:first-of-type {
 	margin-left: 24px;
 }
+.exit-preview{
+	display: inline-block;
+	cursor: pointer;
+	line-height: 36px;
+	display: none;
+}
+.exit-preview img{
+	float: left;
+	padding: 7px;
+}
 .set-index-box {
 	height: 34px;
 	line-height: 34px;
@@ -2127,7 +2137,7 @@ div.f-addbtn-box-auto li{
 .resize-item{
 	width: 150px;
 	height:150px;
-	/*border: 1px solid red;*/
+	border: 1px solid red;
 	position: absolute;
 	z-index: 10000;
 }
