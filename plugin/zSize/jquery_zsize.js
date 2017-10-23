@@ -31,7 +31,10 @@
                     // 删除之前DIV的边框线
                     $(".resize-item .resize-panel").css("display","none");
                     // 给id_添加元素ID
-                    id_ = $(this).attr("id");
+                    // if(!(id_ === $(this).attr("id"))){
+                    //     id_ = $(this).attr("id");
+                    // }
+
                     //创建面板
                     var width = $("#"+id_).width();
                     var height = $("#"+id_).height();
@@ -428,7 +431,7 @@
                 e.stopPropagation();
                 // 文本区双击事件；
                 if(el.attr("data-type") === "text"){
-                    $(this).children(".content-text").addClass("active")   // 显示编辑区
+                    $(this).children(".content-text.edit").addClass("active")   // 显示编辑区
                         .children("div").attr("contenteditable",true)   // 开启编辑区
                         .focus();   // 获取焦点
                 }

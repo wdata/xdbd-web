@@ -47,42 +47,16 @@ $(document).ready(function() {
             var  ele = context.getClickEle();
             e.preventDefault();
             var id = ele.attr("id");
-            var isShow=true;
-            $.each(save_arr,function(index,item){
-                if(isShow){
-                    if(item.cid==id){
-                        var copy = item;
-                        isShow=false;
-                    }
-                }
-                if(item.cid + "" === id){
-                    // 如果cid相同，则将item数据复制给copy_data
-                    copy_data = JSON.parse(JSON.stringify(item));
-                    var dataType = item.customData.dataType;
-                    if(dataType === "text"|| dataType === "button" || dataType === "image" ){
-                        copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
-                    }
-                }
-            });
+            operating.copy(id); // 复制
         }},
         {text: '粘贴',action: function(e){
             e.preventDefault();
-            paste();   // 粘贴函数；
+            operating.paste();   // 粘贴函数；
         }},
         {text: '删除', action: function(e){
             e.preventDefault();
-            var id=context.getClickEle().attr("id");
-            var deleted=true;
-            $.each(save_arr,function(index,item){
-                if(deleted){
-                    if(item.cid==id){
-                        save_arr.splice(index,1);
-                        deleted=false;
-                    }
-                }
-            });
-            context.getClickEle().remove();
-            // console.log(save_arr);
+            var id = context.getClickEle().attr("id");
+            operating.clickDelete(id);      // 删除功能
         }},
         {text: '排列', subMenu: [
             {header: '默认值'},
@@ -116,7 +90,7 @@ $(document).ready(function() {
     context.attach('.edit-libs-box', [
         {text: '粘贴',action: function(e){
             e.preventDefault();
-            paste();   // 粘贴函数；
+            operating.paste();   // 粘贴函数；
         }}
     ]);
 });
@@ -124,7 +98,6 @@ $(document).ready(function() {
 // 刷新按钮
 function save_config(id){
 
-    console.log(id_);
     // 上传数据索引
     refresh.indexes(id);
 
@@ -134,9 +107,10 @@ function save_config(id){
 
 // 保存数据，保存数据索引
 var refresh = {
-    // 数据索引-- 图表和表格的数据索引
+    // 检索数据 -- 图表和表格的检索数据
     indexes:function(id){
         var chart_date={
+            'cid':id,
             "queryJson":{
                 "biSetId": $(".data-source-box option:selected").attr("bisetid"),
                 "dataModelId": modelId,    // BiSet对应数据库表
@@ -148,8 +122,8 @@ var refresh = {
         // 控件类型
         chart_date.type = this.typeData($("#"+ id +"").attr("data-type"),$(".chart-type-val span").text());
         this.dataSource(id,chart_date);   // 获取X,Y
-        DataIndexes.inAjax(chart_date,id); // 请求数据
         this.only(index_arr,chart_date);  // // 数据根据ID唯一，并将数据添加进入保存数组
+        DataIndexes.inAjax(chart_date,id); // 请求数据
         // console.log(index_arr);
     },
     // 图表和表格数据
@@ -292,7 +266,8 @@ var refresh = {
                 'dataType': $(icon).attr('datatype'),
                 'dimMea': $(icon).attr("dim_mea"),
                 'disCon': $(icon).attr("disCon"),
-                'aggregation': $(icon).attr("defaultaggregation")
+                'aggregation': $(icon).attr("defaultaggregation"),
+                "fieldid": $(icon).attr("fieldid"),
             };
             refresh.screen(icon,search_attr,0); // 筛选项
             chart_date.queryJson.x.push(search_attr);
@@ -305,7 +280,8 @@ var refresh = {
                 'dataType':$(icon).attr('datatype'),
                 'dimMea':$(icon).attr("dim_mea"),
                 'disCon':$(icon).attr("disCon"),
-                'aggregation':$(icon).attr("defaultaggregation")
+                'aggregation':$(icon).attr("defaultaggregation"),
+                "fieldid": $(icon).attr("fieldid"),
             };
             refresh.screen(icon,search_attr,1); // 筛选项
             chart_date.queryJson.y.push(search_attr);
@@ -318,7 +294,8 @@ var refresh = {
                 'dataType':$(icon).attr('datatype')||'',
                 'dimMea':$(icon).attr("dim_mea")||'',
                 'disCon':$(icon).attr("disCon")||'',
-                'aggregation':$(icon).attr("defaultaggregation")||''
+                'aggregation':$(icon).attr("defaultaggregation")||'',
+                "fieldid": $(icon).attr("fieldid")||"",
             };
             refresh.screen(icon,search_attr,2); // 筛选项
             chart_date.queryJson.filter.push(search_attr);
@@ -330,10 +307,10 @@ var refresh = {
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
             if($(icon).attr("fieldid") === y.fieldid && y.number === number ){
-                search_attr.listFilter = y.listFilter;
-                search_attr.textFilter = y.textFilter;
-                if(y.numericFilter.aggregation){
-                    search_attr.numericFilter = y.numericFilter;
+                search_attr.listFilter = JSON.parse(JSON.stringify(y.listFilter));
+                search_attr.textFilter = JSON.parse(JSON.stringify(y.textFilter));
+                if(y.numericFilter){
+                    search_attr.numericFilter = JSON.parse(JSON.stringify(y.numericFilter));
                 }
             }
         });
@@ -383,7 +360,8 @@ var refresh = {
                 bur = false;
             }
         });
-        if(bur){
+        // 只有唯一，并且，cid不为null才能存入数据中
+        if(bur && chart_date.cid){
             d.push(chart_date);
         }
         return d;
@@ -393,7 +371,7 @@ var refresh = {
 // 根据数据索引请求数据，并调用图形函数
 var DataIndexes = {
     // 根据数据索引，请求数据
-    inAjax:function(d){
+    inAjax:function(d,id){
         var self = this;
         // console.log(JSON.stringify(d));
         $("#"+id_).find(".resize-panel").siblings().remove();  // 删除之前的图形
@@ -404,8 +382,10 @@ var DataIndexes = {
             dataType:"json",
             contentType: 'application/json',
             success:function(data){
-                // 根据上传索引绘制图形
-                self.draw(id_,d.type,data.data);
+                if(data.code === 0){
+                    // 根据上传索引绘制图形
+                    self.draw(id,d.type,data.data);
+                }
             },
             error:function(res){
                 // console.log(res);
@@ -415,7 +395,6 @@ var DataIndexes = {
     // 刷新，判断类型，选择图形绘制
     // 参数：id：元素ID
     draw:function(id,type,data){
-
         // 判断类型
         switch($("#"+id).attr("data-type")){
             case "chart":
@@ -439,9 +418,11 @@ var DataIndexes = {
                         line("#" + id, "折线图", "2017年1011号", value, data["x-axis"], data["y-axis"]);
                         break;
                     case 103:
-
-                        var outerRadius = 150; //外半径
-                        var innerRadius = 100; //内半径，为0则中间没有空白
+                        var width = refresh.whLength(id,"width");
+                        var height = refresh.whLength(id,"height");
+                        var r = Math.min(width,height);
+                        var outerRadius = r/2; //外半径
+                        var innerRadius = 0; //内半径，为0则中间没有空白
                         circle("#" + id,data.value,outerRadius,innerRadius);
                         break;
                 }
@@ -629,8 +610,9 @@ priceEdit.borderRadius();// 边框 圆角
 var operating = {
     // 保存
     save:function(){
+        // 先更新数据
         var isIndex = null;
-        if($(".set-index-box input").prop("checked")){
+        if($(".top-bar .set-index-box input").prop("checked")){
             isIndex = 1;
         }else{
             isIndex = 0
@@ -638,6 +620,7 @@ var operating = {
         var data = {
             "isIndex":isIndex,
             "controls":save_arr,
+            "customData":screen_data,
             // "jsFile":jsFile,
             // "cssFile":cssFile,
         };
@@ -654,10 +637,124 @@ var operating = {
                 // console.log(res);
             }
         })
+    },
+    // 删除
+    clickDelete:function(id){
+        var deleted = true;
+        // 删除保存中的数据，并删除cid为空的数据，以防出现bug
+        $.each(save_arr,function(index,item){
+            // 删除出现的bug数据
+            // if(!item.cid){
+            //     save_arr.splice(index,1);
+            // }
+            if(deleted && item.cid === id){
+                save_arr.splice(index,1);
+                deleted = false;
+            }
+        });
+        if(deleted){
+            layer.msg("请点击需删除的控件！");
+        }
+        // 删除该ID的元素
+        $("#" + id).remove();
+    },
+    // 复制
+    copy:function(id){
+        $.each(save_arr,function(index,item){
+            if(item.cid + "" === id){
+                // 如果cid相同，则将item数据复制给copy_data
+                copy_data = JSON.parse(JSON.stringify(item));
+                var dataType = item.customData.dataType;
+                if(dataType === "text"|| dataType === "button" || dataType === "image" ){
+                    copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
+                }
+            }
+        });
+    },
+    // 粘贴
+    paste:function(){
+        // 判断是否为空对象！
+        if(!(JSON.stringify(copy_data) === "{}")){
+            var customData = copy_data.customData;
+            var id = customData.dataType + number;
+            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".component-libs-box").css("margin-left"));
+            var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
+
+            var z = '';
+            // 如果是文本和图片，则复制内容不同
+            if(customData.dataType === "text" || customData.dataType === "button" || customData.dataType === "image"){
+                z = customData.html;
+            }
+
+            var html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ customData.dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
+            $(".edit-libs-box").append(html);
+
+
+            // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
+            if(copy_data.queryJson && customData.dataType === "chart" || customData.dataType === "table" ){
+                var z = JSON.parse(JSON.stringify(copy_data));
+                z.cid = id;
+                save_arr.push(z);
+            }
+            refresh.storage(customData.dataType); // 判断不同的TYPE执行不同的采取函数
+            // 拖拽初始化！
+            id_ = id; // 拖拽必须修改id_
+            number++; // ID不重复！
+            new ZResize({
+                stage: '.edit-libs-box', //舞台
+                itemClass: 'resize-item'//可缩放的类名
+            });
+        }else{
+            layer.msg("请先复制");
+        }
+    },
+    // 刷新
+    refresh:function(){
+        location.reload(); // 刷新页面
+    },
+    // 预览
+    preview:function(){
+        // 先隐藏
+        $(".type-bar,.drag-bar").hide();
+        $(".exit-preview").show()
+            .siblings().hide();
+        // $(".chart-main-box").css("right","110px");
+
+        // 删除边框,删除红线
+        $(".resize-item").css("border","none")
+            .find(".resize-panel").remove()
+        $(".resize-item").find(".content-text").removeClass("edit");
 
     },
-};
+    // 退出预览
+    exitPreview:function(){
+        $(".type-bar,.drag-bar").show();
+        $(".exit-preview").hide()
+            .siblings().show();
+        // $(".chart-main-box").css("right","404px");
 
+        $(".resize-item").css("border","1px solid red").find(".content-text").addClass("edit");
+        $.each($(".resize-item"),function(index,val){
+
+            id_ = $(val).attr("id");
+
+            new ZResize({
+                stage: '.edit-libs-box', //舞台
+                itemClass: 'resize-item'//可缩放的类名
+            });
+        });
+        clear(id_);
+    },
+    // 移入提示
+    moveLayer:function(){
+        $(".top-bar>img").on("mouseenter",function(){
+            layer.tips($(this).attr('data-tip'), this,{
+                tips: 3
+            });
+        });
+    },
+};
+operating.moveLayer(); // 移入提示
 
 
 // 获取页面，编辑成编辑页面
@@ -673,7 +770,9 @@ var obtain = {
             dataType:"json",
             success:function(data){
                 if(data.code === 0){
-                    obtain.reduction(data.data);
+                    if(data.data.htmlJson){
+                        obtain.reduction(data.data);
+                    }
                 }
             },
             error:function(res){
@@ -682,39 +781,55 @@ var obtain = {
         })
     },
     reduction:function(data){
-        // 赋值数据
-        save_arr = data.htmlJson.controls;
-        // 遍历数据,生成图形
-        var html = '';
-        $.each(data.htmlJson.controls,function(index,val){
-            // 判断图形、表格、文本、图片、按钮
-            var text = '';
-            // 如果是文本和图片，则复制内容不同
-            var style =  val.style;
-            var controls = val.customData.controls;
-            if(val.customData.dataType === "text" || val.customData.dataType === "button" || val.customData.dataType === "image"){
-                text = controls.html;
+        if(data.index){
+            $(".top-bar .set-index-box input").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");
+        }else{
+            $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
+        }
 
-            }
-            id_ = val.cid; // 拖拽必须修改id_
-            number++; // ID不重复！
-            html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+        if(data.htmlJson.controls){
+            // 赋值数据
+            save_arr = data.htmlJson.controls;
+            screen_data = data.htmlJson.customData;
+            // 遍历数据,生成图形
+            var html = '';
+            $.each(data.htmlJson.controls,function(index,val){
+                // 判断图形、表格、文本、图片、按钮
+                var text = '';
+                // 如果是文本和图片，则复制内容不同
+                var style =  val.style;
+                var controls = val.customData.controls;
+                var dataType = val.customData.dataType;
 
-            $(".edit-libs-box").append(html);
-            // 拖拽初始化！
-            new ZResize({
-                stage: '.edit-libs-box', //舞台
-                itemClass: 'resize-item'//可缩放的类名
+                id_ = val.cid; // 拖拽必须修改id_
+                if(dataType === "text" || dataType === "button" || dataType === "image"){
+                    text = controls.html;
+                }else if(dataType === "table" || dataType === "chart"){
+                    // 将数据存入检索数据中
+                    var chart_date = {
+                        'cid':val.cid,
+                        "type":val.type,
+                        "queryJson":val.queryJson,
+                    };
+                    DataIndexes.inAjax(chart_date,val.cid);
+                    index_arr.push(chart_date);
+                }
+                number++; // ID不重复！
+                html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+
+                $(".edit-libs-box").append(html);
+                // 拖拽初始化！
+                new ZResize({
+                    stage: '.edit-libs-box', //舞台
+                    itemClass: 'resize-item'//可缩放的类名
+                });
+
             });
-
-        });
-
-
+            clear(id_);
+        }
     },
 };
 obtain.request();  // 根据pageId获取数据
-
-
 
 // 文本筛选和列表筛选
 var project = {
@@ -726,11 +841,11 @@ var project = {
     "listFilterB":[],
     // ajax
     TFilter:function(field, name,fieldid,number){
+        console.log(fieldid);
         var self = this;
         this.fieldid = fieldid;    // 保存fieldid作为索引
         this.number = number;
 
-        console.log(screen_data);
         // 判断之前是否有筛选数据
         // 先清除数据;
         $(".f-select-box2").empty();
@@ -764,21 +879,22 @@ var project = {
 
                 var htmlA = '';
                 var z1 = '';
-                $.each(val.textFilter.items,function(x,y){
-                    var a1,a2,a3,a4,a5;
-                    switch(y.operator){
-                        case "CONTAIN":a1="selected='true'";
-                            break;
-                        case "START WITH":a2="selected='true'";
-                            break;
-                        case "END WITH":a3="selected='true'";
-                            break;
-                        case "NOT CONTAIN":a4="selected='true'";
-                            break;
-                        case "EQUAL":a5="selected='true'";
-                            break;
-                    }
-                     htmlA += `<div>
+                if(val.textFilter.items){
+                    $.each(val.textFilter.items,function(x,y){
+                        var a1,a2,a3,a4,a5;
+                        switch(y.operator){
+                            case "CONTAIN":a1="selected='true'";
+                                break;
+                            case "START WITH":a2="selected='true'";
+                                break;
+                            case "END WITH":a3="selected='true'";
+                                break;
+                            case "NOT CONTAIN":a4="selected='true'";
+                                break;
+                            case "EQUAL":a5="selected='true'";
+                                break;
+                        }
+                        htmlA += `<div>
                         <div class="f-subselect">
                             <select onchange="project.textData()" name="" >
                                 <option ${ a1 } value="CONTAIN">包含</option>
@@ -792,15 +908,18 @@ var project = {
                         <input onchange="project.textData()" type="text" class="f-subselect-val" value="${ y.value }" />
                         <img onclick="project.textDelete(this)" src="images/delete_01.png" alt="" class="f-del-btn"/>
                     </div>`;
-                     z1 += y.operator + " " + y.value + " ";
-                });
+                        z1 += y.operator + " " + y.value + " ";
+                    });
+                }
                 $(".f-filter-result li").eq(2).find("em").text(z1);
                 $(".f-select-box2").empty().append(htmlA);
 
                 var z2 = '';
-                $.each(self.listFilter.value,function(x,y){
-                    z2 += self.listFilter.operator +  y + ' ';
-                })
+                if(self.listFilter.value){
+                    $.each(self.listFilter.value,function(x,y){
+                        z2 += self.listFilter.operator +  y + ' ';
+                    })
+                }
                 $(".f-filter-result li").eq(1).find("em").text(z2);
 
 
@@ -993,7 +1112,7 @@ var project = {
     },
     // 列表筛选 -- 保存数据
     listData:function(){
-        project.listFilter.value = [];
+        project.listFilter.values = [];
         project.listFilterB = [];
         var text = ""
             ,index = $(".f-select-methods li input:checked").parent().index();
@@ -1001,27 +1120,27 @@ var project = {
             var r = "",n = '';
             if(index === 0){
                 r = "包含";
-                project.listFilter.operator = "CONTAIN"
+                project.listFilter.operator = "IN"
             }else{
                 r = "排除";
-                project.listFilter.operator = "NOT CONTAIN"
+                project.listFilter.operator = "NOT IN"
             }
             $.each($(".f-select-cont li"),function(x,y){
                 if($(y).find("input").prop("checked")){
                     n += $(y).find("span").text();
-                    project.listFilter.value.push($(y).find("span").text());  // 保存数据
+                    project.listFilter.values.push($(y).find("span").text());  // 保存数据
                 }
             });
             $.each($(".f-addbtn-box-auto li"),function(index,val){
                 n += $(val).find("p").text();
-                project.listFilter.value.push($(val).find("p").text());  // 保存数据
+                project.listFilter.values.push($(val).find("p").text());  // 保存数据
                 project.listFilterB.push($(val).find("p").text());
             });
             text = r + " " + n;
         }else{
             text = "使用全部";
             project.listFilter.operator = "all";
-            project.listFilter.value = [];
+            project.listFilter.values = [];
         }
         $(".f-filter-result li").eq(1).find("em").empty().text(text);
     },
@@ -1078,8 +1197,8 @@ var project = {
             "listFilterB":this.listFilterB,
             "textFilter":this.textFilter,
         };
-
         var bur = true;
+        console.log(screen_data,data);
         $.each(screen_data,function(index,val){
            if(val.fieldid === self.fieldid && val.number === self.number) {
                screen_data.splice(index,1,data);
@@ -1466,46 +1585,6 @@ var timeSng = {
 };
 
 
-
-
-
-// 粘贴
-function paste(){
-    // 判断是否为空对象！
-    if(!(JSON.stringify(copy_data) === "{}")){
-        var customData = copy_data.customData;
-        var id = customData.dataType + number;
-        var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".component-libs-box").css("margin-left"));
-        var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
-
-        var z = '';
-        // 如果是文本和图片，则复制内容不同
-        if(customData.dataType === "text" || customData.dataType === "button" || customData.dataType === "image"){
-            z = customData.html;
-        }
-
-        var html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ customData.dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
-        $(".edit-libs-box").append(html);
-
-
-        // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
-        if(copy_data.queryJson && customData.dataType === "chart" || customData.dataType === "table" ){
-            var z = JSON.parse(JSON.stringify(copy_data));
-            z.cid = id;
-            save_arr.push(z);
-        }
-        refresh.storage(customData.dataType); // 判断不同的TYPE执行不同的采取函数
-        // 拖拽初始化！
-        id_ = id; // 拖拽必须修改id_
-        number++; // ID不重复！
-        new ZResize({
-            stage: '.edit-libs-box', //舞台
-            itemClass: 'resize-item'//可缩放的类名
-        });
-    }else{
-        layer.msg("请先复制");
-    }
-}
 
 // 图片
 /*  上传图片大小格式验证  */
