@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../plugin/layer/skin/default/layer.css" />
+    <link rel="stylesheet" href="../css/form.css" />
+</head>
+<body>
+<div class="origin_tit">数据源配置</div>
+<div class="add_origin">
+    <button class="openBtn">添加数据源</button>
+</div>
+<table class="list_tab" style="text-align: center;">
+    <thead>
+        <tr>
+            <th>数据源类型</th>
+            <th>显示名称</th>
+            <th>数据库地址</th>
+            <th>端口</th>
+            <th>数据库</th>
+            <th>用户名</th>
+            <th>密码</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody class="list">
+        <!--<tr>-->
+            <!--<td>efsdf</td>-->
+            <!--<td>efsdf</td>-->
+            <!--<td>efsdf</td>-->
+            <!--<td>efsdf</td>-->
+            <!--<td>efsdf</td>-->
+            <!--<td>efsdf</td>-->
+            <!--<td>cals</td>-->
+            <!--<td>-->
+                <!--<botton class="compile">编辑</botton>-->
+                <!--<botton class="cancel">删除</botton>-->
+            <!--</td>-->
+        <!--</tr>-->
+
+    </tbody>
+</table>
+<!--数据源配置-->
+<div class="data-source-config modal">
+    <h3>数据源配置</h3>
+    <!--<img src="../images/icon_guanbi.png" alt="" class="fr"/>-->
+    <div class="da-source-origin">
+        <ul>
+            <li>
+                <span>数据源类型：</span>
+                <div class="da-sele-box">
+                    <select name="" id="db_type">
+                        <option value="mysql">mysql</option>
+                    </select>
+                    <i class="fa fa-caret-down"></i>
+                </div>
+            </li>
+        </ul>
+        <div class="da-source-account">
+            <p><label>显示名称：</label><input class="db_name" type="text" placeholder="请输入名称" /></p>
+            <p><label>数据库地址：</label><input class="db_site" type="text" placeholder="请输入数据库地址"/></p>
+            <p><label>端口：</label><input class="db_port" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " placeholder="只能输入数字" /></p>
+            <p><label>数据库：</label><input class="db_database" type="text" placeholder="请输入数据库"/></p>
+            <p><label>用户名：</label><input class="db_user" type="text" placeholder="请输入用户名"/></p>
+            <p><label>密码：</label><input class="db_password" type="text" placeholder="请输入密码"/></p>
+        </div>
+    </div>
+    <div class="file-btns-col mcenter">
+        <span>
+            <button class="addBtn">保存</button>
+            <button class="linkBtn">链接测试</button>
+            <button class="closeBtn">关闭</button>
+        </span>
+    </div>
+</div>
+
+<script src="../plugin/jQuery/jquery.min.js"></script>
+<script src="../plugin/layer/layer.js"></script>
+<script src="../js/origin.js"></script>
+</body>
+</html>
