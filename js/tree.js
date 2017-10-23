@@ -347,34 +347,100 @@ $(function(){
 			});
 		}
 		var switchVersion = function(){
+			$.ajax({
+				type:'POST',
+	            url:$url3+'/bigdata/projectVersion/findVersion',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"projectId":projectId,
+					"versionId":versionId
+				}),
+				success:function(res){
+	              	if(res.code===0){
+						var data = res.data;
+						var versionLen = data.length;
+						console.log(data);
+						console.log(versionLen);
+						if(versionLen>=1){//切换版本
+							var index = layer.confirm('是否保存当前版本?', {
+							  btn: ['确定','取消'] //按钮
+							}, 
+							function(index){
+								var index1 = layer.open({
+								    type: 1,
+								    btn: ['确定', '取消'],
+								    area: ['490px', '200px'],
+								    title:'提交发布',
+								    shadeClose: true, //点击遮罩关闭
+								    content:$(".submit-test"),
+								    yes: function(index1, layero){
+								      var version = $.trim($(".submit-test input").val());
+								      	var remark = "1";
+								      	if(version){
+								      		saveProjVersion(versionId,version,remark);//保存当前版本
+								      		selectVersion();//执行切换版本
+								      		layer.close(index1);
+								      	}else{
+								      		layer.msg("请输入版本号", {icon: 5});
+								      	}
+								    },
+								    btn2:function(){
+								    	selectVersion();//执行切换版本
+								      	layer.close(index1);
+								    },
+								    cancel:function(){
+								      	layer.close(index1);
+								    }
+							    });
+							  layer.close(index);
+							  
+							}, 
+							function(index){
+								selectVersion();//执行切换版本
+							 	layer.close(index);
+							});
+						}else{
+							layer.msg("当前版本不可切换", {icon: 0});
+						}
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+			
+		};
+		
+		//执行切换版本
+		function selectVersion(){
 			findProjVersion(projectId);
-//			$(".cut-version").show();
-			var index = layer.open({
+			var index2 = layer.open({
 			      type: 1,
 			      btn: ['确定', '取消'],
 			      area: ['490px', '330px'],
 			      title:'切换版本',
 			      shadeClose: true, //点击遮罩关闭
 			      content:$(".cut-version"),
-			      yes: function(index, layero){
+			      yes: function(index2, layero){
 			      	var $curLi = $(".cut-version li input:checked").parent("li"),
 			      		curVersion = $curLi.attr("version"),
 			      		curVersionId = $curLi.attr("versionid"),
 			      		curProjectId = $curLi.attr("projectid"),
 			      		curRemark = $curLi.attr("remark");
-			      		console.log(curVersionId);
-			      		//switchProjVersion(curVersionId);
-			      	layer.close(index);
+			      		//console.log(curVersionId);
+			      		switchProjVersion(curVersionId);
+			      	layer.close(index2);
 			      },
 			      btn2:function(){
-			      	layer.close(index);
+			      	layer.close(index2);
 			      },
 			      cancel:function(){
-			      	layer.close(index);
+			      	layer.close(index2);
 			      }
 			   });
 			
-		};
+		}
 		
 		//查询版本
 		function findProjVersion(projectId){
@@ -387,10 +453,11 @@ $(function(){
 					"projectId":projectId
 				}),
 				success:function(res){
-					console.log(res);
+//					console.log(res);
 	              	if(res.code===0){
 						var data = res.data;
 						var html = "";
+						versionLen = data.length;
 						$.each(data, function(i,item) {
 							html += `
 								<li projectId="${item.projectId}" versionId="${item.versionId}" version="${item.version}" isRelease="${item.isRelease}" isActive="${item.isActive}" status="${item.status}" remark="${item.remark}">
@@ -444,8 +511,9 @@ $(function(){
 					"versionId":versionId
 				}),
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
+	              		//切换版本成功之后,刷新项目树
+	              		getProjName(0);//刷新项目树
 						layer.msg(res.message, {icon: 6});
 		            }
 				},
@@ -468,8 +536,7 @@ $(function(){
 			var index = layer.confirm('确认导入文件?', {
 			  btn: ['确定','取消'] //按钮
 			}, function(index){
- //			  confirmLeadingIn();
- 				alert('导入文件');
+// 			  confirmLeadingIn();
 			  layer.close(index);
 			  
 			}, function(index){
@@ -500,36 +567,31 @@ $(function(){
 			  btn: ['确定','取消'] //按钮
 			}, function(index){
  			  confirmLeadingOut(projectId);
- 				alert('导出项目');
 			  layer.close(index);
-			  
 			}, function(index){
 			 	layer.close(index);
 			});
 		};
 		
 		function confirmLeadingOut(projectId){
-			$.ajax({
-				type:'POST',
-	            url:$url3+'/bigdata/project/importProject',
-	            dataType:'json',
-	            contentType: "application/json",
-				data:JSON.stringify({
-					"projectId":projectId
-				}),
-				success:function(res){
-					console.log(res);
-	              	if(res.code===0){
-						layer.msg(res.message, {icon: 6});
-		            }
-				},
-				error:function(err){
-					console.log(err);
-				}
-			});
+			var url = $url3+'/bigdata/project/importProject?projectId='+projectId;
+			downloadFile(url);
 		}
+		
+		//下载文件
+		function downloadFile(url) {   
+		   try{ 
+		        var elemIF = document.createElement("iframe");   
+		        elemIF.src = url;   
+		        elemIF.style.display = "none";   
+		        document.body.appendChild(elemIF);   
+		    }catch(e){ 
+		        zzrw.alert("下载异常！");
+		    }     
+		}
+		
 		var dataSourceConfig = function(){
-      $("#iframepage1").attr("src","html/origin.html");
+      		$("#iframepage1").attr("src","html/origin.html");
 			// $('.data-source-config').css('display','block');
 		};
     // // 添加数据源

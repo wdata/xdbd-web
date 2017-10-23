@@ -30,8 +30,8 @@ $(function(){
 	})
 	
 	//获取首页面
-	getPages(flowPageId);
-	function getPages(rootBiDirId){
+	getFirstPages(flowPageId);
+	function getFirstPages(rootBiDirId){
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/page.json",
@@ -41,7 +41,9 @@ $(function(){
 			},
 			success:function(res){
 				if(res.code===0){
-					console.log(res)
+					var data = res.data;
+					$("#f-fpage-name").text(data.pageName);
+					console.log(data)
 				}
 			},
 			error:function(res){
@@ -50,8 +52,9 @@ $(function(){
 		});
 	}
 	
+	//getOtherPages(flowPageId)
 	//获取页面流具体页面
-	function getPages(pageId){
+	function getOtherPages(pageId){
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/page.json",
