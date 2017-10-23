@@ -79,51 +79,85 @@
 	    '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
 	  });
 	});
-function callBtn(popups) {
-  layer.close(popups);
-}
-function method(_this) {
-  document.getElementById("input").value = $(_this).val();
-}
-function newBtn(popups) {
-  var newName = $(".new_name").val();
-  var newType = $(".new_type").val();
-  var newDescribe = $(".new_describe").val();
-  if(newName == '') {
-    layer.msg('请输入页面名称！');
-  } else if(newType == '') {
-    layer.msg('请输入行业类型！');
-  } else if(newDescribe == '') {
-    layer.msg('请输入页面描述！');
-  } else {
-  	layer.close(popups);
-   	newBiTemplete(projectId,dirId,newName,newType,newDescribe,templateId);
-  }
-}
+	function callBtn(popups) {
+	  layer.close(popups);
+	}
+	function method(_this) {
+	  document.getElementById("input").value = $(_this).val();
+	}
+	function newBtn(popups) {
+	  var newName = $(".new_name").val();
+	  var newType = $(".new_type").val();
+	  var newDescribe = $(".new_describe").val();
+	  if(newName == '') {
+	    layer.msg('请输入页面名称！');
+	  } else if(newType == '') {
+	    layer.msg('请输入行业类型！');
+	  } else if(newDescribe == '') {
+	    layer.msg('请输入页面描述！');
+	  } else {
+	  	layer.close(popups);
+	   	newBiTemplete(projectId,dirId,newName,newType,newDescribe,templateId);
+	   	getProjName(0);//新建Bi页面成功，刷新项目树
+	  }
+	}
 
-//新建  BI 页面
-function newBiTemplete(projectId,dirId,name,industry,newDescribe,templateId){
-	$.ajax({
-            type:'POST',
-            url:$url1+'/bi/report/v1/page.json',
+	//新建  BI 页面
+	function newBiTemplete(projectId,dirId,name,industry,newDescribe,templateId){
+		$.ajax({
+	            type:'POST',
+	            url:$url1+'/bi/report/v1/page.json',
+	            dataType:'json',
+	            data:{
+	                "projectId":projectId,
+	                "dirId":dirId,
+	                "name":name,
+	                "industry":industry,
+	                "comment":newDescribe,
+	                "templateId":templateId
+	            },
+	            success:function(res){
+	              if(res.code===0){
+	              	var data = res.data;
+	              	pageId = data.pageId;
+	              	window.location.href = "../editBI.html?pageId="+pageId;
+	              }
+	            },
+	            error:function(res){
+	                console.log(res);
+	            }
+	        });
+	}
+	
+	//刷新项目树
+	function getProjName(id){
+		$.ajax({
+			type:'POST',
+            url:$url3+'/bigdata/project/findProjectTree',
             dataType:'json',
-            data:{
-                "projectId":projectId,
-                "dirId":dirId,
-                "name":name,
-                "industry":industry,
-                "comment":newDescribe,
-                "templateId":templateId
-            },
-            success:function(res){
-              if(res.code===0){
-              	var data = res.data;
-              	pageId = data.pageId;
-              	window.location.href = "../editBI.html?pageId="+pageId;
-              }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-}
+	        contentType: "application/json",
+			data:JSON.stringify({
+				"id":id
+			}),
+			success:function(res){
+              	if(res.code===0){
+              		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
+					var treeObj = $("#treeDemo");
+					$.fn.zTree.init(treeObj, setting, zNodes);
+					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+					curMenu = zTree_Menu.getNodes()[0].children[0];
+					zTree_Menu.selectNode(curMenu);
+					treeObj.hover(function () {
+						if (!treeObj.hasClass("showIcon")) {
+							treeObj.addClass("showIcon");
+						}
+					}, function() {
+						treeObj.removeClass("showIcon");
+					});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}

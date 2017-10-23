@@ -2047,12 +2047,13 @@ div.f-addbtn-box-auto li{
 }
 /*文本 end*/
 .chart-main-box {
-	background-color:pink;
+	/*background-color:pink;*/
 	position:absolute;
 	top:36px;
 	left:48px;
 	bottom:0;
 	right:404px;
+	background: url(../images/fangge.png) repeat 0 0;
 }
 .edit-content{
 	height:100%;
@@ -2064,13 +2065,13 @@ div.f-addbtn-box-auto li{
 	width: 80%;
 	height: 100%;
 	margin: 0 auto;
-	background-color: yellow;
+	/*background-color: yellow;*/
 }
 .edit-libs-box {
 	width: 100%;
 	min-height: 600px;
 	margin: 30px 0;
-	background-color: powderblue;
+	/*background-color: powderblue;*/
 	position: relative;
 }
 /*按钮 end*/
