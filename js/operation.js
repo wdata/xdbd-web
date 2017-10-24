@@ -371,77 +371,7 @@ var refresh = {
     }
 };
 
-// 根据数据索引请求数据，并调用图形函数
-var DataIndexes = {
-    // 根据数据索引，请求数据
-    inAjax:function(d,id){
-        var self = this;
-        // console.log(JSON.stringify(d));
-        $("#"+id_).find(".resize-panel").siblings().remove();  // 删除之前的图形
-        $.ajax({
-            type:"post",
-            url:"/xdbd-bi/bi/report/v1/data.json",
-            data:JSON.stringify(d),
-            dataType:"json",
-            contentType: 'application/json',
-            success:function(data){
-                if(data.code === 0){
-                    if(data.data){
-                        // 根据上传索引绘制图形
-                        self.draw(id,d.type,data.data);
-                    }else{
-                        layer.msg("数据为空！")
-                    }
-                }
-            },
-            error:function(res){
-                // console.log(res);
-            }
-        })
-    },
-    // 刷新，判断类型，选择图形绘制
-    // 参数：id：元素ID
-    draw:function(id,type,data){
-        // 判断类型
-        switch($("#"+id).attr("data-type")){
-            case "chart":
-                switch(type){
-                    case 0:
-                        // 表格
-                        chart_table(id,data);
-                        break;
-                    case 101:
-                        // 绘制柱状图
-                        // histogramData(data);
-                        // bar("#"+id,dataTsv);
-                        manyChart("#" +id,data);
-                        // bar("#"+id,dataTsv);
-                        break;
-                    case 102:
-                        var value = [];
-                        $.each(data.value,function(x,y){
-                            value.push(y);
-                        });
-                        line("#" + id, "折线图", "2017年1011号", value, data["x-axis"], data["y-axis"]);
-                        break;
-                    case 103:
-                        var width = refresh.whLength(id,"width");
-                        var height = refresh.whLength(id,"height");
-                        var r = Math.min(width,height);
-                        var outerRadius = r/2; //外半径
-                        var innerRadius = 0; //内半径，为0则中间没有空白
-                        circle("#" + id,data.value,outerRadius,innerRadius);
-                        break;
-                }
-                break;
-            case "table":
-                // 绘制表格
-                chart_table(id,data);
-                // chart_table(id,table_date);
-                break;
-        }
-    }
-};
+
 
 // 文本编辑器
 var textEdit = {
