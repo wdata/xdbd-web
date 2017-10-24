@@ -194,7 +194,7 @@ $(function(){
                         break;
                     case 2:
                     case 3:
-                        timeSng.quotes(context.getClickEle().attr("fieldid"),n);  // 时间筛选框
+                        timeSng.quotes(uiEle.text(),uiEle.attr("fieldid"),2);  // 时间筛选框
                         break;
                     case 4:
                         swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldid"),2);  // 数值筛选框
@@ -326,7 +326,7 @@ $(function(){
                         break;
                     case 2:
                     case 3:
-                        timeSng.quotes(context.getClickEle().attr("fieldid"),n);  // 时间筛选框
+                        timeSng.quotes(context.getClickEle().text(),context.getClickEle().attr("fieldid"),n);  // 时间筛选框
                         break;
                     case 4:
                         swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldid"),n);  // 数值筛选框

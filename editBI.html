@@ -253,7 +253,7 @@
 									</div>
 									<!--保存刷新-->
 									<div class="data-refresh">
-										<a onclick="save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+										<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
 									</div>
 								</div>
 								<!--图表 end-->
@@ -310,7 +310,7 @@
 									</div>
 									<!--保存刷新-->
 									<div class="data-refresh">
-										<a onclick="save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+										<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
 									</div>
 								</div>
 								<!--表格 end-->
@@ -778,25 +778,26 @@
 							<span>相对时间</span>
 						</div>
 						<div class="select">
-							<select name="" >
-								<option value="">前7天</option>
-								<option value="">前14天</option>
-								<option value="">前28天</option>
-								<option value="">前30天</option>
-								<option value="">今天</option>
-								<option value="">昨天</option>
-								<option value="">本周</option>
-								<option value="">上周</option>
-								<option value="">本月</option>
-								<option value="">本季度</option>
-								<option value="">上季度</option>
-								<option value="">本年</option>
-								<option value="">去年</option>
+							<select id="time-select" onchange="timeSng.IldToday()" name="" >
+								<option data-days="7" value="10">前天</option>
+								<option data-days="14" value="10">前14天</option>
+								<option data-days="28" value="10">前28天</option>
+								<option data-days="30" value="10">前30天</option>
+								<option value="20">今天</option>
+								<option value="21">昨天</option>
+								<option value="30">本周</option>
+								<option value="31">上周</option>
+								<option value="40">本月</option>
+								<option value="41">上月</option>
+								<option value="50">本季度</option>
+								<option value="51">上季度</option>
+								<option value="60">本年</option>
+								<option value="61">去年</option>
 							</select>
 							<i class="fa fa-caret-down"></i>
-							<div class="radio" onclick="timeSng.IldToday(this)">
-								<img src="images/icon_checked.png" alt="" />
-								<input type="checkbox" checked="checked"/>
+							<div id="IldToday" class="radio" onclick="timeSng.IldToday(this)">
+								<img src="images/xuankuang.png" alt="" />
+								<input type="checkbox"/>
 								<span>包含今天</span>
 							</div>
 						</div>
