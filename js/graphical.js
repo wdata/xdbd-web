@@ -1156,7 +1156,6 @@ function manyChart (id,data){
 
 
     var Yfq = 0;
-    console.log(height);
     var ma = cale(JSON.parse(JSON.stringify(y_axials.valueTree)),height - YTop);
     YAxis(ma);
     function YAxis(data){

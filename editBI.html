@@ -17,13 +17,7 @@
     <link rel="stylesheet" href="css/default.min.css" />
     <link rel="stylesheet" href="css/form.css" />
     <style type="text/css">
-	    .resize-item{
-					width: 150px;
-					height:150px;
-					border: 1px solid red;
-					position: absolute;
-					z-index: 10000;
-				}
+
 			/*图标部分样式*/
 			.axis path,
 			.axis line{
@@ -132,17 +126,20 @@
 					<!--BI报表编辑模式-->
 					<div class="edit-state">
 						<div class="top-bar clearfix clearX">
-							<img src="images/icon_save.png" alt=""  onclick="operating.save()" />
-							<img src="images/icon_copy.png" alt="" />
-							<img src="images/icon_paste.png" alt="" />
-							<img src="images/icon_move.png" alt="" />
-							<img src="images/icon_preview.png" alt="" />
-							<img src="images/icon_temp.png" alt="" />
-							<img src="images/delete_01.png" alt="" />
-							<img src="images/icon_prev.png" alt="" />
-							<img src="images/icon_next.png" alt="" />
-							<img src="images/icon_fresh.png" alt="" />
-							<img src="images/icon_new.png" alt="" />
+
+							<div class="exit-preview" onclick="operating.exitPreview()"><span>退出预览</span><img src="images/icon_preview.png" alt=""/></div>
+
+							<img data-tip="保存" src="images/icon_save.png" alt=""  onclick="operating.save()" />	<!--保存-->
+							<img data-tip="撤销" src="images/icon_prev.png" alt="" />	<!--撤销-->
+							<img data-tip="恢复" src="images/icon_next.png" alt="" />	<!--恢复-->
+							<img data-tip="刷新" src="images/icon_fresh.png" alt="" onclick="operating.refresh()" />	<!--刷新-->
+							<img data-tip="预览" src="images/icon_preview.png" alt="" onclick="operating.preview()" />	<!--预览-->
+							<img data-tip="复制" src="images/icon_copy.png" alt="" onclick="operating.copy(id_)" />		<!--复制-->
+							<img data-tip="粘贴" src="images/icon_paste.png" alt="" onclick="operating.paste(id_)" />		<!--粘贴-->
+							<!--<img src="images/icon_move.png" alt="" />-->
+							<!--<img src="images/icon_temp.png" alt="" />-->
+							<img data-tip="删除" src="images/delete_01.png" alt="" onclick="operating.clickDelete(id_);" />		<!--删除-->
+							<!--<img src="images/icon_new.png" alt="" />-->
 							<div class="set-index-box fr">
 								<input type="checkbox" name="" id="" value="" />
 								<img src="images/xuankuang.png" alt="" />

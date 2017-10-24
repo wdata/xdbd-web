@@ -115,7 +115,7 @@ $(function(){
                     html = '<div class="content-button"><button></button></div>';
                     break;
                 case "text":
-                    html = '<div class="content-text"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
+                    html = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
                     break;
             }
 
@@ -416,17 +416,19 @@ function clear(id){
             var x_param='',y_param='',filter='';
             if(item.queryJson.x){
                 $.each(item.queryJson.x,function(x,item){
-                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.y){
                 $.each(item.queryJson.y,function(y,item){
-                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.filter){
                 $.each(item.queryJson.filter,function(y,item){
-                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    var min = item.numericFilter?item.numericFilter.range.min:"";
+                    var max = item.numericFilter?item.numericFilter.range.max:"";
+                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             $(".x-pills ul").empty().html(x_param);
@@ -487,7 +489,7 @@ function clear(id){
         // 按钮
         if(item.cid === id && item.customData.dataType === "button"){
             var button = item.customData.controls;
-            $("#buttonText").val(button.content);
+            $("#buttonText").val(button.text);
             $(".set-button-color .palette-color-picker-button").css("background-color",button["background-color"]);
             $(".set-button-size select").val(parseInt(button['font-size']));
             $(".set-button-SizeColor .palette-color-picker-button").css("background-color",button["font-size"]);
