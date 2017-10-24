@@ -11,6 +11,7 @@ $(function(){
 	var $url1 = "/xdbd-bi";
 	var $url2 = "/xdbd-etl";
 	var $url3 = "/xdbd-pm";
+//	var $url3="";
 	var $url4 = "/xdbd-wf";
 	
 	/*
@@ -536,20 +537,26 @@ $(function(){
 			var index = layer.confirm('确认导入文件?', {
 			  btn: ['确定','取消'] //按钮
 			}, function(index){
-// 			  confirmLeadingIn();
-			  layer.close(index);
+				$('#import-file').trigger('click');
+			  	layer.close(index);
 			  
 			}, function(index){
 			 	layer.close(index);
 			});
 		};
-		
+			$('#import-file').on('change',function(e){
+    			//console.log(e.target.files[0])
+    			confirmLeadingIn();
+    			layer.closeAll()
+    		})
 		function confirmLeadingIn(){
 			$.ajax({
 				type:'POST',
-	            url:$url3+'/biddata/project/exportProject',
-	            dataType:'json',
-	            contentType: "application/json",
+	            url:$url3+'/bigdata/project/exportProject',
+	            cache: false,
+	            data: new FormData($('#import-form')[0]),
+			    processData: false,
+			    contentType: false,
 				success:function(res){
 					console.log(res);
 	              	if(res.code===0){

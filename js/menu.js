@@ -726,7 +726,7 @@ $(function(){
 	}
 	
 	//上传图片
-	//$('.m-uploadimg-box input[type="file"]').on('change',upLoadImg);
+	$('.m-uploadimg-box input[type="file"]').on('change',upLoadImg);
 	function upLoadImg(){
 		var file = $(this)[0].files[0];
 		console.log(file);
@@ -734,9 +734,8 @@ $(function(){
 			layer.msg("文件必须为图片!",{icon:0});
 			return false;
 		}
-		
-		var formData = new FormData($('.m-uploadimg')[0]);
-		/*$.ajax({
+		var formData = new FormData($('.m-uploadimg-box')[0]);
+		$.ajax({
 			type:"POST",
 			url:"/api/v1/saveTemplateImage",
 			data:formData,
@@ -747,7 +746,7 @@ $(function(){
 			error:function(res){
 				console.log(res);
 			}
-		});*/
+		});
 	}
 	//删除图片
 	

@@ -43,7 +43,7 @@ $(function(){
 				if(res.code===0){
 					var data = res.data;
 					$("#f-fpage-name").text(data.pageName);
-					console.log(data)
+					console.log(data);
                     if(data.htmlJson && data.htmlJson.controls){
                         displayPage(data);
                     }
