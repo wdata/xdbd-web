@@ -173,6 +173,7 @@ $(function(){
               			`;
               		});
               		$(".table-box tbody").empty().append(html);
+              		getPagination();//刷新分页
 	            }
 			},
 			error:function(err){
@@ -183,33 +184,35 @@ $(function(){
 	
 	
 	//layui 分页
-	layui.use(['laypage', 'layer'], function(){
-	  var laypage = layui.laypage
-	  ,layer = layui.layer;
-	  
-	   laypage.render({
-	   	theme: '#578fe6',
-	    elem: 'opagination',
-	    count: totalCount,
-	    limit: pageSize,
-	    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取  
-            var page = location.search.match(/page=(\d+)/);  
-            return page ? page[1] : 1;  
-        }(),
-	    first: '首页',
-	    last: '末页',
-	    prev: '上一页',
-	    next: '下一页',
-	    layout: ['page', 'count'],
-     	jump: function(obj,first){//点击页码出发的事件  
-            if(!first){//是否首次进入页面  
-                pageNum = obj.curr;//获取点击的页码      
-                findLogLists(pageNum,pageSize);
-            }  
-        }  
-	  });
-	})
-	
+	getPagination();
+	function getPagination(){
+		layui.use(['laypage', 'layer'], function(){
+		  var laypage = layui.laypage
+		  ,layer = layui.layer;
+		  
+		   laypage.render({
+		   	theme: '#578fe6',
+		    elem: 'opagination',
+		    count: totalCount,
+		    limit: pageSize,
+		    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取  
+	            var page = location.search.match(/page=(\d+)/);  
+	            return page ? page[1] : 1;  
+	        }(),
+		    first: '首页',
+		    last: '末页',
+		    prev: '上一页',
+		    next: '下一页',
+		    layout: ['page', 'count'],
+	     	jump: function(obj,first){//点击页码出发的事件  
+	            if(!first){//是否首次进入页面  
+	                pageNum = obj.curr;//获取点击的页码      
+	                findLogLists(pageNum,pageSize);
+	            }  
+	        }  
+		  });
+		})
+	}
 	
 
 })//jq end
