@@ -2079,10 +2079,9 @@ div.f-addbtn-box-auto li{
 }
 .edit-libs-box {
 	width: 100%;
-	min-height: 600px;
-	margin: 30px 0;
-	/*background-color: powderblue;*/
 	position: relative;
+	min-height: 100%;
+	overflow-y: auto;
 }
 /*按钮 end*/
 .set-button-price-text p{

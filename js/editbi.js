@@ -96,7 +96,7 @@ $(function(){
     $(".edit-libs-box").droppable({
         accept: ":not(.ui-sortable-helper)",
         drop: function( event, ui ) {
-            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".component-libs-box").css("margin-left"));
+            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
             var cahrt_type = $(ui.draggable).attr("data-type");
             var type = null;
@@ -140,6 +140,30 @@ $(function(){
 				lis.push($(this).attr("fieldId"));
 			});
 			if($.inArray(ui.draggable.attr("fieldId"),lis)===-1 && id_!==""){
+
+			    var dim_mea = ui.draggable.attr("dim_mea");
+			    var type = $(".chart-type-val span").text();   // 类型
+                var dimQ = 0;
+                var meaQ = 0;
+                $.each($(".pills li"),function(index,val){
+                    if($(val).attr("dim_mea") === "0"){ dimQ++; }
+                    if($(val).attr("dim_mea") === "1"){ meaQ++; }
+                });
+
+                // 饼图  一个维度，一个度量
+			    if(type === "饼图" && $(".chart-attr-box:hidden") && (  dimQ > 1 || meaQ > 1 )){
+                    layer.msg("饼图只能有一个维度和度量");
+                    return ;
+                }
+
+                // 折线图
+                if(type === "折线图" && $(".chart-attr-box:hidden") && dimQ > 1 ){
+                    layer.msg("折线图只能有一个维度！");
+                    return ;
+                }
+                // 柱状图
+
+
 				$( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
                 pillsLi();
 			}else if($.inArray(ui.draggable.attr("fieldId"),lis)!==-1 && id_!==""){
