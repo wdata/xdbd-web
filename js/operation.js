@@ -371,8 +371,6 @@ var refresh = {
     }
 };
 
-
-
 // 文本编辑器
 var textEdit = {
     // 文本字体颜色
@@ -613,7 +611,7 @@ var operating = {
         if(!(JSON.stringify(copy_data) === "{}")){
             var customData = copy_data.customData;
             var id = customData.dataType + number;
-            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".component-libs-box").css("margin-left"));
+            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
 
             var z = '';
