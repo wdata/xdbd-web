@@ -40,7 +40,7 @@ $(document).ready(function() {
             $('#donate').submit();
         }}
     ]);
-
+    // 编辑器右键
     context.attach('.resize-item', [
         {header: '菜单设置'},
         {text: '复制',action: function(e){
@@ -87,6 +87,7 @@ $(document).ready(function() {
             }
         ]}
     ]);
+
     context.attach('.edit-libs-box', [
         {text: '粘贴',action: function(e){
             e.preventDefault();
@@ -95,18 +96,15 @@ $(document).ready(function() {
     ]);
 });
 
-// 刷新按钮
-function save_config(id){
-
-    // 上传数据索引
-    refresh.indexes(id);
-
-    // 保存数据到save_arr中；
-    refresh.retrieve(id);
-}
-
 // 保存数据，保存数据索引
 var refresh = {
+    // 刷新按钮
+    save_config:function(id){
+        // 上传数据索引
+        refresh.indexes(id);
+        // 保存数据到save_arr中；
+        refresh.retrieve(id);
+    },
     // 检索数据 -- 图表和表格的检索数据
     indexes:function(id){
         var chart_date={
@@ -307,10 +305,15 @@ var refresh = {
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
             if($(icon).attr("fieldid") === y.fieldid && y.number === number ){
-                search_attr.listFilter = JSON.parse(JSON.stringify(y.listFilter));
-                search_attr.textFilter = JSON.parse(JSON.stringify(y.textFilter));
+                if(y.listFilter || y.textFilter){
+                    search_attr.listFilter = timeSng.reJson(y.listFilter);
+                    search_attr.textFilter = timeSng.reJson(y.textFilter);
+                }
                 if(y.numericFilter){
-                    search_attr.numericFilter = JSON.parse(JSON.stringify(y.numericFilter));
+                    search_attr.numericFilter = timeSng.reJson(y.numericFilter);
+                }
+                if(y.dateFilter){
+                    search_attr.dateFilter = timeSng.reJson(y.dateFilter);
                 }
             }
         });
@@ -383,8 +386,12 @@ var DataIndexes = {
             contentType: 'application/json',
             success:function(data){
                 if(data.code === 0){
-                    // 根据上传索引绘制图形
-                    self.draw(id,d.type,data.data);
+                    if(data.data){
+                        // 根据上传索引绘制图形
+                        self.draw(id,d.type,data.data);
+                    }else{
+                        layer.msg("数据为空！")
+                    }
                 }
             },
             error:function(res){
@@ -574,7 +581,6 @@ var priceEdit = {
             var color = $(".set-price-color .palette-color-picker-button").css("background-color") + " ";
             var style = self.borderStyleJud($(".set-price-border-style select").val()) + " ";
             var width = $(this).val() + "px ";
-            console.log(width + style + color);
             $("#"+id_).find(".image-class").css("border",width + style + color);
             priceEdit.main();
         })
@@ -841,7 +847,6 @@ var project = {
     "listFilterB":[],
     // ajax
     TFilter:function(field, name,fieldid,number){
-        console.log(fieldid);
         var self = this;
         this.fieldid = fieldid;    // 保存fieldid作为索引
         this.number = number;
@@ -1191,23 +1196,14 @@ var project = {
     saveData:function(){
         var self = this;
         var data = {
-            "fieldid":this.fieldid,
-            "number":this.number,
-            "listFilter":this.listFilter,
-            "listFilterB":this.listFilterB,
-            "textFilter":this.textFilter,
+            "fieldid":timeSng.reJson(this.fieldid),
+            "number":timeSng.reJson(this.number),
+            "listFilter":timeSng.reJson(this.listFilter),
+            "listFilterB":timeSng.reJson(this.listFilterB),
+            "textFilter":timeSng.reJson(this.textFilter),
         };
         var bur = true;
-        console.log(screen_data,data);
-        $.each(screen_data,function(index,val){
-           if(val.fieldid === self.fieldid && val.number === self.number) {
-               screen_data.splice(index,1,data);
-               bur = false;
-           }
-        });
-        if(bur){
-            screen_data.push(data);
-        }
+        timeSng.only(timeSng.reJson(data));  // 唯一性
         self.close(); // 关闭
     },
     // 关闭弹出框
@@ -1308,8 +1304,8 @@ var swRag = {
 
         // 根据记录的ID，作为判断
         var data = {
-            "fieldid":this.fieldid,
-            "number":this.number,
+            "fieldid":timeSng.reJson(this.fieldid),
+            "number":timeSng.reJson(this.fieldid),
             "select":$(".s-data-val ul>li input:checked").parent().index(),
             "numericFilter":{
                 "aggregation": "SUM",
@@ -1319,16 +1315,7 @@ var swRag = {
                 }
             }
         };
-        var bur = true;
-        $.each(screen_data,function(index,val){
-            if(val.fieldid === self.fieldid && val.number === self.number) {
-                screen_data.splice(index,1,data);
-                bur = false;
-            }
-        });
-        if(bur){
-            screen_data.push(data);
-        }
+        timeSng.only(timeSng.reJson(data));  // 唯一性
         self.cancel();
     },
     // 判断
@@ -1429,14 +1416,53 @@ var swRag = {
 var timeSng = {
     "fieldid":null,
     "number":null,
+    "dateFilter":{},
     // 引用
-    quotes:function(fieldid,number){
-        this.fieldid = fieldid;
-        this.number = number;
+    quotes:function(name,fieldid,number){
+        var self = this;
+        self.fieldid = fieldid;
+        self.number = number;
+        $(".data-filter-time .f-filter-result li:first em").text(name);
+
+        // 初始化清空
+        $("#start").val("");
+        $("#end").val("");
+        $("#IldToday input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");  // 清除
+
+        $.each(screen_data,function(index,val){
+            if(val.fieldid === self.fieldid && val.number === self.number) {
+                if(val.dateFilter.relative){
+                    $(".time-select input:first").attr("checked","checked").siblings("img").attr("src","images/icon_circle_on.png");  // 选中
+                    $(".time-select input:last-child").removeAttr("checked").siblings("img").attr("src","images/icon_circle.png");  // 清除
+                    // 为相对时间
+                    // 是否选择今天
+                    if(val.dateFilter.relative.containToday){
+                        $("#IldToday  ").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");  // 选中
+                    }
+                    // 下拉框
+                    $.each($("#time-select option"),function(x,y){
+                        if($(y).val() === val.dateFilter.relative.rType){
+                            $(y).attr("selected","selected");
+                            if($(y).attr("data-days") === val.dateFilter.relative.days){
+                                $(y).attr("selected","selected");
+                            }
+                        }
+                    });
+                }else if(val.dateFilter.absolute){
+                    $(".time-select input:last-child").attr("checked","checked").siblings("img").attr("src","images/icon_circle_on.png");  // 选中
+                    $(".time-select input:first").removeAttr("checked").siblings("img").attr("src","images/icon_circle.png");  // 清除
+
+                    $("#start").val(val.dateFilter.absolute.firstDay);
+                    $("#end").val(val.dateFilter.absolute.lastDay);
+                }
+            }
+        });
+
 
         // 初始化
         $(".data-filter-time").show();
         timeSng.selectRadio(); // 事件和时间插件
+        timeSng.timeData();
     },
     // 相对时间 和 日期范围 单选按钮
     selectRadio:function(){
@@ -1515,6 +1541,7 @@ var timeSng = {
             yearRange:"1950:2050",
             onClose: function( selectedDate ) {
                 $( "#end" ).datepicker( "option", "minDate", selectedDate );
+                timeSng.timeData();
             }
         });
 
@@ -1526,9 +1553,10 @@ var timeSng = {
             yearRange:"1950:2050",
             onClose: function( selectedDate ) {
                 $( "#start" ).datepicker( "option", "maxDate", selectedDate );
+                timeSng.timeData();
             }
         });
-
+        this.timeData();
     },
     // 包含今天
     IldToday:function(_this){
@@ -1539,36 +1567,74 @@ var timeSng = {
                 // 选中状态
                 $(_this).find("input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");  // 清除
             }else{
-                $(_this).find("input").attr("checked","checked").siblings("img").attr("src","images/icon_circle_on.png");  // 选中
+                $(_this).find("input").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");  // 选中
             }
         }
+        this.timeData();
     },
     // 日期范围 -- 删除图标
     timeDelete:function(_this){
         $(_this).siblings("input").val("");  // 清除时间值
+        this.timeData();
     },
     // 修改，则保存数据
     timeData:function(){
-
+        // 判断是相对时间，还是日期范围
+        if($(".time-select input:first").prop("checked")){
+            // 相对时间
+            var rType = $("#time-select").val();
+            var days = null;
+            var text = $("#IldToday input").prop("checked")?"包含今天":"";
+            if(rType + "" === "10"){
+                days = $("#time-select option:selected").attr('data-days');
+            }
+            this.dateFilter.relative = {
+                "rType":rType,
+                "containToday":$("#IldToday input").prop("checked"),
+                "days":days,
+            };
+            $(".data-filter-time .f-filter-result li").eq(1).find("em").text($("#time-select option:selected").text() + " " + text);
+            // 删除日期范围数值
+            this.dateFilter.absolute = null;
+        }else{
+            // 日期范围
+            var firstDay = $("#start").val();
+            var lastDay = $("#end").val();
+            this.dateFilter.absolute = {
+                "firstDay":firstDay,
+                "lastDay":lastDay,
+            };
+            $(".data-filter-time .f-filter-result li").eq(1).find("em").text(firstDay + " -- " + lastDay);
+            // 删除相对时间
+            this.dateFilter.relative = null;
+        }
     },
     // 保存按钮
     save:function(){
-    // 根据记录的ID，作为判断
-        var data = {
-            "fieldid":this.fieldid,
-            "number":this.number,
-            "select":$(".s-data-val ul>li input:checked").parent().index(),
-            "numericFilter":{
-                "aggregation": "SUM",
-                "range":{
-                    "min":swRag.min.val(),
-                    "max":swRag.max.val()
-                }
+        if(this.dateFilter.absolute){
+            if(!(this.dateFilter.absolute.firstDay || this.dateFilter.absolute.lastDay)){
+                layer.msg("请选择时间！");
+                return;
             }
+        }
+       // 根据记录的ID，作为判断
+        var data = {
+            "fieldid":timeSng.reJson(this.fieldid),
+            "number":timeSng.reJson(this.number),
+            "dateFilter":timeSng.reJson(this.dateFilter),
         };
+        timeSng.only(timeSng.reJson(data));
+        timeSng.clone();  // 关闭
+    },
+    // 深拷贝
+    reJson:function(data){
+        return JSON.parse(JSON.stringify(data));
+    },
+    // 唯一性
+    only:function(data){
         var bur = true;
         $.each(screen_data,function(index,val){
-            if(val.fieldid === self.fieldid && val.number === self.number) {
+            if(val.fieldid === data.fieldid && val.number === data.number) {
                 screen_data.splice(index,1,data);
                 bur = false;
             }
@@ -1576,6 +1642,7 @@ var timeSng = {
         if(bur){
             screen_data.push(data);
         }
+        return screen_data;
     },
     // 关闭弹出框
     clone:function(){
@@ -1583,6 +1650,7 @@ var timeSng = {
     },
 
 };
+timeSng.selectRadio(); // 事件和时间插件
 
 
 
