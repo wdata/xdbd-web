@@ -40,6 +40,7 @@ $(function(){
 	var lv1DirId = localStorage.getItem("lv1DirId");//一级目录id
 	var index;//layer弹出框
 	var dirType;//目录类型（12/13/15）
+	var typeCode = "1";//模板1,2,3
 
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
@@ -74,6 +75,7 @@ $(function(){
 		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".m-html-mod"+$idx).show().siblings().hide();
+		typeCode = $idx+1;
 		 e.preventDefault()
 	})
 	
@@ -725,6 +727,17 @@ $(function(){
 		});
 	}
 	
+	function getObjectURL(file) {
+		 var url = null ;
+		 if (window.createObjectURL!=undefined) { // basic
+		 url = window.createObjectURL(file) ;
+		 } else if (window.URL!=undefined) { // mozilla(firefox)
+		 url = window.URL.createObjectURL(file) ;
+		 } else if (window.webkitURL!=undefined) { // webkit or chrome
+		 url = window.webkitURL.createObjectURL(file) ;
+		 }
+		 return url ;
+		}
 	//上传图片
 	$('.m-uploadimg-box input[type="file"]').on('change',upLoadImg);
 	function upLoadImg(){
@@ -734,12 +747,20 @@ $(function(){
 			layer.msg("文件必须为图片!",{icon:0});
 			return false;
 		}
-		var formData = new FormData($('.m-uploadimg-box')[0]);
+		console.log(file,projectId,projectVersionId,typeCode,updateUser);
+		var formData = new FormData($('.m-uploadimg')[0]);
+		formData.append("file",file);
+		formData.append("projectId",projectId);
+		formData.append("projectVersionId",projectVersionId);
+		formData.append("typeCode",typeCode);
+		formData.append("user",updateUser);
+		console.log(formData);
 		$.ajax({
 			type:"POST",
-			url:"/api/v1/saveTemplateImage",
+			url:$url1+"/api/v1/saveTemplateImage",
 			data:formData,
-			dataType:"json",
+			processData: false,
+		    contentType: false,
 			success:function(res){
 				console.log(res);
 			},

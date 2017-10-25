@@ -2252,3 +2252,13 @@ div.ztree {
 .import-file {
 	display: none;
 }
+/*重命名项目树*/
+.rename-file {
+	border:1px solid #ddd;
+	display:block;
+	margin:40px auto 10px;
+	padding:5px 9px;
+	width:180px;
+	height:14px;
+	font-size:12px;
+}
