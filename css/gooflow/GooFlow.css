@@ -158,7 +158,7 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 .ico_groups,.ico_node,.ico_task,.ico_input,.ico_output,.ico_plug,.ico_menu,.ico_sound,
 .ico_open,.ico_new,.ico_reload,.ico_save,.ico_undo,.ico_redo,.ico_print,.ico_java,
 .ico_spark,.ico_shell,ico_parallel,ico_sort,ico_where,.ico_group,ico_sql,.ico_preview
-.ico_saveCopy{
+.ico_saveCopy,.ico_execute{
     font-family:"iconflow" !important;
     font-size:16px;line-height:19px;
     font-style:normal;
@@ -274,24 +274,43 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 
 /*以下是内部用头部工具栏的样式*/
 .GooFlow .ico_open:before{ content:"\e7a0";color:#FFD300 }
-.GooFlow .ico_new:before{ content:"\e659"; color:#00B4E1 }
-.GooFlow .ico_reload:before{ content:"\e607";color:#669900 }
-.GooFlow .ico_undo:before{ content:"\e673";color:#ff8800 }
-.GooFlow .ico_redo:before{ content:"\e672";color:#ff8800 }
-.GooFlow .ico_print:before{ content:"\e671";color: #a90329 }
+.GooFlow .ico_new{
+    background: url(../../images/xinjian.png) no-repeat center;
+    background-size: 16px 18px;
+}
+.GooFlow .ico_reload{
+    background: url(../../images/icon_fresh.png) no-repeat center;
+    background-size: 16px 18px;
+}
+.GooFlow .ico_undo{
+    background: url(../../images/icon_prev.png) no-repeat center;
+    background-size: 16px 18px;
+}
+.GooFlow .ico_redo{
+    background: url(../../images/icon_next.png) no-repeat center;
+    background-size: 16px 18px;
+}
+.GooFlow .ico_print{
+    background: url(../../images/dayin.png) no-repeat center;
+    background-size: 16px 18px;
+}
 .GooFlow .ico_save{
     background: url(../../images/save.png) no-repeat center;
-    background-size: 18px 18px;
+    background-size: 16px 18px;
 }
 .GooFlow .ico_sql{
     background: url(/../../images/shengchengSQL.png) no-repeat center;
-    background-size: 18px 18px;
+    background-size: 16px 18px;
 }
 .GooFlow .ico_preview{
-    background: url(../../images/save.png) no-repeat center;
-    background-size: 18px 18px;
+    background: url(../../images/icon_preview.png) no-repeat center;
+    background-size: 16px 18px;
 }
 .GooFlow .ico_saveCopy{
-    background: url(/../../images/shengchengSQL.png) no-repeat center;
-    background-size: 18px 18px;
+    background: url(/../../images/save_copy.png) no-repeat center;
+    background-size: 16px 18px;
+}
+.GooFlow .ico_execute{
+    background: url(/../../images/execute.png) no-repeat center;
+    background-size: 16px 18px;
 }
