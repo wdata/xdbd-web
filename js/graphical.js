@@ -8,7 +8,7 @@ var DataIndexes = {
         $("#"+id).find(".resize-panel").siblings().remove();  // 删除之前的图形
         $.ajax({
             type:"post",
-            url:"/xdbd-bi/bi/report/v1/data.json",
+            url:"/xdbd-bi/bi/report/v1/data.json?projectId="+ localStorage.getItem("projectId") +"&versionId="+ localStorage.getItem("versionId") +"",
             data:JSON.stringify(d),
             dataType:"json",
             contentType: 'application/json',

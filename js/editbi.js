@@ -8,7 +8,8 @@ $(function(){
             dataType:'json',
             data:{
                 "projectId":projectId,
-                "dbType":"0"
+                "versionId":versionId,
+                "dbType":"0",
             },
             success:function(res){
               if(res.code===0){
@@ -47,6 +48,7 @@ $(function(){
             dataType:'json',
             data:{
                 "projectId":projectId,
+                "versionId":versionId,
                 "pageId":pageId,
                 "biSetId":biSetId
             },
@@ -250,8 +252,9 @@ $(function(){
             dataType:'json',
             data:{
                 "projectId":projectId,
+                "versionId":versionId,
                 "fieldId":id,
-                "fieldAlias":name
+                "fieldAlias":name,
             },
             success:function(res){
               if(res.code===0){

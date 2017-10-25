@@ -10,7 +10,8 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,url = "http://192.168.1.42:8084/xdbd-bi"
 
 var projectId = localStorage.getItem("projectId"),
-    pageId = localStorage.getItem("directoryId");
+    pageId = localStorage.getItem("directoryId"),
+    versionId = localStorage.getItem("versionId");
 
 
 
@@ -302,9 +303,11 @@ var refresh = {
     },
     // 搜索匹配项（匹配：fieldid 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
     screen:function(icon,search_attr,number){
+        console.log(screen_data);
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
             if($(icon).attr("fieldid") === y.fieldid && y.number === number ){
+                console.log(y);
                 if(y.listFilter || y.textFilter){
                     search_attr.listFilter = timeSng.reJson(y.listFilter);
                     search_attr.textFilter = timeSng.reJson(y.textFilter);
@@ -560,7 +563,7 @@ var operating = {
         };
         $.ajax({
             type:"PUT",
-            url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex="+ isIndex +"",
+            url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex="+ isIndex +"&versionId="+ versionId +"",
             data:JSON.stringify(data),
             dataType:"json",
             contentType: 'application/json',
@@ -699,7 +702,9 @@ var obtain = {
             type:"get",
             url:"/xdbd-bi/bi/report/v1/page.json",
             data:{
-                "pageId":pageId
+                "pageId":pageId,
+                "projectId":projectId,
+                "versionId":versionId,
             },
             dataType:"json",
             success:function(data){
@@ -707,6 +712,12 @@ var obtain = {
                     if(data.data.htmlJson){
                         obtain.reduction(data.data);
                     }
+                    if(data.data.index){
+                        $(".top-bar .set-index-box input").attr({"checked":"checked","disabled":"disabled"}).siblings("img").attr("src","images/icon_checked.png");
+                    }else{
+                        $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
+                    }
+
                 }
             },
             error:function(res){
@@ -715,12 +726,6 @@ var obtain = {
         })
     },
     reduction:function(data){
-        if(data.index){
-            $(".top-bar .set-index-box input").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");
-        }else{
-            $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
-        }
-
         if(data.htmlJson.controls){
             // 赋值数据
             save_arr = data.htmlJson.controls;
@@ -773,7 +778,6 @@ var project = {
     "listFilter":{},
     "textFilter":{},
     "listFilterB":[],
-    // ajax
     TFilter:function(field, name,fieldid,number){
         var self = this;
         this.fieldid = fieldid;    // 保存fieldid作为索引
@@ -865,7 +869,9 @@ var project = {
             dataType:'json',
             data:{
                 "biSetId":$(".data-source-box option:selected").attr("bisetid"),
-                "field":field
+                "field":field,
+                "projectId":projectId,
+                "versionId":versionId,
             },
             success:function(data){
                 if(data.code === 0){
@@ -1233,7 +1239,7 @@ var swRag = {
         // 根据记录的ID，作为判断
         var data = {
             "fieldid":timeSng.reJson(this.fieldid),
-            "number":timeSng.reJson(this.fieldid),
+            "number":timeSng.reJson(this.number),
             "select":$(".s-data-val ul>li input:checked").parent().index(),
             "numericFilter":{
                 "aggregation": "SUM",
@@ -1630,6 +1636,8 @@ function imgPreview(_this){
         form.append("file",fileObj.files[0]);
         form.append("pageId",pageId);  // 页面ID
         form.append("cid",cahrt_type + number);  // 控件ID
+        form.append("projectId",projectId);
+        form.append("versionId",versionId);
 
         // 上传图片
         $.ajax({
