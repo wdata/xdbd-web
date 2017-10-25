@@ -38,9 +38,10 @@
     <script>
       var tables = {};
       var actionComps;
-      var this_dsId = sessionStorage.getItem('dsid');
-      var this_actionId = sessionStorage.getItem('id');
-      var this_versionId = sessionStorage.getItem('verid');
+//      var this_dsId = sessionStorage.getItem('dsid');
+      var this_actionId = sessionStorage.getItem('directoryId');
+//      var this_versionId = sessionStorage.getItem('verid');
+      var this_versionId = localStorage.getItem("versionId");
       var this_webComponentId;
       var this_actionCompType;
 
@@ -55,7 +56,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print","save"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["new","undo","redo","reload","print","save","sql","preview","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
         haveTool:true,
         haveDashed:true,
         haveGroup:true,
@@ -175,14 +176,41 @@
         //
         // };
         //保存流程图
-        demo.onBtnSaveClick = function () {
-          var saves = JSON.stringify(demo.exportData());
-          console.log(saves)
-        };
+       // demo.onBtnSaveClick = function () {
+//          fn_saveActionComp(getVal());
+         // $('.saveActionComp').click();
+//            bind_click_saveActionComp();
+//          var saves = JSON.stringify(demo.exportData());
+//          console.log(saves)
+   //     };
         //刷新流程图
         demo.onFreshClick=function() {
           location.reload();
         };
+        //预览
+        demo.onBtnPreviewClick=function() {
+          $.ajax({
+            type:"POST",
+            url:"/xdbd-etl/api/action/v1/actionPreview",///xdbd-etl
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "actionId": this_actionId,
+              "versionId": this_versionId
+            }),
+            success:function(data){
+              var data = data.data;
+              console.log(data);
+//              $.each(data,function(){
+//                tables[this.tableName] = this;
+//              });
+            }
+          });
+        };
+        //另存为模板
+        demo.onBtnSaveCopyClick = function() {
+          console.log("另存为模板")
+        }
       };
       var out;
 //      dags = JSON.stringify(demo.exportData());
@@ -278,7 +306,8 @@
     //初始化数据表
       function init_dataSourceTables(){
         var parameter = {
-          'dsId':this_dsId
+          "actionId": this_actionId,
+          "versionId": this_versionId
         };
         $.ajax({
           type:"POST",
@@ -448,6 +477,7 @@
     </script>
 </head>
 <body>
+<span class="ensure_load saveActionComp" style="display: none">保存</span>
 <div style="min-width: 1610px">
     <div id="demo" style="float:left"></div>
     <form class="myForm propertys" id="propertyForm">

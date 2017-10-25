@@ -91,7 +91,8 @@ function newEtlBtn() {
 }
 function get_dataSource() {
   var source = {
-    projectId: this_projectId
+    projectId: this_projectId,
+    versionId: this_versionId
   }
   $.ajax({
     type: "POST",
@@ -120,6 +121,38 @@ function callBtn(popups) {
 }
 function method(_this) {
   document.getElementById("input").value = $(_this).val();
+}
+//刷新菜单树
+function getProjName(id){
+  $.ajax({
+    type:'POST',
+    url:$url3+'/bigdata/project/findProjectTree',
+    dataType:'json',
+    contentType: "application/json",
+    data:JSON.stringify({
+      "id":id
+    }),
+    success:function(res){
+      if(res.code===0){
+        zNodes = [{"id":"0","name":"我的项目",children:res.data}];
+        var treeObj = $("#treeDemo");
+        $.fn.zTree.init(treeObj, setting, zNodes);
+        zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+        curMenu = zTree_Menu.getNodes()[0].children[0];
+        zTree_Menu.selectNode(curMenu);
+        treeObj.hover(function () {
+          if (!treeObj.hasClass("showIcon")) {
+            treeObj.addClass("showIcon");
+          }
+        }, function() {
+          treeObj.removeClass("showIcon");
+        });
+      }
+    },
+    error:function(err){
+      console.log(err);
+    }
+  });
 }
 function newBtn(popups) {
   var newName = $(".new_name").val();
@@ -156,6 +189,7 @@ function newBtn(popups) {
         if(data.code == 0) {
           sessionStorage.setItem('jobid',data.actionId);
           window.location.href = 'flowChart.html';
+          getProjName(0);
         }
       },error:function(data){
         console.log(JSON.stringify(data))

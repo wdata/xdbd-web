@@ -52,8 +52,9 @@ function GooFlow(bgDiv,property){
       tmp+="<label title='"+(property.initLabelText||"newFlow_1")+"' "
         +(GooFlow.prototype.color.main? "style='background:"+GooFlow.prototype.color.main+"'" : "")+">"+(property.initLabelText||"newFlow_1")+"</label>";
 		}
+		console.log(property);
 		for(var x=0;x<property.headBtns.length;++x){
-			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn'><i class='ico_"+property.headBtns[x]+"'></i></a>"
+			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn' title="+property.headBtns[x]+"><i class='ico_"+property.headBtns[x]+"'></i></a>"
 		}
 		tmp+="</div>";
 		this.$head=$(tmp);
@@ -64,7 +65,10 @@ function GooFlow(bgDiv,property){
 		this.onBtnOpenClick=null;//打开流程图按钮定义
 		this.onBtnSaveClick=null;//保存流程图按钮定义
 		this.onFreshClick=null;//重载流程图按钮定义
-        this.onPrintClick=null;//打印流程图按钮定义
+    this.onPrintClick=null;//打印流程图按钮定义
+    this.onBtnSqlClick=null;//生成SQL
+    this.onBtnPreviewClick=null//预览
+    this.onBtnSaveCopyClick=null//另存为模板
 		if(property.headBtns)
 		this.$head.on("click",{inthis:this},function(e){
 			if(!e)e=window.event;
@@ -80,7 +84,10 @@ function GooFlow(bgDiv,property){
 				case "ico_undo":	This.undo();break;
 				case "ico_redo":	This.redo();break;
 				case "ico_reload":  if(This.onFreshClick!=null)	This.onFreshClick();break;
-                case "ico_print":   if(This.onPrintClick!=null)	This.onPrintClick();break;
+        case "ico_print":   if(This.onPrintClick!=null)	This.onPrintClick();break;
+        case "ico_sql": if(This.onBtnSqlClick!=null) This.onBtnSqlClick();break;
+        case "ico_preview": if(This.onBtnPreviewClick!=null) This.onBtnPreviewClick();break;
+        case "ico_saveCopy": if(This.onBtnSaveCopyClick!=null) This.onBtnSaveCopyClick();break;
 			}
 		});
 	}
@@ -910,6 +917,7 @@ GooFlow.prototype={
 		});
     //绑定连线时确定结束点
     this.$workArea.delegate(".GooFlow_item","mouseup",{inthis:this},function(e){
+      console.log(111)
       console.log(e)
       var This=e.data.inthis;
       if((This.$nowType!="direct"&&This.$nowType!="dashed")&&!This.$mpTo.data("p"))	return;
