@@ -118,7 +118,7 @@
                     //绑定触发事件
                     self.bindTrigger($("#"+id_));
                     //根据ID，显示右侧菜单
-                    eleFocus();
+                    clear(id_);
                     //根据this的data-type为文本时调用函数，绑定监听事件
                     if($(this).attr("data-type") === "text"){
                         enterListen($(this).find(".content-text>div")[0]);
