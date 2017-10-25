@@ -303,11 +303,11 @@ var refresh = {
     },
     // 搜索匹配项（匹配：fieldid 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
     screen:function(icon,search_attr,number){
-        console.log(screen_data);
+        // console.log(screen_data);
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
             if($(icon).attr("fieldid") === y.fieldid && y.number === number ){
-                console.log(y);
+                // console.log(y);
                 if(y.listFilter || y.textFilter){
                     search_attr.listFilter = timeSng.reJson(y.listFilter);
                     search_attr.textFilter = timeSng.reJson(y.textFilter);

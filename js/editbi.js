@@ -344,9 +344,6 @@ $(function(){
                 }else if(z.is(".x-pills")){
                     n = 0;
                 }
-
-
-
                 switch(dataType){
                     case 1:
                         project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldid"),n); // 文本筛选框
@@ -458,9 +455,16 @@ function clear(id){
                     filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
-            $(".x-pills ul").empty().html(x_param);
-            $(".y-pills ul").empty().html(y_param);
-            $(".datas-pills ul").empty().html(filter);
+
+            if(item.customData.dataType === "chart"){
+                $(".chart-attr-box .x-pills ul").empty().html(x_param);
+                $(".chart-attr-box .y-pills ul").empty().html(y_param);
+                $(".chart-attr-box .datas-pills ul").empty().html(filter);
+            }else{
+                $(".table-attr-box .x-pills ul").empty().html(x_param);
+                $(".table-attr-box .y-pills ul").empty().html(y_param);
+                $(".table-attr-box .datas-pills ul").empty().html(filter);
+            }
 
             pillsLi();
 
