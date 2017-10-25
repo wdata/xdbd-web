@@ -4,6 +4,7 @@
 // $(function() {
   var projectId = localStorage.getItem("projectId");
   var companyId = localStorage.getItem("companyId");
+  var versionId = localStorage.getItem("versionId");
   var arr = new Array;
   var ds = '';
   var $url = '/xdbd-etl'; ///xdbd-etl
@@ -13,7 +14,8 @@
   //获取数据源列表
   function get_dataSource() {
     var source = {
-      projectId: projectId
+      projectId: projectId,
+      versionId: versionId
     }
     $.ajax({
       type: "POST",
@@ -97,7 +99,8 @@
           "password": dbPassword,
           "username": dbUser,
           "dsId": ds.view.ds,
-          "companyId":companyId
+          "companyId":companyId,
+          "versionId":versionId
         }),
         success: function (res) {
           console.log(res);
