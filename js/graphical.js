@@ -54,8 +54,8 @@ var DataIndexes = {
                         line("#" + id, "折线图", "2017年1011号", value, data["x-axis"], data["y-axis"]);
                         break;
                     case 103:
-                        var width = refresh.whLength(id,"width");
-                        var height = refresh.whLength(id,"height");
+                        var width = parseInt($("#"+ id +"").css("width"));
+                        var height = parseInt($("#"+ id +"").css("height"));
                         var r = Math.min(width,height);
                         var outerRadius = r/2; //外半径
                         var innerRadius = 0; //内半径，为0则中间没有空白
