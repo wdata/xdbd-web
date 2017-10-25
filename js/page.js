@@ -21,6 +21,8 @@ $(function(){
 	 * */
 
 	var flowPageId = localStorage.getItem("directoryId");
+	var projectId = localStorage.getItem("projectId");
+	var versionId = localStorage.getItem("versionId");
 	
 	//页面流
 	$(".p-tabs-title").on("click","li",function(){
@@ -31,6 +33,7 @@ $(function(){
 	
 	//获取首页面
 	getFirstPages(projectId,versionId,flowPageId);
+	console.log(projectId,versionId,flowPageId);
 	function getFirstPages(projectId,versionId,rootBiDirId){
 		$.ajax({
 			type:"GET",

@@ -718,6 +718,7 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
+              		$(".mn-headtxt").text(navigationText);
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -743,18 +744,16 @@ $(function(){
 	function upLoadImg(){
 		var file = $(this)[0].files[0];
 		console.log(file);
-		if(!/image\/\w+/.test(file.type)){
+		/*if(!/image\/\w+/.test(file.type)){
 			layer.msg("文件必须为图片!",{icon:0});
 			return false;
-		}
-		console.log(file,projectId,projectVersionId,typeCode,updateUser);
+		}*/
 		var formData = new FormData($('.m-uploadimg')[0]);
 		formData.append("file",file);
 		formData.append("projectId",projectId);
 		formData.append("projectVersionId",projectVersionId);
 		formData.append("typeCode",typeCode);
 		formData.append("user",updateUser);
-		console.log(formData);
 		$.ajax({
 			type:"POST",
 			url:$url1+"/api/v1/saveTemplateImage",
@@ -763,13 +762,48 @@ $(function(){
 		    contentType: false,
 			success:function(res){
 				console.log(res);
+				if(res.code===0){
+					$(".m-uploadimg>img").attr("src",$url1+res.data);
+					$(".mn-logobox>img").attr("src",$url1+res.data);
+					layer.msg("上传图片成功", {icon: 6});
+				}else{
+					layer.msg("上传图片失败", {icon: 0});
+				}
 			},
 			error:function(res){
 				console.log(res);
 			}
 		});
 	}
+	
+	$("#del-uploadimg-btn").click(function(){
+		delUploadImg(projectId,projectVersionId,typeCode,updateUser,updateUser);
+	});
 	//删除图片
+	function delUploadImg(projectId,projectVersionId,typeCode){
+		$.ajax({
+			type:'POST',
+	        url:$url1+'/api/v1/deleteTemplateImage',
+			data:{
+				"projectId":projectId,
+				"projectVersionId":projectVersionId,
+				"typeCode":typeCode,
+				"user":updateUser
+			},
+			success:function(res){
+	          	if(res.code===0){
+	          		$(".m-uploadimg>img").attr("src","../images/c_img.png");
+					$(".mn-logobox>img").attr("src","");
+	          		layer.msg("删除图片成功", {icon: 6});
+	            }else{
+	            	layer.msg("删除图片失败", {icon: 0});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
+	}
 	
 	/* 
 	 * 链接
