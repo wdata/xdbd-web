@@ -49,7 +49,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["new","undo","redo","reload","print","save","preview","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
         haveTool:true,
         haveDashed:true,
         haveGroup:true,
@@ -295,6 +295,7 @@
         demo.onFreshClick=function() {
           location.reload();
         };
+        //预览
       });
       var out;
       function Export(){

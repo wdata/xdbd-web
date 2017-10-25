@@ -15,9 +15,13 @@ $(function(){
   setVal();
 
   function bind_click_saveActionComp(){
-    $('.saveActionComp').click(function(){
+    demo.onBtnSaveClick = function () {
       fn_saveActionComp(getVal());
-    });
+    }
+    // $('.saveActionComp').click(function(){
+    //   alert(111)
+    //   fn_saveActionComp(getVal());
+    // });
   }
 
   function setVal(){
@@ -32,7 +36,6 @@ $(function(){
   }
 
   function getVal(){
-    var data = {};
     data['name'] = fn_get_stepName();
     data['webComponentId'] = this_webComponentId;
     data['actionId'] = this_actionId;
@@ -49,10 +52,15 @@ $(function(){
   }
 
   function bind_click_generateSql(){
-    $('.generateSql').click(function(){
+    demo.onBtnSqlClick = function() {
+      // alert(666)
       var sql = generate_sql();
       fn_set_sqlOut(sql);
-    });
+    }
+    // $('.generateSql').click(function(){
+    //   var sql = generate_sql();
+    //   fn_set_sqlOut(sql);
+    // });
   }
   function bind_click_loadParguet() {
     $('.loadParguet').click(function() {
@@ -77,6 +85,7 @@ $(function(){
 
   function initFromTable(){
     var optionsHtml = "";
+    // alert(JSON.stringify(tables))
     $.each(tables,function(){
       optionsHtml += "<option>"+this.tableName+"</option>";
     });

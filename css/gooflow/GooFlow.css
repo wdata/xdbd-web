@@ -14,7 +14,7 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 	display:block;width:18px;height:18px;overflow:hidden;font-size:18px;color:#777;text-align:center;margin:0 auto;
 	filter:Alpha(Opacity=70);-moz-opacity:0.7;opacity: 0.7;text-shadow:0.5px 0 #fff,0 0.5px #fff;line-height:1;
 }
-.GooFlow_head{clear:both;height:28px;border-bottom:#00B4E1 2px solid;margin-left:-1px}
+.GooFlow_head{clear:both;height:34px;border-bottom:#00B4E1 2px solid;margin-left:-1px;padding-top: 3px}
 .GooFlow_head label{
 	font-weight:bold;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:27px;padding:3px;width:176px;
 	background:#00B4E1;float:left;color:#fff;border-radius:3px 0 0 0;overflow:hidden;margin:-1px 4px 0 0;text-align:center;
@@ -157,7 +157,8 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 .ico_cursor,.ico_start,.ico_end,.ico_decision,.ico_merge,.ico_direct,.ico_dashed,.ico_join,
 .ico_groups,.ico_node,.ico_task,.ico_input,.ico_output,.ico_plug,.ico_menu,.ico_sound,
 .ico_open,.ico_new,.ico_reload,.ico_save,.ico_undo,.ico_redo,.ico_print,.ico_java,
-.ico_spark,.ico_shell,ico_parallel,ico_sort,ico_where,.ico_group {
+.ico_spark,.ico_shell,ico_parallel,ico_sort,ico_where,.ico_group,ico_sql,.ico_preview
+.ico_saveCopy{
     font-family:"iconflow" !important;
     font-size:16px;line-height:19px;
     font-style:normal;
@@ -278,4 +279,19 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 .GooFlow .ico_undo:before{ content:"\e673";color:#ff8800 }
 .GooFlow .ico_redo:before{ content:"\e672";color:#ff8800 }
 .GooFlow .ico_print:before{ content:"\e671";color: #a90329 }
-/*.GooFlow .ico_save:before{  content: '\267B ';color: #080808 }*/
+.GooFlow .ico_save{
+    background: url(../../images/save.png) no-repeat center;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_sql{
+    background: url(/../../images/shengchengSQL.png) no-repeat center;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_preview{
+    background: url(../../images/save.png) no-repeat center;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_saveCopy{
+    background: url(/../../images/shengchengSQL.png) no-repeat center;
+    background-size: 18px 18px;
+}

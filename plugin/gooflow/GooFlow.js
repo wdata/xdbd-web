@@ -55,7 +55,7 @@ function GooFlow(bgDiv,property){
         +(GooFlow.prototype.color.main? "style='background:"+GooFlow.prototype.color.main+"'" : "")+">"+(property.initLabelText||"newFlow_1")+"</label>";
 		}
 		for(var x=0;x<property.headBtns.length;++x){
-			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn'><i class='ico_"+property.headBtns[x]+"'></i></a>"
+			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn' title="+property.headBtns[x]+"><i class='ico_"+property.headBtns[x]+"'></i></a>"
 		}
 		tmp+="</div>";
 		this.$head=$(tmp);
@@ -66,7 +66,9 @@ function GooFlow(bgDiv,property){
 		this.onBtnOpenClick=null;//打开流程图按钮定义
 		this.onBtnSaveClick=null;//保存流程图按钮定义
 		this.onFreshClick=null;//重载流程图按钮定义
-        this.onPrintClick=null;//打印流程图按钮定义
+    this.onPrintClick=null;//打印流程图按钮定义
+    this.onBtnPreviewClick=null//预览
+    this.onBtnSaveCopyClick=null//另存为模板
 		if(property.headBtns)
 		this.$head.on("click",{inthis:this},function(e){
 			if(!e)e=window.event;
@@ -82,7 +84,9 @@ function GooFlow(bgDiv,property){
 				case "ico_undo":	This.undo();break;
 				case "ico_redo":	This.redo();break;
 				case "ico_reload":  if(This.onFreshClick!=null)	This.onFreshClick();break;
-                case "ico_print":   if(This.onPrintClick!=null)	This.onPrintClick();break;
+        case "ico_print":   if(This.onPrintClick!=null)	This.onPrintClick();break;
+        case "ico_preview": if(This.onBtnPreviewClick!=null) This.onBtnPreviewClick();break;
+        case "ico_saveCopy": if(This.onBtnSaveCopyClick!=null) This.onBtnSaveCopyClick();break;
 			}
 		});
 	}
