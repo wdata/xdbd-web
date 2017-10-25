@@ -17,6 +17,7 @@
 	var $url4 = "/xdbd-wf";
 
 	var projectId = localStorage.getItem("projectId"),
+		versionId = localStorage.getItem("versionId"),
 		pageId = "",
 		dirId = localStorage.getItem("directoryId");
 	var templateId = "";
@@ -29,15 +30,16 @@
 		var $aSelect = $(".demand_top select");
 		var type = $aSelect.eq(0).find("option:selected").val();
 		var industry = $aSelect.eq(1).find("option:selected").val();
-		getBiTemplet(projectId,type,industry);
+		getBiTemplet(projectId,versionId,type,industry);
 	})
-	function getBiTemplet(projectId,type,industry){
+	function getBiTemplet(projectId,versionId,type,industry){
 		$.ajax({
 			type:"GET",
 			url: $url1+"/bi/report/v1/template/list.json",
 			dataType:'json',
 	        data:{
 	            "projectId":projectId,
+	            "versionId":versionId,
 	            "type":type,
 	            "industry":industry
 	        },
@@ -97,19 +99,20 @@
 	    layer.msg('请输入页面描述！');
 	  } else {
 	  	layer.close(popups);
-	   	newBiTemplete(projectId,dirId,newName,newType,newDescribe,templateId);
+	   	newBiTemplete(projectId,versionId,dirId,newName,newType,newDescribe,templateId);
 	   	getProjName(0);//新建Bi页面成功，刷新项目树
 	  }
 	}
 
 	//新建  BI 页面
-	function newBiTemplete(projectId,dirId,name,industry,newDescribe,templateId){
+	function newBiTemplete(projectId,versionId,dirId,name,industry,newDescribe,templateId){
 		$.ajax({
 	            type:'POST',
 	            url:$url1+'/bi/report/v1/page.json',
 	            dataType:'json',
 	            data:{
 	                "projectId":projectId,
+	                "versionId":versionId,
 	                "dirId":dirId,
 	                "name":name,
 	                "industry":industry,

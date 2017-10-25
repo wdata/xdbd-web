@@ -11,7 +11,6 @@ $(function(){
 	var $url1 = "/xdbd-bi";
 	var $url2 = "/xdbd-etl";
 	var $url3 = "/xdbd-pm";
-//	var $url3="";
 	var $url4 = "/xdbd-wf";
 	
 	/*
@@ -34,6 +33,7 @@ $(function(){
 	var rootPath = "";
 	var lv1DirId = "";//一级目录id
 	var pageFlowId = "";//页面流父级->目录 id
+	var name;//项目树重命名
 	
 	/*
 	 
@@ -377,9 +377,8 @@ $(function(){
 								    content:$(".submit-test"),
 								    yes: function(index1, layero){
 								      var version = $.trim($(".submit-test input").val());
-								      	var remark = "1";
 								      	if(version){
-								      		saveProjVersion(versionId,version,remark);//保存当前版本
+								      		saveProjVersion(versionId,version,"1");//保存当前版本
 								      		selectVersion();//执行切换版本
 								      		layer.close(index1);
 								      	}else{
@@ -387,6 +386,7 @@ $(function(){
 								      	}
 								    },
 								    btn2:function(){
+								    	saveProjVersion(versionId,version,"0");//取消保存当前版本
 								    	selectVersion();//执行切换版本
 								      	layer.close(index1);
 								    },
@@ -415,7 +415,7 @@ $(function(){
 		
 		//执行切换版本
 		function selectVersion(){
-			findProjVersion(projectId);
+			findProjVersion(projectId,versionId);
 			var index2 = layer.open({
 			      type: 1,
 			      btn: ['确定', '取消'],
@@ -444,14 +444,15 @@ $(function(){
 		}
 		
 		//查询版本
-		function findProjVersion(projectId){
+		function findProjVersion(projectId,versionId){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/projectVersion/findVersion',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
-					"projectId":projectId
+					"projectId":projectId,
+					"versionId":versionId
 				}),
 				success:function(res){
 //					console.log(res);
@@ -505,13 +506,14 @@ $(function(){
 		function switchProjVersion(versionId){
 			$.ajax({
 				type:'POST',
-	            url:$url3+'/bigdata/projectVersion/saveVersion',
+	            url:$url3+'/bigdata/projectVersion/changeVersion',
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
 					"versionId":versionId
 				}),
 				success:function(res){
+					console.log(res);
 	              	if(res.code===0){
 	              		//切换版本成功之后,刷新项目树
 	              		getProjName(0);//刷新项目树
@@ -560,7 +562,9 @@ $(function(){
 				success:function(res){
 					console.log(res);
 	              	if(res.code===0){
-						layer.msg(res.message, {icon: 6});
+						layer.msg("导入成功", {icon: 6});
+		            }else{
+		            	layer.msg(res.message, {icon: 0});
 		            }
 				},
 				error:function(err){
@@ -700,11 +704,46 @@ $(function(){
     		$("#iframepage1").attr("src","html/biTemplet.html");
     	};
     	var newJob = function(){
-        $("#iframepage1").attr("src","html/stencilmanage.html");
+        	$("#iframepage1").attr("src","html/stencilmanage.html");
     	};
     	var createFpage = function(){
-    		alert('Fpage');
-    	}
+    		$("#iframepage1").attr("src","html/biTemplet.html");
+    	};
+    	var fnRenameFile = function(){
+    		var index = layer.open({
+		      type: 1,
+		      btn: ['确定', '取消'],
+		      area: ['300px', '200px'],
+		      title:'修改文件名称',
+		      shade: 0, 
+		      content:'<input type="text" placeholder="请输入新名称" class="rename-file"/>',
+		      yes: function(index, layero){
+		      	var menuName = $.trim($(".rename-file").val());
+		      		if(menuName){
+				       renameFile(directoryId,menuName);
+		      		}else{
+		      			layer.msg("输入名称不能为空", {icon: 0});
+		      		}
+		      	layer.close(index);
+		      },
+		      btn2:function(){
+		      	layer.close(index);
+		      },
+		      cancel:function(){
+		      	layer.close(index);
+		      }
+		   });
+    	};
+    	var fnDeleteFile = function(){
+    		var index = layer.confirm('确认删除文件?', {
+			  btn: ['确定','取消'] //按钮
+			}, function(index){
+ 			  deleteFile(directoryId);
+			  layer.close(index);
+			}, function(index){
+			 	layer.close(index);
+			});
+    	};
 		var items = [];
 		var items0 = [
 			{ title: '创建子模块', fn: createSubmodule},
@@ -714,7 +753,9 @@ $(function(){
 			{ title: '导入', fn: leadingIn },
 			{ title: '导出', fn: leadingOut},
 			{ title: '数据源配置', fn: dataSourceConfig },
-			{ title: '属性', fn: setProperty }
+			{ title: '属性', fn: setProperty },
+			{ title: '修改名称',fn:fnRenameFile},
+			{ title: '删除',fn:fnDeleteFile}
 		];
 		var items1 = [
 			{ title: '新建ETL', fn: newEtl},
@@ -883,6 +924,55 @@ $(function(){
 						}, function() {
 							treeObj.removeClass("showIcon");
 						});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
+		//删除文件
+		function deleteFile(directoryId){
+			$.ajax({
+				type:'POST',
+	            url:$url3+'/bigdata/project/deleteProjectFile',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"directoryId":directoryId
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						//删除成功,刷新项目树
+						getProjName(0);
+						layer.msg("删除成功", {icon: 6});
+		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
+		//修改名称
+		function renameFile(directoryId,name){
+			$.ajax({
+				type:'POST',
+	            url:$url3+'/bigdata/project/updateProjectFile',
+	            dataType:'json',
+	            contentType: "application/json",
+				data:JSON.stringify({
+					"directoryId":directoryId,
+					"name":name
+				}),
+				success:function(res){
+					console.log(res);
+	              	if(res.code===0){
+						//修改名称成功,刷新项目树
+						getProjName(0);
+						layer.msg("修改名称成功", {icon: 6});
 		            }
 				},
 				error:function(err){
