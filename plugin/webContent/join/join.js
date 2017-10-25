@@ -86,12 +86,12 @@ $(function(){
   }
 
   function bind_click_saveActionComp(){
-    demo.onBtnSaveClick = function() {
-      fn_saveActionComp(getVal());
-    }
-    // $('.saveActionComp').click(function(){
+    // demo.onBtnSaveClick = function() {
     //   fn_saveActionComp(getVal());
-    // });
+    // }
+    $('.saveActionComp').click(function(){
+      fn_saveActionComp(getVal());
+    });
   }
 
   function set_joinTables(joinTables){
@@ -162,14 +162,14 @@ $(function(){
   }
 
   function bind_click_generateSql(){
-    demo.onBtnSqlClick = function() {
-      var sql = generate_sql();
-      fn_set_sqlOut(sql);
-    }
-    // $('.generateSql').click(function(){
+    // demo.onBtnSqlClick = function() {
     //   var sql = generate_sql();
     //   fn_set_sqlOut(sql);
-    // });
+    // }
+    $('.generateSql').click(function(){
+      var sql = generate_sql();
+      fn_set_sqlOut(sql);
+    });
   }
 
 

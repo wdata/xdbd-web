@@ -38,12 +38,14 @@
     <script>
       var tables = {};
       var actionComps;
-//      var this_dsId = sessionStorage.getItem('dsid');
-      var this_actionId = sessionStorage.getItem('directoryId');
+      var this_isTemplate;
+      var this_templateVersionId = localStorage.getItem('templateVersionId');
+      var this_actionId = localStorage.getItem('directoryId');
 //      var this_versionId = sessionStorage.getItem('verid');
       var this_versionId = localStorage.getItem("versionId");
       var this_webComponentId;
       var this_actionCompType;
+      var url = 'xdbd-etl'; ///xdbd-etl
 
       init_dataSourceTables();
       init_actionComp();
@@ -92,7 +94,7 @@
             };
             $.ajax({
               type:"POST",
-              url:"/xdbd-etl/api/action/v1/delActionComp",
+              url:url+"/api/action/v1/delActionComp",
               dataType:"json",
               contentType:"application/json",
               data:JSON.stringify(delActionComp),
@@ -191,7 +193,7 @@
         demo.onBtnPreviewClick=function() {
           $.ajax({
             type:"POST",
-            url:"/xdbd-etl/api/action/v1/actionPreview",///xdbd-etl
+            url:url+"/api/action/v1/actionPreview",///xdbd-etl
             dataType:"json",
             contentType:"application/json",
             data:JSON.stringify({
@@ -209,7 +211,22 @@
         };
         //另存为模板
         demo.onBtnSaveCopyClick = function() {
-          console.log("另存为模板")
+          $.ajax({
+            type:"POST",
+            url:url+"/api/action/v1/saveActionTemplate",///xdbd-etl
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "actionId": this_actionId,
+              "versionId": this_versionId
+            }),
+            success:function(data){
+              if(data.code == 0) {
+                layer.msg("模板保存成功")
+              }
+
+            }
+          });
         }
       };
       var out;
@@ -311,13 +328,13 @@
         };
         $.ajax({
           type:"POST",
-          url:"/xdbd-etl/api/datasource/v1/getTableDetailList",
+          url:url+"/api/datasource/v1/getTableDetailList",
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(parameter),
           success:function(data){
             var data = data.data;
-            //console.log(data);
+            console.log(data);
             $.each(data,function(){
               tables[this.tableName] = this;
             });
@@ -396,10 +413,12 @@
         return ary;
       }
 
-      function fn_saveActionComp(val){
+      function fn_saveActionComp_exec(val){
+        val['actionId'] = this_actionId;
+        alert(2)
         $.ajax({
           type:"POST",
-          url:"/xdbd-etl/api/action/v1/saveActionComp",
+          url:url+"/api/action/v1/saveActionComp",
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(val),
@@ -407,9 +426,43 @@
             if(data.success){
               init_actionComp();
             }
-            alert(data.message);
+            //alert(data.message);
           }
         });
+      }
+
+      function fn_saveActionComp(val){
+        if(this_isTemplate) {
+          fn_saveAction(val);
+        }else{
+          fn_saveActionComp_exec(val);
+        }
+      }
+
+      function fn_saveAction(val) {
+        alert(1)
+          $.ajax({
+            type:"POST",
+            url:url+"/api/action/v1/saveAction",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "isTemplate": this_isTemplate,
+              "templateVersionId": this_templateVersionId,
+              "versionId": this_versionId,
+              "actionId": this_actionId
+            }),
+            success:function(data){
+              if(data.code == 0) {
+                this_actionId = data.data.actionId;
+                this_isTemplate = false;
+                init_actionComp();
+                fn_saveActionComp_exec(val);
+              }
+            },error:function(data){
+              console.log(JSON.stringify(data))
+            }
+          })
       }
 
       //初始化任务组件
@@ -420,7 +473,7 @@
         };
         $.ajax({
           type:"POST",
-          url:"/xdbd-etl/api/action/v1/getActionCompList",
+          url:url+"/api/action/v1/getActionCompList",
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(parameter),
@@ -431,19 +484,22 @@
       }
     //展示有线无环图
       function init_getAction() {
-        var parameter = {
-          'actionId':this_actionId,
-          'versionId':this_versionId
-        };
+        var parameter = {'actionId':this_actionId};
+        if(this_templateVersionId!=null && this_templateVersionId!=''){
+          parameter['versionId'] = this_templateVersionId;
+        }else{
+          parameter['versionId'] = this_versionId;
+        }
         $.ajax({
           type:"POST",
-          url:"/xdbd-etl/api/action/v1/getAction", //http://192.168.1.149:2001/xdbd-etl/api/action/v1/getAction
+          url:url+"/api/action/v1/getAction", //http://192.168.1.149:2001/xdbd-etl/api/action/v1/getAction
           dataType:"json",
           contentType:"application/json",
           data:JSON.stringify(parameter),
           success:function(data){
             var actionDag = {};
             if(data.data != '' && data.data != null && data.data.dag != null) {
+              this_isTemplate = data.data.isTemplate;
               actionDag = JSON.parse(data.data.dag);
             }
             showDag(actionDag);
@@ -460,7 +516,7 @@
           }
           $.ajax({
             type:"POST",
-            url:"/xdbd-etl/api/action/v1/uploadParquet",
+            url:url+"/api/action/v1/uploadParquet",
             dataType:"json",
             contentType:"application/json",
             data:JSON.stringify(load),

@@ -15,13 +15,14 @@ $(function(){
   setVal();
 
   function bind_click_saveActionComp(){
-    demo.onBtnSaveClick = function () {
-      fn_saveActionComp(getVal());
-    }
-    // $('.saveActionComp').click(function(){
-    //   alert(111)
+    // demo.onBtnSaveClick = function () {
+    //   alert(getVal())
     //   fn_saveActionComp(getVal());
-    // });
+    // }
+    $('.saveActionComp').click(function(){
+      // alert(111)
+      fn_saveActionComp(getVal());
+    });
   }
 
   function setVal(){
@@ -36,6 +37,7 @@ $(function(){
   }
 
   function getVal(){
+    var data ={};
     data['name'] = fn_get_stepName();
     data['webComponentId'] = this_webComponentId;
     data['actionId'] = this_actionId;
@@ -85,7 +87,7 @@ $(function(){
 
   function initFromTable(){
     var optionsHtml = "";
-    // alert(JSON.stringify(tables))
+     //alert(JSON.stringify(tables))
     $.each(tables,function(){
       optionsHtml += "<option>"+this.tableName+"</option>";
     });

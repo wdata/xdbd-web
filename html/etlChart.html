@@ -37,10 +37,11 @@
     <script type="text/javascript" src="../plugin/gooflow/GooFlow.export.js"></script>
     <script src="../plugin/layer/layer.js"></script>
     <script>
-      var jobid = sessionStorage.getItem('jobid');
+      var jobid = localStorage.getItem('directoryId');
       var this_versionId = localStorage.getItem("versionId");
       var this_projectId = localStorage.getItem("projectId");
       var this_createUser = localStorage.getItem("createUser");
+      var this_updateUser = localStorage.getItem("updateUser");
 
       var property={
         width:1230,
@@ -49,7 +50,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print","save","preview","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["new","undo","redo","reload","print","save","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
         haveTool:true,
         haveDashed:true,
         haveGroup:true,
@@ -288,34 +289,56 @@
         // };
         //保存流程图
         demo.onBtnSaveClick = function () {
-          var saves = JSON.stringify(demo.exportData());
-          console.log(saves)
+//          var saves = JSON.stringify(demo.exportData());
+//          console.log(saves)
+          var jsons = {};
+          jsons.jobId = jobid;
+          jsons.versionId = this_versionId;
+          jsons.projectId = this_projectId;
+          jsons.dag = JSON.stringify(demo.exportData());
+          console.log(JSON.stringify(jsons))
+          $.post('/xdbd-wf/api/job/v1/update',{
+            jsonStr: JSON.stringify(jsons)
+          },function(data) {
+            console.log(data)
+            if(data.code == 0) {
+              layer.msg('模板保存成功！');
+              window.location.href = 'stencilmanage.html';
+            }
+          },"json")
         };
         //刷新流程图
         demo.onFreshClick=function() {
           location.reload();
         };
-        //预览
+        //执行
+        demo.onBtnExecuteClick=function() {
+
+        };
+        //另存为模板
+        demo.onBtnSaveCopyClick=function() {
+          $.ajax({
+            type:"POST",
+            url:"/api/job/v1/saveAsTemplate",///xdbd-etl
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "jobId": jobid,
+              "versionId": this_versionId,
+              "dag": Export(),
+              "updateUser": this_updateUser
+
+            }),
+            success:function(data){
+              var data = data.data;
+              console.log(data);
+            }
+          });
+        }
       });
       var out;
       function Export(){
-        var jsons = {};
-        jsons.jobId = jobid;
-        jsons.versionId = this_versionId;
-        jsons.projectId = this_projectId;
-        jsons.dag = JSON.stringify(demo.exportData());
-        console.log(JSON.stringify(jsons))
-        $.post('/xdbd-wf/api/job/v1/update',{
-            jsonStr: JSON.stringify(jsons)
-        },function(data) {
-          console.log(data)
-          if(data.code == 0) {
-            layer.msg('模板保存成功！');
-            window.location.href = 'stencilmanage.html';
-          }
-        },"json")
-//        console.log(demo.exportData())
-//        document.getElementById("result").value=JSON.stringify(demo.exportData());
+        return JSON.stringify(demo.exportData());
       }
       function ResetScale(){
         demo.resetScale( parseFloat(document.getElementById("wheelDelta").value) );
@@ -654,11 +677,11 @@
         <input class="save_btn" type="button" value="确定" onclick="updataBtn()"/>
     </div>
 </form>
-<div style="clear:both">
-    <!--<label for="wheelDelta">滚动值：</label><input type="text" id="wheelDelta" value="1">-->
-    <!--<label for="detail">滚动值：</label><input type="text" id="detail" value="1"/>-->
-    <input id="submit" type="button" value='导出结果' onclick="Export()"/>
-    <!--<textarea id="result" row="6"></textarea>-->
-</div>
+<!--<div style="clear:both">-->
+    <!--&lt;!&ndash;<label for="wheelDelta">滚动值：</label><input type="text" id="wheelDelta" value="1">&ndash;&gt;-->
+    <!--&lt;!&ndash;<label for="detail">滚动值：</label><input type="text" id="detail" value="1"/>&ndash;&gt;-->
+    <!--<input id="submit" type="button" value='导出结果' onclick="Export()"/>-->
+    <!--&lt;!&ndash;<textarea id="result" row="6"></textarea>&ndash;&gt;-->
+<!--</div>-->
 </body>
 </html>

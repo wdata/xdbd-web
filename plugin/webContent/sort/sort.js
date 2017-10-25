@@ -30,13 +30,13 @@ $(function(){
   }
 
   function bind_click_saveActionComp(){
-    demo.onBtnSaveClick = function() {
-      fn_saveActionComp(getVal());
-    }
-    // $('.saveActionComp').click(function(){
-    //   //alert(JSON.stringify(getVal()));
+    // demo.onBtnSaveClick = function() {
     //   fn_saveActionComp(getVal());
-    // });
+    // }
+    $('.saveActionComp').click(function(){
+      //alert(JSON.stringify(getVal()));
+      fn_saveActionComp(getVal());
+    });
   }
 
   function setVal(){
@@ -133,12 +133,12 @@ $(function(){
   }
 
   function bind_click_sql(){
-    demo.onBtnSqlClick = function() {
-      fn_set_sqlOut(generate_sql());
-    }
-    // $('.generateSql').click(function(){
+    // demo.onBtnSqlClick = function() {
     //   fn_set_sqlOut(generate_sql());
-    // });
+    // }
+    $('.generateSql').click(function(){
+      fn_set_sqlOut(generate_sql());
+    });
   }
 
   function generate_sql(){
