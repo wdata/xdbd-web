@@ -90,6 +90,7 @@ table th,table td{
     color:#666;
     position: absolute;
     display: none;
+    z-index: 1000;
 }
 
 .axis path,
@@ -149,3 +150,13 @@ table th,table td{
 }
 
 .legend{font-size: 12px; font-family:Arial, Helvetica, sans-serif}
+
+
+#container {
+    width: 800px;
+    margin: 0px auto;
+}
+
+.bar {
+    fill: steelblue;
+}

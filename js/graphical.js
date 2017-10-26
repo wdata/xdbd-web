@@ -42,7 +42,22 @@ var DataIndexes = {
                         // 绘制柱状图
                         // histogramData(data);
                         // bar("#"+id,dataTsv);
+                        // 一维度 一度量
+                        if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length <= 1 && data.charts.dimValues.length <= 1){
+                            var d = [];
+                            $.each(data.charts.dimValues[0],function(index,val){
+                                var c = {
+                                    "letter":val,
+                                    "frequency": data.charts.meaList[0].meaValues[0][0][index]
+                                };
+                                d.push(c);
+                            });
+                            bar("#" +id,d);
+                            return;
+                        }
+
                         manyChart("#" +id,data);
+
                         // bar("#"+id,dataTsv);
                         break;
                     case 102:
@@ -604,7 +619,8 @@ function bar(id,num){
 
     var yAxis = d3.svg.axis()
         .scale(y)
-        .orient("left");
+        .orient("left")
+        .tickFormat(d3.format("s"));             // 数字后面格式;
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
@@ -883,7 +899,7 @@ function chart_table(id,date){
     $.each(date,function(index,item){
         var td='';
         for(var key in item){
-            if(index==0)th+='<th>'+key+'</th>';
+            if(index===0)th+='<th>'+key+'</th>';
             td+='<td>'+item[key]+'</td>';
         }
         tds+='<tr>'+td+'</tr>';
@@ -1796,7 +1812,7 @@ function pieChart(id, dataset,r1) {
          （2）通过更改样式 left 和 top 来设定提示框的位置
          （3）设定提示框的透明度为1.0（完全不透明）
          */
-        console.log(d.data[0] + "：" + "<br />" + d.data[1] + " ")
+        // console.log(d.data[0] + "：" + "<br />" + d.data[1] + " ")
         tooltip.html(d.data[0] + "：" + "<br />" + d.data[1] + " ")
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY + 20) + "px")
@@ -1830,7 +1846,7 @@ function lineChart(id,data){
     var lines = []; //保存折线图对象
     var xMarks = data["x-axis"];  // x轴
     var lineNames = data["y-axis"]; //保存系列名称
-    var lineColor = ["#F00","#09F","#0F0", "#ccc"];
+    var lineColor = ["#F00","#09F","#0F0", "#ccc", "#00FFFF", "#000080", "#006400"];
     var w = parseInt($(id).css("width"));
     var h = parseInt($(id).css("height"));
     var padding = 40;

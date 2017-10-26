@@ -213,17 +213,17 @@ $(function(){
 
                 var uiEle = $(ui.draggable[0]);
                 var datatype= parseInt(uiEle.attr("datatype"));
-                fieldid = uiEle.attr("fieldid");
+                fieldId = uiEle.attr("fieldId");
                 switch(datatype){
                     case 1:
-                        project.TFilter(uiEle.attr("fieldname"),uiEle.text(),uiEle.attr("fieldid"),2); // 文本筛选框
+                        project.TFilter(uiEle.attr("fieldname"),uiEle.text(),uiEle.attr("fieldId"),2,id_); // 文本筛选框
                         break;
                     case 2:
                     case 3:
-                        timeSng.quotes(uiEle.text(),uiEle.attr("fieldid"),2);  // 时间筛选框
+                        timeSng.quotes(uiEle.text(),uiEle.attr("fieldId"),2,id_);  // 时间筛选框
                         break;
                     case 4:
-                        swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldid"),2);  // 数值筛选框
+                        swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldId"),2,id_);  // 数值筛选框
                         break;
                 }
 
@@ -272,7 +272,7 @@ $(function(){
                 text: '修改显示名称',
                 action: function (e) {
                     var fieldAlias = '';
-                    var id = context.getClickEle().attr("fieldid");
+                    var id = context.getClickEle().attr("fieldId");
                     console.log(context.getClickEle());
                     layer.confirm('<input class="none" type="text" style="display:block;margin:0 auto;width:160px;height:14px;padding:6px;border:1px solid #ccc;font-size:12px;" value="' + $.trim(context.getClickEle().text()) + '"/>', {
                         btn: ['确定', '取消'], //按钮
@@ -334,7 +334,7 @@ $(function(){
                 // $("#filter .ui-widget-content ol").append(text);
                 // 数据类型：1-文本（字符串）；2-日期；3-日期和时间；4-数字；5-布尔；6-地理（用于地图）
                 var dataType = parseInt(context.getClickEle().attr("datatype"));
-                fieldid = context.getClickEle().attr("fieldid");
+                fieldId = context.getClickEle().attr("fieldId");
                 var z = context.getClickEle().parent().parent();
                 var n = null;
                 if(z.is(".datas-pills")){
@@ -346,14 +346,14 @@ $(function(){
                 }
                 switch(dataType){
                     case 1:
-                        project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldid"),n); // 文本筛选框
+                        project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldId"),n,id_); // 文本筛选框
                         break;
                     case 2:
                     case 3:
-                        timeSng.quotes(context.getClickEle().text(),context.getClickEle().attr("fieldid"),n);  // 时间筛选框
+                        timeSng.quotes(context.getClickEle().text(),context.getClickEle().attr("fieldId"),n,id_);  // 时间筛选框
                         break;
                     case 4:
-                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldid"),n);  // 数值筛选框
+                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldId"),n,id_);  // 数值筛选框
                         break;
                 }
             }
@@ -440,19 +440,19 @@ function clear(id){
             var x_param='',y_param='',filter='';
             if(item.queryJson.x){
                 $.each(item.queryJson.x,function(x,item){
-                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.y){
                 $.each(item.queryJson.y,function(y,item){
-                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.filter){
                 $.each(item.queryJson.filter,function(y,item){
                     var min = item.numericFilter?item.numericFilter.range.min:"";
                     var max = item.numericFilter?item.numericFilter.range.max:"";
-                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldid="${ item.fieldid }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
 
