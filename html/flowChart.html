@@ -36,6 +36,7 @@
     <script type="text/javascript" src="../plugin/webContent/squel.min.js"></script>
     <script src="../plugin/layer/layer.js"></script>
     <script>
+      var etlName;
       var tables = {};
       var actionComps;
       var this_isTemplate;
@@ -45,7 +46,7 @@
       var this_versionId = localStorage.getItem("versionId");
       var this_webComponentId;
       var this_actionCompType;
-      var $url = '../xdbd-etl'; ///xdbd-etl
+      var $url = '/xdbd-etl'; ///xdbd-etl
 
       init_dataSourceTables();
       init_actionComp();
@@ -162,7 +163,7 @@
           }else if(model=="area") {
             console.log(model)
           }
-//          $("#ele_name").val(obj.name);
+          etlName = obj.name;
           return true;
         };
         demo.onItemBlur=function(id,model){
