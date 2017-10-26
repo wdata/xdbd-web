@@ -7,13 +7,14 @@
   var this_projectId = localStorage.getItem("projectId");
   var this_directoryId = localStorage.getItem("directoryId");
   var this_companyId = localStorage.getItem("companyId");
+  var $url = '/xdbd-etl';
 //获取ETL列表
 var parens = {
   projectId: this_projectId
 }
 $.ajax({
   type: "POST",
-  url: "/xdbd-etl/api/action/v1/getActionTemplateList",
+  url: $url+"/api/action/v1/getActionTemplateList",
   dataType: "json",
   contentType: "application/json",
   data: JSON.stringify(parens),
@@ -46,7 +47,7 @@ function deletesBtn(_this) {
   }
   $.ajax({
     type:"POST",
-    url:"/xdbd-etl/api/action/v1/delAction",
+    url:$url+"/api/action/v1/delAction",
     dataType:"json",
     contentType:"application/json",
     data:JSON.stringify(parans),
@@ -94,7 +95,7 @@ function get_dataSource() {
   }
   $.ajax({
     type: "POST",
-    url: "/xdbd-etl/api/datasource/v1/getDataSourceList",  ///xdbd-etl
+    url: $url+"/api/datasource/v1/getDataSourceList",  ///xdbd-etl
     dataType: "json",
     contentType: "application/json",
     data: JSON.stringify(source),
@@ -180,7 +181,7 @@ function newBtn(popups) {
     };
     $.ajax({
       type:"POST",
-      url:"/xdbd-etl/api/action/v1/saveAction",
+      url:$url+"/api/action/v1/saveAction",
       dataType:"json",
       contentType:"application/json",
       data:JSON.stringify(res),
