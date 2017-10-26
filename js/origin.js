@@ -7,7 +7,7 @@
   var versionId = localStorage.getItem("versionId");
   var arr = new Array;
   var ds = '';
-  var $url = 'xdbd-etl'; ///xdbd-etl
+  var $url = '../xdbd-etl'; ///xdbd-etl
 
   get_dataSource();
 
