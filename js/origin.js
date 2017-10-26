@@ -7,7 +7,7 @@
   var versionId = localStorage.getItem("versionId");
   var arr = new Array;
   var ds = '';
-  var $url = '/xdbd-etl'; ///xdbd-etl
+  var $url = '../xdbd-etl'; ///xdbd-etl
 
   get_dataSource();
 
@@ -221,12 +221,12 @@
           "password": dbPassword,
           "username": dbUser,
           "dsId": ds.view.ds,
-          "companyId":companyId
+          "companyId":companyId,
+          "versionId":versionId
         }),
         success: function (res) {
           console.log(res);
           if (res.code === 0) {
-            $('.data-source-config').css('display', 'none');
             layer.msg('成功链接测试');
           }
         },

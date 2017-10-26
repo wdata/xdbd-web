@@ -7,13 +7,14 @@
   var this_projectId = localStorage.getItem("projectId");
   var this_directoryId = localStorage.getItem("directoryId");
   var this_companyId = localStorage.getItem("companyId");
+  var $url = '../xdbd-etl';
 //获取ETL列表
 var parens = {
-  versionId: this_versionId
+  projectId: this_projectId
 }
 $.ajax({
   type: "POST",
-  url: "/xdbd-etl/api/action/v1/getActionList",
+  url: $url+"/api/action/v1/getActionTemplateList",
   dataType: "json",
   contentType: "application/json",
   data: JSON.stringify(parens),
@@ -24,7 +25,7 @@ $.ajax({
       itemId = data.data;
       $.each(data.data, function (index, item) {
         //graphDiagram.push(item.actionId+','+item.dag);
-        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.dsId+' id='+item.versionId+'> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
       })
       $("#demand_list").html(arr);
     }
@@ -46,7 +47,7 @@ function deletesBtn(_this) {
   }
   $.ajax({
     type:"POST",
-    url:"/xdbd-etl/api/action/v1/delAction",
+    url:$url+"/api/action/v1/delAction",
     dataType:"json",
     contentType:"application/json",
     data:JSON.stringify(parans),
@@ -63,12 +64,10 @@ function deletesBtn(_this) {
 }
 //查看ETL模板
 function demandsBtn(_this) {
-  var currentDs = $(_this).attr('class');
-  var currentVer = $(_this).attr('id');
-  var currentId = $(_this).parents('.new_demand').attr('id');
-  sessionStorage.setItem('id',currentId);
-  sessionStorage.setItem('dsid',currentDs);
-  sessionStorage.setItem('verid',currentVer);
+  var currentActionId = $(_this).attr('class');
+  var currentVersionId = $(_this).attr('id');
+  localStorage.setItem('directoryId',currentActionId);
+  localStorage.setItem('templateVersionId',currentVersionId);
   window.location.href = 'flowChart.html';
 }
 //新建ETL模板
@@ -96,7 +95,7 @@ function get_dataSource() {
   }
   $.ajax({
     type: "POST",
-    url: "/xdbd-etl/api/datasource/v1/getDataSourceList",  ///xdbd-etl
+    url: $url+"/api/datasource/v1/getDataSourceList",  ///xdbd-etl
     dataType: "json",
     contentType: "application/json",
     data: JSON.stringify(source),
@@ -107,7 +106,7 @@ function get_dataSource() {
         itemId = data.data;
         $.each(data.data, function (index, item) {
           //graphDiagram.push(item.actionId+','+item.dag);
-          list.push('<option value='+item.dsId+'>'+item.dbName+'</option>')
+          list.push('<option value='+item.dsId+'>'+item.name+'</option>')
         })
         $(".new_ds").html(list);
       }
@@ -123,37 +122,37 @@ function method(_this) {
   document.getElementById("input").value = $(_this).val();
 }
 //刷新菜单树
-function getProjName(id){
-  $.ajax({
-    type:'POST',
-    url:$url3+'/bigdata/project/findProjectTree',
-    dataType:'json',
-    contentType: "application/json",
-    data:JSON.stringify({
-      "id":id
-    }),
-    success:function(res){
-      if(res.code===0){
-        zNodes = [{"id":"0","name":"我的项目",children:res.data}];
-        var treeObj = $("#treeDemo");
-        $.fn.zTree.init(treeObj, setting, zNodes);
-        zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-        curMenu = zTree_Menu.getNodes()[0].children[0];
-        zTree_Menu.selectNode(curMenu);
-        treeObj.hover(function () {
-          if (!treeObj.hasClass("showIcon")) {
-            treeObj.addClass("showIcon");
-          }
-        }, function() {
-          treeObj.removeClass("showIcon");
-        });
-      }
-    },
-    error:function(err){
-      console.log(err);
-    }
-  });
-}
+// function getProjName(id){
+//   $.ajax({
+//     type:'POST',
+//     url:'/xdbd-pm/bigdata/project/findProjectTree',
+//     dataType:'json',
+//     contentType: "application/json",
+//     data:JSON.stringify({
+//       "id":id
+//     }),
+//     success:function(res){
+//       if(res.code===0){
+//         zNodes = [{"id":"0","name":"我的项目",children:res.data}];
+//         var treeObj = $("#treeDemo");
+//         $.fn.zTree.init(treeObj, setting, zNodes);
+//         zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+//         curMenu = zTree_Menu.getNodes()[0].children[0];
+//         zTree_Menu.selectNode(curMenu);
+//         treeObj.hover(function () {
+//           if (!treeObj.hasClass("showIcon")) {
+//             treeObj.addClass("showIcon");
+//           }
+//         }, function() {
+//           treeObj.removeClass("showIcon");
+//         });
+//       }
+//     },
+//     error:function(err){
+//       console.log(err);
+//     }
+//   });
+// }
 function newBtn(popups) {
   var newName = $(".new_name").val();
   var newType = $("#input").val();
@@ -168,6 +167,7 @@ function newBtn(popups) {
   }else if(newDescribe == '') {
     layer.msg('请输入描述！');
   } else {
+    console.log(newDs)
     var res = {
       actionId: "",
       name: newName,
@@ -181,15 +181,16 @@ function newBtn(popups) {
     };
     $.ajax({
       type:"POST",
-      url:"/xdbd-etl/api/action/v1/saveAction",
+      url:$url+"/api/action/v1/saveAction",
       dataType:"json",
       contentType:"application/json",
       data:JSON.stringify(res),
       success:function(data){
+        // alert(JSON.stringify(data))
         if(data.code == 0) {
-          sessionStorage.setItem('jobid',data.actionId);
+          localStorage.setItem('directoryId',data.data.actionId);
           window.location.href = 'flowChart.html';
-          getProjName(0);
+          // getProjName(0);
         }
       },error:function(data){
         console.log(JSON.stringify(data))
