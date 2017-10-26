@@ -21,16 +21,20 @@ $(function(){
 	 * */
 
 	var pageFlowDirId = localStorage.getItem("directoryId");
-	var projectId = localStorage.getItem("projectId");
-	var versionId = localStorage.getItem("versionId");
+	var projectId = localStorage.getItem("projectId");//参数1
+	var versionId = localStorage.getItem("versionId");//参数2
 	var BIdirId = localStorage.getItem("pageFlowId");//2,10
 	var zNodes = [];
 	var linkPageId = "";//htmljson
 	var index;//popup
 	var $idx="";
-	var $idx1="";
-	var pageId = "";//选择的具体某一页面的id
+	var pageId = "";//选择的具体某一页面的id，参数3
 	var pageName = "";//页面名称
+	var t = 0;
+	var controls = [];
+	var isIndex = "";//参数4
+	var customData = {};//参数5
+	
 	//页面数配置
 	var setting = {
 		view: {
@@ -86,10 +90,13 @@ $(function(){
 	//页面流
 	$(".p-tabs-title").on("click","li",function(){
 		var $idx = $(this).index();
+			t = $idx;
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".p-cont"+$idx).show().siblings().hide();
 		if($idx===1){
 			curTreePages(BIdirId);
+		}else if($idx===0){
+//			getFirstPages(projectId,versionId,pageFlowDirId);
 		}
 	})
 	
@@ -112,10 +119,15 @@ $(function(){
 					var html = "";
 					$(".edit-content").html("");
 					if(data){
+						isIndex = data.index===true?1:0;//参数4
+						htmlJson = data.htmlJson;//参数5
+						controls = data.htmlJson.controls;
+						customData = data.htmlJson.customData;
+						pageId = data.pageId;
+						console.log(pageId);
 						$("#f-fpage-name").text(data.pageName);
-						cid = data.htmlJson.controls;
+						cid = data.htmlJson.controls;					
 						$.each(cid,function(i,item){
-							console.log();
 							html += `
 								<li>
 									<a href="javascript:;">${item.cid}</a>
@@ -124,7 +136,7 @@ $(function(){
 							`;
 						});
 						$(".page-tooltip").append(html);
-//						console.log("cid="+cid);
+
                     	if(data.htmlJson && data.htmlJson.controls){                    		
                         	displayPage(data);
                     	}
@@ -156,17 +168,21 @@ $(function(){
 					var data = res.data;
 					var cid = [];
 					var html = "";
+					isIndex = data.index===true?1:0;//参数4
+					pageId = data.pageId;
 					$(".edit-content").html("");
 					if(data.htmlJson && data.htmlJson.controls){
+						htmlJson = data.htmlJson;//参数5
+						controls = data.htmlJson.controls;
+						customData = data.htmlJson.customData;
 						cid = data.htmlJson.controls;
 						$.each(cid,function(i,item){
-						console.log();
-						html += `
-							<li>
-								<a href="javascript:;">${item.cid}</a>
-								<span class="set-flow-btn1">设置链接</span>
-							</li>
-						`;
+							html += `
+								<li>
+									<a href="javascript:;">${item.cid}</a>
+									<span class="set-flow-btn1">设置链接</span>
+								</li>
+							`;
 						});
 						$(".page-tooltip1").empty().append(html);
 						
@@ -187,7 +203,26 @@ $(function(){
 	
 	//设置链接
 	$(".page-tooltip").delegate(".set-flow-btn","click",function(){
-			$idx = $(this).parent().index();
+//			$idx = $(this).parent().index();
+			index = layer.open({
+		      type: 1,
+		      area: ['280px', '200px'],
+		      title:'链接页面',
+		      shadeClose: true, //点击遮罩关闭
+		      content:$(".flowpage-tree"),
+		      cancel:function(){
+		      	layer.close(index);
+		      }
+		})
+	});
+	
+	$(".page-tooltip").delegate("li","click",function(){
+		$idx = $(this).index();
+	})
+	
+	//设置链接
+	$(".page-tooltip1").delegate(".set-flow-btn1","click",function(){
+//			$idx1 = $(this).parent().index();
 			index = layer.open({
 		      type: 1,
 		      area: ['280px', '200px'],
@@ -200,19 +235,8 @@ $(function(){
 		})
 	})
 	
-	//设置链接
-	$(".page-tooltip1").delegate(".set-flow-btn1","click",function(){
-			$idx1 = $(this).parent().index();
-			index = layer.open({
-		      type: 1,
-		      area: ['280px', '200px'],
-		      title:'链接页面',
-		      shadeClose: true, //点击遮罩关闭
-		      content:$(".flowpage-tree"),
-		      cancel:function(){
-		      	layer.close(index);
-		      }
-		})
+	$(".page-tooltip1").delegate("li","click",function(){
+		$idx = $(this).index();
 	})
 	
 	//根据BIdirId查询项目树.（首页2与BI报表10）
@@ -265,8 +289,9 @@ $(function(){
 		var pageName = curDom[0].name;//目录名称
 		if(dirType==="15"){
 			linkPageId = directoryId;
+			
 			$(".page-tooltip li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
-			$(".page-tooltip1 li").eq($idx1).val("linkPageId",pageId).find("span").text("已设置链接");
+			$(".page-tooltip1 li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
 			layer.closeAll();
 		}else{
 			layer.msg("请选择页面文件", {icon: 0});
@@ -281,15 +306,15 @@ $(function(){
 		var pageName = curDom[0].name;//目录名称
 		if(dirType==="15"){
 			linkPageId = directoryId;
-			pageId = directoryId;
 			pageName = pageName;
-			$(".p-opage-select select option:selected").val(pageId).text(pageName);
-			getOtherPages(projectId,versionId,pageId);//调用
+			$(".p-opage-select select option:selected").val(linkPageId).text(pageName);
+			getOtherPages(projectId,versionId,linkPageId);//调用
 			layer.closeAll();
 		}else{
 			layer.msg("请选择页面文件", {icon: 0});
 		}
 	}
+	
 	//清空
 	$(".clearAll-btn").click(function(){
 		var aLi = $(".page-tooltip li");
@@ -334,13 +359,51 @@ $(function(){
 	//删除
 	$(".delOnly-btn1").click(function(){
 		var aLi = $(".page-tooltip1 li");
-		aLi.eq($idx1).attr("linkPageId","").find("span").text("设置链接");
+		aLi.eq($idx).attr("linkPageId","").find("span").text("设置链接");
 	});
 	
 	//保存页面
 	$("#save-btn").click(function(){
-		alert("保存页面");
+		var aLi;
+		if(t===0){
+			aLi = $(".page-tooltip li");
+		}else if(t===1){
+			aLi = $(".page-tooltip1 li");
+		}
+		for(let i=0;i<aLi.length;i++){
+			if(controls){
+				controls[i].linkPageId = aLi.eq(i).attr("linkPageId");
+			}
+		}
+		pageId = linkPageId;
+		savePage(pageId);
+		console.log(pageId,aLi);
+		
 	})
+	
+	function savePage(){
+		$.ajax({
+			type:'PUT',
+            url:$url1+"/bi/report/v1/page.json?projectId="+projectId+"&pageId="+pageId+"&isIndex="+isIndex+"&versionId="+versionId,
+            dataType:"json",
+            contentType: 'application/json',
+			data:JSON.stringify({
+				"isIndex":isIndex,
+				"controls":controls,
+        		"customData":customData,
+
+			}),
+			success:function(res){
+				console.log(res);
+              	if(res.code===0){
+              		layer.msg("保存页面成功", {icon: 6});
+              	}
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
 	
 });//JQ END
 
