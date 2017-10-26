@@ -14,6 +14,8 @@ $(function(){
 //alert(JSON.stringify(tables))
   setVal();
 
+  $('.fromTable').trigger('change');
+
   function bind_click_saveActionComp(){
     // demo.onBtnSaveClick = function () {
     //   alert(getVal())
@@ -54,15 +56,15 @@ $(function(){
   }
 
   function bind_click_generateSql(){
-    demo.onBtnSqlClick = function() {
-      // alert(666)
-      var sql = generate_sql();
-      fn_set_sqlOut(sql);
-    }
-    // $('.generateSql').click(function(){
+    // demo.onBtnSqlClick = function() {
+    //   // alert(666)
     //   var sql = generate_sql();
     //   fn_set_sqlOut(sql);
-    // });
+    // }
+    $('.generateSql').click(function(){
+      var sql = generate_sql();
+      fn_set_sqlOut(sql);
+    });
   }
   function bind_click_loadParguet() {
     $('.loadParguet').click(function() {
