@@ -15,6 +15,8 @@ $(function(){
   $('.fromTable').trigger('change');
   setVal();
 
+  $(".stepName").val(etlName);
+
   function bind_change_fromTable(){
     $(document.body)
       .off('change','.fromTable')

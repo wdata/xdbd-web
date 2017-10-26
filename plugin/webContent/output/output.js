@@ -8,9 +8,11 @@ $(function(){
   bind_click_generateSql();
 
   bind_click_saveActionComp();
- bind_click_extractAdd();
+  bind_click_extractAdd();
   bind_click_extractLessen();
- setVal();
+  setVal();
+
+  $(".stepName").val(etlName);
 
   function initFromTable(){
     $.each(demo.exportData().lines,function(){

@@ -7,7 +7,7 @@ $(function(){
   bind_click_sql();
   bind_click_saveActionComp();
   setVal();
-
+  $(".stepName").val(etlName);
 
   function initFromTable(){
     $.each(demo.exportData().lines,function(){

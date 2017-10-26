@@ -11,6 +11,7 @@ $(function(){
   bind_click_onAdd();
   bind_click_onLessen();
   setVal();
+  $(".stepName").val(etlName);
 
   function bind_click_saveActionComp(){
     // demo.onBtnSaveClick = function() {

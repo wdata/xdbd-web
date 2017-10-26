@@ -18,6 +18,8 @@ $(function(){
   //bind_click_lessen();
 //alert(JSON.stringify(tables))
 
+  $(".stepName").val(etlName);
+
 
 
 
