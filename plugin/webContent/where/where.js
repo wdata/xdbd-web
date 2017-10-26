@@ -53,7 +53,6 @@ $(function(){
 
   function getVal(){
     var data = {};
-    data['dsId'] = this_dsId;
     data['name'] = fn_get_stepName();
     data['webComponentId'] = this_webComponentId;
     data['actionId'] = this_actionId;
