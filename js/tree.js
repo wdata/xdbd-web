@@ -34,6 +34,8 @@ $(function(){
 	var lv1DirId = "";//一级目录id
 	var pageFlowId = "";//页面流父级->目录 id
 	var name;//项目树重命名
+	var BIdirId = "";
+	var FBIdirId = "";
 	
 	/*
 	 
@@ -798,8 +800,8 @@ $(function(){
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-//			console.log("1="+dirType);
-//			console.log("2="+directoryId);
+			console.log("1="+dirType);
+			console.log("2="+directoryId);
 			switch(dirType){
 				case "1":
 					items = items0;
@@ -810,6 +812,7 @@ $(function(){
 					items = items1;
 				break;
 				case "11":
+				case "5":
 					items = items2;
 				break;
 				case "9":
@@ -838,6 +841,7 @@ $(function(){
 					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
 					break;
 				case "15":
+				case "14":
 					items = [];
 					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
 					break;
