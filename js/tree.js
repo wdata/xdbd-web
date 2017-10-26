@@ -812,6 +812,7 @@ $(function(){
 					items = items1;
 				break;
 				case "11":
+				case "5":
 					items = items2;
 				break;
 				case "9":
@@ -840,6 +841,7 @@ $(function(){
 					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
 					break;
 				case "15":
+				case "14":
 					items = [];
 					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
 					break;

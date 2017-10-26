@@ -51,6 +51,25 @@ $(function(){
 			onClick:addLinkPage
 		}
 	};
+	var setting1 = {
+		view: {
+			selectedMulti: false,
+			showIcon: false,
+			showLine: false,
+			addDiyDom: addDiyDom
+		},
+		edit: {
+			enable: true
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			onClick:addOtherPage
+		}
+	};
 	var IDMark_A = "_a";
 	function addDiyDom(treeId, treeNode) {
 		var spaceWidth = 5;
@@ -69,6 +88,9 @@ $(function(){
 		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".p-cont"+$idx).show().siblings().hide();
+		if($idx===1){
+			curTreePages(BIdirId);
+		}
 	})
 	
 	//获取首页面
@@ -88,7 +110,7 @@ $(function(){
 					var data = res.data;
 					var cid = [];
 					var html = "";
-					console.log(data);
+					$(".edit-content").html("");
 					if(data){
 						$("#f-fpage-name").text(data.pageName);
 						cid = data.htmlJson.controls;
@@ -103,9 +125,9 @@ $(function(){
 						});
 						$(".page-tooltip").append(html);
 //						console.log("cid="+cid);
-                    	/*if(data.htmlJson && data.htmlJson.controls){                    		
+                    	if(data.htmlJson && data.htmlJson.controls){                    		
                         	displayPage(data);
-                    	}*/
+                    	}
 					}else{
 						layer.msg("请先为BI页面添加组件", {icon: 0});
 					}
@@ -134,7 +156,7 @@ $(function(){
 					var data = res.data;
 					var cid = [];
 					var html = "";
-					console.log(data);
+					$(".edit-content").html("");
 					if(data.htmlJson && data.htmlJson.controls){
 						cid = data.htmlJson.controls;
 						$.each(cid,function(i,item){
@@ -149,9 +171,9 @@ $(function(){
 						$(".page-tooltip1").empty().append(html);
 						
 						
-                    	/*if(data.htmlJson && data.htmlJson.controls){                    		
+                    	if(data.htmlJson && data.htmlJson.controls){                    		
                         	displayPage(data);
-                    	}*/
+                    	}
 					}else{
 						layer.msg("请先为BI页面添加组件", {icon: 0});
 					}
@@ -213,12 +235,8 @@ $(function(){
 	              			zNodes = data.children[0];
 	              		}
 						$.fn.zTree.init($("#flow-tree"), setting, zNodes);
-//						var treeObj = $.fn.zTree.getZTreeObj("flow-tree");
-//						var sNodes = treeObj.getSelectedNodes();
-//						if (sNodes.length > 0) {
-//							sNodes[0].open = true;
-//						}
-		            }
+						$.fn.zTree.init($("#other-tree"), setting1, zNodes);
+	              	}
 				},
 				error:function(err){
 					console.log(err);
@@ -227,6 +245,7 @@ $(function(){
 	}
 	
 	treeHover($("#flow-tree"));
+	treeHover($("#other-tree"));
 	function treeHover(treeObj){
 		treeObj.hover(function(){
 			if (!treeObj.hasClass("showIcon")){
@@ -246,17 +265,31 @@ $(function(){
 		var pageName = curDom[0].name;//目录名称
 		if(dirType==="15"){
 			linkPageId = directoryId;
-			pageId = directoryId;
-			pageName = pageName;
-			$(".selected-page").val(pageName).attr("pageId",pageId);
 			$(".page-tooltip li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
-		 	$(".page-tooltip1 li").eq($idx1).attr("linkPageId",pageId).find("span").text("已设置链接");
+			$(".page-tooltip1 li").eq($idx1).val("linkPageId",pageId).find("span").text("已设置链接");
 			layer.closeAll();
 		}else{
 			layer.msg("请选择页面文件", {icon: 0});
 		}
 	}
 	
+	function addOtherPage(){
+		var curObj = $.fn.zTree.getZTreeObj("other-tree");
+		var curDom = curObj.getSelectedNodes();
+		var dirType =  curDom[0].directoryType;//目录类型
+		var directoryId =  curDom[0].directoryId;//目录id
+		var pageName = curDom[0].name;//目录名称
+		if(dirType==="15"){
+			linkPageId = directoryId;
+			pageId = directoryId;
+			pageName = pageName;
+			$(".p-opage-select select option:selected").val(pageId).text(pageName);
+			getOtherPages(projectId,versionId,pageId);//调用
+			layer.closeAll();
+		}else{
+			layer.msg("请选择页面文件", {icon: 0});
+		}
+	}
 	//清空
 	$(".clearAll-btn").click(function(){
 		var aLi = $(".page-tooltip li");
@@ -274,25 +307,21 @@ $(function(){
 	/*
 	 * 其他页 
 	 */
-	$(".p-opage-select").on("click",function(){
+	$(".p-opage-select select").on("click",function(){
+		var name = $(this).val();
 		 index = layer.open({
 		      type: 1,
 //		      btn: ['确定', '取消'],
 		      area: ['280px', '200px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
-		      content:$(".flowpage-tree"),
+		      content:$(".otherpage-tree"),
 		      cancel:function(){
 		      	layer.close(index);
 		    }
 	  });
 	});
 	
-	//input的value改变的时候
-	$(".selected-page").on("input",function(e){alert(1);
-   		getOtherPages(projectId,versionId,pageId);//调用
-   		$idx1 = "";
-   	})
 	
 	//清空
 	$(".clearAll-btn1").click(function(){
@@ -305,7 +334,7 @@ $(function(){
 	//删除
 	$(".delOnly-btn1").click(function(){
 		var aLi = $(".page-tooltip1 li");
-		aLi.eq($idx).attr("linkPageId","").find("span").text("设置链接");
+		aLi.eq($idx1).attr("linkPageId","").find("span").text("设置链接");
 	});
 	
 	//保存页面

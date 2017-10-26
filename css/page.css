@@ -142,10 +142,10 @@
 	border: 0;
 }
 /*page tree*/
-.flowpage-tree {
+.flowpage-tree,.otherpage-tree {
 	display: none;
 }
-.flowpage-tree>.ztree {
+.flowpage-tree>.ztree ,.otherpage-tree>.ztree{
 	width: 100%;
 	min-height: 150px;
 	overflow-x: hidden;
