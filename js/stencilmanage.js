@@ -9,8 +9,8 @@ var this_companyId = localStorage.getItem("companyId");
 var this_createUser = localStorage.getItem("createUser");
 var this_updateUser = localStorage.getItem("updataeUser");
 var this_rootPath = localStorage.getItem("rootPath");
-var $url = '../xdbd-wf';  ///xdbd-wf
-//调用工作流列表
+var $url = '../xdbd-wf';  //../xdbd-wf
+//调用模板列表
 var getAll = {
   projectId: this_projectId
 };
@@ -66,27 +66,29 @@ function deleteBtn(_this) {
 //查看工作流
 function demandBtn(_this) {
   console.log(_this)
-  var demandId = {
-    id: $(_this).parents(".new_demand").attr("id"),
-    versionId: this_versionId
-  }
-  $.ajax({
-    type:"POST",
-    url:$url+"/api/job/v1/getById",
-    dataType:"json",
-    contentType:"application/json",
-    data:JSON.stringify(demandId),
-    success:function(data){
-      console.log(data)
-      if(data.code == 0) {
-        sessionStorage.setItem('jobId',data.data.jobId);
-        sessionStorage.setItem('isTemplate',data.data.isTemplate);
-        window.location.href = 'etlChart.html';
-      }
-    },error:function(data){
-      console.log(JSON.stringify(data))
-    }
-  })
+  sessionStorage.setItem('jobId',$(_this).parents(".new_demand").attr("id"));
+  window.location.href = 'etlChart.html';
+  // var demandId = {
+  //   id: $(_this).parents(".new_demand").attr("id"),
+  //   versionId: this_versionId
+  // }
+  // $.ajax({
+  //   type:"POST",
+  //   url:$url+"/api/job/v1/getById",
+  //   dataType:"json",
+  //   contentType:"application/json",
+  //   data:JSON.stringify(demandId),
+  //   success:function(data){
+  //     console.log(data)
+  //     if(data.code == 0) {
+  //       sessionStorage.setItem('jobId',data.data.jobId);
+  //       sessionStorage.setItem('isTemplate',data.data.isTemplate);
+  //       window.location.href = 'etlChart.html';
+  //     }
+  //   },error:function(data){
+  //     console.log(JSON.stringify(data))
+  //   }
+  // })
 }
 //弹出层
 $("#new_demand_btn").click(function() {
@@ -140,7 +142,7 @@ function newBtn(popups) {
       data:JSON.stringify(res),
       success:function(data){
         if(data.code == 0) {
-
+          sessionStorage.setItem('jobId',data.data);
           window.location.href = 'etlChart.html';
         }
       },error:function(data){
