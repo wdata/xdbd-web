@@ -107,6 +107,9 @@ $(function(){
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/page.json",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			dataType:"json",
 			data:{
 				"projectId":projectId,
@@ -119,7 +122,7 @@ $(function(){
 					var cid = [];
 					var html = "";
 					$(".edit-content").html("");
-					if(data){
+					if(data&&data.htmlJson){
 						isIndex = data.index===true?1:0;//参数4
 						htmlJson = data.htmlJson;//参数5
 						controls = data.htmlJson.controls;
@@ -159,6 +162,9 @@ $(function(){
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/page.json",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			dataType:"json",
 			data:{
 				"projectId":projectId,
@@ -248,6 +254,9 @@ $(function(){
 		$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/findProjectTreeById',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -395,6 +404,9 @@ $(function(){
 		$.ajax({
 			type:'PUT',
             url:$url1+"/bi/report/v1/page.json?projectId="+projectId+"&pageId="+pageId+"&isIndex="+isIndex+"&versionId="+versionId,
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
             dataType:"json",
             contentType: 'application/json',
 			data:JSON.stringify({

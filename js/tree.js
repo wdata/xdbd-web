@@ -73,6 +73,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/createProject',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
@@ -107,6 +110,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectTree',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
             dataType:'json',
 	        contentType: "application/json",
 			data:JSON.stringify({
@@ -234,6 +240,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/createSubProject',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -282,6 +291,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/createEndProject',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -330,6 +342,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/publishProject',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -353,6 +368,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/projectVersion/findVersion',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -450,6 +468,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/projectVersion/findVersion',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -485,6 +506,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/projectVersion/saveVersion',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -509,6 +533,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/projectVersion/changeVersion',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -557,6 +584,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/exportProject',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            cache: false,
 	            data: new FormData($('#import-form')[0]),
 			    processData: false,
@@ -908,6 +938,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/findProjectTreeById',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -941,6 +974,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/deleteProjectFile',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
@@ -965,6 +1001,9 @@ $(function(){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/updateProjectFile',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
