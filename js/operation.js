@@ -5,7 +5,7 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,screen_data = [] // 用以保存筛选后的数据,以fieldid作为指引
     ,data_type = ""  // 作为判断图形的；
     ,number=0   // 层级
-    ,fieldid = null  // 记录数据筛选时候的ID
+    ,fieldId = null  // 记录数据筛选时候的ID
     ,modelId = null // 记录dataModelId值；
     ,url = "http://192.168.1.42:8084/xdbd-bi"
 
@@ -266,7 +266,7 @@ var refresh = {
                 'dimMea': $(icon).attr("dim_mea"),
                 'disCon': $(icon).attr("disCon"),
                 'aggregation': $(icon).attr("defaultaggregation"),
-                "fieldid": $(icon).attr("fieldid"),
+                "fieldId": $(icon).attr("fieldId"),
             };
             refresh.screen(icon,search_attr,0); // 筛选项
             chart_date.queryJson.x.push(search_attr);
@@ -280,7 +280,7 @@ var refresh = {
                 'dimMea':$(icon).attr("dim_mea"),
                 'disCon':$(icon).attr("disCon"),
                 'aggregation':$(icon).attr("defaultaggregation"),
-                "fieldid": $(icon).attr("fieldid"),
+                "fieldId": $(icon).attr("fieldId"),
             };
             refresh.screen(icon,search_attr,1); // 筛选项
             chart_date.queryJson.y.push(search_attr);
@@ -294,19 +294,19 @@ var refresh = {
                 'dimMea':$(icon).attr("dim_mea")||'',
                 'disCon':$(icon).attr("disCon")||'',
                 'aggregation':$(icon).attr("defaultaggregation")||'',
-                "fieldid": $(icon).attr("fieldid")||"",
+                "fieldId": $(icon).attr("fieldId")||"",
             };
             refresh.screen(icon,search_attr,2); // 筛选项
             chart_date.queryJson.filter.push(search_attr);
         });
         return chart_date;
     },
-    // 搜索匹配项（匹配：fieldid 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
+    // 搜索匹配项（匹配：fieldId 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
     screen:function(icon,search_attr,number){
         // console.log(screen_data);
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
-            if($(icon).attr("fieldid") === y.fieldid && y.number === number ){
+            if($(icon).attr("fieldId") === y.fieldId && y.number === number && y.cid === id_){
                 // console.log(y);
                 if(y.listFilter || y.textFilter){
                     search_attr.listFilter = timeSng.reJson(y.listFilter);
@@ -378,9 +378,8 @@ var refresh = {
 var textEdit = {
     // 文本字体颜色
   color:function(){
-      $(document).on("click",".set-price-color .color-row span",function(){
+      $(document).on("click",".set-text-attr-wrap .color-row span",function(){
           $("#"+id_).find(".content-text").css('color',$(this).attr("data-color"))
-          // document.execCommand("foreColor",false,$(this).attr("data-color"));
       })
   },
     // 文本字体大小 1-7尺寸
@@ -447,7 +446,7 @@ var buttonEdit = {
             $("#"+id_).find("button").css({
                 'background-color':$(this).attr("data-color"),
                 'border-color':$(this).attr("data-color")
-            })
+            });
             buttonEdit.main();
         });
     },
@@ -773,15 +772,18 @@ obtain.request();  // 根据pageId获取数据
 // 文本筛选和列表筛选
 var project = {
     "list":null,
-    "fieldid": null,
+    "fieldId": null,
     "number":null,
+    "cid":null,
     "listFilter":{},
     "textFilter":{},
     "listFilterB":[],
-    TFilter:function(field, name,fieldid,number){
+    TFilter:function(field, name,fieldId,number,cid){
         var self = this;
-        this.fieldid = fieldid;    // 保存fieldid作为索引
+        var listFilter = null;
+        this.fieldId = fieldId;    // 保存fieldid作为索引
         this.number = number;
+        this.cid = cid;
 
         // 判断之前是否有筛选数据
         // 先清除数据;
@@ -792,11 +794,12 @@ var project = {
         $(".f-filter-result li:first em").text(name);
 
         $.each(screen_data,function(index,val){
-            if(fieldid === val.fieldid && val.number === number){
-                this.listFilter = val.listFilter;
-                this.textFilter = val.textFilter;
-                //
-                if(val.listFilter.operator === "NOT CONTAIN"){
+            if(fieldId === val.fieldId && val.number === number && val.cid === cid){
+                listFilter = timeSng.reJson(val.listFilter);
+                this.listFilter = timeSng.reJson(val.listFilter);
+                this.textFilter = timeSng.reJson(val.textFilter);
+
+                if(val.listFilter.operator === "NOT IN"){
                     project.chear($(".f-select-methods li").eq(1));
                 }else if(val.listFilter.operator === "all"){
                     project.chear($(".f-select-methods li").eq(2));
@@ -807,7 +810,7 @@ var project = {
                 var html = '';
                 $.each(val.listFilterB,function(x,y){
                     var c = '';
-                    if(val.listFilter.operator === "NOT CONTAIN"){
+                    if(val.listFilter.operator === "NOT IN"){
                         c = 'style="text-decoration: line-through;"'
                     }
                     html = '<li><p '+ c +'>'+ y +'</p><span onclick="project.textDelete(this)">删除</span></li>';
@@ -884,16 +887,17 @@ var project = {
                             ,c = ''
                             ,z1= ''
                         // 重置数据
-                        if(self.listFilter.value){
-                            $.each(self.listFilter.value,function(x,y){
+                        if(listFilter){
+                            if(listFilter.values)
+                            $.each(listFilter.values,function(x,y){
                                 if(val === y){
                                     a = 'icon_checked';
                                     b = "checked='checked'";
-                                    if(self.listFilter.operator === "NOT CONTAIN"){
+                                    if(listFilter.operator === "NOT IN"){
                                         c = 'style="text-decoration: line-through;"';
                                     }
                                 }
-                                if(self.listFilter.operator === "all"){
+                                if(listFilter.operator === "all"){
                                     a = 'icon_checked';
                                     b = "checked = 'checked'";
                                 }
@@ -1130,13 +1134,13 @@ var project = {
     saveData:function(){
         var self = this;
         var data = {
-            "fieldid":timeSng.reJson(this.fieldid),
+            "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
+            "cid":timeSng.reJson(this.cid),
             "listFilter":timeSng.reJson(this.listFilter),
             "listFilterB":timeSng.reJson(this.listFilterB),
             "textFilter":timeSng.reJson(this.textFilter),
         };
-        var bur = true;
         timeSng.only(timeSng.reJson(data));  // 唯一性
         self.close(); // 关闭
     },
@@ -1150,12 +1154,14 @@ var project = {
 var swRag = {
     "min":$(".s-range-val .min"),
     "max":$(".s-range-val .max"),
-    "fieldid":null,
+    "fieldId":null,
     "number":null,
+    "cid":null,
     // 根据传递的元素赋值
-    ass:function(min,max,fieldid,number){
-        this.fieldid = fieldid;
+    ass:function(min,max,fieldId,number,cid){
+        this.fieldId = fieldId;
         this.number = number;
+        this.cid = cid;
 
         // 先重置，在按照数据添加进去
         swRag.min.val("");
@@ -1163,7 +1169,7 @@ var swRag = {
         swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
 
         $.each(screen_data,function(index,val){
-            if(val.fieldid === fieldid && val.number === number){
+            if(val.fieldId === fieldId && val.number === number && val.cid === cid){
                 swRag.min.val(val.numericFilter.range.min);
                 swRag.max.val(val.numericFilter.range.max);
                 swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
@@ -1238,8 +1244,9 @@ var swRag = {
 
         // 根据记录的ID，作为判断
         var data = {
-            "fieldid":timeSng.reJson(this.fieldid),
+            "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
+            "cid":timeSng.reJson(this.cid),
             "select":$(".s-data-val ul>li input:checked").parent().index(),
             "numericFilter":{
                 "aggregation": "SUM",
@@ -1348,13 +1355,15 @@ var swRag = {
 
 // 时间筛选器
 var timeSng = {
-    "fieldid":null,
+    "fieldId":null,
     "number":null,
+    "cid":null,
     "dateFilter":{},
     // 引用
-    quotes:function(name,fieldid,number){
+    quotes:function(name,fieldId,number,cid){
         var self = this;
-        self.fieldid = fieldid;
+        self.fieldId = fieldId;
+        self.cid = cid;
         self.number = number;
         $(".data-filter-time .f-filter-result li:first em").text(name);
 
@@ -1364,7 +1373,7 @@ var timeSng = {
         $("#IldToday input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");  // 清除
 
         $.each(screen_data,function(index,val){
-            if(val.fieldid === self.fieldid && val.number === self.number) {
+            if(val.fieldId === self.fieldId && val.number === self.number && val.cid === cid) {
                 if(val.dateFilter.relative){
                     $(".time-select input:first").attr("checked","checked").siblings("img").attr("src","images/icon_circle_on.png");  // 选中
                     $(".time-select input:last-child").removeAttr("checked").siblings("img").attr("src","images/icon_circle.png");  // 清除
@@ -1553,8 +1562,9 @@ var timeSng = {
         }
        // 根据记录的ID，作为判断
         var data = {
-            "fieldid":timeSng.reJson(this.fieldid),
+            "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
+            "cid":timeSng.reJson(this.cid),
             "dateFilter":timeSng.reJson(this.dateFilter),
         };
         timeSng.only(timeSng.reJson(data));
@@ -1568,7 +1578,7 @@ var timeSng = {
     only:function(data){
         var bur = true;
         $.each(screen_data,function(index,val){
-            if(val.fieldid === data.fieldid && val.number === data.number) {
+            if(val.fieldId === data.fieldId && val.number === data.number && val.cid === data.cid) {
                 screen_data.splice(index,1,data);
                 bur = false;
             }

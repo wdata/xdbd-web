@@ -72,6 +72,10 @@
 	width: 50%;
 	text-align: center;
 	float: left;
+	cursor: default;
+}
+.p-setlink-box li>span {
+	cursor: pointer;
 }
 .p-setlink-box .p-btns button {
 	width: 88px;
@@ -136,4 +140,30 @@
 }
 .resize-item{
 	border: 0;
+}
+/*page tree*/
+.flowpage-tree,.otherpage-tree {
+	display: none;
+}
+.flowpage-tree>.ztree ,.otherpage-tree>.ztree{
+	width: 100%;
+	min-height: 150px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	background-color: #FFFFFF;
+}
+/**/
+.ztree li {
+	padding-left: 15px;
+}
+/**/
+.selected-page {
+	display: block;
+	width: 140px;
+	height: 28px;
+	margin: 0 auto;
+	border: 1px solid #ccc;
+	text-align: center;
+	line-height: 28px;
+	font-size: 12px;
 }

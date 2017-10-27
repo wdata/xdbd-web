@@ -140,7 +140,7 @@ function newBtn(popups) {
       data:JSON.stringify(res),
       success:function(data){
         if(data.code == 0) {
-          sessionStorage.setItem('jobid',data.data);
+
           window.location.href = 'etlChart.html';
         }
       },error:function(data){

@@ -90,6 +90,9 @@ $(function(){
 		$.ajax({
 			type:'GET',
             url:$url1+'/api/v1/logs',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"page":page,
 				"size":size
@@ -138,6 +141,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url1+'/api/v1/logs/search',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"page":pageNum,
 				"size":pageSize,

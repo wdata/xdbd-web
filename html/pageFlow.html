@@ -10,6 +10,8 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../plugin/font-awesome-4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="../plugin/layer/skin/default/layer.css" />
+    <!--<link rel="stylesheet" href="../plugin/zTree/css/demo.css" />-->
+    <!--<link rel="stylesheet" href="../plugin/zTree/css/zTreeStyle/zTreeStyle.css" />-->
     <link rel="stylesheet" href="../css/form.css" />
 	  <!--D3绘图时需要用到的样式文件-->
 	  <link rel="stylesheet" href="../css/BI_d3.css" />
@@ -23,7 +25,7 @@
 		<!--BI页面流-->
 		<div class="edit-state">
 			<div class="top-bar clearfix">
-				<img src="../images/icon_save.png" alt="" />
+				<img src="../images/icon_save.png" alt="" id="save-btn"/>
 				<img src="../images/icon_prev.png" alt="" />
 				<img src="../images/icon_next.png" alt="" />
 				<img src="../images/icon_fresh.png" alt="" />
@@ -46,26 +48,22 @@
 						</ul>
 						<div class="p-tabs-cont">
 							<div class="p-cont0">
-								<h3>首页为<em id="f-fpage-name">页面2</em></h3>
+								<h3>首页为&ensp;<em id="f-fpage-name">页面2</em></h3>
 								<div class="p-setlink-box">
 									<h4>链接设置</h4>
-									<ul>
-										<li>
-											<a href="javascript:;">链接设置</a>
-											<span>链接</span>
+									<ul class="page-tooltip">
+										<!--<li>
+											<a href="javascript:;">组件1</a>
+											<span class="set-flow-btn">设置链接</span>
 										</li>
 										<li>
-											<a href="#">下一页</a>
-											<span>页面1</span>
-										</li>
-										<li>
-											<a href="#">上一页</a>
-											<span>页面2</span>
-										</li>
+											<a href="javascript:;">组件2</a>
+											<span class="set-flow-btn">设置链接</span>
+										</li>-->
 									</ul>
 									<div class="p-btns">
-										<button><img src="../images/icon_sxp.png" alt="" />清空</button>
-										<button><img src="../images/icon_sdel.png" alt="" />删除</button>
+										<button class="clearAll-btn"><img src="../images/icon_sxp.png" alt="" />清空</button>
+										<button class="delOnly-btn"><img src="../images/icon_sdel.png" alt="" />删除</button>
 									</div>
 								</div>
 							</div>
@@ -73,41 +71,42 @@
 								<h4>页面流其他页面</h4>
 								<div class="p-opage-select">
 									<select name="">
-										<option value="">页面1</option>
-										<option value="">页面2</option>
-										<option value="">页面3</option>
+										<option value="">请选择页面</option>
+										<!--<option value="">页面2</option>
+										<option value="">页面3</option>-->
 									</select>
 									<i class="fa fa-caret-down"></i>
 								</div>
+								
+								<!--<div class="p-opage-select">
+									<input type="text" class="selected-page" value="请选择页面"  autoComplete='off'/>
+								</div>-->
+								
 								<div class="p-setlink-box">
 									<h4>链接设置</h4>
-									<ul>
-										<li>
-											<a href="javascript:;">链接设置</a>
-											<span>链接</span>
+									<ul class="page-tooltip1">
+										<!--<li>
+											<a href="javascript:;">组件1</a>
+											<span class="set-flow-btn1">设置链接</span>
 										</li>
 										<li>
-											<a href="#">下一页</a>
-											<span>页面1</span>
-										</li>
-										<li>
-											<a href="#">上一页</a>
-											<span>页面2</span>
-										</li>
+											<a href="javascript:;">组件2</a>
+											<span class="set-flow-btn1">设置链接</span>
+										</li>-->
 									</ul>
 									<div class="p-btns">
-										<button><img src="../images/icon_sxp.png" alt="" />清空</button>
-										<button><img src="../images/icon_sdel.png" alt="" />删除</button>
+										<button class="clearAll-btn1"><img src="../images/icon_sxp.png" alt="" />清空</button>
+										<button class="delOnly-btn1"><img src="../images/icon_sdel.png" alt="" />删除</button>
 									</div>
 								</div>
-								<div class="p-has-edited">
+								<!--<div class="p-has-edited">
 									<h4>已编辑的页面流页面</h4>
 									<ul>
 										<li>页面1</li>
 										<li>页面2</li>
 										<li>页面3</li>
 									</ul>
-								</div>
+								</div>-->
 							</div>
 						</div>
 					</div>
@@ -123,11 +122,20 @@
 		</div>
 	</div>
 		</div>
+		<!--zTree-->
+		<div class="flowpage-tree">
+			<ul id="flow-tree" class="ztree"></ul>
+		</div>
+		<div class="otherpage-tree">
+			<ul id="other-tree" class="ztree"></ul>
+		</div>
     <script src="../plugin/jQuery/jquery.min.js"></script>
+    <script src="../js/login.js"></script>
+    <script src="../plugin/zTree/jquery.ztree.all.min.js"></script>
     <script src="../plugin/layer/layer.js"></script>
-	<script src="../plugin/d3/d3.v3.min.js"></script>
-	<script  src="../plugin/d3/d3.tip.js"></script>
-	<script src="../js/graphical.js"></script>
+		<script src="../plugin/d3/d3.v3.min.js"></script>
+		<script  src="../plugin/d3/d3.tip.js"></script>
+		<script src="../js/graphical.js"></script>
     <script src="../js/page.js"></script>
   </body>
 </html>

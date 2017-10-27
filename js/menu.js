@@ -108,6 +108,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url1+'/api/v1/saveProjectMenuTop',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -132,6 +135,9 @@ $(function(){
 		$.ajax({
 			type:'GET',
             url:$url1+'/api/v1/findProjectMenuTop',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId
@@ -196,6 +202,9 @@ $(function(){
 		$.ajax({
 			type:'PUT',
             url:$url1+'/api/v1/updateMenuNameById',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"id":id,
 				"menuName":menuName,
@@ -234,6 +243,9 @@ $(function(){
 		$.ajax({
 			type:'PUT',
             url:$url1+'/api/v1/updateProjectMentSortIndexTopById',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"id":id,
 				"updateUser":updateUser,
@@ -260,6 +272,9 @@ $(function(){
 		$.ajax({
 			type:'DELETE',
             url:$url1+'/api/v1/deleteProjectMenuTopById/'+id,
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			success:function(res){
               	if(res.code===0){
               		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
@@ -280,6 +295,9 @@ $(function(){
 		$.ajax({
 			type:'GET',
             url:$url1+'/api/v1/deleteProjectMenuAll',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId
@@ -435,6 +453,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url1+'/api/v1/saveProjectMenuLeft',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"menuName":menuName,
 				"projectMenuId":projectMenuId,
@@ -459,6 +480,9 @@ $(function(){
 		$.ajax({
 			type:'GET',
             url:$url1+'/api/v1/findProjectMenuLeft',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -490,6 +514,9 @@ $(function(){
 		$.ajax({
 			type:'DELETE',
             url:$url1+'/api/v1/deleteProjectMenuLeftById/'+id,
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			success:function(res){
               	if(res.code===0){
               		layer.msg(res.message, {icon: 6});
@@ -521,6 +548,9 @@ $(function(){
 		$.ajax({
 			type:'PUT',
             url:$url1+'/api/v1/updateProjectMentSortIndexLeftById',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"id":projectMenuId,
 				"updateUser":updateUser,
@@ -547,6 +577,9 @@ $(function(){
 		$.ajax({
 			type:'GET',
             url:$url1+'/api/v1/deleteProjectMenuLeftALlById',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"topMenuId":topMenuId
 			},
@@ -705,6 +738,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url1+'/api/v1/saveTemplateStyle',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -784,6 +820,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
 	        url:$url1+'/api/v1/deleteTemplateImage',
+	        headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"projectVersionId":projectVersionId,
@@ -844,6 +883,9 @@ $(function(){
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectTreeById',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
@@ -866,6 +908,9 @@ $(function(){
 		$.ajax({
 			type:'PUT',
             url:$url1+'/api/v1/creatProjectMenuLinkPage',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"id":projectMenuId,
 				"createUser":createUser,

@@ -36,6 +36,9 @@
 		$.ajax({
 			type:"GET",
 			url: $url1+"/bi/report/v1/template/list.json",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			dataType:'json',
 	        data:{
 	            "projectId":projectId,
@@ -109,6 +112,9 @@
 		$.ajax({
 	            type:'POST',
 	            url:$url1+'/bi/report/v1/page.json',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
 	            dataType:'json',
 	            data:{
 	                "projectId":projectId,
@@ -137,6 +143,9 @@
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectTree',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
             dataType:'json',
 	        contentType: "application/json",
 			data:JSON.stringify({
