@@ -417,7 +417,6 @@
 
       function fn_saveActionComp_exec(val){
         val['actionId'] = this_actionId;
-        alert(2)
         $.ajax({
           type:"POST",
           url:$url+"/api/action/v1/saveActionComp",
@@ -442,7 +441,6 @@
       }
 
       function fn_saveAction(val) {
-        alert(1)
           $.ajax({
             type:"POST",
             url:$url+"/api/action/v1/saveAction",
