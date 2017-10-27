@@ -27,7 +27,7 @@ function logOut(){//登出
 function sysidByusernameAndAppkey(ByuserName){//获取sysid(userId)
     userId = sessionStorage.getItem('userId');
     if(userId){
-        console.log(userId);
+//      console.log(userId);
         return true;
     }else {
         $.ajax({
@@ -38,6 +38,7 @@ function sysidByusernameAndAppkey(ByuserName){//获取sysid(userId)
             data:{username:ByuserName,appkey:appkey},
             success:function(res){
                 if(res.code==0){
+                	console.log(res);
                     if(res.data){
                         userId = res.data;
                         sessionStorage.setItem('userId',userId);
