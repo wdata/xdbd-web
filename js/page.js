@@ -34,6 +34,7 @@ $(function(){
 	var controls = [];
 	var isIndex = "";//参数4
 	var customData = {};//参数5
+	var lv1DirId = localStorage.getItem("lv1DirId");
 	
 	//页面数配置
 	var setting = {
@@ -94,7 +95,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".p-cont"+$idx).show().siblings().hide();
 		if($idx===1){
-			curTreePages(BIdirId);
+			curTreePages(lv1DirId);
 		}else if($idx===0){
 //			getFirstPages(projectId,versionId,pageFlowDirId);
 		}
@@ -124,6 +125,7 @@ $(function(){
 						controls = data.htmlJson.controls;
 						customData = data.htmlJson.customData;
 						pageId = data.pageId;
+						sessionStorage.setItem("pageid",pageId);
 						console.log(pageId);
 						$("#f-fpage-name").text(data.pageName);
 						cid = data.htmlJson.controls;					
@@ -170,6 +172,7 @@ $(function(){
 					var html = "";
 					isIndex = data.index===true?1:0;//参数4
 					pageId = data.pageId;
+					sessionStorage.setItem("pageid",pageId);
 					$(".edit-content").html("");
 					if(data.htmlJson && data.htmlJson.controls){
 						htmlJson = data.htmlJson;//参数5
@@ -206,7 +209,7 @@ $(function(){
 //			$idx = $(this).parent().index();
 			index = layer.open({
 		      type: 1,
-		      area: ['280px', '200px'],
+		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
 		      content:$(".flowpage-tree"),
@@ -225,7 +228,7 @@ $(function(){
 //			$idx1 = $(this).parent().index();
 			index = layer.open({
 		      type: 1,
-		      area: ['280px', '200px'],
+		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
 		      content:$(".flowpage-tree"),
@@ -240,7 +243,7 @@ $(function(){
 	})
 	
 	//根据BIdirId查询项目树.（首页2与BI报表10）
-	curTreePages(BIdirId);
+	curTreePages(lv1DirId);
 	function curTreePages(BIdirId){
 		$.ajax({
 				type:'POST',
@@ -253,11 +256,12 @@ $(function(){
 				success:function(res){
 	              	if(res.code===0){
 	              		var data = res.data;
-	              		if(data.directoryType==="2"){//首页
+	              		/*if(data.directoryType==="2"){//首页
 	              			zNodes = data.children[2];
 	              		}else if(data.directoryType==="10"){
 	              			zNodes = data.children[0];
-	              		}
+	              		}*/
+	              		zNodes = data;
 						$.fn.zTree.init($("#flow-tree"), setting, zNodes);
 						$.fn.zTree.init($("#other-tree"), setting1, zNodes);
 	              	}
@@ -289,12 +293,11 @@ $(function(){
 		var pageName = curDom[0].name;//目录名称
 		if(dirType==="15"){
 			linkPageId = directoryId;
-			
 			$(".page-tooltip li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
 			$(".page-tooltip1 li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
 			layer.closeAll();
 		}else{
-			layer.msg("请选择页面文件", {icon: 0});
+			layer.msg("请选择BI页面文件", {icon: 0});
 		}
 	}
 	
@@ -304,6 +307,7 @@ $(function(){
 		var dirType =  curDom[0].directoryType;//目录类型
 		var directoryId =  curDom[0].directoryId;//目录id
 		var pageName = curDom[0].name;//目录名称
+//		pageId = directoryId;
 		if(dirType==="15"){
 			linkPageId = directoryId;
 			pageName = pageName;
@@ -311,7 +315,7 @@ $(function(){
 			getOtherPages(projectId,versionId,linkPageId);//调用
 			layer.closeAll();
 		}else{
-			layer.msg("请选择页面文件", {icon: 0});
+			layer.msg("请选择BI页面文件", {icon: 0});
 		}
 	}
 	
@@ -337,7 +341,7 @@ $(function(){
 		 index = layer.open({
 		      type: 1,
 //		      btn: ['确定', '取消'],
-		      area: ['280px', '200px'],
+		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
 		      content:$(".otherpage-tree"),
@@ -373,15 +377,21 @@ $(function(){
 		for(let i=0;i<aLi.length;i++){
 			if(controls){
 				controls[i].linkPageId = aLi.eq(i).attr("linkPageId");
+				console.log(aLi.eq(i).attr("linkPageId"));
 			}
 		}
-		pageId = linkPageId;
+		
+//		console.log(sessionStorage.getItem("pageid"));
+		pageId = sessionStorage.getItem("pageid");
+		console.log(pageId);
+		console.log(linkPageId);
 		savePage(pageId);
-		console.log(pageId,aLi);
+	
 		
 	})
+	 
 	
-	function savePage(){
+	function savePage(pageId){
 		$.ajax({
 			type:'PUT',
             url:$url1+"/bi/report/v1/page.json?projectId="+projectId+"&pageId="+pageId+"&isIndex="+isIndex+"&versionId="+versionId,
