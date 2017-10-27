@@ -399,6 +399,7 @@ $(function(){
             contentType: 'application/json',
 			data:JSON.stringify({
 				"isIndex":isIndex,
+				"pageId":pageId,
 				"controls":controls,
         		"customData":customData,
 
