@@ -9,6 +9,7 @@ var DataIndexes = {
         $.ajax({
             type:"post",
             url:"/xdbd-bi/bi/report/v1/data.json?projectId="+ localStorage.getItem("projectId") +"&versionId="+ localStorage.getItem("versionId") +"",
+            headers:{   username:username, userId:userId    },
             data:JSON.stringify(d),
             dataType:"json",
             contentType: 'application/json',

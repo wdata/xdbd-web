@@ -11,7 +11,9 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
 
 var projectId = localStorage.getItem("projectId"),
     pageId = localStorage.getItem("directoryId"),
-    versionId = localStorage.getItem("versionId");
+    versionId = localStorage.getItem("versionId"),
+    username = sessionStorage.getItem("ByuserName"),
+    userId = sessionStorage.getItem("userId")
 
 
 
@@ -287,14 +289,14 @@ var refresh = {
         });
         $.each($("."+ type +"-attr-box .datas-pills ul li"),function(index,icon){
             var search_attr={
-                'field':$(icon).attr("fieldname")||'',
+                'field':$(icon).attr("fieldname"),
                 'fieldAlias':$(icon).text(),
                 'order':"ASC",
-                'dataType':$(icon).attr('datatype')||'',
-                'dimMea':$(icon).attr("dim_mea")||'',
-                'disCon':$(icon).attr("disCon")||'',
-                'aggregation':$(icon).attr("defaultaggregation")||'',
-                "fieldId": $(icon).attr("fieldId")||"",
+                'dataType':$(icon).attr('datatype'),
+                'dimMea':$(icon).attr("dim_mea"),
+                'disCon':$(icon).attr("disCon"),
+                'aggregation':$(icon).attr("defaultaggregation"),
+                "fieldId": $(icon).attr("fieldId"),
             };
             refresh.screen(icon,search_attr,2); // 筛选项
             chart_date.queryJson.filter.push(search_attr);
@@ -436,7 +438,7 @@ var buttonEdit = {
     // 按钮文字
     ButtonText:function(){
         $("#buttonText").on("change",function(){
-            $("#"+id_).find("button").text($(this).val())
+            $("#"+id_).find("button").text($(this).val());
             buttonEdit.main();
         })
     },
@@ -563,6 +565,10 @@ var operating = {
         $.ajax({
             type:"PUT",
             url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex="+ isIndex +"&versionId="+ versionId +"",
+            headers:{
+                username:username,
+                userId:userId
+            },
             data:JSON.stringify(data),
             dataType:"json",
             contentType: 'application/json',
@@ -700,6 +706,10 @@ var obtain = {
         $.ajax({
             type:"get",
             url:"/xdbd-bi/bi/report/v1/page.json",
+            headers:{
+                username:username,
+                userId:userId
+            },
             data:{
                 "pageId":pageId,
                 "projectId":projectId,
@@ -869,6 +879,10 @@ var project = {
         $.ajax({
             type:"get",
             url:"/xdbd-bi/bi/report/v1/data/list.json",
+            headers:{
+                username:username,
+                userId:userId
+            },
             dataType:'json',
             data:{
                 "biSetId":$(".data-source-box option:selected").attr("bisetid"),
@@ -1154,11 +1168,13 @@ var project = {
 var swRag = {
     "min":$(".s-range-val .min"),
     "max":$(".s-range-val .max"),
+    "minData":null,
+    "maxData":null,
     "fieldId":null,
     "number":null,
     "cid":null,
     // 根据传递的元素赋值
-    ass:function(min,max,fieldId,number,cid){
+    ass:function(field,fieldId,number,cid){
         this.fieldId = fieldId;
         this.number = number;
         this.cid = cid;
@@ -1175,6 +1191,8 @@ var swRag = {
                 swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
             }
         });
+        var min = swRag.min.val();
+        var max = swRag.max.val();
 
         if(min && !max){
             swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
@@ -1192,8 +1210,48 @@ var swRag = {
 
         // 初始化
         $(".data-filter-mod").show();       // 显示数字筛选框
+        $(".s-more-btn").show();
+        $(".s-slider-box").hide();
+
+        swRag.rangeAjax(field);
         swRag.ele();
         swRag.switchRange();
+    },
+    // 取得范围
+    rangeAjax:function(field){
+        var dimensions = [];  // 维度字段名
+        $.each($(".x-pills li"),function(index,val){
+            if($(val).attr("dim_mea") === "0"){
+                dimensions.push($(val).attr("fieldname"));
+            }
+        });
+        $.ajax({
+            type:"get",
+            url:"/xdbd-bi/bi/report/v1/data/range.json",
+            headers:{
+                username:username,
+                userId:userId
+            },
+            data:{
+                "biSetId":$(".data-source-box option:selected").attr("bisetid"),
+                "field":field,
+                "aggregation":"SUM",           // 默认数据求和
+                "dimensions":dimensions,
+                "projectId":projectId,
+                "versionId":versionId,
+            },
+            traditional: true,
+            dataType:"json",
+            success:function(data){
+                if(data.code === 0){
+                    swRag.minData = data.data.min;
+                    swRag.maxData = data.data.max;
+                }
+            },
+            error:function(res){
+                // console.log(res);
+            }
+        });
     },
     // 事件
     ele:function(){
@@ -1212,15 +1270,12 @@ var swRag = {
             var index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
             switch(index){
                 case 0 :
-                    if(!swRag.judgment(index)){	return	};
                     swRag.range(index);
                     break;
                 case 1:
-                    if(!swRag.judgment(index)){	return	};
                     swRag.range(index);
                     break;
                 case 2:
-                    if(!swRag.judgment(index)){	return	};
                     swRag.range(index);
                     break;
             }
@@ -1308,15 +1363,17 @@ var swRag = {
     // 范围
     range:function(type){
         var slider = $( "#slider-range" );
-        var minD = parseInt(swRag.min.val());
-        var maxD = parseInt(swRag.max.val());
+        var minD = swRag.minData;
+        var maxD = swRag.maxData;
+        var minA = swRag.min.val().length>0?parseInt(swRag.min.val()):minD;
+        var maxA = swRag.max.val().length>0?parseInt(swRag.max.val()):maxD;
         switch(type){
             case 0:
                 slider.slider({
                     range: true,
                     min: minD,
                     max: maxD,
-                    values: [ minD, maxD ],
+                    values: [ minA, maxA ],
                     slide: function( event, ui ) {
                         swRag.min.val(ui.values[ 0 ]);
                         swRag.max.val(ui.values[ 1 ]);
@@ -1326,9 +1383,9 @@ var swRag = {
             case 1:
                 slider.slider({
                     range: "min",
-                    value: minD,
+                    value: minA,
                     min: minD,
-                    max: minD *10 ,
+                    max: maxD ,
                     slide: function( event, ui ) {
                         swRag.min.val(ui.value );
                     }
@@ -1337,8 +1394,8 @@ var swRag = {
             case 2:
                 slider.slider({
                     range: "max",
-                    value: maxD,
-                    min: maxD /10,
+                    value: maxA,
+                    min: minD,
                     max: maxD,
                     slide: function( event, ui ) {
                         swRag.max.val(ui.value );
@@ -1653,6 +1710,10 @@ function imgPreview(_this){
         $.ajax({
             type:"post",
             url:" /xdbd-bi/bi/report/v1/controlImage.json",
+            headers:{
+                username:username,
+                userId:userId
+            },
             data:form,
             contentType: false,
             processData: false,
