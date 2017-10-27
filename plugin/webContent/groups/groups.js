@@ -140,7 +140,7 @@ $(function(){
       var field = this.field;
       var alias = this.alias;
       var fn = this.fn;
-      alert(grtoupTable)
+      //alert(grtoupTable)
       if(grtoupTable!=null){
         field = grtoupTable+"."+field;
       }

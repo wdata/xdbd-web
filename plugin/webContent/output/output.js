@@ -67,7 +67,7 @@ $(function(){
     attValue['extractFields'] = fn_get_extractFields();
     data['attValue'] = JSON.stringify(attValue);
 
-    alert(JSON.stringify(data))
+    // alert(JSON.stringify(data))
 
     return data;
   }
@@ -95,7 +95,7 @@ $(function(){
     $(document.body)
       .off('click', '.extractLessen')
       .on('click', '.extractLessen', function () {
-        console.log($(this).parents('.extractField').length)
+        //console.log($(this).parents('.extractField').length)
         $(this).parents('.extractField').remove();
       })
   }
@@ -107,7 +107,7 @@ $(function(){
     $.each(fn_get_extractFields(),function(){
       var field = this.field;
       var alias = this.alias;
-      alert(fromTable)
+      //alert(fromTable)
       if(fromTable!=null &&fromTable!=''){
         field = fromTable+"."+field;
       }

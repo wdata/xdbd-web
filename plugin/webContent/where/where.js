@@ -67,7 +67,7 @@ $(function(){
     var attValue = {};
     attValue['extractFields'] = get_extractFields();
     attValue['wheres'] = get_wheres();
-    data['attValue'] = JSON.stringify(attValue);alert(data)
+    data['attValue'] = JSON.stringify(attValue);
     return data;
   }
 
