@@ -44,7 +44,7 @@
     display: block;
 }
 .demand_name{
-    width: 410px;
+    width: 450px;
     margin: 30px auto 0;
     overflow: hidden;
     position: relative;
@@ -54,7 +54,7 @@
     coor: #3d5275;
     display: block;
     float: left;
-    width: 90px;
+    width: 104px;
     height: 36px;
     line-height: 36px;
 }
@@ -75,7 +75,7 @@
     position: absolute;
     width: 280px;
     height: 32px;
-    left: 91px;
+    left: 107px;
     top: 1px;
     border-bottom: 0px;
     border-right: 0px;

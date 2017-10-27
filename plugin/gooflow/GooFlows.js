@@ -917,7 +917,6 @@ GooFlow.prototype={
 		});
     //绑定连线时确定结束点
     this.$workArea.delegate(".GooFlow_item","mouseup",{inthis:this},function(e){
-      console.log(111)
       console.log(e)
       var This=e.data.inthis;
       if((This.$nowType!="direct"&&This.$nowType!="dashed")&&!This.$mpTo.data("p"))	return;

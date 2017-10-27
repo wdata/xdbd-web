@@ -8,6 +8,7 @@ $(function(){
   bind_click_saveActionComp();
   setVal();
   $(".stepName").val(etlName);
+  $(".tableOut").val(etlName);
 
   function initFromTable(){
     $.each(demo.exportData().lines,function(){

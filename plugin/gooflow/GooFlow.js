@@ -179,7 +179,6 @@ function GooFlow(bgDiv,property){
 	  this.$workArea.mousemove({inthis:this},function(e){
 			if((e.data.inthis.$nowType!="direct"&&e.data.inthis.$nowType!="dashed")&&!e.data.inthis.$mpTo.data("p"))	return;
 			var lineStart=$(this).data("lineStart");
-			console.log(lineStart)
 			var lineEnd=$(this).data("lineEnd");
 			if(!lineStart&&!lineEnd)return;
 
@@ -778,9 +777,10 @@ GooFlow.prototype={
 		if(this.$textArea.css("display")=="none")	this.$textArea.removeData("id").val("").hide();
 	},
   getParams:function (id,type) {
-    var jobid = sessionStorage.getItem('jobid');
     var self = this;
-
+    if(id == '') {
+      return false;
+    }
     $.post('/xdbd-wf/api/sysJobComp/v1/getByType',{
       'webComponentId':id,
       'jobId':jobid,
@@ -804,7 +804,6 @@ GooFlow.prototype={
   },
 	//增加一个流程结点,传参为一个JSON,有id,name,top,left,width,height,type(结点类型)等属性
 	addNode:function(id,json){
-	  console.log(json)
 	  this.getParams(id,json.type);
 		if(this.onItemAdd!=null&&!this.onItemAdd(id,"node",json))return;
 		if(this.$undoStack&&this.$editable){
@@ -1376,9 +1375,9 @@ GooFlow.prototype={
 	//载入一组数据
 	loadData:function(data){
     // console.log(data)
-    // if(data != '') {
-	   //  return false;
-    // }
+    if(data == null) {
+	    data = '';
+    }
 		var t=this.$editable;
 		this.$editable=false;
 		if(data.title)	this.setTitle(data.title);

@@ -104,7 +104,7 @@
                   console.log('删除成功')
                 }
               },error:function(data){
-                console.log(JSON.stringify(data))
+                layer.msg(JSON.stringify(data))
               }
             })
             this.blurItem();

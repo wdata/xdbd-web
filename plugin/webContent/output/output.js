@@ -111,11 +111,7 @@ $(function(){
       if(fromTable!=null &&fromTable!=''){
         field = fromTable+"."+field;
       }
-      if(alias!=null && alias!=''){
-        s.field(field,alias);
-      }else{
-        s.field(field);
-      }
+      s.field(field);
     });
     return s.toString();
   }

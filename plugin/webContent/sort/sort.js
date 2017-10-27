@@ -16,6 +16,7 @@ $(function(){
   setVal();
 
   $(".stepName").val(etlName);
+  $(".tableOut").val(etlName);
 
   function bind_change_fromTable(){
     $(document.body)
