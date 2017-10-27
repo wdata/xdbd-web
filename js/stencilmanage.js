@@ -9,7 +9,7 @@ var this_companyId = localStorage.getItem("companyId");
 var this_createUser = localStorage.getItem("createUser");
 var this_updateUser = localStorage.getItem("updataeUser");
 var this_rootPath = localStorage.getItem("rootPath");
-var $url = '';  ///xdbd-wf
+var $url = '../xdbd-wf';  ///xdbd-wf
 //调用工作流列表
 var getAll = {
   projectId: this_projectId
