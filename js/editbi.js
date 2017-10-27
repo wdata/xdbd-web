@@ -5,6 +5,7 @@ $(function(){
 		$.ajax({
             type:'get',
             url:'/xdbd-bi/bi/report/v1/biset/list.json',
+            headers:{   username:username, userId:userId    },
             dataType:'json',
             data:{
                 "projectId":projectId,
@@ -45,6 +46,7 @@ $(function(){
 		$.ajax({
             type:'get',
             url:'/xdbd-bi/bi/report/v1/datamodel.json',
+            headers:{   username:username, userId:userId    },
             dataType:'json',
             data:{
                 "projectId":projectId,
@@ -214,16 +216,21 @@ $(function(){
                 var uiEle = $(ui.draggable[0]);
                 var datatype= parseInt(uiEle.attr("datatype"));
                 fieldId = uiEle.attr("fieldId");
+
+                var fieldname = uiEle.attr("fieldname")
+                    ,text = uiEle.text()
+                    ,fieldId = uiEle.attr("fieldId")
+
                 switch(datatype){
                     case 1:
-                        project.TFilter(uiEle.attr("fieldname"),uiEle.text(),uiEle.attr("fieldId"),2,id_); // 文本筛选框
+                        project.TFilter(fieldname,text,fieldId,2,id_); // 文本筛选框
                         break;
                     case 2:
                     case 3:
-                        timeSng.quotes(uiEle.text(),uiEle.attr("fieldId"),2,id_);  // 时间筛选框
+                        timeSng.quotes(text,fieldId,2,id_);  // 时间筛选框
                         break;
                     case 4:
-                        swRag.ass(uiEle.attr("min"),uiEle.attr("max"),uiEle.attr("fieldId"),2,id_);  // 数值筛选框
+                        swRag.ass(fieldname,fieldId,2,id_);  // 数值筛选框
                         break;
                 }
 
@@ -249,6 +256,7 @@ $(function(){
 		$.ajax({
             type:'PUT',
             url:'/xdbd-bi/bi/report/v1/dataModel/fieldAlias.json',
+            headers:{   username:username, userId:userId    },
             dataType:'json',
             data:{
                 "projectId":projectId,
@@ -344,16 +352,21 @@ $(function(){
                 }else if(z.is(".x-pills")){
                     n = 0;
                 }
+
+                var field = context.getClickEle().attr("fieldname")  // 字段名
+                    ,text = context.getClickEle().text()    // 名称
+                    ,fieldId = context.getClickEle().attr("fieldId")    // id
+
                 switch(dataType){
                     case 1:
-                        project.TFilter(context.getClickEle().attr("fieldname"),context.getClickEle().text(),context.getClickEle().attr("fieldId"),n,id_); // 文本筛选框
+                        project.TFilter(field,text,fieldId,n,id_); // 文本筛选框
                         break;
                     case 2:
                     case 3:
-                        timeSng.quotes(context.getClickEle().text(),context.getClickEle().attr("fieldId"),n,id_);  // 时间筛选框
+                        timeSng.quotes(text,fieldId,n,id_);  // 时间筛选框
                         break;
                     case 4:
-                        swRag.ass(context.getClickEle().attr("min"),context.getClickEle().attr("max"),context.getClickEle().attr("fieldId"),n,id_);  // 数值筛选框
+                        swRag.ass(field,fieldId,n,id_);  // 数值筛选框
                         break;
                 }
             }
@@ -374,7 +387,8 @@ $(function(){
             //右键 cgt.name：修改显示名称； cgt.agm：聚合方式  cgt.filter：筛选器； cgt.nullVal：空值处理; cgt.remove：移除
             context.attach('.pills ul li[discon=0]', [{header: '属性'},cgt.name,cgt.remove]);
             context.attach('.pills ul li[discon=1]', [{header: '属性'},cgt.name,cgt.agm,cgt.filter,cgt.nullVal,cgt.remove]);
-            context.attach('.datas-pills ul li', [{header: '属性'},cgt.name,cgt.filter,cgt.remove]);
+            context.attach('.datas-pills ul li[discon=0]', [{header: '属性'},cgt.name,cgt.filter,cgt.remove]);
+            context.attach('.datas-pills ul li[discon=1]', [{header: '属性'},cgt.name,cgt.filter,cgt.remove]);
         },
         agmClick:function(){
             $(document).on("mouseover",".dropdown-menu .agm-default",function(){
