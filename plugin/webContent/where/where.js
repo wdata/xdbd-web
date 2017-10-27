@@ -11,6 +11,8 @@ $(function(){
   bind_click_onAdd();
   bind_click_onLessen();
   setVal();
+  $(".stepName").val(etlName);
+  $(".tableOut").val(etlName);
 
   function bind_click_saveActionComp(){
     // demo.onBtnSaveClick = function() {
@@ -151,7 +153,7 @@ $(function(){
 
     $.each(get_wheres(),function(){
       var field = this.field;
-      var expr = this.expr;
+      var expr = " "+this.expr+" ";
       var value = this.value;
       value = "'"+value+"'";
       var whereSql =  field+expr+value;

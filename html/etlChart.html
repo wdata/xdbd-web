@@ -27,8 +27,8 @@
         .hide{display: none;}
     </style>
     <script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
-     <script src="../js/login.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/child.js"></script>
+    <!--<script type="text/javascript" src="../plugin/gooflow/child.js"></script>-->
+    <script src="../js/login.js"></script>
     <script type="text/javascript" src="../plugin/gooflow/GooFunc.js"></script>
     <!--<script type="text/javascript" src="../plugin/gooflow/json2.js"></script>-->
     <script type="text/javascript" src="../plugin/gooflow/GooFlow.js"></script>
@@ -43,6 +43,20 @@
       var this_projectId = localStorage.getItem("projectId");
       var this_createUser = localStorage.getItem("createUser");
       var this_updateUser = localStorage.getItem("updateUser");
+      var template = sessionStorage.getItem("isTemplate");
+      var JobId = sessionStorage.getItem("jobId");
+      var this_isTemplate = false;  //是否为模板
+      var $url = '';  ///xdbd-wf
+
+      if(template){
+        this_isTemplate = true;
+      }
+      if(JobId) {
+        jobid = JobId;
+      }
+
+      init_dag();
+      init_task();
 
       var property={
         width:1230,
@@ -72,7 +86,7 @@
         spark:"spark"
       };
       var demo;
-      $(document).ready(function(){
+      function showDag(getDag){
         demo=$.createGooFlow($("#demo"),property);
         demo.setNodeRemarks(remark);
         demo.onItemDel=function(id,type){
@@ -90,7 +104,7 @@
 //            return true;
             $.ajax({
               type:"POST",
-              url:"/xdbd-wf/api/jobComp/v1/deleteByIds",
+              url:$url+"/api/jobComp/v1/deleteByIds",
               dataType:"json",
               contentType:"application/json",
               data:JSON.stringify(datas),
@@ -98,7 +112,7 @@
                 self.blurItem();
                 return true;
               },error:function(data){
-                console.log(JSON.stringify(data))
+                layer.msg(JSON.stringify(data))
             }
             })
             self.blurItem();
@@ -111,7 +125,7 @@
         var exportName="流程图";
 //        console.log(demandDags)
 //        console.log(JSON.parse(demandDags))
-        demo.loadData(jsondata);
+        demo.loadData(getDag);
         console.log(demo)
         demo.onPrintClick=function(){demo.exportDiagram(exportName);}
         demo.onItemFocus=function(id,model){
@@ -141,27 +155,6 @@
           }else if(model=="dataSheet") {
             obj=this.params[id];
             var formProperty = [];
-            var version = {
-              versionId:this_versionId
-            };
-            console.log(obj)
-            $.ajax({
-              type:"POST",
-              url:"/xdbd-wf/api/action/v1/getActionList",
-              dataType:"json",
-              contentType:"application/json",
-              data:JSON.stringify(version),
-              success:function(data){
-                console.log(data)
-                if(data.code == 0) {
-                  $.each(data.data,function(index,item) {
-                    $("#ele_genre").html('<option id='+item.actionId+'>'+item.name+'</option>');
-                  })
-                }
-              },error:function(data){
-                console.log(JSON.stringify(data))
-              }
-            })
             //java的详细属性
             if(obj.type=='java') {
                 formProperty.push('' +
@@ -231,10 +224,10 @@
             if(obj.type=='spark') {
               formProperty.push('' +
                 '<tr class="hide"><td class="th">error：</td><td class="spark_error"><input type="text" value='+obj.action.error+'></td></tr>' +
-                '<tr style="display: block"><td class="th">项目名称</td><td class="spark_name"><input type="text" placeholder="请输入spark项目名称" value='+obj.action.name+'></td></tr>' +
+                '<tr class="hide"><td class="th">任务名称</td><td class="spark_task"><input type="text" placeholder="请输入任务名称" value='+obj.action.name+'></td></tr>' +
                 '<tr class="hide"><td class="th">ok：</td><td class="spark_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
-                '<tr style="display: block"><td class="th">class名</td><td class="spark_clazz"><input type="text" placeholder="请输入spark的class值" value='+obj.action.spark.clazz+'></td></tr>' +
-                '<tr style="display:block"><td class="th">jar包名</td><td class="spark_jar"><input type="text" placeholder="请输入spark的jar包名" value='+obj.action.spark.jar+'></td></tr>' +
+                '<tr class="hide"><td class="th">class名</td><td class="spark_clazz"><input type="text" placeholder="请输入spark的class值" value='+obj.action.spark.clazz+'></td></tr>' +
+                '<tr class="hide"><td class="th">jar包名</td><td class="spark_jar"><input type="text" placeholder="请输入spark的jar包名" value='+obj.action.spark.jar+'></td></tr>' +
                 '<tr class="hide"><td class="th">spark-jobtracker：</td><td class="spark_jobtracker"><input type="text" value='+obj.action.spark.jobtracker+'></td></tr>' +
                 '<tr class="hide"><td class="th">spark-master：</td><td class="spark_master"><input type="text" value='+obj.action.spark.master+'></td></tr>' +
                 '<tr class="hide"><td class="th">spark-mode：</td><td class="spark_mode"><input type="text" value='+obj.action.spark.mode+'></td></tr>' +
@@ -290,23 +283,31 @@
         // };
         //保存流程图
         demo.onBtnSaveClick = function () {
-//          var saves = JSON.stringify(demo.exportData());
-//          console.log(saves)
+
           var jsons = {};
           jsons.jobId = jobid;
+          jsons.isTemplate = this_isTemplate;
+          jsons.updateUser = this_updateUser;
           jsons.versionId = this_versionId;
           jsons.projectId = this_projectId;
-          jsons.dag = JSON.stringify(demo.exportData());
-          console.log(JSON.stringify(jsons))
-          $.post('/xdbd-wf/api/job/v1/update',{
-            jsonStr: JSON.stringify(jsons)
-          },function(data) {
-            console.log(data)
-            if(data.code == 0) {
-              layer.msg('模板保存成功！');
-              window.location.href = 'stencilmanage.html';
+          jsons.dag = Export();
+          jsons.algorithm = $('.ele_alg').find('input').val();
+          $.ajax({
+            type:"POST",
+            url:$url+'/api/job/v1/update',
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify(jsons),
+            success:function(data){
+              console.log(data)
+              if(data.code == 0) {
+                  layer.msg('模板保存成功！');
+//                  window.location.href = 'stencilmanage.html';
+              }
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
             }
-          },"json")
+          })
         };
         //刷新流程图
         demo.onFreshClick=function() {
@@ -314,13 +315,27 @@
         };
         //执行
         demo.onBtnExecuteClick=function() {
-
+          $.ajax({
+            type:"POST",
+            url:$url+"/api/job/v1/execute",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "jobId": jobid,
+              "versionId": this_versionId
+            }),success:function(data){
+              console.log(data);
+              layer.msg("正在执行")
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
+            }
+          });
         };
         //另存为模板
         demo.onBtnSaveCopyClick=function() {
           $.ajax({
             type:"POST",
-            url:"/api/job/v1/saveAsTemplate",///xdbd-etl
+            url:$url+"/api/job/v1/saveAsTemplate",///xdbd-etl
             dataType:"json",
             contentType:"application/json",
             data:JSON.stringify({
@@ -328,15 +343,15 @@
               "versionId": this_versionId,
               "dag": Export(),
               "updateUser": this_updateUser
-
-            }),
-            success:function(data){
+            }),success:function(data){
               var data = data.data;
               console.log(data);
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
             }
           });
         }
-      });
+      };
       var out;
       function Export(){
         return JSON.stringify(demo.exportData());
@@ -444,21 +459,21 @@
           jsonStr = {
             "action":
               {
-                "actionId":$('#ele_genre option').attr('id'),
+                "actionId":$('#ele_genre').val(),
                 "type": $('#ele_type').val(),
-                "name": $('.spark_name input').val(),
-                "ok": $('.spark_ok input').val(),
-                "error": $('.spark_error input').val(),
+                "name": $('.spark_task').find('input').val(),
+                "ok": $('.spark_ok').find('input').val(),
+                "error": $('.spark_error').find('input').val(),
                 "spark": {
-                  "xmlns": $('.spark_xmlns input').val(),
-                  "jobtracker": $('.spark_jobtracker input').val(),
-                  "namenode": $('.spark_node input').val(),
-                  "master": $('.spark_master input').val(),
-                  "mode": $('.spark_mode input').val(),
-                  "name": $('.spark_name input').val(),
-                  "clazz": $('.spark_clazz input').val(),
-                  "jar": $('.spark_jar input').val(),
-                  "sparkopts": $('.spark_opts input').val(),
+                  "xmlns": $('.spark_xmlns').find('input').val(),
+                  "jobtracker": $('.spark_jobtracker').find('input').val(),
+                  "namenode": $('.spark_node').find('input').val(),
+                  "master": $('.spark_master').find('input').val(),
+                  "mode": $('.spark_mode').find('input').val(),
+                  "name": $('.spark_name').find('input').val(),
+                  "clazz": $('.spark_clazz').find('input').val(),
+                  "jar": $('.spark_jar').find('input').val(),
+                  "sparkopts": $('.spark_opts').find('input').val(),
                   "arg": sparkArgs,
                   "file": sparkFiles,
                   "prepare": {
@@ -469,20 +484,15 @@
                     "property": sparkPropertys
                   }
                 }
-              }
+              },
+            "type":"spark"
           }
-          console.log($('.spark_name').find("input").val())
+          alert($('.spark_name').find("input").val())
+          if($('.spark_task').find('input').val() == '') {
+            layer.msg('请输入任务名称!')
+          }
           if ($('.spark_name').find("input").val() == '') {
-            layer.msg('请输入name的值！');
-            return false;
-          } else if ($('.spark_clazz').find("input").val() == '') {
-            layer.msg('请输入clazz的值！');
-            return false;
-          } else if ($('.spark_jar').find("input").val() == '') {
-            layer.msg('请输入jar的值！');
-            return false;
-          } else if ($('.spark_name').find("input").val() == '') {
-            layer.msg('请输入spark-name的值！');
+            layer.msg('请输入程序名称！');
             return false;
           }
         }
@@ -509,16 +519,16 @@
           jsonStr = {
             "action":
               {
-                "actionId":$('#ele_genre option').attr('id'),
+                "actionId":$('#ele_genre').val(),
                 "type": $('#ele_type').val(),
-                "name": $('.java_name input').val(),
-                "ok": $('.java_ok input').val(),
-                "error": $('.java_error input').val(),
+                "name": $('.java_name').find('input').val(),
+                "ok": $('.java_ok').find('input').val(),
+                "error": $('.java_error').find('input').val(),
                 "java":{
-                  "job_tracker":$('.java_tracker input').val(),
-                  "name_node":$('.java_node input').val(),
-                  "main_class":$('.java_class input').val(),
-                  "capture_output":$('.java_output input').val(),
+                  "job_tracker":$('.java_tracker').find('input').val(),
+                  "name_node":$('.java_node').find('input').val(),
+                  "main_class":$('.java_class').find('input').val(),
+                  "capture_output":$('.java_output').find('input').val(),
                   "java_opts":$('.java_opts').find('input').val(),
                   "arg":javaArgs,
                   "file":javaFiles,
@@ -569,17 +579,17 @@
           jsonStr = {
             "action":
               {
-                "actionId": $('#ele_genre option').attr('id'),
+                "actionId": $('#ele_genre').val(),
                 "type": $('#ele_type').val(),
-                "name": $('.shell_name input').val(),
-                "ok": $('.shell_ok input').val(),
-                "error": $('.shell_error input').val(),
+                "name": $('.shell_name').find('input').val(),
+                "ok": $('.shell_ok').find('input').val(),
+                "error": $('.shell_error').find('input').val(),
                 "shell": {
-                  "xmlns": $('.shell_xmlns input').val(),
-                  "job_tracker": $('.shell_tracker input').val(),
-                  "name_node": $('.shell_node input').val(),
-                  "exec": $('.shell_exec input').val(),
-                  "capture_output": $('.shell_output input').val(),
+                  "xmlns": $('.shell_xmlns').find('input').val(),
+                  "job_tracker": $('.shell_tracker').find('input').val(),
+                  "name_node": $('.shell_node').find('input').val(),
+                  "exec": $('.shell_exec').find('input').val(),
+                  "capture_output": $('.shell_output').find('input').val(),
                   "argument": shellArgs,
                   "env_var": shellEnvs,
                   "file": shellFiles,
@@ -606,21 +616,30 @@
           }
         }
         this.propertyAlter = false;
-        $.post('/xdbd-wf/api/jobComp/v1/save',{
-          webComponentId: $('#ele_id').val(),
-          name:'拉了个并行',
-          jobId:jobid,
-          sysJobCompId:'comp0003',
-          createUser: this_createUser,
-          remark:'lalala',
-          versionId: this_versionId,
-          attValue:JSON.stringify(jsonStr)
-        },function(data) {
-          if(data.code == 0) {
-            console.log(data)
-            layer.msg('保存成功！');
+        $.ajax({
+          type:"POST",
+          url:$url+'/api/jobComp/v1/save',///xdbd-etl
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify({
+            "webComponentId": $('#ele_id').val(),
+            "name":'拉了个并行',
+            "jobId":jobid,
+            "sysJobCompId":'comp0003',
+            "createUser": this_createUser,
+            "remark":'lalala',
+            "versionId": this_versionId,
+            "attValue":JSON.stringify(jsonStr)
+          }),success:function(data){
+            if(data.code == 0) {
+              layer.msg('保存成功！');
+            } else {
+              alert(data.message)
+            }
+          },error:function(data){
+            layer.msg(JSON.stringify(data))
           }
-        })
+        });
       }
       function add(this_) {
         console.log($(this_).parents(".archive"))
@@ -648,7 +667,59 @@
         for(var j=0;j<values.length;j++) {
           arr[j].value = values[j].value
         }
+      };
+        //有限无环图
+      function init_dag() {
+        var demandId = {
+          id: jobid,
+          versionId: this_versionId
+        }
+        $.ajax({
+          type:"POST",
+          url:$url+"/api/job/v1/getById",
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify(demandId),
+          success:function(data){
+            console.log(data)
+            if(data.code == 0) {
+              var getDag = "";
+              if(data.data != '' && data.data != null && data.data.dag != null) {
+                var dag = JSON.parse(data.data.dag);
+                getDag = JSON.parse(dag);
+              }
+              showDag(getDag)
+            }
+          },error:function(data){
+            console.log(data)
+          }
+        })
+      };
+      function init_task() {
+        var version = {
+          versionId:this_versionId
+        };
+        $.ajax({
+          type:"POST",
+          url:"/xdbd-etl/api/action/v1/getActionList",
+          dataType:"json",
+          contentType:"application/json",
+          data:JSON.stringify(version),
+          success:function(data){
+            console.log(data)
+            if(data.code == 0) {
+              var arr = [];
+              $.each(data.data,function(index,item) {
+                arr.push('<option value='+item.actionId+'>'+item.name+'</option>');
+              })
+              $("#ele_genre").append(arr);
+            }
+          },error:function(data){
+            layer.msg(JSON.stringify(data))
+          }
+        })
       }
+
     </script>
 </head>
 <body>
@@ -669,6 +740,7 @@
             <!--<tr><td class="th">Height：</td><td><input type="text" id="ele_height"/></td></tr>-->
             <tr><td class="th">连接线初始点</td><td><input type="text" id="ele_from"/></td></tr>
             <tr><td class="th">连接线结束点</td><td><input type="text" id="ele_to"/></td></tr>
+            <tr><td class="th">算法参数</td><td><input type="text" id="ele_alg" /></td></tr>
             <tr><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>
         </table>
         <table class="form_profile"></table>

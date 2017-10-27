@@ -18,8 +18,8 @@ $(function(){
   //bind_click_lessen();
 //alert(JSON.stringify(tables))
 
-
-
+  $(".stepName").val(etlName);
+  $(".tableOut").val(etlName);
 
   $('.extractField .table').trigger('change');
   $('.fromTable').trigger('change');

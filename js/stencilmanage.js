@@ -9,13 +9,14 @@ var this_companyId = localStorage.getItem("companyId");
 var this_createUser = localStorage.getItem("createUser");
 var this_updateUser = localStorage.getItem("updataeUser");
 var this_rootPath = localStorage.getItem("rootPath");
+var $url = '';  ///xdbd-wf
 //调用工作流列表
 var getAll = {
   projectId: this_projectId
 };
 $.ajax({
   type:"POST",
-  url:"/xdbd-wf/api/job/v1/getAll",
+  url:$url+"/api/job/v1/getAll",
   dataType:"json",
   contentType:"application/json",
   data:JSON.stringify(getAll),
@@ -47,7 +48,7 @@ function deleteBtn(_this) {
   }
   $.ajax({
     type:"POST",
-    url:"/xdbd-wf/api/job/v1/deleteByIds",
+    url:$url+"/api/job/v1/deleteByIds",
     dataType:"json",
     contentType:"application/json",
     data:JSON.stringify(parans),
@@ -71,15 +72,15 @@ function demandBtn(_this) {
   }
   $.ajax({
     type:"POST",
-    url:"/xdbd-wf/api/job/v1/getById",
+    url:$url+"/api/job/v1/getById",
     dataType:"json",
     contentType:"application/json",
     data:JSON.stringify(demandId),
     success:function(data){
       console.log(data)
       if(data.code == 0) {
-        sessionStorage.setItem('jobid',data.data.jobId);
-        sessionStorage.setItem('demandDag',data.data.dag);
+        sessionStorage.setItem('jobId',data.data.jobId);
+        sessionStorage.setItem('isTemplate',data.data.isTemplate);
         window.location.href = 'etlChart.html';
       }
     },error:function(data){
@@ -93,12 +94,12 @@ $("#new_demand_btn").click(function() {
   popups = layer.open({
     type: 1,
     title: '新建',
-    skin: 'layui-layer-rim', //加上边框
+    //skin: 'layui-layer-rim', //加上边框
     area: ['660px', '460px'], //宽高
     content: '' +
-    '<div class="demand_name"><label>工作流名称：<span>*</span></label><input class="new_name" type="text" ></div>' +
+    '<div class="demand_name"><label>作业流名称：<span>*</span></label><input class="new_name" type="text" ></div>' +
     '<div class="demand_name"><label>行业类型：<span>*</span></label><select class="new_type" onchange="method(this)"><option>全部</option><option>酒店</option></select><input class="new_Inp" type="text" id="input"/></div>' +
-    '<div class="demand_name"><label>工作流描述：<span>*</span></label><textarea maxlength="20" class="new_describe"></textarea></div>' +
+    '<div class="demand_name"><label>作业流描述：<span>*</span></label><textarea maxlength="20" class="new_describe"></textarea></div>' +
     '<p class="hint">20个字以内</p>' +
     '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
   });
@@ -133,20 +134,19 @@ function newBtn(popups) {
     };
     $.ajax({
       type:"POST",
-      url:"/xdbd-wf/api/job/v1/save",
+      url:$url+"/api/job/v1/save",
       dataType:"json",
       contentType:"application/json",
       data:JSON.stringify(res),
       success:function(data){
         if(data.code == 0) {
-          sessionStorage.setItem('jobid',data.data);
+
           window.location.href = 'etlChart.html';
         }
       },error:function(data){
         console.log(JSON.stringify(data))
       }
     })
-//        window.location.href = 'etlChart.html';
     layer.close(popups);
   }
 }

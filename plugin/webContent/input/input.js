@@ -13,6 +13,7 @@ $(function(){
   bind_click_lessen();
 //alert(JSON.stringify(tables))
   setVal();
+  $(".stepName").val(etlName);
 
   $('.fromTable').trigger('change');
 
