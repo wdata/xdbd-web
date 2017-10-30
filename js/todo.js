@@ -36,10 +36,12 @@ $(function(){
 		$ul.slideToggle();
 	});
 	$(".chart-type-lists").on("click","li",function(){
+		$(this).addClass("active").siblings().removeClass("active");
+
 		var $this = $(this),
 		$p = $(".chart-type-lists"),
 		$val = $(".chart-type-val span");
-		$val.text($this.find("span").text());
+		$val.text($this.find("span").text()).attr("data-type",$this.attr("data-type"));
 		$p.hide();
 	});
 	

@@ -121,7 +121,7 @@ var refresh = {
             }
         };
         // 控件类型
-        chart_date.type = this.typeData($("#"+ id +"").attr("data-type"),$(".chart-type-val span").text());
+        chart_date.type = this.typeData($("#"+ id +"").attr("data-type"));
         this.dataSource(id,chart_date);   // 获取X,Y
         this.only(index_arr,chart_date);  // // 数据根据ID唯一，并将数据添加进入保存数组
         DataIndexes.inAjax(chart_date,id); // 请求数据
@@ -329,7 +329,7 @@ var refresh = {
         // 层级
         chart_date.displayLevel = this.whLength(id,"z-index");
         // 控件类型
-        chart_date.type = this.typeData($("#"+ id +"").attr("data-type"),$(".chart-type-val span").text());
+        chart_date.type = this.typeData($("#"+ id +"").attr("data-type"));
         // 宽高、距左、距右
         chart_date.style.width = this.whLength(id,"width");
         chart_date.style.height = this.whLength(id,"height");
@@ -342,12 +342,12 @@ var refresh = {
         return parseInt($("#"+ id +"").css(box));
     },
     // 根据不同的类型和图形，返回不同的控件类型
-    typeData:function(dataType,sele){
+    typeData:function(dataType){
         var type = null;
     // 控件类型：0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
         switch(dataType){
             case "chart":
-                type = eachGPdata(sele);
+                type = $(".chart-type-val span").attr("data-type");
                 break;
             case "table":type = 0;
                 break;
@@ -356,7 +356,7 @@ var refresh = {
             case "image":type = 203;
                 break;
         }
-        return type;
+        return parseInt(type);
     },
     // 数据根据ID唯一，并将数据添加进入保存数组
     only:function(d,chart_date,id){
@@ -668,29 +668,29 @@ var operating = {
         // $(".resize-item").css("border","none")
         //     .find(".resize-panel").remove()
         // $(".resize-item").find(".content-text").removeClass("edit");
-
-        window.open("../html/preview.html");
+        var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ pageId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+        window.open("../html/preview.html" + url);
 
     },
     // 退出预览
-    exitPreview:function(){
-        $(".type-bar,.drag-bar").show();
-        $(".exit-preview").hide()
-            .siblings().show();
-        // $(".chart-main-box").css("right","404px");
-
-        $(".resize-item").css("border","1px solid red").find(".content-text").addClass("edit");
-        $.each($(".resize-item"),function(index,val){
-
-            id_ = $(val).attr("id");
-
-            new ZResize({
-                stage: '.edit-libs-box', //舞台
-                itemClass: 'resize-item'//可缩放的类名
-            });
-        });
-        clear(id_);
-    },
+    // exitPreview:function(){
+    //     $(".type-bar,.drag-bar").show();
+    //     $(".exit-preview").hide()
+    //         .siblings().show();
+    //     // $(".chart-main-box").css("right","404px");
+    //
+    //     $(".resize-item").css("border","1px solid red").find(".content-text").addClass("edit");
+    //     $.each($(".resize-item"),function(index,val){
+    //
+    //         id_ = $(val).attr("id");
+    //
+    //         new ZResize({
+    //             stage: '.edit-libs-box', //舞台
+    //             itemClass: 'resize-item'//可缩放的类名
+    //         });
+    //     });
+    //     clear(id_);
+    // },
     // 移入提示
     moveLayer:function(){
         $(".top-bar>img").on("mouseenter",function(){

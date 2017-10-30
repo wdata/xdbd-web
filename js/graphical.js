@@ -6,9 +6,10 @@ var DataIndexes = {
     inAjax:function(d,id){
         var self = this;
         $("#"+id).find(".resize-panel").siblings().remove();  // 删除之前的图形
+        console.log(JSON.stringify(d));
         $.ajax({
             type:"post",
-            url:"/xdbd-bi/bi/report/v1/data.json?projectId="+ localStorage.getItem("projectId") +"&versionId="+ localStorage.getItem("versionId") +"",
+            url:"/xdbd-bi/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",
             headers:{   username:username, userId:userId    },
             data:JSON.stringify(d),
             dataType:"json",
@@ -54,6 +55,12 @@ var DataIndexes = {
                                 d.push(c);
                             });
                             bar("#" +id,d);
+                            return;
+                        }
+
+                        if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length === 2 && data.charts.dimValues.length <= 1){
+                            console.log("22222222222222222");
+                            stacking("#" +id,data);
                             return;
                         }
 
@@ -599,7 +606,7 @@ function line(id, tit, sub, data, mark, lin) {
     }
 }
 
-// 封装一维柱状图
+// 封装一维柱状图  一个维度 一个度量
 function bar(id,num){
     var margin = {top: 40, right: 20, bottom: 30, left: 80};
     var hei=$(id).height() - margin.top - margin.bottom;
@@ -695,7 +702,7 @@ function chart_table(id,date){
     $("#"+id).append(table_text);
 }
 
-// 多维柱状图
+// 多维柱状图 多个维度 多个度量 维度需要交叉
 function manyChart (id,data){
     var figure=1;
     var  dim_width=20;//每列维度之间的间距
@@ -1148,7 +1155,7 @@ function manyChart (id,data){
 
 }
 
-// 2017-10-25 饼图
+// 2017-10-25 饼图  一个维度 一个度量
 function pieChart(id, dataset,r1) {
 
     var width = r1;
@@ -1320,7 +1327,7 @@ function pieChart(id, dataset,r1) {
     }
 }
 
-// 2017-10-26 折线图
+// 2017-10-26 折线图 一个维度 多个度量
 function lineChart(id,data){
     var dataset = data.value;  // 数据
     var lines = []; //保存折线图对象
@@ -1637,75 +1644,82 @@ function lineChart(id,data){
     }
 }
 
+// 2017-10-30 堆叠柱状图 一个维度 多个度量
+function stacking(id,data){
+    console.log(data)
+    var crimea = [];
+    var causes = ["chart1","chart0"];   // 标题：
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 存放数据格式
-// 0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
-var gpData = [
-    {
-        "name":"表格",
-        "shux":"table",
-        "type":0
-    },
-    {
-        "name":"柱状图",
-        "shux":"chart",
-        "type":101
-    },
-    {
-        "name":"折线图",
-        "shux":"chart",
-        "type":102
-    },
-    {
-        "name":"饼图",
-        "shux":"chart",
-        "type":103
-    },
-    {
-        "name":"文本",
-        "shux":"text",
-        "type":201
-    },
-    {
-        "name":"图片",
-        "shux":"image",
-        "type":202
-    },
-    {
-        "name":"按钮",
-        "shux":"button",
-        "type":203
-    },
-];
-// 根据传入，返回name或者type
-function eachGPdata(data){
-    var z = null;
-    if(isNaN(data)){
-        $.each(gpData,function(index,val){
-            if(data === val["name"]){
-                z =  val["type"];
-            }
+    $.each(data.charts.dimValues[0],function(index,val){
+        var c = {};
+        c.date = val;
+        $.each(data.charts.meaList,function(x,y){
+            var a = "chart"+ x;
+            c[""+ a +""] = data.charts.meaList[x].meaValues[0][0][index];
         });
-    }else{
-        $.each(gpData,function(index,val){
-            if(data === val["type"]){
-                z =  val["name"];
-            }
+        crimea.push(c);
+    });
+
+    var margin = {top: 20, right: 50, bottom: 30, left: 20},
+        spacing = 10,
+        width = parseInt($(id).css("width")) - margin.left - margin.right,
+        height = parseInt($(id).css("height")) - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width],0.2);
+
+    var y = d3.scale.linear()
+        .rangeRound([height, 0]);
+
+    var z = d3.scale.category10();
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(d3.format("s"));             // 数字后面格式;
+
+
+    var svg = d3.select(id).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var layers = d3.layout.stack()(causes.map(function(c) {
+        return crimea.map(function(d) {
+            return {x: d.date, y: d[c]};
         });
-    }
-    return z ;
+    }));
+
+    x.domain(layers[0].map(function(d) { return d.x; }));
+    y.domain([0, d3.max(layers[layers.length - 1], function(d) { return d.y0 + d.y; })]).nice();
+
+    var layer = svg.selectAll(".layer")
+        .data(layers)
+        .enter().append("g")
+        .attr("class", "layer")
+        .attr("transform", "translate(" + margin.left + ",0)")
+        .style("fill", function(d, i) { return z(i); });
+
+    layer.selectAll("rect")
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .attr("x", function(d) { return x(d.x); })
+        .attr("y", function(d) { return y(d.y + d.y0); })
+        .attr("height", function(d) { return y(d.y0) - y(d.y + d.y0); })
+        .attr("width", x.rangeBand());
+
+    svg.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate("+ margin.left +"," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "axis axis--y")
+        .attr("transform", "translate("+ margin.left +",0)")
+        .call(yAxis);
 }
