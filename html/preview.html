@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>预览页面</title>
     <link rel="stylesheet" href="../css/form.css" />
+    <link rel="stylesheet" href="../css/menu.css" />
     <!--D3绘图时需要用到的样式文件-->
     <link rel="stylesheet" href="../css/BI_d3.css" />
     <style>
@@ -12,17 +13,89 @@
         */
         .resize-item{border: 0;}
         .content-text.active{ background-color: inherit; }
+        .chart-main-box{ top: 0; right: 0;}
     </style>
 </head>
 <body>
+<!--菜单设置-->
+<div class="edit-state">
+    <div class="chart-main-box">
+        <div class="edit-content">
+            <div class="m-html-mod-box">
+                <div class="m-html-mod0">
+                    <div class="mn-header">
+                        <a href="#" class="mn-logobox">
+                            <img src="../images/mlogo.png" alt="" />
+                        </a>
+                        <p class="mn-headtxt">小道科技欢迎您！</p>
+                        <ul class="mn-menu clearfix">
+                            <!--<li class="active"><a href="javascript:;">财务</a></li>
+                            <li><a href="javascript:;">产品</a></li>
+                            <li><a href="javascript:;">运输</a></li>-->
+                        </ul>
+                    </div>
+                    <div class="mn-sider">
+                        <ul id="sidebar-tree" class="ztree"></ul>
+                    </div>
+                    <div class="mn-htmlmain">
+                        主体区域
+                    </div>
+                </div>
+                <div class="m-html-mod1">
+                    <div class="mn-header">
+                        <a href="#" class="mn-logobox">
+                            <img src="../images/mlogo.png" alt="" />
+                        </a>
+                        <p class="mn-headtxt">小道科技欢迎您！</p>
+                        <ul class="mn-menu clearfix">
+                            <li class="active"><a href="javascript:;">财务</a></li>
+                            <li><a href="javascript:;">产品</a></li>
+                            <li><a href="javascript:;">运输</a></li>
+                        </ul>
+                    </div>
+                    <div class="mn-sider">
+                        菜单
+                    </div>
+                    <div class="mn-htmlmain">
+                        主体区域
+                    </div>
+                </div>
+                <div class="m-html-mod2">
+                    <div class="mn-header">
+                        <a href="#" class="mn-logobox">
+                            <img src="../images/mlogo.png" alt="" />
+                        </a>
+                        <p class="mn-headtxt">小道科技欢迎您！</p>
+                        <ul class="mn-menu clearfix">
+                            <li class="active"><a href="javascript:;">财务</a></li>
+                            <li><a href="javascript:;">产品</a></li>
+                            <li><a href="javascript:;">运输</a></li>
+                        </ul>
+                    </div>
+                    <div class="mn-sider">
+                        菜单
+                    </div>
+                    <div class="mn-htmlmain">
+                        主体区域
+                    </div>
+                </div>
 
-<div class="edit-content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--页面链接弹出框-->
+<div class="link-modal">
+    <ul id="modal-tree" class="ztree"></ul>
+</div>
 <script src="../plugin/jQuery/jquery.min.js"></script>
 <script src="../plugin/jQuery/jQuery_ui.js"></script>
+<script src="../plugin/zTree/jquery.ztree.all.min.js"></script>
 <script src="../plugin/d3/d3.v3.min.js"></script>
 <script  src="../plugin/d3/d3.tip.js"></script>
 <!--存放3D转化封装的函数-->
 <script src="../js/graphical.js"></script>
+<script src="../js/menu.js"></script>
 <script src="../js/preview.js"></script>
 </body>
 </html>
