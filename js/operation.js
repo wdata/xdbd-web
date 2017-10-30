@@ -573,7 +573,9 @@ var operating = {
             dataType:"json",
             contentType: 'application/json',
             success:function(data){
-                layer.msg("保存成功！");
+                if(data.code === 0){
+                    layer.msg("保存成功！");
+                }
             },
             error:function(res){
                 // console.log(res);
@@ -657,15 +659,17 @@ var operating = {
     // 预览
     preview:function(){
         // 先隐藏
-        $(".type-bar,.drag-bar").hide();
-        $(".exit-preview").show()
-            .siblings().hide();
-        // $(".chart-main-box").css("right","110px");
+        // $(".type-bar,.drag-bar").hide();
+        // $(".exit-preview").show()
+        //     .siblings().hide();
+        // // $(".chart-main-box").css("right","110px");
+        //
+        // // 删除边框,删除红线
+        // $(".resize-item").css("border","none")
+        //     .find(".resize-panel").remove()
+        // $(".resize-item").find(".content-text").removeClass("edit");
 
-        // 删除边框,删除红线
-        $(".resize-item").css("border","none")
-            .find(".resize-panel").remove()
-        $(".resize-item").find(".content-text").removeClass("edit");
+        window.open("../html/preview.html");
 
     },
     // 退出预览

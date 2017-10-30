@@ -6,9 +6,19 @@
     <link rel="stylesheet" href="../css/form.css" />
     <!--D3绘图时需要用到的样式文件-->
     <link rel="stylesheet" href="../css/BI_d3.css" />
+    <style>
+        /*
+            清除边框红线，清除文本框内白色背景；
+        */
+        .resize-item{border: 0;}
+        .content-text.active{ background-color: inherit; }
+    </style>
 </head>
 <body>
 
+<div class="edit-content"></div>
+<script src="../plugin/jQuery/jquery.min.js"></script>
+<script src="../plugin/jQuery/jQuery_ui.js"></script>
 <script src="../plugin/d3/d3.v3.min.js"></script>
 <script  src="../plugin/d3/d3.tip.js"></script>
 <!--存放3D转化封装的函数-->
