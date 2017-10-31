@@ -483,11 +483,11 @@ function clear(id){
             pillsLi();
 
             // 全部属性
-            var type = eachGPdata(item.type);
-            $(".chart-type-val span").text(type);
+            var type = $(".chart-type-lists ul li[data-type="+ item.type +"] span").text();
+            $(".chart-type-val span").text(type).attr("data-type",item.type);
             // 遍历修改属性颜色
             $.each($(".chart-type-lists ul li "),function(index,val){
-               if($(val).find("span").text() === type){
+               if($(val).attr("data-type") === item.type + ""){
                     $(val).addClass("active")
                         .siblings().removeClass();
                }
