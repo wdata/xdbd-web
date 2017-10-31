@@ -66,9 +66,9 @@ function GooFlow(bgDiv,property){
 		this.onBtnSaveClick=null;//保存流程图按钮定义
 		this.onFreshClick=null;//重载流程图按钮定义
     this.onPrintClick=null;//打印流程图按钮定义
-    this.onBtnSqlClick=null;//生成SQL
     this.onBtnPreviewClick=null//预览
     this.onBtnSaveCopyClick=null//另存为模板
+    this.onBtnExecuteClick=null//执行
 		if(property.headBtns)
 		this.$head.on("click",{inthis:this},function(e){
 			if(!e)e=window.event;
@@ -85,7 +85,7 @@ function GooFlow(bgDiv,property){
 				case "ico_redo":	This.redo();break;
 				case "ico_reload":  if(This.onFreshClick!=null)	This.onFreshClick();break;
         case "ico_print":   if(This.onPrintClick!=null)	This.onPrintClick();break;
-        case "ico_sql": if(This.onBtnSqlClick!=null) This.onBtnSqlClick();break;
+        case "ico_execute": if(This.onBtnExecuteClick!=null) This.onBtnExecuteClick();break;
         case "ico_preview": if(This.onBtnPreviewClick!=null) This.onBtnPreviewClick();break;
         case "ico_saveCopy": if(This.onBtnSaveCopyClick!=null) This.onBtnSaveCopyClick();break;
 			}

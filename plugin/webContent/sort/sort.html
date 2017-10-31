@@ -10,6 +10,7 @@
         position: absolute;
         right: 20px;
         top: 12px;
+        display: none;
     }
     .ensure_save{
         display: inline-block;
@@ -145,15 +146,15 @@
 </div>
 <div class="fromInp" style="margin-top: 44px;">
     <label>步骤名称：</label>
-    <input type="text" class="stepName"/>
+    <input type="text" class="stepName auto_save"/>
 </div>
 <div class="fromInp">
     <label>表输出：</label>
-    <input type="text" class="tableOut" style="margin-left: 23px;"/>
+    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
 </div>
 <div class="fromInp">
     <label>选择表：</label>
-    <select class="fromTable" style="width:160px;height: 28px;margin-left: 25px;">
+    <select class="fromTable auto_save" style="width:160px;height: 28px;margin-left: 25px;">
     </select>
 </div>
 <div class="related_tit">排序字段</div>
@@ -167,14 +168,14 @@
         </thead>
         <tbody class="sortFields">
         <tr class="sortField">
-            <td><select class="field"></select></td>
+            <td><select class="field auto_save"></select></td>
             <td>
-                <select class="sort">
+                <select class="sort auto_save">
                     <option>asc</option>
                     <option>desc</option>
                 </select>
             </td>
-            <td class="regulation"><span class="add sortAdd"></span><span class="lessen sortLessen"></span></td>
+            <td class="regulation"><span class="add sortAdd auto_save"></span><span class="lessen sortLessen auto_save"></span></td>
         </tr>
         </tbody>
     </table>

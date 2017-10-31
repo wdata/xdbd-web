@@ -152,8 +152,8 @@
             $("#ele_from").val("");
             $("#ele_to").val("");
             //obj=this.$nodeData[id];
-//          }else if(model=="dataSheet") {
-//            obj=this.params[id];
+          }else if(model=="dataSheet") {
+            obj=this.params[id];
             var formProperty = [];
             //java的详细属性
             if(obj.type=='java') {
@@ -266,7 +266,7 @@
           }else if(model=="area") {
             console.log(model)
           }
-          $("#ele_name").val(obj.name);
+//          $("#ele_name").val(obj);
           return true;
         };
         demo.onItemBlur=function(id,model){

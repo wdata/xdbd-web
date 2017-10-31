@@ -35,7 +35,7 @@ function GooFlow(bgDiv,property){
 	this.$lineDom={};
 	this.$nodeDom={};
 	this.$areaDom={};
-	// this.params = [];//各模块的详细属性
+	this.params = [];//各模块的详细属性
   this.propertyAlter = true;
 	this.$max=property.initNum||1;//计算默认ID值的起始SEQUENCE
 	this.$focus="";//当前被选定的结点/转换线ID,如果没选中或者工作区被清空,则为""
@@ -789,15 +789,15 @@ GooFlow.prototype={
       if(data.success) {
         console.log(data)
 
-        delete self.$nodeData[id];
-        console.log(self.$nodeData[id])
+        delete self.params[id];
+        // console.log(self.params[id])
         console.log(data.data)
         if(typeof(data.data) == "string"||data.data ==null) {
-          self.$nodeData[id] = JSON.parse(data.data)
+          self.params[id] = JSON.parse(data.data)
         }else {
-          self.$nodeData[id] = JSON.parse(data.data.attValue)
+          self.params[id] = JSON.parse(data.data.attValue)
         }
-        console.log(self.$nodeData)
+        console.log(self.params)
       }
     })
   },
@@ -1457,13 +1457,13 @@ GooFlow.prototype={
         }
         ret.areas[k3]=JSON.parse(JSON.stringify(this.$areaData[k3]));
     }
-    // for(var k4 in self.params){
-    //   console.log(self.params[k4])
-    //   if(!this.params[k4].marked) {
-    //     delete this.params[k4]["marked"];
-    //   }
-    //   ret.dataSheet[k4]=JSON.parse(JSON.stringify(this.params[k4]));
-    // }
+    for(var k4 in self.params){
+      console.log(self.params[k4])
+      if(!this.params[k4].marked) {
+        delete this.params[k4]["marked"];
+      }
+      ret.dataSheet[k4]=JSON.parse(JSON.stringify(this.params[k4]));
+    }
 		return ret;
 	},
 	//只把本次编辑流程图中作了变更(包括增删改)的元素导出到一个变量中,以方便用户每次编辑载入的流程图后只获取变更过的数据
@@ -1484,11 +1484,11 @@ GooFlow.prototype={
 				ret.areas[k3]=this.$areaData[k3];
 			}
 		}
-    // for(var k4 in this.params) {
-		 //  if(this.params[k4].alt) {
-		 //    ret.dataSheet[k4]=this.params[k4]
-    //   }
-    // }
+    for(var k4 in this.params) {
+		  if(this.params[k4].alt) {
+		    ret.dataSheet[k4]=this.params[k4]
+      }
+    }
 		ret.deletedItem=this.$deletedItem;
 		return ret;
 	},
