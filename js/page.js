@@ -212,7 +212,6 @@ $(function(){
 	
 	//设置链接
 	$(".page-tooltip").delegate(".set-flow-btn","click",function(){
-//			$idx = $(this).parent().index();
 			index = layer.open({
 		      type: 1,
 		      area: ['490px', '330px'],
@@ -231,7 +230,6 @@ $(function(){
 	
 	//设置链接
 	$(".page-tooltip1").delegate(".set-flow-btn1","click",function(){
-//			$idx1 = $(this).parent().index();
 			index = layer.open({
 		      type: 1,
 		      area: ['490px', '330px'],
@@ -265,11 +263,6 @@ $(function(){
 				success:function(res){
 	              	if(res.code===0){
 	              		var data = res.data;
-	              		/*if(data.directoryType==="2"){//首页
-	              			zNodes = data.children[2];
-	              		}else if(data.directoryType==="10"){
-	              			zNodes = data.children[0];
-	              		}*/
 	              		zNodes = data;
 						$.fn.zTree.init($("#flow-tree"), setting, zNodes);
 						$.fn.zTree.init($("#other-tree"), setting1, zNodes);

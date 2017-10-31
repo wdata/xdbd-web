@@ -22,6 +22,29 @@ function logOut(){//登出
     window.location.href = logout_url;
 }
 
+	/*
+	 
+	 * url地址变量
+	 * BI : http://192.168.1.42:8084/xdbd-bi
+	 * ETL: http://192.168.1.42:8084/xdbd-etl
+	 * PM: http://192.168.1.42:8084/xdbd-pm
+	 * WF: http://192.168.1.42:8084/xdbd-wf
+	 * 
+	 * */
+	var $url1 = "/xdbd-bi";
+	var $url2 = "/xdbd-etl";
+	var $url3 = "/xdbd-pm";
+	var $url4 = "/xdbd-wf";
+	
+
+
+var projectId = localStorage.getItem("projectId");
+var versionId = localStorage.getItem("versionId");
+var dirId = localStorage.getItem("directoryId");
+var createUser = localStorage.getItem("createUser");
+var updateUser = localStorage.getItem("updateUser");
+var username = sessionStorage.getItem("ByuserName"),
+	userId = sessionStorage.getItem("userId");
 
 
 

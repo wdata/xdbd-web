@@ -159,37 +159,37 @@
 	}
 	
 	//刷新项目树
-	function getProjName(id){
-		$.ajax({
-			type:'POST',
-            url:$url3+'/bigdata/project/findProjectTree',
-            headers:{
-            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
-            },
-            dataType:'json',
-	        contentType: "application/json",
-			data:JSON.stringify({
-				"id":id
-			}),
-			success:function(res){
-              	if(res.code===0){
-              		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
-					var treeObj = $("#treeDemo");
-					$.fn.zTree.init(treeObj, setting, zNodes);
-					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-					curMenu = zTree_Menu.getNodes()[0].children[0];
-					zTree_Menu.selectNode(curMenu);
-					treeObj.hover(function () {
-						if (!treeObj.hasClass("showIcon")) {
-							treeObj.addClass("showIcon");
-						}
-					}, function() {
-						treeObj.removeClass("showIcon");
-					});
-	            }
-			},
-			error:function(err){
-				console.log(err);
-			}
-		});
-	}
+//	function getProjName(id){
+//		$.ajax({
+//			type:'POST',
+//          url:$url3+'/bigdata/project/findProjectTree',
+//          headers:{
+//          	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+//          },
+//          dataType:'json',
+//	        contentType: "application/json",
+//			data:JSON.stringify({
+//				"id":id
+//			}),
+//			success:function(res){
+//            	if(res.code===0){
+//            		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
+//					var treeObj = $("#treeDemo");
+//					$.fn.zTree.init(treeObj, setting, zNodes);
+//					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+//					curMenu = zTree_Menu.getNodes()[0].children[0];
+//					zTree_Menu.selectNode(curMenu);
+//					treeObj.hover(function () {
+//						if (!treeObj.hasClass("showIcon")) {
+//							treeObj.addClass("showIcon");
+//						}
+//					}, function() {
+//						treeObj.removeClass("showIcon");
+//					});
+//	            }
+//			},
+//			error:function(err){
+//				console.log(err);
+//			}
+//		});
+//	}

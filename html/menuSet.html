@@ -15,6 +15,15 @@
     <link rel="stylesheet" href="../css/form.css" />
     <link rel="stylesheet" href="../plugin/zTree/css/zTreeStyle/zTreeStyle.css" />
     <link rel="stylesheet" href="../css/menu.css" />
+    <!--D3绘图时需要用到的样式文件-->
+    <link rel="stylesheet" href="../css/BI_d3.css" />
+    <style>
+        /*
+            清除边框红线，清除文本框内白色背景；
+        */
+        .resize-item{border: 0;}
+        .content-text.active{ background-color: inherit; }
+    </style>
     <!--[if lt IE 9]>
       <script src="common/html5shiv.min.js"></script>
       <script src="common/respond.min.js"></script>
@@ -240,9 +249,10 @@
 							</div>
 							<div class="mn-sider">
 								<ul id="sidebar-tree" class="ztree"></ul>
+								<ul id="temp-tree" class="ztree" style="display: none;"></ul>
 							</div>
-							<div class="mn-htmlmain">
-								主体区域
+							<div  class="mn-htmlmain">
+							<!--	主体区域-->
 							</div>
 						</div>
 						<!--<div class="m-html-mod1">
@@ -295,11 +305,13 @@
 			<ul id="modal-tree" class="ztree"></ul>
 		</div>
     <script src="../plugin/jQuery/jquery.min.js"></script>
+		<script src="../plugin/d3/d3.v3.min.js"></script>
     <script src="../js/login.js"></script>
     <script src="../plugin/zTree/jquery.ztree.all.min.js"></script>
     <!--<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>-->
     <script src="../plugin/swiper/swiper.min.js"></script>
     <script src="../plugin/layer/layer.js"></script>
+    <script src="../js/graphical.js"></script>
     <script src="../js/menu.js"></script>
   </body>
 </html>

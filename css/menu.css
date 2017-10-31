@@ -423,8 +423,8 @@ li {
 }
 .m-html-mod0 .mn-sider {
 	background-color: #FFFFFF;
+	padding-top: 40px;
 }
-
 .m-html-mod1 {
 	background-color: #f7f7f7;
 }
@@ -608,4 +608,9 @@ li {
 }
 .ztree .page-link-btn:hover {
 	background-color: transparent;
+}
+.mn-sider>.tree a {
+	display: inline-block;
+	font-size: 18px;
+	margin-left: 20px;
 }
