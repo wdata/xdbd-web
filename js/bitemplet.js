@@ -51,7 +51,7 @@
 //	          	console.log(res);
 	          	var arr = new Array;
 		      	$.each(res.data,function(index,item) {
-		        	arr.push('<dl class="new_demand" id='+item.templateId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class="" onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)"> <p>'+item.templateName+'</p> <span>'+item.templateComment+'</span> </dd> </dl>')
+		        	arr.push('<dl class="new_demand" id='+item.templateId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class="" onclick="deleteBtn(this)">X</div><img src="../images/bi_moren.png"></dt> <dd onclick="demandBtn(this)"> <p>'+item.templateName+'</p> <span>'+item.templateComment+'</span> </dd> </dl>')
 		      	});
 		      	$("#demand_list").html(arr);
 	          }
@@ -78,7 +78,7 @@
 	    area: ['660px', '460px'], //宽高
 	    content: '' +
 	    '<div class="demand_name"><label>页面名称：<span>*</span></label><input class="new_name" type="text" ></div>' +
-	    '<div class="demand_name"><label>行业类型：<span>*</span></label><select class="new_type" onchange="method(this)"><option value="0">全部</option><option value="1">房地产</option><option value="2">酒店</option><option value="3">互联网</option><option value="4">自定义</option></select><input class="new_Inp" type="text" id="input"/></div>' +
+	    '<div class="demand_name"><label>行业类型：<span>*</span></label><select class="new_type" onchange="method(this)"><option value="全部">全部</option><option value="房地产">房地产</option><option value="酒店">酒店</option><option value="互联网">互联网</option><option value="自定义">自定义</option></select><input class="new_Inp" type="text" id="input"/></div>' +
 	    '<div class="demand_name"><label>页面描述：<span>*</span></label><textarea maxlength="20" class="new_describe"></textarea></div>' +
 	    '<p class="hint">20个字以内</p>' +
 	    '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
@@ -101,6 +101,26 @@
 	  } else if(newDescribe == '') {
 	    layer.msg('请输入页面描述！');
 	  } else {
+	  	switch(newType){
+	  		case "全部":
+				newType = "0";
+				break;
+			case "房地产":
+				newType = "1";
+				break;
+			case "酒店":
+				newType = "2";
+				break;
+			case "互联网":
+				newType = "3";
+				break;
+			case "自定义":
+				newType = "4";
+				break;
+			default:
+				newType = "";
+	  			
+	  	}
 	  	layer.close(popups);
 	   	newBiTemplete(projectId,versionId,dirId,newName,newType,newDescribe,templateId);
 	   	getProjName(0);//新建Bi页面成功，刷新项目树
@@ -139,37 +159,37 @@
 	}
 	
 	//刷新项目树
-	function getProjName(id){
-		$.ajax({
-			type:'POST',
-            url:$url3+'/bigdata/project/findProjectTree',
-            headers:{
-            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
-            },
-            dataType:'json',
-	        contentType: "application/json",
-			data:JSON.stringify({
-				"id":id
-			}),
-			success:function(res){
-              	if(res.code===0){
-              		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
-					var treeObj = $("#treeDemo");
-					$.fn.zTree.init(treeObj, setting, zNodes);
-					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-					curMenu = zTree_Menu.getNodes()[0].children[0];
-					zTree_Menu.selectNode(curMenu);
-					treeObj.hover(function () {
-						if (!treeObj.hasClass("showIcon")) {
-							treeObj.addClass("showIcon");
-						}
-					}, function() {
-						treeObj.removeClass("showIcon");
-					});
-	            }
-			},
-			error:function(err){
-				console.log(err);
-			}
-		});
-	}
+//	function getProjName(id){
+//		$.ajax({
+//			type:'POST',
+//          url:$url3+'/bigdata/project/findProjectTree',
+//          headers:{
+//          	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+//          },
+//          dataType:'json',
+//	        contentType: "application/json",
+//			data:JSON.stringify({
+//				"id":id
+//			}),
+//			success:function(res){
+//            	if(res.code===0){
+//            		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
+//					var treeObj = $("#treeDemo");
+//					$.fn.zTree.init(treeObj, setting, zNodes);
+//					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+//					curMenu = zTree_Menu.getNodes()[0].children[0];
+//					zTree_Menu.selectNode(curMenu);
+//					treeObj.hover(function () {
+//						if (!treeObj.hasClass("showIcon")) {
+//							treeObj.addClass("showIcon");
+//						}
+//					}, function() {
+//						treeObj.removeClass("showIcon");
+//					});
+//	            }
+//			},
+//			error:function(err){
+//				console.log(err);
+//			}
+//		});
+//	}

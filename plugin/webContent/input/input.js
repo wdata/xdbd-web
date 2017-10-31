@@ -2,30 +2,36 @@
  * Created by qiangxl on 2017/10/11.
  */
 //增加字段
-
 $(function(){
   initFromTable();
   bind_change_fromTable();
   bind_click_add();
   bind_click_loadParguet();
-  bind_click_generateSql();
+ // bind_click_generateSql();
   bind_click_saveActionComp();
   bind_click_lessen();
+  //bind_method();
 //alert(JSON.stringify(tables))
   setVal();
   $(".stepName").val(etlName);
 
   $('.fromTable').trigger('change');
+  //$('.fields').trigger('change');
 
   function bind_click_saveActionComp(){
-    // demo.onBtnSaveClick = function () {
-    //   alert(getVal())
+    // $('.saveActionComp').click(function(){
+    //   // alert(111)
     //   fn_saveActionComp(getVal());
-    // }
-    $('.saveActionComp').click(function(){
-      // alert(111)
-      fn_saveActionComp(getVal());
-    });
+    // });
+    // $('.fields').blur(function(){alert(111)
+    //     fn_saveActionComp(getVal());
+    //   });
+    $(document.body)
+      .off('change', '.fields')
+      .on('change', '.fields', function () {
+        fn_set_sqlOut(generate_sql());
+        fn_saveActionComp(getVal());
+      })
   }
 
   function setVal(){
@@ -56,17 +62,17 @@ $(function(){
     return data;
   }
 
-  function bind_click_generateSql(){
-    // demo.onBtnSqlClick = function() {
-    //   // alert(666)
-    //   var sql = generate_sql();
-    //   fn_set_sqlOut(sql);
-    // }
-    $('.generateSql').click(function(){
-      var sql = generate_sql();
-      fn_set_sqlOut(sql);
-    });
-  }
+  // function bind_click_generateSql(){
+  //   // demo.onBtnSqlClick = function() {
+  //   //   // alert(666)
+  //   //   var sql = generate_sql();
+  //   //   fn_set_sqlOut(sql);
+  //   // }
+  //   $('.generateSql').click(function(){
+  //     var sql = generate_sql();
+  //     fn_set_sqlOut(sql);
+  //   });
+  // }
   function bind_click_loadParguet() {
     $('.loadParguet').click(function() {
       fn_upload_parquet();
@@ -86,6 +92,11 @@ $(function(){
 
     });
   }
+  // function bind_method() {
+  //   $('.fields').bind("change",function() {alert(111)
+  //     document.getElementsByClassName('fields_inp').value = $(this).val();
+  //   });
+  // }
 
 
   function initFromTable(){
@@ -123,10 +134,15 @@ function bind_click_add() {
   function set_extractFields(obj){
     var extractFieldHtml = $('.extractField').prop('outerHTML');
     $('.extractField').remove();
+    // alert(JSON.stringify(obj))
+    var extractHtml = '';
       $.each(obj,function(){
          $('.extractFields').append(extractFieldHtml);
-        $('.extractField:last .fields').val(this);
+         // $('.extractField:last .fields').val(this);
+        extractHtml += "<option value="+this+">"+this+"</option>";
+        //$('.extractField').attr(selected);
       });
+    $('.extractField').find('.fields').html(extractHtml);
   }
 
   function get_extractFields(){

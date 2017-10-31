@@ -6,7 +6,7 @@ var DataIndexes = {
     inAjax:function(d,id){
         var self = this;
         $("#"+id).find(".resize-panel").siblings().remove();  // 删除之前的图形
-        console.log(JSON.stringify(d));
+  
         $.ajax({
             type:"post",
             url:"/xdbd-bi/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",

@@ -1,39 +1,28 @@
+
+
+
+
+
+
 $(function(){
-	/*
-	 
-	 * url地址变量
-	 * BI : http://192.168.1.42:8084/xdbd-bi
-	 * ETL: http://192.168.1.42:8084/xdbd-etl
-	 * PM: http://192.168.1.42:8084/xdbd-pm
-	 * WF: http://192.168.1.42:8084/xdbd-wf
-	 * 
-	 * */
-	var $url1 = "/xdbd-bi";
-	var $url2 = "/xdbd-etl";
-	var $url3 = "/xdbd-pm";
-	var $url4 = "/xdbd-wf";
-	
+
 	
 	/*
 	 
 	 * 常用参数设置
 	 * 
 	 * projectId = localStorage.getItem("projectId")
-	 * projectVersionId = localStorage.getItem("versionId")
+	 * versionId = localStorage.getItem("versionId")
 	 * createUser
 	 * updateUser
 	 * directoryId 根据 directoryId 查询
 	 * parentId
 	 * */
 	
-	var projectId = localStorage.getItem("projectId");
-	var projectVersionId = localStorage.getItem("versionId");
-	var dirId = localStorage.getItem("directoryId");
-	var createUser = localStorage.getItem("createUser");
-	var updateUser = localStorage.getItem("updateUser");
 	var topMenu = [];//顶部导航菜单
-	var topMenuId = 0;//topMenu--id
-	var projectMenuId;//projectMenuId
+	var topMenuId = "";//topMenu--id
+	//var projectMenuId;//projectMenuId
+	var reportMenuId;
 	var zNodes = [];//存放子菜单的数据
 	var LeftMenu = [];//存放左侧所有菜单
 	var pageId;//链接页面的id
@@ -41,24 +30,27 @@ $(function(){
 	var index;//layer弹出框
 	var dirType;//目录类型（12/13/15）
 	var typeCode = "1";//模板1,2,3
-
+	var parentId = "";
+	
+		
+	var tempLogo = sessionStorage.getItem("tempLogo")||"";
+	var tempTxt = sessionStorage.getItem("tempTxt")||"";
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
 		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".m-cont"+$idx).show().siblings().hide();
 		if($idx===2){
-			getTopMenu(projectId,projectVersionId);
+			getTopMenu(projectId,versionId,0);
 			var html = "";
-			console.log(topMenu);
 			$.each(topMenu, function(i,item) {
 				html += `
-					<div class="swiper-slide ${i===0?'active':''}" id="${item.id}" parentId="${item.parentId}" sortIndex="${item.sortIndex}">${item.menuName}</div>
+					<div class="swiper-slide ${i===0?'active':''}" reportMenuId="${item.reportMenuId}" parentId="${item.parentId}" sortIndex="${item.sortIndex}">${item.menuName}</div>
 				`;
 			});
 			$("#link-scrollmenu").empty().append(html);
-			topMenuId = $("#link-scrollmenu").find(".active").attr("id");
-			findLeftMenu(projectId,projectVersionId,topMenuId);//查询左侧菜单
+			topMenuId = $("#link-scrollmenu").find(".active").attr("reportmenuid");
+			findLeftMenu(projectId,versionId,topMenuId);//查询左侧菜单
 			
 			var swiper = new Swiper('.swiper-container', {
 		        nextButton: '.swiper-button-next',
@@ -76,7 +68,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".m-html-mod"+$idx).show().siblings().hide();
 		typeCode = $idx+1;
-		 e.preventDefault()
+		e.preventDefault()
 	})
 	
 	//菜单--导航切换
@@ -97,30 +89,30 @@ $(function(){
 	$("#head-text-btn").click(function(){
 		var headText = $.trim($("#head-text").val());
 		if(headText){
-			setHeadText(projectId,projectVersionId,createUser,headText);
+			setHeadText(projectId,versionId,createUser,headText);
 			$("#head-text").val("");
 		}else{
 			layer.msg("请输入顶部菜单内容", {icon: 5});
 		}
 	})
 
-	function setHeadText(projectId,projectVersionId,createUser,menuName){
+	function setHeadText(projectId,versionId,createUser,menuName){
 		$.ajax({
 			type:'POST',
-            url:$url1+'/api/v1/saveProjectMenuTop',
+            url:$url1+'/bi/report/v1/menu/saveReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
 				"projectId":projectId,
-				"projectVersionId":projectVersionId,
+				"versionId":versionId,
 				"createUser":createUser,
 				"menuName":menuName
 			},
 			success:function(res){
               	if(res.code===0){
               		layer.msg(res.message, {icon: 6});
-              		getTopMenu(projectId,projectVersionId);
+              		getTopMenu(projectId,versionId,0);
 	            }
 			},
 			error:function(err){
@@ -130,27 +122,31 @@ $(function(){
 	}
 	
 	//获取 顶部导航菜单
-	getTopMenu(projectId,projectVersionId);
-	function getTopMenu(projectId,projectVersionId){
+	getTopMenu(projectId,versionId,0);
+	function getTopMenu(projectId,versionId,menuType){
 		$.ajax({
 			type:'GET',
-            url:$url1+'/api/v1/findProjectMenuTop',
+            url:$url1+'/bi/report/v1/menu/findReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
 				"projectId":projectId,
-				"projectVersionId":projectVersionId
+				"versionId":versionId,
+				"menuType":menuType
 			},
 			success:function(res){
               	if(res.code===0){
-              		var data = res.data.slice(0,5);
+              		var data = res.data;
               		var html = "";
               		var html2 = "";//页面展示
-              		topMenu = data;              		
+              		topMenu = data;
               		$.each(data, function(i,item) {
+              			if(i===0){
+							findLeftMenu(projectId,versionId,item.reportMenuId);
+              			}
               			html += `
-              				<li id="${item.id}" createUser="${item.createUser}" updateUser="${item.updateUser}">
+              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
 								<span class="m-menu-tag">${item.menuName}</span>
 								<input type="text" class="top-reedit" value="${item.menuName}"/>
 								<div class="m-navs-order-btns">
@@ -161,8 +157,10 @@ $(function(){
 							</li>
               			`;
               			html2 += `
-              				<li class="${i===0?'active':''}" id="${item.id}"><a href="javascript:;">${item.menuName}</a></li>
+              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
               			`;
+              			
+              			
               		});
               		
               		$(".top-menu-15").empty().append(html);
@@ -186,33 +184,35 @@ $(function(){
 	$(document).keydown(function(e){
 		if(e.which===13){
 			if(e.target.nodeName==='INPUT'&&$(e.target).attr("class")==="top-reedit"){
-				var id = $(e.target).parent("li").attr("id");
-				var updateUser = $(e.target).parent("li").attr("updateuser");
+				var reportMenuId = $(e.target).parent("li").attr("reportmenuid");
+//				var updateUser = $(e.target).parent("li").attr("updateuser");
 				var old = $(e.target).prev().text();
 				var re = $.trim($(e.target).val());
 				var menuName = (old===re?old:re);
 				$(e.target).hide();
 				if(old !== re){
-					modifyTopMenuName(id,menuName,updateUser);//修改
+					modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser);//修改
 				}
 			}
 		}
 	})
-	function modifyTopMenuName(id,menuName,updateUser){
+	function modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser){
 		$.ajax({
 			type:'PUT',
-            url:$url1+'/api/v1/updateMenuNameById',
+            url:$url1+'/bi/report/v1/menu/updateReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
-				"id":id,
+				"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
 				"menuName":menuName,
 				"updateUser":updateUser
 			},
 			success:function(res){
               	if(res.code===0){
-              		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
+              		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -225,35 +225,37 @@ $(function(){
 	//上移
 	$(".top-menu-15").delegate(".t-up","click",function(){
 		var $li = $(this).parents("li");
-		var id = $li.attr("id");
-		var upOrDown = "up";
-		modifyTopMenuPosition(id,updateUser,upOrDown);
+		var reportMenuId = $li.attr("reportmenuid");
+		var upOrDown = "7";
+		modifyTopMenuPosition(projectId,versionId,reportMenuId,updateUser,upOrDown);
 	});
 	
 	//下移
 	$(".top-menu-15").delegate(".t-down","click",function(){
 		var $li = $(this).parents("li");
-		var id = $li.attr("id");
-		var upOrDown = "down";
-		modifyTopMenuPosition(id,updateUser,upOrDown);
+		var reportMenuId = $li.attr("reportmenuid");
+		var upOrDown = "8";
+		modifyTopMenuPosition(projectId,versionId,reportMenuId,updateUser,upOrDown);
 	});
 	
 	//修改顶部菜单的位置
-	function modifyTopMenuPosition(id,updateUser,upOrDown){
+	function modifyTopMenuPosition(projectId,versionId,reportMenuId,updateUser,upOrDown){
 		$.ajax({
 			type:'PUT',
-            url:$url1+'/api/v1/updateProjectMentSortIndexTopById',
+            url:$url1+'/bi/report/v1/menu/updateReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
-				"id":id,
+				"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
 				"updateUser":updateUser,
 				"upOrDown":upOrDown
 			},
 			success:function(res){
               	if(res.code===0){
-              		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
+              		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -264,20 +266,27 @@ $(function(){
 	}
 	
 	$(".top-menu-15").delegate(".t-del","click",function(){
-		var id = $(this).parents("li").attr("id");
-		deleteTopMenu(id);
+		var reportMenuId = $(this).parents("li").attr("reportmenuid");
+		deleteTopMenu(projectId,versionId,reportMenuId,0,updateUser);
 	});
 	//删除顶部菜单
-	function deleteTopMenu(id){
+	function deleteTopMenu(projectId,versionId,reportMenuId,menuType,updateUser){
 		$.ajax({
-			type:'DELETE',
-            url:$url1+'/api/v1/deleteProjectMenuTopById/'+id,
+			type:'PUT',
+            url:$url1+'/bi/report/v1/menu/deleteReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
+            data:{
+            	"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
+				"menuType":menuType,
+				"updateUser":updateUser
+            },
 			success:function(res){
               	if(res.code===0){
-              		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
+              		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -288,23 +297,25 @@ $(function(){
 	}
 	
 	$("#clearTopMenu").click(function(){
-		clearTopMenu(projectId,projectVersionId);
+		clearTopMenu(projectId,versionId,updateUser);
 	})
 	//清空顶部菜单
-	function clearTopMenu(projectId,projectVersionId){
+	function clearTopMenu(projectId,versionId,updateUser){
 		$.ajax({
-			type:'GET',
-            url:$url1+'/api/v1/deleteProjectMenuAll',
+			type:'PUT',
+            url:$url1+'/bi/report/v1/menu/deleteReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
 				"projectId":projectId,
-				"projectVersionId":projectVersionId
+				"versionId":versionId,
+				"updateUser":updateUser
 			},
 			success:function(res){
+				console.log(res);
               	if(res.code===0){
-              		getTopMenu(projectId,projectVersionId);//刷新顶部菜单列表
+              		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -316,16 +327,16 @@ $(function(){
 	
 	//左边菜单
 	$(".leftMenuBtn").click(function(){
-		getTopMenu(projectId,projectVersionId);
+		getTopMenu(projectId,versionId,0);
 		var html = "";
 		$.each(topMenu, function(i,item) {
 			html += `
-				<div class="swiper-slide ${i===0?'active':''}" id="${item.id}" parentId="${item.parentId}" sortIndex="${item.sortIndex}">${item.menuName}</div>
+				<div class="swiper-slide" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">${item.menuName}</div>
 			`;
 		});
 		$("#scroll-topmenu").empty().append(html);
-		topMenuId = $("#scroll-topmenu").find(".active").attr("id");
-		findLeftMenu(projectId,projectVersionId,topMenuId);//查询左侧菜单
+//		topMenuId = $("#scroll-topmenu").find(".active").attr("reportmenuid");
+		//findLeftMenu(projectId,versionId,topMenuId);//查询左侧菜单
 	});
 	
 	
@@ -347,8 +358,8 @@ $(function(){
 			}
 		},
 		callback: {
-			onClick: selectLeftMenu,
-			onRename:renameLeftMenu
+			onClick: selectLeftMenu
+//			,onRename:renameLeftMenu
 		}
 	};
 	
@@ -385,6 +396,9 @@ $(function(){
 			simpleData: {
 				enable: true
 			}
+		},
+		callback: {
+			onClick:redirectPage
 		}
 	};
 	var setting3 = {
@@ -419,7 +433,7 @@ $(function(){
 		      yes: function(index, layero){
 		      	var menuName = $.trim($(".le-add-menu").val());
 		      		if(menuName){
-				        addLeftMenu(menuName,0,topMenuId,createUser);
+				        addLeftMenu(projectId,versionId,createUser,menuName,1,topMenuId);
 		      		}else{
 		      			layer.msg("菜单名称不能为空", {icon: 5});
 		      		}
@@ -437,34 +451,40 @@ $(function(){
 	//点击头部菜单展示对应的左部菜单
 	$("#scroll-topmenu").delegate(".swiper-slide","click",function(){
 		$(this).addClass("active").siblings().removeClass("active");
-		topMenuId = $(this).attr("id");
-		findLeftMenu(projectId,projectVersionId,topMenuId);
+		topMenuId = $(this).attr("reportmenuid");
+		parentId = $(this).attr("reportmenuid");
+		findLeftMenu(projectId,versionId,parentId);
 	});
 	
 	//点击页面头部获取左部菜单
 	$(".mn-menu").delegate("li","click",function(){
+		console.log("222222222222222")
 		$(this).addClass("active").siblings().removeClass("active");
-		topMenuId = $(this).attr("id");
-		findLeftMenu(projectId,projectVersionId,topMenuId);
+		topMenuId = $(this).attr("reportmenuid");
+		parentId = $(this).attr("reportmenuid");
+		findLeftMenu(projectId,versionId,parentId);
 	})
 	
 	//添加左侧菜单
-	function addLeftMenu(menuName,projectMenuId,topMenuId,createUser){
+	function addLeftMenu(projectId,versionId,createUser,menuName,menuType,parentId){
 		$.ajax({
 			type:'POST',
-            url:$url1+'/api/v1/saveProjectMenuLeft',
+            url:$url1+'/bi/report/v1/menu/saveReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
+				"projectId":projectId,
+				"versionId":versionId,
+				"createUser":createUser,
 				"menuName":menuName,
-				"projectMenuId":projectMenuId,
-				"topMenuId":topMenuId,
-				"createUser":createUser
+				"menuType":menuType,
+				"parentId":parentId
+				
 			},
 			success:function(res){
               	if(res.code===0){
-              		findLeftMenu(projectId,projectVersionId,topMenuId);
+                	findLeftMenu(projectId,versionId,topMenuId);//topMenuId
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -474,28 +494,31 @@ $(function(){
 		});
 	}
 	
-	findLeftMenu(projectId,projectVersionId,0);
+//	findLeftMenu(projectId,versionId,0);
 	//查询左侧菜单
-	function findLeftMenu(projectId,projectVersionId,topMenuId){
+	function findLeftMenu(projectId,versionId,reportMenuId){
+		console.log("111111111111111")
 		$.ajax({
 			type:'GET',
-            url:$url1+'/api/v1/findProjectMenuLeft',
+            url:$url1+'/bi/report/v1/menu/findReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
 				"projectId":projectId,
-				"projectVersionId":projectVersionId,
-				"parentId":topMenuId
+				"versionId":versionId,
+				"reportMenuId":reportMenuId
 			},
 			success:function(res){
               	if(res.code===0){
               		zNodes = res.data;
-//            		if(zNodes){
+              		console.log(zNodes);
+            		if(zNodes){
               			$.fn.zTree.init($("#match-tree"), setting, zNodes);
               			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
               			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
-//            		}
+              			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+            		}
 	            }
 			},
 			error:function(err){
@@ -505,20 +528,27 @@ $(function(){
 	}
 	
 	$(".le-close").click(function(){
-		deleteLeftMenu(projectMenuId);
-		findLeftMenu(projectId,projectVersionId,topMenuId);
+		deleteLeftMenu(projectId,versionId,reportMenuId,1,updateUser);
 	});
 	
 	//删除左侧菜单
-	function deleteLeftMenu(id){
+	function deleteLeftMenu(projectId,versionId,reportMenuId,menuType,updateUser){
 		$.ajax({
-			type:'DELETE',
-            url:$url1+'/api/v1/deleteProjectMenuLeftById/'+id,
+			type:'PUT',
+            url:$url1+'/bi/report/v1/menu/deleteReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
+            data:{
+            	"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
+				"menuType":menuType,
+				"updateUser":updateUser
+            },
 			success:function(res){
               	if(res.code===0){
+              		findLeftMenu(projectId,versionId,topMenuId);
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -530,34 +560,35 @@ $(function(){
 	
 	//上移
 	$(".le-up").click(function(){
-		var upOrDown = "up";
-		orderLeftMenu(projectMenuId,updateUser,upOrDown)
-		findLeftMenu(projectId,projectVersionId,topMenuId)
+		var upOrDown = "7";
+		orderLeftMenu(projectId,versionId,reportMenuId,upOrDown,updateUser);
 	})
 	
 	//下移
 	$(".le-down").click(function(){
-		var upOrDown = "down";
-		orderLeftMenu(projectMenuId,updateUser,upOrDown);
-		findLeftMenu(projectId,projectVersionId,topMenuId);
+		var upOrDown = "8";
+		orderLeftMenu(projectId,versionId,reportMenuId,upOrDown,updateUser);
 	})
 	
 	
 	//排序左侧菜单
-	function orderLeftMenu(projectMenuId,updateUser,upOrDown){
+	function orderLeftMenu(projectId,versionId,reportMenuId,upOrDown,updateUser){
 		$.ajax({
 			type:'PUT',
-            url:$url1+'/api/v1/updateProjectMentSortIndexLeftById',
+            url:$url1+'/bi/report/v1/menu/updateReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
-				"id":projectMenuId,
-				"updateUser":updateUser,
-				"upOrDown":upOrDown
+				"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
+				"upOrDown":upOrDown,
+				"updateUser":updateUser
 			},
 			success:function(res){
               	if(res.code===0){
+              		findLeftMenu(projectId,versionId,topMenuId);
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -569,23 +600,26 @@ $(function(){
 	
 	//清空--topMenuId对应的 leftMenu
 	$(".le-clear").click(function(){
-		clearTopMenu(topMenuId);
-		findLeftMenu(projectId,projectVersionId,topMenuId)//刷新左部菜单列表
+		clearLeftMenu(projectId,versionId,topMenuId,2,updateUser);
 	})
 	//清空左部菜单
-	function clearTopMenu(topMenuId){
+	function clearLeftMenu(projectId,versionId,reportMenuId,menuType,updateUser){
 		$.ajax({
-			type:'GET',
-            url:$url1+'/api/v1/deleteProjectMenuLeftALlById',
+			type:'PUT',
+            url:$url1+'/bi/report/v1/menu/deleteReportMenu',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
-				"topMenuId":topMenuId
+				"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
+				"menuType":menuType,
+				"updateUser":updateUser
 			},
 			success:function(res){
               	if(res.code===0){
-              		findLeftMenu(projectId,projectVersionId,topMenuId)//刷新左部菜单列表
+              		findLeftMenu(projectId,versionId,topMenuId)//刷新左部菜单列表
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -599,10 +633,9 @@ $(function(){
 		var zTree = $.fn.zTree.getZTreeObj("match-tree");
 		var curDom = zTree.getSelectedNodes();
 		var name = curDom[0].name;
-			topMenuId = curDom[0].id;
 		var pId = curDom[0].pId;
 		var pageId = curDom[0].pageId;
-			projectMenuId = curDom[0].projectMenuId;
+			reportMenuId = curDom[0].reportMenuId;
 		var menuName = '';
 		var index = layer.open({
 		      type: 1,
@@ -614,7 +647,8 @@ $(function(){
 		      yes: function(index, layero){
 		      		menuName = $.trim($(".le-add-menu").val());
 		      		if(menuName){
-				        addLeftMenu(menuName,projectMenuId,topMenuId,createUser);
+				        addLeftMenu(projectId,versionId,createUser,menuName,1,reportMenuId);
+				        console.log(parentId);
 		      		}else{
 		      			layer.msg("菜单名称不能为空", {icon: 5});
 		      		}
@@ -639,12 +673,12 @@ $(function(){
 	function createLink(){
 		var zTree = $.fn.zTree.getZTreeObj("link-tree");
 		var curDom = zTree.getSelectedNodes();
-		projectMenuId = curDom[0].projectMenuId;
+		reportMenuId = curDom[0].reportMenuId;
 	}
 	function fpageLink(){
 		var zTree = $.fn.zTree.getZTreeObj("modal-tree");
 		var curDom = zTree.getSelectedNodes();
-//		projectMenuId = curDom[0].projectMenuId;
+//		reportMenuId = curDom[0].reportMenuId;
 		dirType = curDom[0].directoryType;
 		switch(dirType){
 			case "12":
@@ -656,13 +690,25 @@ $(function(){
 				pageId = "";	
 		}
 		if(pageId){
-			createPageLink(projectMenuId,createUser,pageId);
-			console.log(projectMenuId,createUser,pageId);
+			createPageLink(projectId,versionId,reportMenuId,pageId,updateUser);
 			layer.close(index);
 		}else{
 			layer.msg("请选择页面", {icon: 0});
 		}
 	}
+	
+	function redirectPage(){
+		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
+		var curDom = zTree.getSelectedNodes();
+		pageId = curDom[0].pageId;
+		console.log(pageId);
+		if(pageId != null){//执行画图
+			adce(pageId)
+		}else{//提醒未设置链接
+			$(".mn-htmlmain").empty();
+		}
+	}
+	
 	
 	
 	var IDMark_A = "_a";
@@ -727,14 +773,14 @@ $(function(){
 			leftHeight = $(".mleft-height").val(),
 			navigationText = $(".mnavigation-text").val();
 		if($.trim(topWidth)&&$.trim(topHeight)&&$.trim(leftWidth)&&$.trim(leftHeight)&&$.trim(navigationText)){
-			addModel(projectId,projectVersionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,updateUser);
+			addModel(projectId,versionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,updateUser);
 		}else{
 			layer.msg("信息不能为空", {icon: 5});
 		}
 		
 	})
 	
-	function addModel(projectId,projectVersionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,user){
+	function addModel(projectId,versionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,user){
 		$.ajax({
 			type:'POST',
             url:$url1+'/api/v1/saveTemplateStyle',
@@ -743,7 +789,7 @@ $(function(){
             },
 			data:{
 				"projectId":projectId,
-				"projectVersionId":projectVersionId,
+				"versionId":versionId,
 				"typeCode":typeCode,
 				"topWidth":topWidth,
 				"topHeight":topHeight,
@@ -755,6 +801,7 @@ $(function(){
 			success:function(res){
               	if(res.code===0){
               		$(".mn-headtxt").text(navigationText);
+              		sessionStorage.setItem("tempTxt",navigationText)
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -763,18 +810,8 @@ $(function(){
 			}
 		});
 	}
+	$(".mn-headtxt").text(tempTxt);
 	
-	function getObjectURL(file) {
-		 var url = null ;
-		 if (window.createObjectURL!=undefined) { // basic
-		 url = window.createObjectURL(file) ;
-		 } else if (window.URL!=undefined) { // mozilla(firefox)
-		 url = window.URL.createObjectURL(file) ;
-		 } else if (window.webkitURL!=undefined) { // webkit or chrome
-		 url = window.webkitURL.createObjectURL(file) ;
-		 }
-		 return url ;
-		}
 	//上传图片
 	$('.m-uploadimg-box input[type="file"]').on('change',upLoadImg);
 	function upLoadImg(){
@@ -787,7 +824,7 @@ $(function(){
 		var formData = new FormData($('.m-uploadimg')[0]);
 		formData.append("file",file);
 		formData.append("projectId",projectId);
-		formData.append("projectVersionId",projectVersionId);
+		formData.append("versionId",versionId);
 		formData.append("typeCode",typeCode);
 		formData.append("user",updateUser);
 		$.ajax({
@@ -801,6 +838,7 @@ $(function(){
 				if(res.code===0){
 					$(".m-uploadimg>img").attr("src",$url1+res.data);
 					$(".mn-logobox>img").attr("src",$url1+res.data);
+					sessionStorage.setItem("tempLogo",res.data);
 					layer.msg("上传图片成功", {icon: 6});
 				}else{
 					layer.msg("上传图片失败", {icon: 0});
@@ -811,12 +849,15 @@ $(function(){
 			}
 		});
 	}
+	if(tempLogo != ""){
+		$(".mn-logobox>img").attr("src",$url1+tempLogo);
+	}
 	
 	$("#del-uploadimg-btn").click(function(){
-		delUploadImg(projectId,projectVersionId,typeCode,updateUser,updateUser);
+		delUploadImg(projectId,versionId,typeCode,updateUser,updateUser);
 	});
 	//删除图片
-	function delUploadImg(projectId,projectVersionId,typeCode){
+	function delUploadImg(projectId,versionId,typeCode){
 		$.ajax({
 			type:'POST',
 	        url:$url1+'/api/v1/deleteTemplateImage',
@@ -825,7 +866,7 @@ $(function(){
             },
 			data:{
 				"projectId":projectId,
-				"projectVersionId":projectVersionId,
+				"versionId":versionId,
 				"typeCode":typeCode,
 				"user":updateUser
 			},
@@ -850,33 +891,22 @@ $(function(){
 	//点击头部菜单展示对应的左部菜单
 	$("#link-scrollmenu").delegate(".swiper-slide","click",function(){
 		$(this).addClass("active").siblings().removeClass("active");
-		topMenuId = $(this).attr("id");
-		findLeftMenu(projectId,projectVersionId,topMenuId);
+		topMenuId = $(this).attr("reportmenuid");
+		findLeftMenu(projectId,versionId,topMenuId);
 	})
 		
 	$("#link-tree").delegate(".page-link-btn","click",function(){
 		getProjPages(lv1DirId);
-		console.log(lv1DirId);
 		index = layer.open({
 		      type: 1,
-//		      btn: ['确定', '取消'],
 		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
 		      content:$(".link-modal"),
-//		      yes: function(index, layero){
-//		      	
-//		      	layer.close(index);
-//		      },
-//		      btn2:function(){
-//		      	layer.close(index);
-//		      },
 		      cancel:function(){
 		      	layer.close(index);
 		      }
-		   	});
-	   	
-	   	
+		   });
 	});
 	
 	function getProjPages(lv1DirId){
@@ -896,6 +926,7 @@ $(function(){
               	if(res.code===0){
               		zNodes = res.data;
               		$.fn.zTree.init($("#modal-tree"), setting3, zNodes);
+              		$.fn.zTree.getZTreeObj("modal-tree").expandAll(true);
 	            }
 			},
 			error:function(err){
@@ -904,17 +935,20 @@ $(function(){
 		});
 	}
 	
-	function createPageLink(projectMenuId,createUser,pageId){
+	//创建链接
+	function createPageLink(projectId,versionId,reportMenuId,pageId,updateUser){
 		$.ajax({
-			type:'PUT',
-            url:$url1+'/api/v1/creatProjectMenuLinkPage',
+			type:'POST',
+            url:$url1+'/bi/report/v1/menu/addPageId',
             headers:{
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			data:{
-				"id":projectMenuId,
-				"createUser":createUser,
-				"pageId":pageId
+				"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
+				"pageId":pageId,
+				"updateUser":updateUser
 			},
 			success:function(res){
               	if(res.code===0){
@@ -927,4 +961,145 @@ $(function(){
 		});
 	}
 	
+	//取消链接
+	function deletePageLink(projectId,versionId,reportMenuId,pageId,updateUser){
+		$.ajax({
+			type:"PUT",
+			url:$url1+"/bi/report/v1/menu/deletePageId",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
+			data:{
+				"projectId":projectId,
+				"versionId":versionId,
+				"reportMenuId":reportMenuId,
+				"pageId":pageId,
+				"updateUser":updateUser
+			},
+			success:function(res){
+              	if(res.code===0){
+              		layer.msg(res.message, {icon: 6});
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
+	//获取页面所有的菜单--顶部菜单和左部菜单
+//	getAllMenu(projectId,versionId);
+	function getAllMenu(projectId,versionId){
+		$.ajax({
+			type:'GET',
+            url:$url1+'/bi/report/v1/menu/findReportMenu',
+            headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
+			data:{
+				"projectId":projectId,
+				"versionId":versionId
+			},
+			success:function(res){
+				console.log(res);
+              	if(res.code===0){
+              		var data = res.data;
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
+	//1.6 获取默认的左菜单
+	findDefinedLeftMenu(projectId,versionId);
+	function findDefinedLeftMenu(projectId,versionId){
+		$.ajax({
+			type:"GET",
+			url:$url1+"/bi/report/v1/menu/findReportMenuLeftDefault",
+			data:{
+				"projectId":projectId,
+				"versionId":versionId
+			},
+			success:function(res){
+				console.log(res);
+				if(res.code===0){
+					var data = res.data;
+					$.fn.zTree.init($("#temp-tree"), setting2, zNodes);
+				}
+			},
+			error:function(res){
+				console.log(res);
+			}
+		});
+	}
+	
+	//预览
+	$("#preview").click(function(){
+		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+    	window.open("../html/preview.html" + url);
+	})
+	
 });//jq end
+
+
+    /*
+     * 根据传递的参数，获取页面数据
+     * */
+    
+	function adce(pageId){
+//		console.log(pageId + "22222222222222222222222")
+	    $.ajax({
+	        type:"get",
+	        url:"/xdbd-bi/bi/report/v1/page.json",
+	        headers:{
+	            username:username,
+	            userId:userId
+	        },
+	        data:{
+	            "pageId":pageId,
+	            "projectId":projectId,
+	            "versionId":versionId,
+	        },
+	        dataType:"json",
+	        success:function(data){
+	            if(data.code === 0){
+	                if(data.data.htmlJson){
+	                    displayPage(data.data);
+	                }
+	            }
+	        },
+	        error:function(res){
+	            // console.log(res);
+	        }
+	    });
+	}
+
+	
+    // 显示BI页面数据
+    function displayPage(data){
+        // 遍历数据,生成图形
+        var html = '';
+        $.each(data.htmlJson.controls,function(index,val){
+            var text = ''            // html
+                ,style =  val.style  // 宽、高
+                ,dataType = val.customData.dataType;  // 类型
+
+            // 判断图形、表格、文本、图片、按钮
+            // 如果是文本和图片，则复制内容不同
+            if(dataType === "text" || dataType === "button" || dataType === "image"){
+                text = val.customData.controls.html;
+            }else if(dataType === "table" || dataType === "chart"){
+                // 将数据存入检索数据中
+                var chart_date = {
+                    'cid':val.cid,
+                    "type":val.type,
+                    "queryJson":val.queryJson,
+                };
+                DataIndexes.inAjax(chart_date,val.cid);
+            }
+            html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+            $(".mn-htmlmain").empty().append(html);
+        });
+    }
