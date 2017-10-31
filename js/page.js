@@ -273,6 +273,10 @@ $(function(){
 	              		zNodes = data;
 						$.fn.zTree.init($("#flow-tree"), setting, zNodes);
 						$.fn.zTree.init($("#other-tree"), setting1, zNodes);
+						var curObj1 = $.fn.zTree.getZTreeObj("flow-tree");
+						curObj1.expandAll(true);
+						var curObj2 = $.fn.zTree.getZTreeObj("other-tree");
+						curObj2.expandAll(true);
 	              	}
 				},
 				error:function(err){
@@ -280,6 +284,7 @@ $(function(){
 				}
 			});
 	}
+	
 	
 	treeHover($("#flow-tree"));
 	treeHover($("#other-tree"));
