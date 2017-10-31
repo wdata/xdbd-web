@@ -46,7 +46,7 @@
       var template = sessionStorage.getItem("isTemplate");
       var JobId = sessionStorage.getItem("jobId");
       var this_isTemplate = false;  //是否为模板
-      var $url = '../xdbd-wf';  ///xdbd-wf
+      var $url = '../xdbd-wf';  //../xdbd-wf
 
       if(template){
         this_isTemplate = true;
@@ -65,7 +65,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print","save","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["new","undo","redo","reload","print","save","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
         haveTool:true,
         haveDashed:true,
         haveGroup:true,
@@ -224,7 +224,7 @@
             if(obj.type=='spark') {
               formProperty.push('' +
                 '<tr class="hide"><td class="th">error：</td><td class="spark_error"><input type="text" value='+obj.action.error+'></td></tr>' +
-                '<tr class="hide"><td class="th">任务名称</td><td class="spark_task"><input type="text" placeholder="请输入任务名称" value='+obj.action.name+'></td></tr>' +
+                '<tr style="display: block;"><td class="th">任务名称</td><td class="spark_task"><input type="text" placeholder="请输入任务名称" value='+obj.action.name+'></td></tr>' +
                 '<tr class="hide"><td class="th">ok：</td><td class="spark_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
                 '<tr class="hide"><td class="th">class名</td><td class="spark_clazz"><input type="text" placeholder="请输入spark的class值" value='+obj.action.spark.clazz+'></td></tr>' +
                 '<tr class="hide"><td class="th">jar包名</td><td class="spark_jar"><input type="text" placeholder="请输入spark的jar包名" value='+obj.action.spark.jar+'></td></tr>' +
@@ -301,7 +301,7 @@
             success:function(data){
               console.log(data)
               if(data.code == 0) {
-                  layer.msg('模板保存成功！');
+                  layer.msg('保存成功！');
 //                  window.location.href = 'stencilmanage.html';
               }
             },error:function(data){
@@ -321,13 +321,17 @@
             dataType:"json",
             contentType:"application/json",
             data:JSON.stringify({
-              "jobId": jobid,
+              "id": jobid,
               "versionId": this_versionId
             }),success:function(data){
               console.log(data);
-              layer.msg("正在执行")
+              if(data.code == 0) {
+                layer.msg("执行成功")
+              } else{
+                layer.msg(data.message)
+              }
             },error:function(data){
-              layer.msg(JSON.stringify(data))
+              console.log(JSON.stringify(data))
             }
           });
         };
@@ -345,9 +349,13 @@
               "updateUser": this_updateUser
             }),success:function(data){
               var data = data.data;
-              console.log(data);
+              if(data.code == 0) {
+                layer.msg('模板保存成功')
+              } else {
+                layer.msg(data.message)
+              }
             },error:function(data){
-              layer.msg(JSON.stringify(data))
+              console.log(JSON.stringify(data))
             }
           });
         }
@@ -487,7 +495,6 @@
               },
             "type":"spark"
           }
-          alert($('.spark_name').find("input").val())
           if($('.spark_task').find('input').val() == '') {
             layer.msg('请输入任务名称!')
           }
@@ -634,7 +641,7 @@
             if(data.code == 0) {
               layer.msg('保存成功！');
             } else {
-              alert(data.message)
+              layer.msg(data.message)
             }
           },error:function(data){
             layer.msg(JSON.stringify(data))
@@ -671,8 +678,8 @@
         //有限无环图
       function init_dag() {
         var demandId = {
-          id: jobid,
-          versionId: this_versionId
+          "id": jobid,
+          "versionId": this_versionId
         }
         $.ajax({
           type:"POST",
@@ -738,8 +745,8 @@
             <!--<tr><td class="th">Top-r：</td><td><input type="text" id="ele_top"/></td></tr>-->
             <!--<tr><td class="th">Width：</td><td><input type="text" id="ele_width"/></td></tr>-->
             <!--<tr><td class="th">Height：</td><td><input type="text" id="ele_height"/></td></tr>-->
-            <tr><td class="th">连接线初始点</td><td><input type="text" id="ele_from"/></td></tr>
-            <tr><td class="th">连接线结束点</td><td><input type="text" id="ele_to"/></td></tr>
+            <!--<tr><td class="th">连接线初始点</td><td><input type="text" id="ele_from"/></td></tr>-->
+            <!--<tr><td class="th">连接线结束点</td><td><input type="text" id="ele_to"/></td></tr>-->
             <tr><td class="th">算法参数</td><td><input type="text" id="ele_alg" /></td></tr>
             <tr><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>
         </table>
