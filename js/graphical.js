@@ -42,25 +42,19 @@ var DataIndexes = {
                         break;
                     case 101:
                         // 绘制柱状图
-                        // histogramData(data);
-                        // bar("#"+id,dataTsv);
                         // 一维度 一度量
                         if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length <= 1 && data.charts.dimValues.length <= 1){
                             var d = [];
                             $.each(data.charts.dimValues[0],function(index,val){
-                                var c = {
-                                    "letter":val,
-                                    "frequency": data.charts.meaList[0].meaValues[0][0][index]
-                                };
+                                var c = {"letter":val, "frequency": data.charts.meaList[0].meaValues[0][0][index]};
                                 d.push(c);
                             });
                             bar("#" +id,d);
                             return;
                         }
-
-                        if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length === 2 && data.charts.dimValues.length <= 1){
-                            console.log("22222222222222222");
-                            stacking("#" +id,data);
+                        // 一维度 多度量
+                        if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length >= 2 && data.charts.dimValues.length <= 1){
+                            manyGroup("#" +id,data);
                             return;
                         }
 
@@ -69,20 +63,12 @@ var DataIndexes = {
                         // bar("#"+id,dataTsv);
                         break;
                     case 102:
-                        // var value = [];
-                        // $.each(data.value,function(x,y){
-                        //     value.push(y);
-                        // });
-                        // line("#" + id, "折线图", "2017年1011号", value, data["x-axis"], data["y-axis"]);
+                        // 折线图
                         lineChart("#" + id,data);
                         break;
                     case 103:
-                        var width = parseInt($("#"+ id +"").css("width"));
-                        var height = parseInt($("#"+ id +"").css("height"));
-                        var r = Math.min(width,height);
-                        var outerRadius = r/2; //外半径
-                        var innerRadius = 0; //内半径，为0则中间没有空白
-                        // circle("#" + id,data.value,outerRadius,innerRadius);
+                        // 饼图
+                        var r = Math.min(parseInt($("#"+ id +"").css("width")),parseInt($("#"+ id +"").css("height")));
                         var pieData = [];
                         $.each(data.value,function(index,val){
                             var z = [data.key[index],val];
@@ -1646,22 +1632,15 @@ function lineChart(id,data){
 
 // 2017-10-30 堆叠柱状图 一个维度 多个度量
 function stacking(id,data){
-    console.log(data)
-    var crimea = [];
-    var causes = ["chart1","chart0"];   // 标题：
-
-    $.each(data.charts.dimValues[0],function(index,val){
-        var c = {};
-        c.date = val;
-        $.each(data.charts.meaList,function(x,y){
-            var a = "chart"+ x;
-            c[""+ a +""] = data.charts.meaList[x].meaValues[0][0][index];
+    var legendData = data.charts.meaList.map(function(d) { return d.meaTitle; });   // 顶部右侧的颜色提示
+    var layers = d3.layout.stack()(data.charts.meaList.map(function(a) {
+        return a.meaValues[0][0].map(function(c,d) {
+            return {x: data.charts.dimValues[0][d], y: a.meaValues[0][0][d]};
         });
-        crimea.push(c);
-    });
+    }));   // 数据格式
+
 
     var margin = {top: 20, right: 50, bottom: 30, left: 20},
-        spacing = 10,
         width = parseInt($(id).css("width")) - margin.left - margin.right,
         height = parseInt($(id).css("height")) - margin.top - margin.bottom;
 
@@ -1682,18 +1661,11 @@ function stacking(id,data){
         .orient("left")
         .tickFormat(d3.format("s"));             // 数字后面格式;
 
-
     var svg = d3.select(id).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    var layers = d3.layout.stack()(causes.map(function(c) {
-        return crimea.map(function(d) {
-            return {x: d.date, y: d[c]};
-        });
-    }));
 
     x.domain(layers[0].map(function(d) { return d.x; }));
     y.domain([0, d3.max(layers[layers.length - 1], function(d) { return d.y0 + d.y; })]).nice();
@@ -1722,4 +1694,123 @@ function stacking(id,data){
         .attr("class", "axis axis--y")
         .attr("transform", "translate("+ margin.left +",0)")
         .call(yAxis);
+
+    // 右侧颜色提示
+    var legend = svg.append("g")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", 10)
+        .attr("text-anchor", "end")
+        .selectAll("g")
+        .data(legendData.slice().reverse())
+        .enter().append("g")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+        .attr("x", width - 19)
+        .attr("width", 19)
+        .attr("height", 19)
+        .attr("fill", function(d,i){ return z(i) });
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9.5)
+        .attr("dy", "0.4em")
+        .style("font-size","12px")
+        .text(function(d) { return d; });
+}
+
+// 2017-10-31 多组并行柱状图 一维多度量
+function manyGroup(id,total){
+    var max = total.charts.meaList.map(function(d) { return d.maxValue; });   // y轴 最大值数组
+    var xTitle = total.charts.dimValues[0].map(function(d) {return d;});     // x轴
+    var data = total.charts.meaList.map(function(d,i) {return d.meaValues[0][0].map(function(c,d){return c});});  // 数据数组
+    var legendData = total.charts.meaList.map(function(d) { return d.meaTitle; });   // y轴 最大值数组
+
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = parseInt($(id).css("width")) - margin.left - margin.right,
+        height = parseInt($(id).css("height")) - margin.top - margin.bottom;
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(max)])
+        .range([height, 0]);
+
+    var x0 = d3.scale.ordinal()
+        .domain(d3.range(xTitle.length))
+        .rangeBands([0, width], .2);
+
+    var x1 = d3.scale.ordinal()
+        .domain(d3.range(data.length))
+        .rangeBands([0, x0.rangeBand(),.1]);
+
+    var x2 = d3.scale.ordinal()
+        .domain(xTitle)
+        .rangeBands([0, width], .2);
+
+
+    var z = d3.scale.category10();   // 颜色;
+
+    var xAxis = d3.svg.axis()
+        .scale(x2)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(d3.format("s"));             // 数字后面格式
+
+    var svg = d3.select(id).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("svg:g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g").selectAll("g")
+        .data(data)
+        .enter().append("g")
+        .style("fill", function(d, i) {
+            console.log(z(i))
+            return z(i);
+        })
+        .attr("transform", function(d, i) { return "translate(" + x1(i) + ",0)"; })
+        .selectAll("rect")
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .attr("width", x1.rangeBand())
+        .attr("height", function(d) { return height - y(d); })
+        .attr("x", function(d, i) { return x0(i); })
+        .attr("y", y);
+
+    // 右侧颜色提示
+    var legend = svg.append("g")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", 10)
+        .attr("text-anchor", "end")
+        .selectAll("g")
+        .data(legendData.slice().reverse())
+        .enter().append("g")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+        .attr("x", width - 19)
+        .attr("width", 19)
+        .attr("height", 19)
+        .attr("fill", function(d,i){ return z(i) });
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9.5)
+        .attr("dy", "0.4em")
+        .style("font-size","12px")
+        .text(function(d) { return d; });
+
+
 }
