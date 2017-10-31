@@ -152,8 +152,8 @@
             $("#ele_from").val("");
             $("#ele_to").val("");
             //obj=this.$nodeData[id];
-          }else if(model=="dataSheet") {
-            obj=this.params[id];
+//          }else if(model=="dataSheet") {
+//            obj=this.params[id];
             var formProperty = [];
             //java的详细属性
             if(obj.type=='java') {
@@ -349,7 +349,7 @@
               "dag": Export(),
               "updateUser": this_updateUser
             }),success:function(data){
-              var data = data.data;
+//              var data = data.data;
               if(data.code == 0) {
                 layer.msg('模板保存成功')
               } else {
