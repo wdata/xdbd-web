@@ -6,6 +6,11 @@ $(function(){
 		$(this).find('ul').hide()
 	});
 	
+	//显示用户名
+	if($("#username").length){
+		$("#username").text(sessionStorage.getItem("ByuserName"));
+	}
+	
 	//项目管理与系统管理切换
 	$(".menu-top").on("click","li",function(){
 		var $idx = $(this).index();
