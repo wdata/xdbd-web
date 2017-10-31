@@ -1,18 +1,11 @@
+
+
+
+
+
+
 $(function(){
-	/*
-	 
-	 * url地址变量
-	 * BI : http://192.168.1.42:8084/xdbd-bi
-	 * ETL: http://192.168.1.42:8084/xdbd-etl
-	 * PM: http://192.168.1.42:8084/xdbd-pm
-	 * WF: http://192.168.1.42:8084/xdbd-wf
-	 * 
-	 * */
-	var $url1 = "/xdbd-bi";
-	var $url2 = "/xdbd-etl";
-	var $url3 = "/xdbd-pm";
-	var $url4 = "/xdbd-wf";
-	
+
 	
 	/*
 	 
@@ -26,11 +19,6 @@ $(function(){
 	 * parentId
 	 * */
 	
-	var projectId = localStorage.getItem("projectId");
-	var versionId = localStorage.getItem("versionId");
-	var dirId = localStorage.getItem("directoryId");
-	var createUser = localStorage.getItem("createUser");
-	var updateUser = localStorage.getItem("updateUser");
 	var topMenu = [];//顶部导航菜单
 	var topMenuId = "";//topMenu--id
 	//var projectMenuId;//projectMenuId
@@ -43,7 +31,10 @@ $(function(){
 	var dirType;//目录类型（12/13/15）
 	var typeCode = "1";//模板1,2,3
 	var parentId = "";
-
+	
+		
+	var tempLogo = sessionStorage.getItem("tempLogo")||"";
+	var tempTxt = sessionStorage.getItem("tempTxt")||"";
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
 		var $idx = $(this).index();
@@ -150,8 +141,10 @@ $(function(){
               		var html = "";
               		var html2 = "";//页面展示
               		topMenu = data;
-              		console.log(topMenu);
               		$.each(data, function(i,item) {
+              			if(i===0){
+							findLeftMenu(projectId,versionId,item.reportMenuId);
+              			}
               			html += `
               				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
 								<span class="m-menu-tag">${item.menuName}</span>
@@ -166,6 +159,8 @@ $(function(){
               			html2 += `
               				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
               			`;
+              			
+              			
               		});
               		
               		$(".top-menu-15").empty().append(html);
@@ -401,6 +396,9 @@ $(function(){
 			simpleData: {
 				enable: true
 			}
+		},
+		callback: {
+			onClick:redirectPage
 		}
 	};
 	var setting3 = {
@@ -460,6 +458,7 @@ $(function(){
 	
 	//点击页面头部获取左部菜单
 	$(".mn-menu").delegate("li","click",function(){
+		console.log("222222222222222")
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
 		parentId = $(this).attr("reportmenuid");
@@ -498,6 +497,7 @@ $(function(){
 //	findLeftMenu(projectId,versionId,0);
 	//查询左侧菜单
 	function findLeftMenu(projectId,versionId,reportMenuId){
+		console.log("111111111111111")
 		$.ajax({
 			type:'GET',
             url:$url1+'/bi/report/v1/menu/findReportMenu',
@@ -517,6 +517,7 @@ $(function(){
               			$.fn.zTree.init($("#match-tree"), setting, zNodes);
               			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
               			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
+              			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
             		}
 	            }
 			},
@@ -696,6 +697,19 @@ $(function(){
 		}
 	}
 	
+	function redirectPage(){
+		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
+		var curDom = zTree.getSelectedNodes();
+		pageId = curDom[0].pageId;
+		console.log(pageId);
+		if(pageId != null){//执行画图
+			adce(pageId)
+		}else{//提醒未设置链接
+			$(".mn-htmlmain").empty();
+		}
+	}
+	
+	
 	
 	var IDMark_A = "_a";
 	function addDiyDom(treeId, treeNode) {
@@ -787,6 +801,7 @@ $(function(){
 			success:function(res){
               	if(res.code===0){
               		$(".mn-headtxt").text(navigationText);
+              		sessionStorage.setItem("tempTxt",navigationText)
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -795,6 +810,7 @@ $(function(){
 			}
 		});
 	}
+	$(".mn-headtxt").text(tempTxt);
 	
 	//上传图片
 	$('.m-uploadimg-box input[type="file"]').on('change',upLoadImg);
@@ -822,6 +838,7 @@ $(function(){
 				if(res.code===0){
 					$(".m-uploadimg>img").attr("src",$url1+res.data);
 					$(".mn-logobox>img").attr("src",$url1+res.data);
+					sessionStorage.setItem("tempLogo",res.data);
 					layer.msg("上传图片成功", {icon: 6});
 				}else{
 					layer.msg("上传图片失败", {icon: 0});
@@ -831,6 +848,9 @@ $(function(){
 				console.log(res);
 			}
 		});
+	}
+	if(tempLogo != ""){
+		$(".mn-logobox>img").attr("src",$url1+tempLogo);
 	}
 	
 	$("#del-uploadimg-btn").click(function(){
@@ -877,27 +897,16 @@ $(function(){
 		
 	$("#link-tree").delegate(".page-link-btn","click",function(){
 		getProjPages(lv1DirId);
-		console.log(lv1DirId);
 		index = layer.open({
 		      type: 1,
-//		      btn: ['确定', '取消'],
 		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
 		      content:$(".link-modal"),
-//		      yes: function(index, layero){
-//		      	
-//		      	layer.close(index);
-//		      },
-//		      btn2:function(){
-//		      	layer.close(index);
-//		      },
 		      cancel:function(){
 		      	layer.close(index);
 		      }
-		   	});
-	   	
-	   	
+		   });
 	});
 	
 	function getProjPages(lv1DirId){
@@ -917,6 +926,7 @@ $(function(){
               	if(res.code===0){
               		zNodes = res.data;
               		$.fn.zTree.init($("#modal-tree"), setting3, zNodes);
+              		$.fn.zTree.getZTreeObj("modal-tree").expandAll(true);
 	            }
 			},
 			error:function(err){
@@ -1016,7 +1026,7 @@ $(function(){
 				console.log(res);
 				if(res.code===0){
 					var data = res.data;
-					$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
+					$.fn.zTree.init($("#temp-tree"), setting2, zNodes);
 				}
 			},
 			error:function(res){
@@ -1027,16 +1037,69 @@ $(function(){
 	
 	//预览
 	$("#preview").click(function(){
-		//iframe窗
-		layer.open({
-		  type: 2,
-		  title: "预览",
-		  shadeClose: true,
-	      shade: false,
-		  area: ['1200px', '600px'],
-		  maxmin: true, //开启最大化最小化按钮
-		  content: ['../html/menuSet.html', 'no'], //iframe的url，no代表不显示滚动条
-		});
+		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+    	window.open("../html/preview.html" + url);
 	})
 	
 });//jq end
+
+
+    /*
+     * 根据传递的参数，获取页面数据
+     * */
+    
+	function adce(pageId){
+//		console.log(pageId + "22222222222222222222222")
+	    $.ajax({
+	        type:"get",
+	        url:"/xdbd-bi/bi/report/v1/page.json",
+	        headers:{
+	            username:username,
+	            userId:userId
+	        },
+	        data:{
+	            "pageId":pageId,
+	            "projectId":projectId,
+	            "versionId":versionId,
+	        },
+	        dataType:"json",
+	        success:function(data){
+	            if(data.code === 0){
+	                if(data.data.htmlJson){
+	                    displayPage(data.data);
+	                }
+	            }
+	        },
+	        error:function(res){
+	            // console.log(res);
+	        }
+	    });
+	}
+
+	
+    // 显示BI页面数据
+    function displayPage(data){
+        // 遍历数据,生成图形
+        var html = '';
+        $.each(data.htmlJson.controls,function(index,val){
+            var text = ''            // html
+                ,style =  val.style  // 宽、高
+                ,dataType = val.customData.dataType;  // 类型
+
+            // 判断图形、表格、文本、图片、按钮
+            // 如果是文本和图片，则复制内容不同
+            if(dataType === "text" || dataType === "button" || dataType === "image"){
+                text = val.customData.controls.html;
+            }else if(dataType === "table" || dataType === "chart"){
+                // 将数据存入检索数据中
+                var chart_date = {
+                    'cid':val.cid,
+                    "type":val.type,
+                    "queryJson":val.queryJson,
+                };
+                DataIndexes.inAjax(chart_date,val.cid);
+            }
+            html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+            $(".mn-htmlmain").empty().append(html);
+        });
+    }
