@@ -1,0 +1,43 @@
+*{box-sizing: border-box;}
+html,body{margin: 0;padding: 0;}
+textarea{resize: none;
+  &:focus {outline:none;}
+}
+ul,ol,li{margin:0;padding: 0;list-style: none;}
+a:hover{text-decoration: none;}
+a:focus{text-decoration: none;}
+input[type=number]{-moz-appearance:textfield;}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {-webkit-appearance: none;margin: 0;}
+p{margin: 0;}
+table {border-collapse: collapse;border-spacing: 0;}
+.pr{position: relative;}
+.pa{position: absolute;}
+.fl{float: left;}
+.fr{float: right;}
+.tc{text-align: center;}
+.clear{&:after{content: '';display: table-cell;clear: both;}}
+.btn{display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  //text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+
+.mCustomScrollBox .mCSB_scrollTools{width: 6px;}
+.mCustomScrollBox .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{background: #d5dbe6;&:hover,&:active,&:focus,&:visited{background:#d5dbe6;}}
+.mCustomScrollBox .mCSB_scrollTools .mCSB_draggerRail{background: transparent;}

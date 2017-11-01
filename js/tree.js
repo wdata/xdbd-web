@@ -37,6 +37,78 @@ $(function(){
 	var BIdirId = "";
 	var FBIdirId = "";
 	
+	/**
+	 * 
+	 * 用户菜单权限
+	 * 
+	 */
+	let onCurEnv = "开发环境";
+	userRight();
+	function userRight(){
+		$.ajax({
+			type:"POST",
+			url:"/api/resource/v1/resources",
+			dataType:'json',
+            contentType: "application/json",
+			data:JSON.stringify({
+				
+			}),
+			success:function(res){
+              	if(res.code===0){
+              		var menuLv1 = res.data;
+              		var htmlLv1 = "";
+
+					//一级菜单
+              		$.each(menuLv1, function(i,v) {
+              			htmlLv1 += `
+              				<li class="${i===0?'active':''}"><a href="javascript:;">${v.name}</a></li>
+              			`;
+              		});
+              		$(".menu-top ul").empty().append(htmlLv1);
+              		
+              		//项目管理环境控制
+              		var menuEnv = menuLv1[0].childrens;
+              		var htmlEnv = "";
+              		$.each(menuEnv, function(i,v) {
+              			htmlEnv += `
+              				<option value="${v.name}">${v.name}</option>
+              			`;
+              		});
+              		$(".set-cur-env select").empty().append(htmlEnv);
+              		//系统管理菜单
+              		var menuSys = menuLv1[1].childrens;
+              		var htmlSys = "";
+              		$.each(menuSys, function(i,v) {
+              			htmlSys += `
+              				<li><a href="javascript:;">${v.name}</a></li>
+              			`;
+              		});
+              		$(".sys-menus").empty().append(htmlSys);
+              		
+	            }
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	}
+	
+	/**
+	 * 环境切换
+	 */
+	$(".set-cur-env select").on("change",function(){
+		onCurEnv = $(this).find("option:selected").val();
+		if(onCurEnv==="测试环境"){
+			$("#create-proj-btn").hide();
+		}else if(onCurEnv==="开发环境"){
+			$("#create-proj-btn").show();
+		}else if(onCurEnv==="生产环境"){
+			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+    		window.open("../html/preview.html" + url);
+		}
+	})
+	
+	
 	/*
 	 
 	 * 创建项目
@@ -247,6 +319,7 @@ $(function(){
 	            contentType: "application/json",
 				data:JSON.stringify({
 					"directoryId":directoryId,
+					"versionId":versionId,
 					"name":name
 				}),
 				success:function(res){
@@ -298,6 +371,7 @@ $(function(){
 	            contentType: "application/json",
 				data:JSON.stringify({
 					"directoryId":directoryId,
+					"versionId":versionId,
 					"name":name
 				}),
 				success:function(res){
@@ -777,38 +851,8 @@ $(function(){
 			});
     	};
 		var items = [];
-		var items0 = [
-			{ title: '创建子模块', fn: createSubmodule},
-			{ title: '创建最终子模块', fn: createFinalSubmodule },
-			{ title: '提交测试', fn: checkInTest },
-			{ title: '切换版本', fn: switchVersion },
-			{ title: '导入', fn: leadingIn },
-			{ title: '导出', fn: leadingOut},
-			{ title: '数据源配置', fn: dataSourceConfig },
-			{ title: '属性', fn: setProperty },
-			{ title: '修改名称',fn:fnRenameFile},
-			{ title: '删除',fn:fnDeleteFile}
-		];
-		var items1 = [
-			{ title: '新建ETL', fn: newEtl},
-			{ title: '新建文件夹', fn: newFile }
-		];
-		var items2 = [
-			{ title: '新建BI文件', fn: newBi},
-			{ title: '新建文件夹', fn: newFile }
-		];
-		var items3 = [
-			{ title: '新建作业流', fn: newJob},
-			{ title: '新建文件夹', fn: newFile }
-		];
-		var items4 = [
-			{ title: '创建子模块', fn: createSubmodule},
-			{ title: '创建最终子模块', fn: createFinalSubmodule}
-		];
-		var items5 = [
-			{ title: '新建文件夹', fn: newFile},
-			{ title: '创建页面', fn: createFpage}
-		];
+		
+		
 		function zTreeOnClick(){
 			var curTreeObj = $.fn.zTree.getZTreeObj("treeDemo");
 			var curClickedDom = curTreeObj.getSelectedNodes();
@@ -832,6 +876,64 @@ $(function(){
 			localStorage.setItem("rootPath",rootPath);
 			console.log("1="+dirType);
 			console.log("2="+directoryId);
+			
+			
+			if(onCurEnv==="开发环境"){
+				var items0 = [
+						{ title: '创建子模块', fn: createSubmodule},
+						{ title: '创建最终子模块', fn: createFinalSubmodule },
+						{ title: '提交测试', fn: checkInTest },
+						{ title: '切换版本', fn: switchVersion },
+						{ title: '导入', fn: leadingIn },
+						{ title: '导出', fn: leadingOut},
+						{ title: '数据源配置', fn: dataSourceConfig },
+						{ title: '属性', fn: setProperty },
+						{ title: '修改名称',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items1 = [
+						{ title: '新建ETL', fn: newEtl},
+						{ title: '新建文件夹', fn: newFile }
+					];
+					var items2 = [
+						{ title: '新建BI文件', fn: newBi},
+						{ title: '新建文件夹', fn: newFile }
+					];
+					var items3 = [
+						{ title: '新建作业流', fn: newJob},
+						{ title: '新建文件夹', fn: newFile }
+					];
+					var items4 = [
+						{ title: '创建子模块', fn: createSubmodule},
+						{ title: '创建最终子模块', fn: createFinalSubmodule}
+					];
+					var items5 = [
+						{ title: '新建文件夹', fn: newFile},
+						{ title: '创建页面', fn: createFpage}
+					];
+			}else if(onCurEnv==="测试环境"){
+					var items0 = [
+						{ title: '提交发布', fn: checkInTest },
+						{ title: '数据源配置', fn: dataSourceConfig },
+						{ title: '属性', fn: setProperty }
+					];
+					var items1 = [
+						
+					];
+					var items2 = [
+						
+					];
+					var items3 = [
+						
+					];
+					var items4 = [
+						
+					];
+					var items5 = [
+						
+					];
+				}
+		
 			switch(dirType){
 				case "1":
 					items = items0;
@@ -944,7 +1046,8 @@ $(function(){
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
-					"id":dirId
+					"directoryId":dirId,
+					"versionId":versionId
 				}),
 				success:function(res){
 					console.log(res);

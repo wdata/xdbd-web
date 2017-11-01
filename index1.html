@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>小道科技</title>
@@ -8,66 +7,10 @@
 	<meta name="description" content="fullPage fixed header and footer." />
 	<meta name="keywords"  content="fullpage,jquery,demo,screen,fixed, header,footer, absolute, positioned,css" />
 	<meta name="Resource-type" content="Document" />
-
-
 	<link rel="stylesheet" type="text/css" href="plugin/fullpage/jquery.fullPage.css" />
 	<link rel="stylesheet" type="text/css" href="plugin/fullpage/examples.css" />
-	<style>
-
-	/* Style for our header texts
-	* --------------------------------------- */
-	h1{
-		font-size: 5em;
-		font-family: arial,helvetica;
-		color: #fff;
-		margin:0;
-		padding:0;
-	}
-	.intro p{
-		color: #fff;
-	}
-
-	/* Centered texts in each section
-	* --------------------------------------- */
-	.section{
-		text-align:center;
-	}
-
-	/* Fixed header and footer.
-	* --------------------------------------- */
-	#header, #footer{
-		position:fixed;
-		height: 50px;
-		display:block;
-		width: 100%;
-		background: rgba(0,0,0,.3);
-		z-index:9;
-		text-align:center;
-		color: #f2f2f2;
-		padding: 20px 0 0 0;
-	}
-
-	#header{
-		top:0px;
-	}
-	#footer{
-		bottom:0px;
-		display: none;
-	}
-
-
-	/* Bottom menu
-	* --------------------------------------- */
-	#infoMenu {
-		bottom: 80px;
-	}
-	#infoMenu li a {
-		color: #fff;
-		z-index: 999;
-	}
-
-	</style>
-
+	<link rel="stylesheet" href="plugin/swiper/swiper.min.css" />
+	<link rel="stylesheet" href="css/first.css" />
 	<!--[if IE]>
 		<script type="text/javascript">
 			 var console = { log: function() {} };
@@ -76,53 +19,303 @@
 
 	<script src="plugin/jQuery/jquery.min.js"></script>
 	<script src="plugin/jQuery/jQuery_ui.js"></script>
+	<script src="plugin/swiper/swiper.min.js"></script>
 	<script type="text/javascript" src="plugin/fullpage/vendors/scrolloverflow.js"></script>
 	<script type="text/javascript" src="plugin/fullpage/jquery.fullPage.js"></script>
 	<script type="text/javascript" src="plugin/fullpage/examples.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#fullpage').fullpage({
-				anchors: ['firstPage', 'secondPage', '3rdPage'],
-				sectionsColor: ['#C63D0F', '#1BBC9B', '#7E8F7C'],
-				css3: true
-			});
-		});
-	</script>
+	<script src="js/first.js"></script>
 </head>
 <body>
 
-<div id="header">Header</div>
-<div id="footer">Footer</div>
+<div id="header">
+	<div class="head-bar main">
+		<a href="#">
+			<img src="images/logo.png" alt="" />
+		</a>
+		<ul>
+			<li>
+				<a href="#">产品</a>
+			</li>
+			<li>
+				<a href="#">解决方案</a>
+			</li>
+			<li>
+				<a href="#">案例</a>
+			</li>
+			<li>
+				<a href="#">下载</a>
+			</li>
+			<li>
+				<a href="#">联系我们</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="footer">
+	<div class="foot-bar main">
+		<p>深圳市南山区科技园东方科技大厦505-507室</p>
+		<p>Copyright ©2017 深圳小道科技有限公司 版权所有 粤ICP备 11298888号-6</p>
+	</div>
+</div>
 
 <div id="fullpage">
-	<div class="section " id="section0">
+	<!--<div class="section " id="section0">
 		<div class="intro">
 			<h1>Fixed elements</h1>
 			<p>Create your own headers and footers</p>
 		</div>
-	</div>
-	<div class="section" id="section1">
-	    <div class="slide" id="slide1">
-			<div class="intro">
-				<h1>How to do it</h1>
-				<p>
-					You will need to place your header and footer outside the plugin's wrapper. 
-					This way it won't move on scrolling. Take a look at the source code of this page.
-				</p>
-			</div>
-		</div>
-
-	    <div class="slide" id="slide2">
-			<h1>Slide 2</h1>
-			<img src="imgs/iphone-blue.png" alt="iphone" id="iphone-two" />
-		</div>
+	</div>-->
+	<!--<div class="section" id="section1">
 
 	</div>
 	<div class="section" id="section2">
 		<div class="intro">
 			<h1>Enjoy it</h1>
 		</div>
-	</div>
+	</div>-->
+	<!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+            	<div class="section0 section">
+            		<div class="video-box">
+            			<video  poster="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" autoplay="autoplay">
+				          <source src="plugin/website_main_bg.mp4" type="video/mp4">
+				        </video>
+            		</div>
+            		<!--<img src="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" alt=""/>-->
+            		<h1 class="title">大数据平台精准服务</h1>
+    				<a href="index.html" class="xdbd-btn">点击进入</a>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<div class="section1 section">
+            		<div class="business main">
+            			<!--1 start-->
+				        <h2>主营业务</h2>
+				        <ul>
+				        	<!--1-->
+				          <li>
+				            <div class="intro">
+				            	<img src="https://assets.megvii.com/static%2Fimages/home/business/business_faceid-9b3e68a560.jpg" alt="FaceID在线身份验证服务">
+				              <h3>FaceID 在线身份验证服务</h3>
+				              <p>刷脸验人<br>为关键业务保驾护航</p>
+				              <div class="company">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/alipay-e6863c4e0c.jpg" alt="支付宝">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/zxbank-67b2c92104.jpg" alt="中信银行">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/szcx-a0a8198006.jpg" alt="神州出行">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/xhqb-e9e16d19d0.jpg" alt="小花钱包">
+				              </div>
+				            </div>
+				            <div class="detail faceid">
+				              <div class="detail-header">
+				                <h3><span>FaceID 在线身份验证服务</span></h3>
+				                <p>通过先进的人脸识别技术，FaceID 正在为超过 200 个互联网金融、出行、直播等行业客户，以及超过 20 家银行机构验证用户身份，为身份敏感的关键业务保驾护航。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li><i class="icon1"></i>
+				                  <h4>活体检测</h4>
+				                  <p>Android</p>
+				                  <p>iOS</p>
+				                  <p>H5</p>
+				                  <p>公众号</p>
+				                  <p>小程序</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>人脸比对</h4>
+				                  <p>识别能力超越人眼</p>
+				                  <p>年龄光照配饰无关</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>证件识别</h4>
+				                  <p>身份证识别与验真</p>
+				                  <p>驾驶证</p>
+				                  <p>行驶证</p>
+				                  <p>银行卡</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>云服务<span>/解决方案</span></h4>
+				                  <p>公有云服务</p>
+				                  <p>私有云方案</p>
+				                  <p>生物特征平台</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>他们正在使用</p>
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/alipay-e6863c4e0c.jpg" alt="支付宝">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/zxbank-67b2c92104.jpg" alt="中信银行">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/szcx-a0a8198006.jpg" alt="神州出行">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/xhqb-e9e16d19d0.jpg" alt="小花钱包">
+				              </div>
+				              <div class="detail-link"><a href="https://faceid.com" target="_blank">进入 FaceID 官网<span>&gt;&gt;</span></a></div>
+				            </div>
+				          </li>
+				          <!--2-->
+				          <li>
+				            <div class="intro">
+				            	<img src="https://assets.megvii.com/static%2Fimages/home/business/business_facepp-0e901fb263.jpg" alt="Face++人工智能开放平台">
+				              <h3>Face++ 人工智能开放平台</h3>
+				              <p>人脸识别、证件识别、图像识别<br>尖端能力全开放</p>
+				              <div class="company">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img1-ff7004c12f.jpg" alt="10 万+ 开发者">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img2-71d23baef4.jpg" alt="1 千万+日调用量">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img3-d964b33d6f.jpg" alt="国内站 国际站">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img4-6f88caf09d.jpg" alt="API SDK"></div>
+				            </div>
+				            <div class="detail facepp">
+				              <div class="detail-header">
+				                <h3><span>Face++ 人工智能开放平台</span></h3>
+				                <p>Face++ 人工智能开放平台以 API 或 SDK 的形式为开发者提供人脸识别、文字识别、图像识别、物体识别、场景识别及其他人工智能能力，旨在帮助开发者用最简便的方式实现 AI 赋能。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li><i class="icon1"></i>
+				                  <h4>算法先进</h4>
+				                  <p>算法升级，检测更准、<br> 更快、更稳</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>能力丰富</h4>
+				                  <p>更多 API、更多能力</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>服务透明</h4>
+				                  <p>服务状态透明，可监控</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>免费接入</h4>
+				                  <p>免费创建 API Key<br>无限次调用</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>平台正在支持/提供</p>
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img1-ff7004c12f.jpg" alt="10万+ 开发者">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img2-71d23baef4.jpg" alt="1千万+日调用量">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img3-d964b33d6f.jpg" alt="国内站 国际站">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img4-6f88caf09d.jpg" alt="API SDK">
+				              </div>
+				              <div class="detail-link"><span><a href="https://www.faceplusplus.com.cn" target="_blank">进入 Face++<span>&gt;&gt;</span></a></span><span><a href="https://www.faceplusplus.com" target="_blank">进入 Face++ 国际站<span>&gt;&gt;</span></a></span></div>
+				            </div>
+				          </li>
+				          <!--3-->
+				          <li>
+				            <div class="intro"><img src="https://assets.megvii.com/static%2Fimages/home/business/business_cases-0c7756fbb9.jpg" alt="智能地产解决方案">
+				              <h3>智能地产解决方案</h3>
+				              <p>用人工智能的方式改善人们工作、<br>生活、商业环境中的交互体验</p>
+				              <div class="company"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_sohu-e662846a70.jpg" alt="sohu"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_work-a4de80c11a.jpg" alt="work"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic3-d9c0511dce.png" alt="凯德集团"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic4-dc469d4b95.png" alt="阿里巴巴"></div>
+				            </div>
+				            <div class="detail cases">
+				              <div class="detail-header">
+				                <h3><span>智能地产解决方案</span></h3>
+				                <p>通过软硬一体的系统集成和计算机视觉技术，帮助企业管理者和地产、零售等行业建立以“人核心数据”为中心的底层感知体系、打通线上和线下的数据孤岛，实现感知融合和不同商业场景中的人机互联。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li>
+				            	<i class="icon1"></i>
+				                  <h4>人员通行</h4>
+				                  <p>人员通行管理</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>车辆定位</h4>
+				                  <p>车辆定位管理</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>视频监控</h4>
+				                  <p>智能视频监控</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>零售模块</h4>
+				                  <p>智能零售模块</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>平台正在支持/提供</p>
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_sohu-e662846a70.jpg" alt="sohu">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_work-a4de80c11a.jpg" alt="work">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic3-d9c0511dce.png" alt="凯德集团">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic4-dc469d4b95.png" alt="阿里巴巴">
+				              </div>
+				              <div class="detail-link"><span><a href="/smart-commerce/">了解更多<span>&gt;&gt;</span></a></span></div>
+				            </div>
+				          </li>
+				          <!--4-->
+				          <li>
+				            <div class="intro">
+				            	<img src="https://assets.megvii.com/static%2Fimages/home/business/business_ssn-358ead4952.jpg" alt="智能安防大数据解决方案">
+				              <h3>智能安防解决方案</h3>
+				              <p>为社会治安综合治理<br>提供视频结构化技术及服务</p>
+				              <div class="company">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img1-5567736132.jpg" alt="公安部第一研究所">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img2-bd4a9a871a.jpg" alt="无锡市局">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img3-b986f355a2.jpg" alt="合肥市局">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img4-3f90acf78d.jpg" alt="苏州市局">
+				              </div>
+				            </div>
+				            <div class="detail ssn">
+				              <div class="detail-header">
+				                <h3><span>智能安防解决方案</span></h3>
+				                <p>整合大数据和计算机视觉技术，将监控系统、人员卡口与智能警务工具及安防业务结合，解决公安、海关、机场、铁路等机构对于实名制认证、人脸电子围栏、重点人员布控告警等实战诉求。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li><i class="icon1"></i>
+				                  <h4>人脸识别</h4>
+				                  <p>人脸识别系列</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>视频结构化</h4>
+				                  <p>视频结构化系列</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>智能硬件</h4>
+				                  <p>智能硬件系列</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>临侦</h4>
+				                  <p>临侦系列</p>
+				                </li>
+				                <li><i class="icon5"></i>
+				                  <h4>视频平台</h4>
+				                  <p>视频平台系列</p>
+				                </li>
+				                <li><i class="icon6"></i>
+				                  <h4>车辆识别</h4>
+				                  <p>车辆识别系列</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>平台正在支持/提供</p><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img1-5567736132.jpg" alt="青羊市局"><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img2-bd4a9a871a.jpg" alt="无锡市局"><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img3-b986f355a2.jpg" alt="合肥市局"><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img4-3f90acf78d.jpg" alt="厦门市局">
+				              </div>
+				              <div class="detail-link"><span><a href="/smart-security/">了解更多<span>&gt;&gt;</span></a></span></div>
+				            </div>
+				          </li>
+				        </ul>
+				        <!--1 end-->
+            		</div>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<div class="section2 section">
+        			<iframe id="iframepage" src="html/3d/index.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<div class="section3 section">
+            		<div class="chart main">
+            			<h2>自助式探索分析</h2>
+            			<p>PPT模式的界面和交互方式，易学易用，业务人员只需简单拖拽，就能轻松制作出兼具敏捷分析与精美展示的报告。支持实时预警、定时邮件，支持参考线、下钻、联动、表计算等强大分析功能。</p>
+            			<div class="chart-video">
+            				<video  poster="images/yemian.png" autoplay="autoplay">
+					          <source src="plugin/xdbd.mp4" type="video/mp4">
+					        </video>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <!--<div class="swiper-slide">
+            	<div class="section4 section">5</div>
+            </div>-->
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
 </div>
 
 </body>

@@ -1,0 +1,118 @@
+html{background-color: #ebeff7;}
+body{margin:0;padding:0;width: 1900px;height: 100%;}
+//页面头部
+header.header{width: 100%;height: 140px;line-height: 140px;text-align: center;background: -webkit-linear-gradient(left, #6d80fe , #2dcddd);
+  .search_form{display: inline-block;
+    .search_tit{display:inline-block;color: #fff;font-size: 26px;line-height: 60px;-webkit-user-select: none;user-select: none;}
+    .search{width: 800px;height: 60px;border-radius: 6px;background-color: #fff;font-size: 24px;color: #a5aec1;padding-left: 6px;border: none;margin-right: 12px;}
+    .search_btn{background-color: #1055bc;font-size: 26px;color: #fff;border-radius: 6px;line-height: 60px;width: 120px;padding:0;border: none;cursor: pointer;}
+  }
+}
+//页面主体
+section.con{width: 100%;min-height: 600px;padding: 30px 15px 0;
+  .tabs{
+    ul{
+      li{float: left;width: 130px;line-height: 48px;font-size: 16px;color: #646d7e;background-color: #fff;text-align: center;border: 1px solid #dfe2e8;
+        -webkit-user-select: none;user-select: none;cursor: pointer;border-top-left-radius: 6px;border-top-right-radius: 6px;
+        &.click{background: url("../image/yihushi/click.png") no-repeat 100%;background-size: 100%;border-color: transparent;
+          line-height: 52px;position: relative;bottom: 4px;width: 146px;color: #fff;}
+      }
+    }
+  }
+  .tabs_panel{box-shadow:0 2px 10px #d6dae3;position: relative;top:-12px;height: 1050px;
+    .panel{height: 100%;width: 1880px;background-color: #fff;border-radius: 12px;display: none;
+      &.click{display: block;}
+      .panel_con{width: 100%;height: 100%;padding:14px 18px;position: relative;
+        .panel_con_title{color:#41b1fe;font-size: 30px;text-align: center;margin: 16px 0;}
+        .history{position: absolute;left: 14px;top:0;width: 414px;height: 1018px;
+          .history_con{position: relative;height: 94%;color: #58647a;
+            .mCSB_container{margin-right: 20px;padding-left: 14px;}
+            ul{  margin-top: 14px;padding: 0 14px;
+              .history_bg{min-height: 260px;background:url("../image/yihushi/history_bg.png") no-repeat 0 100%;background-size: 100%;padding: 16px;position: relative;margin-bottom: 28px;
+                .top_border{display: block;background: #fff8e5;height: 166px;position: absolute;width: 100%;top: 0;left: 0;z-index: 0;}
+                .icon{display: block;position: absolute;background: url("../image/yihushi/clip.png") no-repeat 0 0;background-size: 85%;width: 51px;height: 47px;top:-11px;left: -9px;}
+                .message{position: relative;z-index: 0;}
+                .text{font-size: 16px;line-height: 22px;margin: 0;border-bottom: 1px solid #ded4b9;padding-bottom: 12px;}
+                .phone_con{background: url("../image/yihushi/to_phone.png") no-repeat 50% 50%;background-size: 29px;min-height: 100px;text-align: center;padding: 28px 0;border-bottom:1px solid #ded4b9;
+                  .from{float: left;width: 45%;}
+                  .to{float: right;width: 45%;}
+                }
+                .time_con{padding-top: 18px;}
+              }
+            }
+          }
+        }
+        .basic{position: absolute;left: 426px;top:0;width: 972px;height: 100%;margin:0 18px;
+          .ratepayer{position: relative;height: 36px;
+            .ratepayer_num,.ratepayer_name{position:absolute;
+              top:0;width:50%;height: 32px;font-size: 24px;color: #41b1fe;
+              &:before{content: '';display: block;float: left;margin-right:10px;width: 8px;height: 31px;background: #41b1fe;}
+            }
+            .ratepayer_name{left: 486px;}
+          }
+          .table_con{
+            .table_1{width: 100%;color: #58647a;font-size: 14px;margin-top:20px;border-top: 1px solid #c7ccd7;border-left: 1px solid #c7ccd7;
+              td{border-right: 1px solid #c7ccd7;border-bottom: 1px solid #c7ccd7;width: 50%;height: 60px;padding-left: 40px;}
+            }
+            .table_2{width: 100%;color: #58647a;font-size: 14px;border-left: 1px solid #c7ccd7;
+              td{border-right: 1px solid #c7ccd7;border-bottom: 1px solid #c7ccd7;width: 37%;height: 60px;padding-left: 40px;}
+              tr td:first-child{width: 26%;}
+            }
+            .table_3{width: 100%;color: #58647a;font-size: 14px;border-left: 1px solid #c7ccd7;
+              td{border-right: 1px solid #c7ccd7;border-bottom: 1px solid #c7ccd7;width: 42%;height: 60px;padding-left: 40px;}
+              .table_3_x{width: 16%;padding: 0;text-align: center;}
+            }
+            .btn_green{color: #fff;background-color: #19c471;width: 80px;height: 38px;border-radius: 19px;line-height: 38px;position: absolute;right: 12px;top:11px;
+              &:hover{background-color: #24d397;}
+              &:focus,&:visited,&:active{background-color: #10b062;}
+              &:before{content: "";display: block;float: left;background: url("../image/yihushi/phone.png") no-repeat 100% 50%;background-size: 12px;width: 12px;height: 100%;margin: 0 8px;}
+            }
+          }
+        }
+        .contact{position: absolute;right: 20px;top:0;width: 410px;height: 1030px;
+          .contact_con{position:relative;height: 93%;
+            .mCSB_container{margin-right: 18px;}
+            .blue_bg{background-color: #3abff1;width: 398px;min-height:953px;
+              .contact_bg{min-height: 150px;border-top: 3px dashed #fff;padding: 16px 16px 38px;color: #fff;
+                .contact_name{font-size: 24px;
+                  span{font-size: 14px;}
+                }
+                .contact_phone{font-size: 28px;line-height: 36px;
+                  .btn_white{width: 66px;height: 28px;border-radius: 15px;line-height: 28px;position: relative;left: 12px;top:-6px;background-color: transparent;border:1px solid #fff;
+                    &:hover{background-color: #fff; color: #3abff1;
+                      &:before{background: url("../image/yihushi/phone_hover.png") no-repeat 100% 50%;background-size: 10px;}
+                    }
+                    &:before{content: "";display: block;float: left;background: url("../image/yihushi/phone.png") no-repeat 100% 50%;background-size: 10px;width: 10px;height: 100%;margin: 0 6px;}
+                  }
+                }
+                .contact_count{height: 54px;margin-top: 10px;
+                  .fl{padding: 0 2px;width: 23%;text-align: center;height: 100%;
+                    span{font-size: 20px;line-height: 36px;}
+                    p{font-size: 12px;line-height: 18px;}
+                  }
+                  .contact_total{border-right: 1px solid #199bce;width: 30%;text-align: left;
+                    span{font-size: 30px;}
+                  }
+                }
+                .mean{font-size: 18px;margin: 26px 0 14px;}
+                .evaluate{width: 240px;
+                  p{font-size: 12px;text-align: right;line-height: 30px;
+                    .star_con{display: inline-table;vertical-align: middle;background: url("../image/yihushi/star.png") no-repeat 100% 0;background-size: 200%;width: 132px;height: 19px;}
+                    .star_1{background-position: 80% 0;}
+                    .star_2{background-position: 60% 0;}
+                    .star_3{background-position: 40% 0;}
+                    .star_4{background-position: 20% 0;}
+                    .star_5{background-position: 0 0;}
+                  }
+                }
+                &:first-child{border-top: none;}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
