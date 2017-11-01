@@ -791,13 +791,13 @@ GooFlow.prototype={
 
         delete self.params[id];
         // console.log(self.params[id])
-        console.log(data.data)
+        // console.log(data.data)
         if(typeof(data.data) == "string"||data.data ==null) {
           self.params[id] = JSON.parse(data.data)
         }else {
           self.params[id] = JSON.parse(data.data.attValue)
         }
-        console.log(self.params)
+        // console.log(self.params)
       }
     })
   },
