@@ -1,0 +1,425 @@
+html {
+  background-color: #ebeff7;
+}
+body {
+  margin: 0;
+  padding: 0;
+  width: 1900px;
+  height: 100%;
+}
+header.header {
+  width: 100%;
+  height: 140px;
+  line-height: 140px;
+  text-align: center;
+  background: -webkit-linear-gradient(left, #6d80fe, #2dcddd);
+}
+header.header .search_form {
+  display: inline-block;
+}
+header.header .search_form .search_tit {
+  display: inline-block;
+  color: #fff;
+  font-size: 26px;
+  line-height: 60px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+header.header .search_form .search {
+  width: 800px;
+  height: 60px;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 24px;
+  color: #a5aec1;
+  padding-left: 6px;
+  border: none;
+  margin-right: 12px;
+}
+header.header .search_form .search_btn {
+  background-color: #1055bc;
+  font-size: 26px;
+  color: #fff;
+  border-radius: 6px;
+  line-height: 60px;
+  width: 120px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+section.con {
+  width: 100%;
+  min-height: 600px;
+  padding: 30px 15px 0;
+}
+section.con .tabs ul li {
+  float: left;
+  width: 130px;
+  line-height: 48px;
+  font-size: 16px;
+  color: #646d7e;
+  background-color: #fff;
+  text-align: center;
+  border: 1px solid #dfe2e8;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+section.con .tabs ul li.click {
+  background: url("../image/yihushi/click.png") no-repeat 100%;
+  background-size: 100%;
+  border-color: transparent;
+  line-height: 52px;
+  position: relative;
+  bottom: 4px;
+  width: 146px;
+  color: #fff;
+}
+section.con .tabs_panel {
+  box-shadow: 0 2px 10px #d6dae3;
+  position: relative;
+  top: -12px;
+  height: 1050px;
+}
+section.con .tabs_panel .panel {
+  height: 100%;
+  width: 1880px;
+  background-color: #fff;
+  border-radius: 12px;
+  display: none;
+}
+section.con .tabs_panel .panel.click {
+  display: block;
+}
+section.con .tabs_panel .panel .panel_con {
+  width: 100%;
+  height: 100%;
+  padding: 14px 18px;
+  position: relative;
+}
+section.con .tabs_panel .panel .panel_con .panel_con_title {
+  color: #41b1fe;
+  font-size: 30px;
+  text-align: center;
+  margin: 16px 0;
+}
+section.con .tabs_panel .panel .panel_con .history {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  width: 414px;
+  height: 1018px;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con {
+  position: relative;
+  height: 94%;
+  color: #58647a;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con .mCSB_container {
+  margin-right: 20px;
+  padding-left: 14px;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul {
+  margin-top: 14px;
+  padding: 0 14px;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg {
+  min-height: 260px;
+  background: url("../image/yihushi/history_bg.png") no-repeat 0 100%;
+  background-size: 100%;
+  padding: 16px;
+  position: relative;
+  margin-bottom: 28px;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .top_border {
+  display: block;
+  background: #fff8e5;
+  height: 166px;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .icon {
+  display: block;
+  position: absolute;
+  background: url("../image/yihushi/clip.png") no-repeat 0 0;
+  background-size: 85%;
+  width: 51px;
+  height: 47px;
+  top: -11px;
+  left: -9px;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .message {
+  position: relative;
+  z-index: 0;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .text {
+  font-size: 16px;
+  line-height: 22px;
+  margin: 0;
+  border-bottom: 1px solid #ded4b9;
+  padding-bottom: 12px;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .phone_con {
+  background: url("../image/yihushi/to_phone.png") no-repeat 50% 50%;
+  background-size: 29px;
+  min-height: 100px;
+  text-align: center;
+  padding: 28px 0;
+  border-bottom: 1px solid #ded4b9;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .phone_con .from {
+  float: left;
+  width: 45%;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .phone_con .to {
+  float: right;
+  width: 45%;
+}
+section.con .tabs_panel .panel .panel_con .history .history_con ul .history_bg .time_con {
+  padding-top: 18px;
+}
+section.con .tabs_panel .panel .panel_con .basic {
+  position: absolute;
+  left: 426px;
+  top: 0;
+  width: 972px;
+  height: 100%;
+  margin: 0 18px;
+}
+section.con .tabs_panel .panel .panel_con .basic .ratepayer {
+  position: relative;
+  height: 36px;
+}
+section.con .tabs_panel .panel .panel_con .basic .ratepayer .ratepayer_num,
+section.con .tabs_panel .panel .panel_con .basic .ratepayer .ratepayer_name {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 32px;
+  font-size: 24px;
+  color: #41b1fe;
+}
+section.con .tabs_panel .panel .panel_con .basic .ratepayer .ratepayer_num:before,
+section.con .tabs_panel .panel .panel_con .basic .ratepayer .ratepayer_name:before {
+  content: '';
+  display: block;
+  float: left;
+  margin-right: 10px;
+  width: 8px;
+  height: 31px;
+  background: #41b1fe;
+}
+section.con .tabs_panel .panel .panel_con .basic .ratepayer .ratepayer_name {
+  left: 486px;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_1 {
+  width: 100%;
+  color: #58647a;
+  font-size: 14px;
+  margin-top: 20px;
+  border-top: 1px solid #c7ccd7;
+  border-left: 1px solid #c7ccd7;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_1 td {
+  border-right: 1px solid #c7ccd7;
+  border-bottom: 1px solid #c7ccd7;
+  width: 50%;
+  height: 60px;
+  padding-left: 40px;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_2 {
+  width: 100%;
+  color: #58647a;
+  font-size: 14px;
+  border-left: 1px solid #c7ccd7;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_2 td {
+  border-right: 1px solid #c7ccd7;
+  border-bottom: 1px solid #c7ccd7;
+  width: 37%;
+  height: 60px;
+  padding-left: 40px;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_2 tr td:first-child {
+  width: 26%;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_3 {
+  width: 100%;
+  color: #58647a;
+  font-size: 14px;
+  border-left: 1px solid #c7ccd7;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_3 td {
+  border-right: 1px solid #c7ccd7;
+  border-bottom: 1px solid #c7ccd7;
+  width: 42%;
+  height: 60px;
+  padding-left: 40px;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .table_3 .table_3_x {
+  width: 16%;
+  padding: 0;
+  text-align: center;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .btn_green {
+  color: #fff;
+  background-color: #19c471;
+  width: 80px;
+  height: 38px;
+  border-radius: 19px;
+  line-height: 38px;
+  position: absolute;
+  right: 12px;
+  top: 11px;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .btn_green:hover {
+  background-color: #24d397;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .btn_green:focus,
+section.con .tabs_panel .panel .panel_con .basic .table_con .btn_green:visited,
+section.con .tabs_panel .panel .panel_con .basic .table_con .btn_green:active {
+  background-color: #10b062;
+}
+section.con .tabs_panel .panel .panel_con .basic .table_con .btn_green:before {
+  content: "";
+  display: block;
+  float: left;
+  background: url("../image/yihushi/phone.png") no-repeat 100% 50%;
+  background-size: 12px;
+  width: 12px;
+  height: 100%;
+  margin: 0 8px;
+}
+section.con .tabs_panel .panel .panel_con .contact {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  width: 410px;
+  height: 1030px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con {
+  position: relative;
+  height: 93%;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .mCSB_container {
+  margin-right: 18px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg {
+  background-color: #3abff1;
+  width: 398px;
+  min-height: 953px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg {
+  min-height: 150px;
+  border-top: 3px dashed #fff;
+  padding: 16px 16px 38px;
+  color: #fff;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_name {
+  font-size: 24px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_name span {
+  font-size: 14px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_phone {
+  font-size: 28px;
+  line-height: 36px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_phone .btn_white {
+  width: 66px;
+  height: 28px;
+  border-radius: 15px;
+  line-height: 28px;
+  position: relative;
+  left: 12px;
+  top: -6px;
+  background-color: transparent;
+  border: 1px solid #fff;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_phone .btn_white:hover {
+  background-color: #fff;
+  color: #3abff1;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_phone .btn_white:hover:before {
+  background: url("../image/yihushi/phone_hover.png") no-repeat 100% 50%;
+  background-size: 10px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_phone .btn_white:before {
+  content: "";
+  display: block;
+  float: left;
+  background: url("../image/yihushi/phone.png") no-repeat 100% 50%;
+  background-size: 10px;
+  width: 10px;
+  height: 100%;
+  margin: 0 6px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_count {
+  height: 54px;
+  margin-top: 10px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_count .fl {
+  padding: 0 2px;
+  width: 23%;
+  text-align: center;
+  height: 100%;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_count .fl span {
+  font-size: 20px;
+  line-height: 36px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_count .fl p {
+  font-size: 12px;
+  line-height: 18px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_count .contact_total {
+  border-right: 1px solid #199bce;
+  width: 30%;
+  text-align: left;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .contact_count .contact_total span {
+  font-size: 30px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .mean {
+  font-size: 18px;
+  margin: 26px 0 14px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate {
+  width: 240px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p {
+  font-size: 12px;
+  text-align: right;
+  line-height: 30px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p .star_con {
+  display: inline-table;
+  vertical-align: middle;
+  background: url("../image/yihushi/star.png") no-repeat 100% 0;
+  background-size: 200%;
+  width: 132px;
+  height: 19px;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p .star_1 {
+  background-position: 80% 0;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p .star_2 {
+  background-position: 60% 0;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p .star_3 {
+  background-position: 40% 0;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p .star_4 {
+  background-position: 20% 0;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg .evaluate p .star_5 {
+  background-position: 0 0;
+}
+section.con .tabs_panel .panel .panel_con .contact .contact_con .blue_bg .contact_bg:first-child {
+  border-top: none;
+}

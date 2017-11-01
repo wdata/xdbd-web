@@ -122,6 +122,7 @@ $(function(){
               			`;
               		});
               		$(".table-box tbody").empty().append(html);
+              		getPagination();//刷新分页
 	            }
 			},
 			error:function(err){
@@ -190,7 +191,7 @@ $(function(){
 	
 	
 	//layui 分页
-	getPagination();
+//	getPagination();
 	function getPagination(){
 		layui.use(['laypage', 'layer'], function(){
 		  var laypage = layui.laypage

@@ -1,4 +1,5 @@
 $(function(){
+	
 	//个人中心
 	$(".user-info").hover(function(){
 		$(this).find('ul').show()

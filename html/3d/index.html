@@ -1,0 +1,532 @@
+﻿<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>一户式管理系统</title>
+	<link rel="stylesheet" href="style/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="style/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="style/css/default.css">
+	<link rel="stylesheet" href="style/css/index-new.css">
+	<style type="text/css">
+		/*.wrap{width: 600px;margin: 0 auto;}*/
+
+	</style>
+	<!--[if IE]>
+		<script src="style/js/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div class="container">
+		<div class="content">
+			<div class="wrap">
+				<div class="earth"><img src="image/index/moon.png" alt=""></div>
+			  	<canvas style="position: relative;z-index: -1;" id="html5_3d_animation">Internet Explorer 8 Not Supported</canvas>
+			  	<!--<div id="show"></div>-->
+				<div id="title" class="title">
+					<div type="one" class="icon one on">
+						<div type="panel" class="o">
+							<div class="distribute">
+								<div class="left">
+									<div class="tilte"><i></i><span><img src="image/index/1_bg.png" alt=""></span></div>
+									<div class="list">
+										<div class="name"><span>督办任务</span><span>总代办数</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+									<div class="middle">
+										<div class="name">已完成</div>
+										<div class="num"><span>0</span></div>
+									</div>
+									<div class="last">
+										<div class="name"><span>今日到期</span><span>今日到期</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+								</div>
+								<div id="bar" class="right"></div>
+							</div>
+						</div>
+					</div>
+					<div type="two" class="icon two off">
+						<div type="panel" class="t">
+							<div class="map">
+								<div id="pie" style="width:67%;height:100%;" class="left item"></div>
+								<div class="right item">
+									<div class="tilte"><i></i><span><img src="image/index/task_list.png" alt=""></span></div>
+									<div class="list">
+										<div class="name"><span>总代办数</span><span>督办任务</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+									<div class="middle">
+										<div class="name">已完成</div>
+										<div class="num"><span>0</span></div>
+									</div>
+									<div class="last">
+										<div class="name"><span>今日到期</span><span>今日到期</span><span>今日到期</span></div>
+										<div class="num"><span>0</span><span>0</span><span>0</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div type="three" class="icon three off">
+						<div type="panel" class="thr">
+							<div class="map">
+								<div id="radar" style="width:67%;height:100%;" class="left item"></div>
+								<div class="right item">
+									<div class="tilte"><i></i><span><img src="image/index/task_list2.png" alt=""></span></div>
+									<div class="list">
+										<div class="name"><span>总代办数</span><span>督办任务</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+									<div class="middle">
+										<div class="name">已完成</div>
+										<div class="num"><span>0</span></div>
+									</div>
+									<div class="last">
+										<div class="name"><span>今日到期</span><span>今日到期</span><span>今日到期</span></div>
+										<div class="num"><span>0</span><span>0</span><span>0</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div type="four" class="icon four off">
+						<div type="panel" class="f">
+							<div class="map">
+								<div id="map"  class="left item"></div>
+								<div class="right item">
+									<div class="tilte"><i></i><span><img src="image/index/task_list2.png" alt=""></span></div>
+									<div class="list">
+										<div class="name"><span>总代办数</span><span>督办任务</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+									<div class="middle">
+										<div class="name">已完成</div>
+										<div class="num"><span>0</span></div>
+									</div>
+									<div class="last">
+										<div class="name"><span>今日到期</span><span>今日到期</span><span>今日到期</span></div>
+										<div class="num"><span>0</span><span>0</span><span>0</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div type="five" class="icon five off">
+						<div type="panel" class="fiv">
+							<div class="map">
+								<div id="barX" style="width:67%;height:100%;" class="left item"></div>
+								<div class="right item">
+									<div class="tilte"><i></i><span><img src="image/index/task_list.png" alt=""></span></div>
+									<div class="list">
+										<div class="name"><span>总代办数</span><span>督办任务</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+									<div class="middle">
+										<div class="name">已完成</div>
+										<div class="num"><span>0</span></div>
+									</div>
+									<div class="last">
+										<div class="name"><span>今日到期</span><span>今日到期</span><span>今日到期</span></div>
+										<div class="num"><span>0</span><span>0</span><span>0</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div type="six" class="icon six off">
+						<div type="panel" class="s">
+							<div class="map">
+								<div id="rose" style="width:67%;height:100%;" class="left item"></div>
+								<div class="right item">
+									<div class="tilte"><i></i><span><img src="image/index/task_list.png" alt=""></span></div>
+									<div class="list">
+										<div class="name"><span>总代办数</span><span>督办任务</span></div>
+										<div class="num"><span>0</span><span>0</span></div>
+									</div>
+									<div class="middle">
+										<div class="name">已完成</div>
+										<div class="num"><span>0</span></div>
+									</div>
+									<div class="last">
+										<div class="name"><span>今日到期</span><span>今日到期</span><span>今日到期</span></div>
+										<div class="num"><span>0</span><span>0</span><span>0</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="search"><input type="text"><a></a></div>
+				<div class="history">
+					<h1><img src="image/index/his_title.png" alt=""></h1>
+					<main>
+						<article style="padding-top: 18px;">
+							<p>格力股份有限公司(98147552511444555)</p>
+							<p>金阳道科技有限公司</p>
+							<p>纳税人名称 百度科技有限公司</p>
+							<p>9118273672345234342E(腾讯科技公司)</p>
+						</article>
+						<article class="telephone">
+							<p>李建成 15825873571 (珠海格力有限公司)<a href=""></a></p>
+						</article>
+						<article>
+							<p>纳税人名称 百度科技有限公司</p>
+							<p>纳税人名称 百度科技有限公司</p>
+						</article>
+						<article class="telephone">
+							<p>李建成 15825873571 (珠海格力有限公司)<a href=""></a></p>
+						</article>
+						<article>
+							<p>纳税人名称 百度科技有限公司</p>
+							<p>9118273672345234342E(腾讯科技公司)</p>
+						</article>
+					</main>
+				</div>
+				<div class="banner">
+					<a type="one" class="active"><img src="image/index/1.png" alt=""></a>
+					<a type="two"><img src="image/index/2.png" alt=""></a>
+					<a type="three"><img src="image/index/3.png" alt=""></a>
+					<a type="four"><img src="image/index/4.png" alt=""></a>
+					<a type="five"><img src="image/index/5.png" alt=""></a>
+					<a type="six"><img src="image/index/6.png" alt=""></a>
+				</div>
+				<div class="manger">
+					<div class="name"><img src="image/index/name.png" alt=""></div>
+					<div class="position"><img src="image/index/position.png" alt=""></div>
+				</div>
+				<div class="danger">
+					<i class="icon"></i>
+					<img src="image/index/danger.png" alt="">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="two" class="hide layer">
+		<div class="mask"></div>
+		<div class="two">
+			<div class="content">
+				<div class="left item">
+					<div class="big_pie" style="width:100%;height:50%;" id="big_pie"></div>
+					<div class="big_barY" style="width:100%;height:50%;" id="big_barY"></div>
+				</div>
+				<div class="right item">
+					<div class="title_">
+						<div class="icon_"><span><img src="image/index/taskb.png" alt=""></span><span><img src="image/index/mes1.png" alt=""></span></div>
+						<div class="row">
+							<div class="detail">
+								<div class="list">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="list">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="list">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+							<div class="detail green">
+								<div class="list">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="list">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="list">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="big_barX" style="width: 100%;height: 75%;" id="big_barX"></div>
+				</div>
+			</div>
+		</div>
+		<div class="close"></div>
+	</div>
+	<div id="one" class="hide layer">
+		<div class="mask"></div>
+		<div class="one">
+			<div class="content">
+				<div class="left item">
+					<div id="bar1" style="height:50%;width:100%;" class="bar"></div>
+					<div id="bar2" style="height:50%;width:100%;" class="bar"></div>
+				</div>
+				<div class="right item">
+					<div id="line1" style="height:50%;width:100%;" class="bar"></div>
+					<div id="line2" style="height:50%;width:100%;" class="bar"></div>
+				</div>
+			</div>
+		</div>
+		<div  class="close"></div>
+	</div>
+	<div id="three" class="hide layer">
+		<div class="mask"></div>
+		<div class="three">
+			<!--<div class="content">-->
+				<div class="top item">
+					<div id="spot1" class="spot"></div>
+					<div id="spot_title" class="spot">
+						<div class="gather">
+							<div class="title_item">
+								<div class="column">
+									<div class="name">总代办数</div>
+									<div class="num">0</div>
+								</div>
+								<div class="column supervision">
+									<div class="name">督办任务</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+							<div class="title_item">
+								<div class="column">
+								</div>
+								<div class="column supervision">
+									<div class="name">已完成</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+							<div class="title_item today">
+								<div class="column">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="column">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="column">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+						</div>
+						<div class="icon"><img src="image/index/mes2.png" alt=""><img src="image/index/taskv.png" alt=""></div>
+					</div>
+					<div id="spot2" class="spot"></div>
+				</div>
+				<div class="bottom item">
+					<div id="spot3" class="spot"></div>
+					<div id="spot4" class="spot"></div>
+					<div id="spot5" class="spot"></div>
+				</div>
+			<!--</div>-->
+		</div>
+		<div  class="close"></div>
+	</div>
+	<div id="four" class="hide layer">
+		<div class="mask"></div>
+		<div class="four">
+			<div class="item">
+				<div class="four_icon"><img src="image/index/mes2.png" alt=""><img src="image/index/task_list2.png" alt=""></div>
+				<div id="four_map" class="four_map"></div>
+				<div class="four_title">
+					<!--<div class="title_item">-->
+					<div class="left">
+						<div class="column">
+							<div class="name">总代办数</div>
+							<div class="num">0</div>
+						</div>
+						<div class="column">
+							<div class="name">今日到期</div>
+							<div class="num color">0</div>
+						</div>
+					</div>
+					<div class="left">
+						<div class="column">
+							<div class="name">督办任务</div>
+							<div class="num">0</div>
+						</div>
+						<div class="column">
+							<div class="name">今日到期</div>
+							<div class="num">0</div>
+						</div>
+					</div>
+					<div class="left">
+						<div class="column">
+							<div class="name">已完成</div>
+							<div class="num">0</div>
+						</div>
+						<div class="column">
+							<div class="name">今日到期</div>
+							<div class="num">0</div>
+						</div>
+					</div>
+					<!--</div>-->
+				</div>
+			</div>
+			<div class="item">
+				<div class="four_title">
+					<!--<div class="title_item">-->
+					<div class="left">
+						<div class="column">
+							<div class="name">总代办数</div>
+							<div class="num">0</div>
+						</div>
+						<div class="column">
+							<div class="name">今日到期</div>
+							<div class="num color">0</div>
+						</div>
+					</div>
+					<div class="left">
+						<div class="column">
+							<div class="name">督办任务</div>
+							<div class="num">0</div>
+						</div>
+						<div class="column">
+							<div class="name">今日到期</div>
+							<div class="num">0</div>
+						</div>
+					</div>
+					<div class="left">
+						<div class="column">
+							<div class="name">已完成</div>
+							<div class="num">0</div>
+						</div>
+						<div class="column">
+							<div class="name">今日到期</div>
+							<div class="num">0</div>
+						</div>
+					</div>
+					<!--</div>-->
+				</div>
+				<div id="pie_four" class="pie_four"></div>
+			</div>
+			<div id="bar_four" class="item"></div>
+		</div>
+		<div  class="close"></div>
+	</div>
+	<div id="five" class="hide layer">
+		<div class="mask"></div>
+		<div class="five">
+			<div class="top">
+				<div id="bar_five" class="item bar_five"></div>
+				<div class="item">
+					<div class="title_icon"><img src="image/index/mes1.png" alt=""><img src="image/index/taskb.png" alt=""></div>
+					<div class="title_cone">
+						<div class="gather">
+							<div class="title_item">
+								<div class="column">
+									<div class="name">总代办数</div>
+									<div class="num">0</div>
+								</div>
+								<div class="column"></div>
+								<div class="column supervision">
+									<div class="name">督办任务</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+							<div class="title_item">
+								<div class="column"></div>
+								<div class="column"></div>
+								<div class="column supervision">
+									<div class="name">已完成</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+							<div class="title_item purple">
+								<div class="column">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="column">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+								<div class="column">
+									<div class="name">今日到期</div>
+									<div class="num">0</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="pei_five" class="item pei_five"></div>
+			</div>
+			<div id="line_five" class="bottom"></div>
+		</div>
+		<div  class="close"></div>
+	</div>
+	<div id="six" class="hide layer">
+		<div class="mask"></div>
+		<div class="six">
+			<div class="item">
+				<div class="top">
+					<div class="num_title">
+						<div class="item">
+							<div class="name">总代办数</div>
+							<div class="name">督办任务</div>
+						</div>
+						<div class="item one_tit">
+							<div class="num">0</div>
+							<div class="num">0</div>
+						</div>
+						<div class="item">
+							<div class="name">总代办数</div>
+							<div class="name">督办任务</div>
+						</div>
+						<div class="item two_tit">
+							<div class="num">0</div>
+							<div class="num">0</div>
+						</div>
+						<div class="item">
+							<div class="name">总代办数</div>
+							<div class="name">督办任务</div>
+						</div>
+						<div class="item three_tit">
+							<div class="num">0</div>
+							<div class="num">0</div>
+						</div>
+					</div>
+					<div class="pie6" id="pie6"></div>
+				</div>
+				<div id="bar6" class="bottom"></div>
+			</div>
+			<div id="barX6"  class="item barX6"></div>
+		</div>
+		<div  class="close"></div>
+	</div>
+
+
+
+	<script src="style/js/jquery.min.js" type="text/javascript"></script>
+	<script>window.jQuery || document.write('<script src="style/js/jquery-1.9.1.min.js"><\/script>')</script>
+	<script src="style/js/html5_3d_animation.js" type="text/javascript"></script>
+	<script src="style/js/chart/echarts.min.js"></script>
+	<script src="style/js/chart/echart-stat.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+	<script src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+	<script src="style/layer/layer.js"></script>
+	<script src="js/aqi-beijing.js">//这是数据，可以删除</script>
+	<script src="js/nutrients-json.js">//这是数据，可以删除</script>
+	<script src="js/index.js"></script>
+	<script type="text/javascript">
+		(function(){
+			var width=$(window).width(),height=$(window).height();
+			$(window).resize(function () {          //当浏览器大小变化时
+				width=$(window).width();height=$(window).height();
+			});
+			star_star(width,height);
+		})();
+		function star_star(width,height){
+			$("#html5_3d_animation").html5_3d_animation({
+				window_width:width,
+				window_height: height,
+				window_background: '#000',
+				star_count: '1800',
+				star_color: '#fff',
+				star_depth: '1000'
+			});
+		}
+	</script>
+</body>
+</html>
