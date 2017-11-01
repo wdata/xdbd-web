@@ -7,14 +7,7 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,number=0   // 层级
     ,fieldId = null  // 记录数据筛选时候的ID
     ,modelId = null // 记录dataModelId值；
-    ,url = "http://192.168.1.42:8084/xdbd-bi"
-
-var projectId = localStorage.getItem("projectId"),
-    pageId = localStorage.getItem("directoryId"),
-    versionId = localStorage.getItem("versionId"),
-    username = sessionStorage.getItem("ByuserName"),
-    userId = sessionStorage.getItem("userId")
-
+    ,url = "http://192.168.1.42:8084/xdbd-bi";
 
 
 // 右键功能
@@ -564,7 +557,7 @@ var operating = {
         };
         $.ajax({
             type:"PUT",
-            url:"/xdbd-bi/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ pageId +"&isIndex="+ isIndex +"&versionId="+ versionId +"",
+            url:$url1 + "/bi/report/v1/page.json?projectId="+ projectId  +"&pageId="+ dirId +"&isIndex="+ isIndex +"&versionId="+ versionId +"",
             headers:{
                 username:username,
                 userId:userId
@@ -668,7 +661,7 @@ var operating = {
         // $(".resize-item").css("border","none")
         //     .find(".resize-panel").remove()
         // $(".resize-item").find(".content-text").removeClass("edit");
-        var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ pageId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+        var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
         window.open("../html/preview.html" + url);
 
     },
@@ -709,13 +702,13 @@ var obtain = {
     request:function(){
         $.ajax({
             type:"get",
-            url:"/xdbd-bi/bi/report/v1/page.json",
+            url:$url1 + "/bi/report/v1/page.json",
             headers:{
                 username:username,
                 userId:userId
             },
             data:{
-                "pageId":pageId,
+                "pageId":dirId,
                 "projectId":projectId,
                 "versionId":versionId,
             },
@@ -882,7 +875,7 @@ var project = {
 
         $.ajax({
             type:"get",
-            url:"/xdbd-bi/bi/report/v1/data/list.json",
+            url:$url1 + "/bi/report/v1/data/list.json",
             headers:{
                 username:username,
                 userId:userId
@@ -1231,7 +1224,7 @@ var swRag = {
         });
         $.ajax({
             type:"get",
-            url:"/xdbd-bi/bi/report/v1/data/range.json",
+            url:$url1 + "/bi/report/v1/data/range.json",
             headers:{
                 username:username,
                 userId:userId
@@ -1705,7 +1698,7 @@ function imgPreview(_this){
         var cahrt_type = $(_this).siblings("img").attr("data-type");    // 类型
 
         form.append("file",fileObj.files[0]);
-        form.append("pageId",pageId);  // 页面ID
+        form.append("pageId",dirId);  // 页面ID
         form.append("cid",cahrt_type + number);  // 控件ID
         form.append("projectId",projectId);
         form.append("versionId",versionId);
@@ -1713,7 +1706,7 @@ function imgPreview(_this){
         // 上传图片
         $.ajax({
             type:"post",
-            url:" /xdbd-bi/bi/report/v1/controlImage.json",
+            url:$url1 + "/bi/report/v1/controlImage.json",
             headers:{
                 username:username,
                 userId:userId

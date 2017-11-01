@@ -26,7 +26,7 @@
     fill: #ccc ;
 }
 .x.axis path {
-    display: none;
+    /*display: none;*/
 }
 path {
     stroke: #fff;

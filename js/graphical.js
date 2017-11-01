@@ -6,10 +6,10 @@ var DataIndexes = {
     inAjax:function(d,id){
         var self = this;
         $("#"+id).find(".resize-panel").siblings().remove();  // 删除之前的图形
-  
+
         $.ajax({
             type:"post",
-            url:"/xdbd-bi/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",
+            url:$url1 + "/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",
             headers:{   username:username, userId:userId    },
             data:JSON.stringify(d),
             dataType:"json",
@@ -20,8 +20,10 @@ var DataIndexes = {
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
-                        layer.msg("数据为空！")
+                        layer.msg("数据为空！");
                     }
+                }else{
+                    self.draw(id,d.type);
                 }
             },
             error:function(res){
@@ -75,6 +77,31 @@ var DataIndexes = {
                             pieData.push(z);
                         });
                         pieChart("#" + id,pieData,r);
+                        break;
+                    case 104:
+                        // 堆叠柱状图
+                        stacking("#" + id);
+                        break;
+                    case 105:
+                        // 区域图
+                        // scatterPlot("#" + id);
+                        break;
+                    case 106:
+                        // 散点图
+                        scatterPlot("#" + id);
+                        break;
+                    case 107:
+                        // 甘特图
+                        break;
+                    case 108:
+                        // 仪表盘
+                        break;
+                    case 109:
+                        // 漏斗图
+                        break;
+                    case 110:
+                        // 矩阵图
+                        rectangle("#" + id);
                         break;
                 }
                 break;
@@ -1631,7 +1658,9 @@ function lineChart(id,data){
 }
 
 // 2017-10-30 堆叠柱状图 一个维度 多个度量
-function stacking(id,data){
+function stacking(id,dataA){
+    var data = {"dim": {"dimX": {"titles": [],"valueTree": []},"dimY": {"titles": [],"valueTree": []}},"charts": {"meaAxis": "y","dimTitle": "子类别","dimValues": [["书架","信封","复印机","存储","标签","桌子","椅子","用具","用品","电器","电话","系固件","纸张","艺术","装订机","设备","附件"]],"meaList": [{"meaTitle": "销售额","maxValue": 1706824.1391999815,"meaValues": [[[1466572.2417999955,169217.48959999997,1509436.2732800008,1126812.9693999952,73350.27600000013,757041.9243999993,1501681.764199983,385155.9679000007,242811.13259999975,1010535.5249999986,1706824.1391999815,89495.04590000006,241787.52739999996,371613.15390000306,461869.39370000095,779060.0670999992,749237.0184999971]]]},{"meaTitle": "数量","maxValue": 21403,"meaValues": [[[8310,8210,7454,16884,9301,3083,12336,11163,8482,6026,11870,9051,12672,16215,21403,4906,10946]]]},{"meaTitle": "装运成本","maxValue": 184953.49199999985,"meaValues": [[[155487.96699999995,18582.96800000004,159501.20490000022,120793.85199999981,8840.72500000001,79863.3939999999,164253.35200000033,40981.656000000046,24950.826999999972,108307.74600000016,184953.49199999985,10300.06799999999,26864.085000000046,41889.08199999998,49773.102000000064,79149.84849999998,83592.33399999977]]]},{"meaTitle": "折扣","maxValue": 1101.8800000000203,"meaValues": [[[370.709999999997,317.20999999999793,260.41799999999876,699.4900000000124,313.4899999999976,250.31999999999994,560.1200000000015,475.0800000000016,308.19999999999794,247.4999999999987,489.60999999999217,356.8399999999977,384.49999999999375,571.8800000000007,1101.8800000000203,251.9999999999985,370.47999999999627]]]}]}}
+
     var legendData = data.charts.meaList.map(function(d) { return d.meaTitle; });   // 顶部右侧的颜色提示
     var layers = d3.layout.stack()(data.charts.meaList.map(function(a) {
         return a.meaValues[0][0].map(function(c,d) {
@@ -1765,7 +1794,7 @@ function manyGroup(id,total){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     svg.append("g")
-        .attr("class", "y axis")
+        .attr("class", "y axis ")
         .call(yAxis);
 
     svg.append("g")
@@ -1776,10 +1805,7 @@ function manyGroup(id,total){
     svg.append("g").selectAll("g")
         .data(data)
         .enter().append("g")
-        .style("fill", function(d, i) {
-            console.log(z(i))
-            return z(i);
-        })
+        .style("fill", function(d, i) { return z(i) })
         .attr("transform", function(d, i) { return "translate(" + x1(i) + ",0)"; })
         .selectAll("rect")
         .data(function(d) { return d; })
@@ -1813,4 +1839,299 @@ function manyGroup(id,total){
         .text(function(d) { return d; });
 
 
+}
+
+// 2017-10-31 散点图 多维2度量
+function scatterPlot(id,total){
+//        console.log(total);
+    // 例子格式
+    var data = [{sepalLength:"5.1",sepalWidth:"3.5",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.9",sepalWidth:"3.0",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.7",sepalWidth:"3.2",petalLength:"1.3",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.6",sepalWidth:"3.1",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.6",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.4",sepalWidth:"3.9",petalLength:"1.7",petalWidth:"0.4",species:"setosa"},{sepalLength:"4.6",sepalWidth:"3.4",petalLength:"1.4",petalWidth:"0.3",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.4",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.4",sepalWidth:"2.9",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.9",sepalWidth:"3.1",petalLength:"1.5",petalWidth:"0.1",species:"setosa"},{sepalLength:"5.4",sepalWidth:"3.7",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.8",sepalWidth:"3.4",petalLength:"1.6",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.8",sepalWidth:"3.0",petalLength:"1.4",petalWidth:"0.1",species:"setosa"},{sepalLength:"4.3",sepalWidth:"3.0",petalLength:"1.1",petalWidth:"0.1",species:"setosa"},{sepalLength:"5.8",sepalWidth:"4.0",petalLength:"1.2",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.7",sepalWidth:"4.4",petalLength:"1.5",petalWidth:"0.4",species:"setosa"},{sepalLength:"5.4",sepalWidth:"3.9",petalLength:"1.3",petalWidth:"0.4",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.5",petalLength:"1.4",petalWidth:"0.3",species:"setosa"},{sepalLength:"5.7",sepalWidth:"3.8",petalLength:"1.7",petalWidth:"0.3",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.8",petalLength:"1.5",petalWidth:"0.3",species:"setosa"},{sepalLength:"5.4",sepalWidth:"3.4",petalLength:"1.7",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.7",petalLength:"1.5",petalWidth:"0.4",species:"setosa"},{sepalLength:"4.6",sepalWidth:"3.6",petalLength:"1.0",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.3",petalLength:"1.7",petalWidth:"0.5",species:"setosa"},{sepalLength:"4.8",sepalWidth:"3.4",petalLength:"1.9",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.0",petalLength:"1.6",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.4",petalLength:"1.6",petalWidth:"0.4",species:"setosa"},{sepalLength:"5.2",sepalWidth:"3.5",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.2",sepalWidth:"3.4",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.7",sepalWidth:"3.2",petalLength:"1.6",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.8",sepalWidth:"3.1",petalLength:"1.6",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.4",sepalWidth:"3.4",petalLength:"1.5",petalWidth:"0.4",species:"setosa"},{sepalLength:"5.2",sepalWidth:"4.1",petalLength:"1.5",petalWidth:"0.1",species:"setosa"},{sepalLength:"5.5",sepalWidth:"4.2",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.9",sepalWidth:"3.1",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.2",petalLength:"1.2",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.5",sepalWidth:"3.5",petalLength:"1.3",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.9",sepalWidth:"3.6",petalLength:"1.4",petalWidth:"0.1",species:"setosa"},{sepalLength:"4.4",sepalWidth:"3.0",petalLength:"1.3",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.4",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.5",petalLength:"1.3",petalWidth:"0.3",species:"setosa"},{sepalLength:"4.5",sepalWidth:"2.3",petalLength:"1.3",petalWidth:"0.3",species:"setosa"},{sepalLength:"4.4",sepalWidth:"3.2",petalLength:"1.3",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.5",petalLength:"1.6",petalWidth:"0.6",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.8",petalLength:"1.9",petalWidth:"0.4",species:"setosa"},{sepalLength:"4.8",sepalWidth:"3.0",petalLength:"1.4",petalWidth:"0.3",species:"setosa"},{sepalLength:"5.1",sepalWidth:"3.8",petalLength:"1.6",petalWidth:"0.2",species:"setosa"},{sepalLength:"4.6",sepalWidth:"3.2",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.3",sepalWidth:"3.7",petalLength:"1.5",petalWidth:"0.2",species:"setosa"},{sepalLength:"5.0",sepalWidth:"3.3",petalLength:"1.4",petalWidth:"0.2",species:"setosa"},{sepalLength:"7.0",sepalWidth:"3.2",petalLength:"4.7",petalWidth:"1.4",species:"versicolor"},{sepalLength:"6.4",sepalWidth:"3.2",petalLength:"4.5",petalWidth:"1.5",species:"versicolor"},{sepalLength:"6.9",sepalWidth:"3.1",petalLength:"4.9",petalWidth:"1.5",species:"versicolor"},{sepalLength:"5.5",sepalWidth:"2.3",petalLength:"4.0",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.5",sepalWidth:"2.8",petalLength:"4.6",petalWidth:"1.5",species:"versicolor"},{sepalLength:"5.7",sepalWidth:"2.8",petalLength:"4.5",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.3",sepalWidth:"3.3",petalLength:"4.7",petalWidth:"1.6",species:"versicolor"},{sepalLength:"4.9",sepalWidth:"2.4",petalLength:"3.3",petalWidth:"1.0",species:"versicolor"},{sepalLength:"6.6",sepalWidth:"2.9",petalLength:"4.6",petalWidth:"1.3",species:"versicolor"},{sepalLength:"5.2",sepalWidth:"2.7",petalLength:"3.9",petalWidth:"1.4",species:"versicolor"},{sepalLength:"5.0",sepalWidth:"2.0",petalLength:"3.5",petalWidth:"1.0",species:"versicolor"},{sepalLength:"5.9",sepalWidth:"3.0",petalLength:"4.2",petalWidth:"1.5",species:"versicolor"},{sepalLength:"6.0",sepalWidth:"2.2",petalLength:"4.0",petalWidth:"1.0",species:"versicolor"},{sepalLength:"6.1",sepalWidth:"2.9",petalLength:"4.7",petalWidth:"1.4",species:"versicolor"},{sepalLength:"5.6",sepalWidth:"2.9",petalLength:"3.6",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.7",sepalWidth:"3.1",petalLength:"4.4",petalWidth:"1.4",species:"versicolor"},{sepalLength:"5.6",sepalWidth:"3.0",petalLength:"4.5",petalWidth:"1.5",species:"versicolor"},{sepalLength:"5.8",sepalWidth:"2.7",petalLength:"4.1",petalWidth:"1.0",species:"versicolor"},{sepalLength:"6.2",sepalWidth:"2.2",petalLength:"4.5",petalWidth:"1.5",species:"versicolor"},{sepalLength:"5.6",sepalWidth:"2.5",petalLength:"3.9",petalWidth:"1.1",species:"versicolor"},{sepalLength:"5.9",sepalWidth:"3.2",petalLength:"4.8",petalWidth:"1.8",species:"versicolor"},{sepalLength:"6.1",sepalWidth:"2.8",petalLength:"4.0",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.3",sepalWidth:"2.5",petalLength:"4.9",petalWidth:"1.5",species:"versicolor"},{sepalLength:"6.1",sepalWidth:"2.8",petalLength:"4.7",petalWidth:"1.2",species:"versicolor"},{sepalLength:"6.4",sepalWidth:"2.9",petalLength:"4.3",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.6",sepalWidth:"3.0",petalLength:"4.4",petalWidth:"1.4",species:"versicolor"},{sepalLength:"6.8",sepalWidth:"2.8",petalLength:"4.8",petalWidth:"1.4",species:"versicolor"},{sepalLength:"6.7",sepalWidth:"3.0",petalLength:"5.0",petalWidth:"1.7",species:"versicolor"},{sepalLength:"6.0",sepalWidth:"2.9",petalLength:"4.5",petalWidth:"1.5",species:"versicolor"},{sepalLength:"5.7",sepalWidth:"2.6",petalLength:"3.5",petalWidth:"1.0",species:"versicolor"},{sepalLength:"5.5",sepalWidth:"2.4",petalLength:"3.8",petalWidth:"1.1",species:"versicolor"},{sepalLength:"5.5",sepalWidth:"2.4",petalLength:"3.7",petalWidth:"1.0",species:"versicolor"},{sepalLength:"5.8",sepalWidth:"2.7",petalLength:"3.9",petalWidth:"1.2",species:"versicolor"},{sepalLength:"6.0",sepalWidth:"2.7",petalLength:"5.1",petalWidth:"1.6",species:"versicolor"},{sepalLength:"5.4",sepalWidth:"3.0",petalLength:"4.5",petalWidth:"1.5",species:"versicolor"},{sepalLength:"6.0",sepalWidth:"3.4",petalLength:"4.5",petalWidth:"1.6",species:"versicolor"},{sepalLength:"6.7",sepalWidth:"3.1",petalLength:"4.7",petalWidth:"1.5",species:"versicolor"},{sepalLength:"6.3",sepalWidth:"2.3",petalLength:"4.4",petalWidth:"1.3",species:"versicolor"},{sepalLength:"5.6",sepalWidth:"3.0",petalLength:"4.1",petalWidth:"1.3",species:"versicolor"},{sepalLength:"5.5",sepalWidth:"2.5",petalLength:"4.0",petalWidth:"1.3",species:"versicolor"},{sepalLength:"5.5",sepalWidth:"2.6",petalLength:"4.4",petalWidth:"1.2",species:"versicolor"},{sepalLength:"6.1",sepalWidth:"3.0",petalLength:"4.6",petalWidth:"1.4",species:"versicolor"},{sepalLength:"5.8",sepalWidth:"2.6",petalLength:"4.0",petalWidth:"1.2",species:"versicolor"},{sepalLength:"5.0",sepalWidth:"2.3",petalLength:"3.3",petalWidth:"1.0",species:"versicolor"},{sepalLength:"5.6",sepalWidth:"2.7",petalLength:"4.2",petalWidth:"1.3",species:"versicolor"},{sepalLength:"5.7",sepalWidth:"3.0",petalLength:"4.2",petalWidth:"1.2",species:"versicolor"},{sepalLength:"5.7",sepalWidth:"2.9",petalLength:"4.2",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.2",sepalWidth:"2.9",petalLength:"4.3",petalWidth:"1.3",species:"versicolor"},{sepalLength:"5.1",sepalWidth:"2.5",petalLength:"3.0",petalWidth:"1.1",species:"versicolor"},{sepalLength:"5.7",sepalWidth:"2.8",petalLength:"4.1",petalWidth:"1.3",species:"versicolor"},{sepalLength:"6.3",sepalWidth:"3.3",petalLength:"6.0",petalWidth:"2.5",species:"virginica"},{sepalLength:"5.8",sepalWidth:"2.7",petalLength:"5.1",petalWidth:"1.9",species:"virginica"},{sepalLength:"7.1",sepalWidth:"3.0",petalLength:"5.9",petalWidth:"2.1",species:"virginica"},{sepalLength:"6.3",sepalWidth:"2.9",petalLength:"5.6",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.5",sepalWidth:"3.0",petalLength:"5.8",petalWidth:"2.2",species:"virginica"},{sepalLength:"7.6",sepalWidth:"3.0",petalLength:"6.6",petalWidth:"2.1",species:"virginica"},{sepalLength:"4.9",sepalWidth:"2.5",petalLength:"4.5",petalWidth:"1.7",species:"virginica"},{sepalLength:"7.3",sepalWidth:"2.9",petalLength:"6.3",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.7",sepalWidth:"2.5",petalLength:"5.8",petalWidth:"1.8",species:"virginica"},{sepalLength:"7.2",sepalWidth:"3.6",petalLength:"6.1",petalWidth:"2.5",species:"virginica"},{sepalLength:"6.5",sepalWidth:"3.2",petalLength:"5.1",petalWidth:"2.0",species:"virginica"},{sepalLength:"6.4",sepalWidth:"2.7",petalLength:"5.3",petalWidth:"1.9",species:"virginica"},{sepalLength:"6.8",sepalWidth:"3.0",petalLength:"5.5",petalWidth:"2.1",species:"virginica"},{sepalLength:"5.7",sepalWidth:"2.5",petalLength:"5.0",petalWidth:"2.0",species:"virginica"},{sepalLength:"5.8",sepalWidth:"2.8",petalLength:"5.1",petalWidth:"2.4",species:"virginica"},{sepalLength:"6.4",sepalWidth:"3.2",petalLength:"5.3",petalWidth:"2.3",species:"virginica"},{sepalLength:"6.5",sepalWidth:"3.0",petalLength:"5.5",petalWidth:"1.8",species:"virginica"},{sepalLength:"7.7",sepalWidth:"3.8",petalLength:"6.7",petalWidth:"2.2",species:"virginica"},{sepalLength:"7.7",sepalWidth:"2.6",petalLength:"6.9",petalWidth:"2.3",species:"virginica"},{sepalLength:"6.0",sepalWidth:"2.2",petalLength:"5.0",petalWidth:"1.5",species:"virginica"},{sepalLength:"6.9",sepalWidth:"3.2",petalLength:"5.7",petalWidth:"2.3",species:"virginica"},{sepalLength:"5.6",sepalWidth:"2.8",petalLength:"4.9",petalWidth:"2.0",species:"virginica"},{sepalLength:"7.7",sepalWidth:"2.8",petalLength:"6.7",petalWidth:"2.0",species:"virginica"},{sepalLength:"6.3",sepalWidth:"2.7",petalLength:"4.9",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.7",sepalWidth:"3.3",petalLength:"5.7",petalWidth:"2.1",species:"virginica"},{sepalLength:"7.2",sepalWidth:"3.2",petalLength:"6.0",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.2",sepalWidth:"2.8",petalLength:"4.8",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.1",sepalWidth:"3.0",petalLength:"4.9",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.4",sepalWidth:"2.8",petalLength:"5.6",petalWidth:"2.1",species:"virginica"},{sepalLength:"7.2",sepalWidth:"3.0",petalLength:"5.8",petalWidth:"1.6",species:"virginica"},{sepalLength:"7.4",sepalWidth:"2.8",petalLength:"6.1",petalWidth:"1.9",species:"virginica"},{sepalLength:"7.9",sepalWidth:"3.8",petalLength:"6.4",petalWidth:"2.0",species:"virginica"},{sepalLength:"6.4",sepalWidth:"2.8",petalLength:"5.6",petalWidth:"2.2",species:"virginica"},{sepalLength:"6.3",sepalWidth:"2.8",petalLength:"5.1",petalWidth:"1.5",species:"virginica"},{sepalLength:"6.1",sepalWidth:"2.6",petalLength:"5.6",petalWidth:"1.4",species:"virginica"},{sepalLength:"7.7",sepalWidth:"3.0",petalLength:"6.1",petalWidth:"2.3",species:"virginica"},{sepalLength:"6.3",sepalWidth:"3.4",petalLength:"5.6",petalWidth:"2.4",species:"virginica"},{sepalLength:"6.4",sepalWidth:"3.1",petalLength:"5.5",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.0",sepalWidth:"3.0",petalLength:"4.8",petalWidth:"1.8",species:"virginica"},{sepalLength:"6.9",sepalWidth:"3.1",petalLength:"5.4",petalWidth:"2.1",species:"virginica"},{sepalLength:"6.7",sepalWidth:"3.1",petalLength:"5.6",petalWidth:"2.4",species:"virginica"},{sepalLength:"6.9",sepalWidth:"3.1",petalLength:"5.1",petalWidth:"2.3",species:"virginica"},{sepalLength:"5.8",sepalWidth:"2.7",petalLength:"5.1",petalWidth:"1.9",species:"virginica"},{sepalLength:"6.8",sepalWidth:"3.2",petalLength:"5.9",petalWidth:"2.3",species:"virginica"},{sepalLength:"6.7",sepalWidth:"3.3",petalLength:"5.7",petalWidth:"2.5",species:"virginica"},{sepalLength:"6.7",sepalWidth:"3.0",petalLength:"5.2",petalWidth:"2.3",species:"virginica"},{sepalLength:"6.3",sepalWidth:"2.5",petalLength:"5.0",petalWidth:"1.9",species:"virginica"},{sepalLength:"6.5",sepalWidth:"3.0",petalLength:"5.2",petalWidth:"2.0",species:"virginica"},{sepalLength:"6.2",sepalWidth:"3.4",petalLength:"5.4",petalWidth:"2.3",species:"virginica"},{sepalLength:"5.9",sepalWidth:"3.0",petalLength:"5.1",petalWidth:"1.8",species:"virginica"}];
+
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+        width = parseInt($(id).css("width")) - margin.left - margin.right,
+        height = parseInt($(id).css("height")) - margin.top - margin.bottom;
+
+    var x = d3.scale.linear()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var color = d3.scale.category10();
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    var svg = d3.select(id).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // 将字符串数字改成数字类型
+    data.forEach(function(d) {
+        d.petalWidth = +d.petalWidth;
+        d.petalLength = +d.petalLength;
+        d.sepalWidth = +d.sepalWidth;
+        d.sepalLength = +d.sepalLength;
+    });
+
+    // 找出最大值和最小值，并定义x和y轴的输出域
+    x.domain(d3.extent(data, function(d) { return d.sepalWidth; })).nice();
+    y.domain(d3.extent(data, function(d) { return d.sepalLength; })).nice();
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .append("text")
+        .attr("class", "label")
+        .attr("x", width)
+        .attr("y", -6)
+        .style("text-anchor", "end")
+        .text("Sepal Width (cm)");
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Sepal Length (cm)")
+
+    svg.selectAll(".dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 3.5)
+        .attr("cx", function(d) { return x(d.sepalWidth); })
+        .attr("cy", function(d) { return y(d.sepalLength); })
+        .style("fill", function(d) { return color(d.species); });
+
+    var legend = svg.selectAll(".legend")
+        .data(color.domain())
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+        .attr("x", width - 18)
+        .attr("width", 18)
+        .attr("height", 18)
+        .style("fill", color);
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function(d) { return d; });
+}
+
+// 2017-11-1 矩形图
+function rectangle(id){
+    var correlationMatrix = [
+        [1, 0.3, 0, 0.8, 0, 0.2, 1, 0.5, 0, 0.75],
+        [0.3, 1, 0.5, 0.2, 0.4, 0.3, 0.8, 0.1, 1, 0],
+        [0, 0.5, 1, 0.4, 0, 0.9, 0, 0.2, 1, 0.3],
+        [0.8, 0.2, 0.4, 1, 0.3, 0.4, 0.1, 1, 0.2, 0.9],
+        [0, 0.4, 0, 0.3, 1, 0.1, 0.4, 0, 0.6, 0.7],
+        [0.2, 0.3, 0.9, 0.4, 0.1, 1, 0, 0.1, 0.4, 0.1],
+        [1, 0.8, 0, 0.1, 0.4, 0, 1, 0.5, 0, 1],
+        [0.5, 0.1, 0.2, 1, 0.1, 0, 0.5, 1, 0, 0.4],
+        [0, 1, 1, 0.2, 0.6, 0.4, 0, 0, 1, 0.6],
+        [0.75, 0, 0.3, 0.9, 0.7, 0.1, 1, 0.4, 0.6, 1]
+    ];
+
+    var labels = ['Var 1', 'Var 2', 'Var 3', 'Var 4', 'Var 5', 'Var 6', 'Var 7', 'Var 8', 'Var 9', 'Var 10'];
+
+    Matrix({
+        container : id,
+        data      : correlationMatrix,
+        labels    : labels,
+        start_color : '#ffffff',
+        end_color : '#3498db'
+    });
+
+    function Matrix(options) {
+//            {top: 30, right: 130, bottom: 50, left: 60},
+        var margin = {top: 30, right: 120, bottom: 50, left: 60},
+            container = options.container,
+            width = parseInt($(container).css("width")) - margin.left - margin.right,
+            height = parseInt($(container).css("height")) - margin.top - margin.bottom,
+            data = options.data,
+            labelsData = options.labels,
+            startColor = options.start_color,
+            endColor = options.end_color;
+
+        var widthLegend = 100;   // 右侧栏宽度
+
+        if(!data){
+            throw new Error('Please pass data');
+        }
+
+        if(!Array.isArray(data) || !data.length || !Array.isArray(data[0])){
+            throw new Error('It should be a 2-D array');
+        }
+
+        var maxValue = d3.max(data, function(layer) { return d3.max(layer, function(d) { return d; }); });
+        var minValue = d3.min(data, function(layer) { return d3.min(layer, function(d) { return d; }); });
+
+        var numrows = data.length;
+        var numcols = data[0].length;
+
+        var svg = d3.select(container).append("svg")
+            .attr("width", width + margin.left + margin.right - widthLegend)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var background = svg.append("rect")
+            .style("stroke", "black")
+            .style("stroke-width", "2px")
+            .attr("width", width)
+            .attr("height", height);
+
+        var x = d3.scale.ordinal()
+            .domain(d3.range(numcols))
+            .rangeBands([0, width]);
+
+        var y = d3.scale.ordinal()
+            .domain(d3.range(numrows))
+            .rangeBands([0, height]);
+
+        var colorMap = d3.scale.linear()
+            .domain([minValue,maxValue])
+            .range([startColor, endColor]);
+
+        var row = svg.selectAll(".row")
+            .data(data)
+            .enter().append("g")
+            .attr("class", "row")
+            .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; });
+
+        var cell = row.selectAll(".cell")
+            .data(function(d) { return d; })
+            .enter().append("g")
+            .attr("class", "cell")
+            .attr("transform", function(d, i) { return "translate(" + x(i) + ", 0)"; });
+
+        cell.append('rect')
+            .attr("width", x.rangeBand())
+            .attr("height", y.rangeBand())
+            .style("stroke-width", 0);
+
+        cell.append("text")
+            .attr("dy", ".32em")
+            .attr("x", x.rangeBand() / 2)
+            .attr("y", y.rangeBand() / 2)
+            .attr("text-anchor", "middle")
+            .style("fill", function(d, i) { return d >= maxValue/2 ? 'white' : 'black'; })
+            .text(function(d, i) { return d; });
+
+        row.selectAll(".cell")
+            .data(function(d, i) { return data[i]; })
+            .style("fill", colorMap);
+
+        var labels = svg.append('g')
+            .attr('class', "labels");
+
+        var columnLabels = labels.selectAll(".column-label")
+            .data(labelsData)
+            .enter().append("g")
+            .attr("class", "column-label")
+            .attr("transform", function(d, i) { return "translate(" + x(i) + "," + height + ")"; });
+
+        columnLabels.append("line")
+            .style("stroke", "black")
+            .style("stroke-width", "1px")
+            .attr("x1", x.rangeBand() / 2)
+            .attr("x2", x.rangeBand() / 2)
+            .attr("y1", 0)
+            .attr("y2", 5);
+
+        columnLabels.append("text")
+            .attr("x", 0)
+            .attr("y", y.rangeBand() / 2)
+            .attr("dy", ".82em")
+            .attr("text-anchor", "end")
+            .attr("transform", "rotate(-60)")
+            .text(function(d, i) { return d; });
+
+        var rowLabels = labels.selectAll(".row-label")
+            .data(labelsData)
+            .enter().append("g")
+            .attr("class", "row-label")
+            .attr("transform", function(d, i) { return "translate(" + 0 + "," + y(i) + ")"; });
+
+        rowLabels.append("line")
+            .style("stroke", "black")
+            .style("stroke-width", "1px")
+            .attr("x1", 0)
+            .attr("x2", -5)
+            .attr("y1", y.rangeBand() / 2)
+            .attr("y2", y.rangeBand() / 2);
+
+        rowLabels.append("text")
+            .attr("x", -8)
+            .attr("y", y.rangeBand() / 2)
+            .attr("dy", ".32em")
+            .attr("text-anchor", "end")
+            .text(function(d, i) { return d; });
+
+        var key = d3.select(container)
+            .append("svg")
+            .attr("width", widthLegend)
+            .attr("height", height + margin.top + margin.bottom);
+
+        var legend = key
+            .append("defs")
+            .append("svg:linearGradient")
+            .attr("id", "gradient")
+            .attr("x1", "100%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "100%")
+            .attr("spreadMethod", "pad");
+
+        legend
+            .append("stop")
+            .attr("offset", "0%")
+            .attr("stop-color", endColor)
+            .attr("stop-opacity", 1);
+
+        legend
+            .append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", startColor)
+            .attr("stop-opacity", 1);
+
+        key.append("rect")
+            .attr("width", widthLegend/2-10)
+            .attr("height", height)
+            .style("fill", "url(#gradient)")
+            .attr("transform", "translate(0," + margin.top + ")");
+
+        var y = d3.scale.linear()
+            .range([height, 0])
+            .domain([minValue, maxValue]);
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("right");
+
+        key.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(41," + margin.top + ")")
+            .call(yAxis)
+    }
 }
