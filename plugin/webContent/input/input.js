@@ -4,34 +4,22 @@
 //增加字段
 $(function(){
   initFromTable();
+  // init_autosave();
   bind_change_fromTable();
   bind_click_add();
   bind_click_loadParguet();
- // bind_click_generateSql();
+  bind_click_generateSql();
   bind_click_saveActionComp();
   bind_click_lessen();
-  //bind_method();
-//alert(JSON.stringify(tables))
-  setVal();
-  $(".stepName").val(etlName);
-
   $('.fromTable').trigger('change');
-  //$('.fields').trigger('change');
+
+  $(".stepName").val(etlName);
+  setVal();
 
   function bind_click_saveActionComp(){
-    // $('.saveActionComp').click(function(){
-    //   // alert(111)
-    //   fn_saveActionComp(getVal());
-    // });
-    // $('.fields').blur(function(){alert(111)
-    //     fn_saveActionComp(getVal());
-    //   });
-    $(document.body)
-      .off('change', '.fields')
-      .on('change', '.fields', function () {
-        fn_set_sqlOut(generate_sql());
-        fn_saveActionComp(getVal());
-      })
+    $('.saveActionComp').click(function(){
+      fn_saveActionComp(getVal());
+    });
   }
 
   function setVal(){
@@ -62,17 +50,12 @@ $(function(){
     return data;
   }
 
-  // function bind_click_generateSql(){
-  //   // demo.onBtnSqlClick = function() {
-  //   //   // alert(666)
-  //   //   var sql = generate_sql();
-  //   //   fn_set_sqlOut(sql);
-  //   // }
-  //   $('.generateSql').click(function(){
-  //     var sql = generate_sql();
-  //     fn_set_sqlOut(sql);
-  //   });
-  // }
+  function bind_click_generateSql(){
+    $('.generateSql').click(function(){
+      var sql = generate_sql();
+      fn_set_sqlOut(sql);
+    });
+  }
   function bind_click_loadParguet() {
     $('.loadParguet').click(function() {
       fn_upload_parquet();
@@ -84,20 +67,23 @@ $(function(){
       var tbName = $(this).val();
       var extractFieldHtml = $('.extractField').prop('outerHTML');
       $('.extractField').remove();
-      $.each(tables[tbName].fieldList,function(){
+      var fieldList = tables[tbName].fieldList;
+      $.each(fieldList,function(){
+        var checkField = this+"";
         $('.extractFields').append(extractFieldHtml);
         var extractField = $('.extractField:last');
-        extractField.find('.fields').val(this);
+        var optionHtml='';
+        $.each(fieldList,function(){
+          optionHtml += "<option value="+this+">"+this+"</option>";
+        });
+        extractField.find('.fields').html(optionHtml);
+        extractField.find('.fields').val(checkField);
       });
+
+
 
     });
   }
-  // function bind_method() {
-  //   $('.fields').bind("change",function() {alert(111)
-  //     document.getElementsByClassName('fields_inp').value = $(this).val();
-  //   });
-  // }
-
 
   function initFromTable(){
     var optionsHtml = "";
@@ -107,7 +93,6 @@ $(function(){
     });
     $('.fromTable').html(optionsHtml);
   }
-
 
 function bind_click_add() {
   $(document.body)
@@ -134,8 +119,13 @@ function bind_click_add() {
   function set_extractFields(obj){
     var extractFieldHtml = $('.extractField').prop('outerHTML');
     $('.extractField').remove();
+    if(obj.length<1){
+      return;
+    }
     // alert(JSON.stringify(obj))
-    var extractHtml = '';
+    /**
+    console.log(obj);
+    var extractHtml = '';alert(JSON.stringify(obj))
       $.each(obj,function(){
          $('.extractFields').append(extractFieldHtml);
          // $('.extractField:last .fields').val(this);
@@ -143,6 +133,20 @@ function bind_click_add() {
         //$('.extractField').attr(selected);
       });
     $('.extractField').find('.fields').html(extractHtml);
+*/
+
+    $.each(obj,function(){
+      var checkField = this+"";
+      $('.extractFields').append(extractFieldHtml);
+      var extractField = $('.extractField:last');
+      var optionHtml='';
+      $.each(tables[fn_get_fromTable()].fieldList,function(){
+        optionHtml += "<option value="+this+">"+this+"</option>";
+      });
+      extractField.find('.fields').html(optionHtml);
+      extractField.find('.fields').val(checkField);
+    });
+
   }
 
   function get_extractFields(){
@@ -167,13 +171,4 @@ function bind_click_add() {
     });
     return s.toString();
   }
-
-
-
-
-
-
-
-
-
 });

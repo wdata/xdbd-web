@@ -10,6 +10,7 @@
         position: absolute;
         right: 20px;
         top: 12px;
+        display: none;
     }
     .ensure_save{
         display: inline-block;
@@ -153,11 +154,11 @@
 </div>
 <div class="fromInp" style="margin-top: 44px;">
     <label>步骤名称：</label>
-    <input type="text" class="stepName"/>
+    <input type="text" class="stepName auto_save"/>
 </div>
 <div class="fromInp">
     <label>表输出：</label>
-    <input type="text" class="tableOut" style="margin-left: 23px;"/>
+    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
 </div>
 <!--<div class="fromInp">-->
     <!--<label>选择表：</label>-->
@@ -175,8 +176,8 @@
             </thead>
             <tbody class="groups">
             <tr class="group">
-                <td><select class="field"></select></td>
-                <td class="regulation"><span class="add onAdd"></span><span class="lessen onLessen"></span></td>
+                <td><select class="field auto_save"></select></td>
+                <td class="regulation"><span class="add onAdd auto_save"></span><span class="lessen onLessen auto_save"></span></td>
             </tr>
             </tbody>
         </table>
@@ -194,12 +195,12 @@
         </thead>
         <tbody class="extractFields">
         <tr class="extractField">
-            <td style="width: 30%;"><select class="field"></select></td>
+            <td style="width: 30%;"><select class="field auto_save"></select></td>
             <td>
-                <input class="alias" type="text"/>
+                <input class="alias auto_save" type="text"/>
             </td>
             <td style="width: 32%">
-                <select class="fn">
+                <select class="fn auto_save">
                     <option></option>
                     <option>max</option>
                     <option>min</option>
@@ -208,7 +209,7 @@
                     <option>avg</option>
                 </select>
             </td>
-            <td class="regulation"><span class="add extractAdd"></span><span class="lessen extractLessen"></span></td>
+            <td class="regulation"><span class="add extractAdd auto_save"></span><span class="lessen extractLessen auto_save"></span></td>
         </tr>
         </tbody>
     </table>

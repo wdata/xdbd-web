@@ -4,7 +4,7 @@ $(function(){
 	function getBiSet(projectId){
 		$.ajax({
             type:'get',
-            url:'/xdbd-bi/bi/report/v1/biset/list.json',
+            url:$url1 + '/bi/report/v1/biset/list.json',
             headers:{   username:username, userId:userId    },
             dataType:'json',
             data:{
@@ -45,13 +45,13 @@ $(function(){
 	function getBiDataModel(biSetId){
 		$.ajax({
             type:'get',
-            url:'/xdbd-bi/bi/report/v1/datamodel.json',
+            url:$url1 + '/bi/report/v1/datamodel.json',
             headers:{   username:username, userId:userId    },
             dataType:'json',
             data:{
                 "projectId":projectId,
                 "versionId":versionId,
-                "pageId":pageId,
+                "pageId":dirId,
                 "biSetId":biSetId
             },
             success:function(res){
@@ -255,7 +255,7 @@ $(function(){
 	function setBiFieldName(id,name){
 		$.ajax({
             type:'PUT',
-            url:'/xdbd-bi/bi/report/v1/dataModel/fieldAlias.json',
+            url:$url1 + '/bi/report/v1/dataModel/fieldAlias.json',
             headers:{   username:username, userId:userId    },
             dataType:'json',
             data:{

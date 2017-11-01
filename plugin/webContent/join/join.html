@@ -12,6 +12,7 @@
         position: absolute;
         right: 20px;
         top: 12px;
+        display: none;
     }
     .ensure_save{
         display: inline-block;
@@ -155,15 +156,15 @@
 </div>
 <div class="fromInp" style="margin-top: 44px;">
     <label>步骤名称：</label>
-    <input type="text" class="stepName"/>
+    <input type="text" class="stepName auto_save"/>
 </div>
 <div class="fromInp">
     <label>表输出：</label>
-    <input type="text" class="tableOut" style="margin-left: 23px;"/>
+    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
 </div>
 <div class="fromInp">
     <label>选择表：</label>
-    <select class="fromTable" style="width:160px;height: 28px;margin-left: 25px;">
+    <select class="fromTable auto_save" style="width:160px;height: 28px;margin-left: 25px;">
     </select>
 </div>
 <div class="related_tit">关联表</div>
@@ -171,7 +172,7 @@
 <div class="fromInp joinTable" style="margin: 0 12px;border: 1px solid #d9d9d9;overflow: hidden;">
     <div class="related">
         <label style="float: left;">关联类型：</label>
-        <select class="joinType">
+        <select class="joinType auto_save">
             <option>inner join</option>
             <option>left join</option>
             <option>right join</option>
@@ -179,7 +180,7 @@
     </div>
     <div class="related">
         <label style="float: left;">选择表：</label>
-        <select class="selectTable"></select>
+        <select class="selectTable auto_save"></select>
     </div>
     <div class="clear"></div>
     <table class="related_tab" cellspacing="0">
@@ -192,14 +193,14 @@
         </thead>
         <tbody class="onFilters">
         <tr class="onFilter">
-            <td><select class="field1"></select></td>
+            <td><select class="field1 auto_save"></select></td>
             <td>
-                <select class="expr">
+                <select class="expr auto_save">
                 <option>=</option><option><</option><option>></option><option><=</option><option>>=</option>
                 </select>
             </td>
-            <td><select class="field2"></select></td>
-            <td class="regulation"><span class="add onAdd"></span><span class="lessen onLessen"></span></td>
+            <td><select class="field2 auto_save"></select></td>
+            <td class="regulation"><span class="add onAdd auto_save"></span><span class="lessen onLessen auto_save"></span></td>
         </tr>
         </tbody>
     </table>
@@ -217,12 +218,12 @@
         </thead>
         <tbody class="extractFields">
             <tr class="extractField">
-                <td><select class="table"></select></td>
+                <td><select class="table auto_save"></select></td>
                 <td>
-                    <select class="field"></select>
+                    <select class="field auto_save"></select>
                 </td>
-                <td style="width: 32%"><input class="alias" type="text"/></td>
-                <td class="regulation"><span class="add extractAdd"></span><span class="lessen extractLessen"></span></td>
+                <td style="width: 32%"><input class="alias auto_save" type="text"/></td>
+                <td class="regulation"><span class="add extractAdd auto_save"></span><span class="lessen extractLessen auto_save"></span></td>
             </tr>
         </tbody>
     </table>
