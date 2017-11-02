@@ -50,9 +50,17 @@
       var this_actionId = localStorage.getItem('directoryId');
 //      var this_versionId = sessionStorage.getItem('verid');
       var this_versionId = localStorage.getItem("versionId");
+      var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
+      var onenv = true;
       var this_webComponentId;
       var this_actionCompType;
       var $url = '../xdbd-etl'; ///xdbd-etl
+
+      if(this_onenv == 'dev') {
+        onenv = true;
+      } else if(this_onenv == 'test') {
+        onenv = false;
+      }
 
       init_dataSourceTables();
       init_actionComp();
@@ -69,7 +77,7 @@
 //        headLabel:true,
         initLabelText:'流程图',
         headBtns:["save","undo","redo","reload","new","print","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
-        haveTool:true,
+        haveTool:onenv,
         haveDashed:true,
         haveGroup:true,
         useOperStack:true
@@ -567,7 +575,8 @@
         function fn_upload_parquet() {
           var load = {
             "actionId":this_actionId,
-            "versionId":this_versionId
+            "versionId":this_versionId,
+            "active": this_onenv
           }
           $.ajax({
             type:"POST",
