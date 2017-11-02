@@ -116,6 +116,33 @@ $(function(){
 	})
 	
 	
+	/**
+	 * 公共页面*/
+	$(".sys-menus").delegate("li","click",function(){
+		let url;
+		let name = $(this).find("a").text();
+		switch(name){
+			case "组织管理":
+				url = "http://192.168.1.43:8086/page/org_control/org_control.html";
+			break;
+			case "账号管理":
+				url = "http://192.168.1.43:8086/page/account/account.html";
+			break;
+			case "角色管理":
+				url = "http://192.168.1.43:8086/page/character/character.html";
+			break;
+			case "日志管理":
+				url = "html/loglist.html";
+			break;
+			case "企业中心":
+				url = "http://192.168.1.43:8086/page/org_control/not_org.html";
+			break;
+			default:
+		}
+		$("#iframepage2").attr("src",url);
+	})
+	
+	
 	/*
 	 
 	 * 创建项目
