@@ -18,7 +18,7 @@ $(document).ready(function() {
   	//section1
   	$(".business .intro").hover(
   		function(){
-  			$(this).next(".detail").css({"backgoundColor":"red"})
+  			$(this).next(".detail").css({"backgroundColor":"red"})
   		},
   		function(){
   			

@@ -611,7 +611,7 @@ $(function(){
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
 	            dataType:'json',
-	            contentType: "application/json",
+//	            contentType: "application/json",
 				data:{
 					"versionIdFrom":versionIdFrom,
 					"versionIdTo":versionIdTo
