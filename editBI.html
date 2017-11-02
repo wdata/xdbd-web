@@ -26,760 +26,763 @@
     <![endif]-->
   </head>
   <body>
-					<!--BI报表编辑模式-->
-					<div class="edit-state">
-						<div class="top-bar clearfix clearX">
+	<!--BI报表编辑模式-->
+	<div class="edit-state" >
+		<div class="top-bar clearfix clearX">
 
-							<div class="exit-preview" onclick="operating.exitPreview()"><span>退出预览</span><img src="images/icon_preview.png" alt=""/></div>
+			<!--<div class="exit-preview" onclick="operating.exitPreview()"><span>退出预览</span><img src="images/icon_preview.png" alt=""/></div>-->
 
-							<img data-tip="保存" src="images/icon_save.png" alt=""  onclick="operating.save()" />	<!--保存-->
-							<img data-tip="撤销" src="images/icon_prev.png" alt="" />	<!--撤销-->
-							<img data-tip="恢复" src="images/icon_next.png" alt="" />	<!--恢复-->
-							<img data-tip="刷新" src="images/icon_fresh.png" alt="" onclick="operating.refresh()" />	<!--刷新-->
-							<img data-tip="预览" src="images/icon_preview.png" alt="" onclick="operating.preview()" />	<!--预览-->
-							<img data-tip="复制" src="images/icon_copy.png" alt="" onclick="operating.copy(id_)" />		<!--复制-->
-							<img data-tip="粘贴" src="images/icon_paste.png" alt="" onclick="operating.paste(id_)" />		<!--粘贴-->
-							<!--<img src="images/icon_move.png" alt="" />-->
-							<!--<img src="images/icon_temp.png" alt="" />-->
-							<img data-tip="删除" src="images/delete_01.png" alt="" onclick="operating.clickDelete(id_);" />		<!--删除-->
-							<!--<img src="images/icon_new.png" alt="" />-->
-							<div class="set-index-box fr">
-								<input type="checkbox" name="" id="" value="" />
-								<img src="images/xuankuang.png" alt="" />
-								<span>设为首页</span>
+			<img data-tip="保存" src="images/icon_save.png" alt=""  onclick="operating.save()" />	<!--保存-->
+			<img data-tip="撤销" src="images/icon_prev.png" alt="" />	<!--撤销-->
+			<img data-tip="恢复" src="images/icon_next.png" alt="" />	<!--恢复-->
+			<img data-tip="刷新" src="images/icon_fresh.png" alt="" onclick="operating.refresh()" />	<!--刷新-->
+			<img id="preview" data-tip="预览" src="images/icon_preview.png" alt="" onclick="operating.preview()" />	<!--预览-->
+			<img data-tip="复制" src="images/icon_copy.png" alt="" onclick="operating.copy(id_)" />		<!--复制-->
+			<img data-tip="粘贴" src="images/icon_paste.png" alt="" onclick="operating.paste(id_)" />		<!--粘贴-->
+			<!--<img src="images/icon_move.png" alt="" />-->
+			<!--<img src="images/icon_temp.png" alt="" />-->
+			<img data-tip="删除" src="images/delete_01.png" alt="" onclick="operating.clickDelete(id_);" />		<!--删除-->
+			<!--<img src="images/icon_new.png" alt="" />-->
+			<div class="set-index-box fr">
+				<input type="checkbox" name="" id="" value="" />
+				<img src="images/xuankuang.png" alt="" />
+				<span>设为首页</span>
+			</div>
+		</div>
+		<div class="type-bar clearY">
+			<div class="fold-button">
+				<img src="images/btn_shouqi.png" alt="" />
+			</div>
+			<div class="chart-type-box">
+				<img src="images/bar.png" alt=""  data-type="chart" class="u-btn-class"/>
+				<img src="images/biaoge.png" alt=""  data-type="table" class="u-btn-class"/>
+				<img src="images/txt.png" alt=""  data-type="text" class="u-btn-class"/>
+				<form class="upload-img-box" id="fileForm">
+					<input type="file" id="uploadFile" onchange="imageUpload(this);"/>
+					<img src="images/img.png" alt=""  data-type="image" class="u-btn-class"/>
+				</form>
+				<img src="images/button.png" alt=""  data-type="button" class="u-btn-class"/>
+			</div>
+		</div>
+		<div class="drag-bar clearfix">
+			<div class="op-box1 op-box">
+				<!--图表 start-->
+				<div class="chart-attr-box">
+					<div class="title-box">
+						<h3>图表</h3>
+					</div>
+					<div class="set-axis-box">
+						<div class="set-x set-axis">
+							<p>X轴</p>
+							<div class="x-pills pills">
+								<ul>
+									<!--<li>
+										<span>年-月-日（发货日期）</span>
+									</li>
+									<li>
+										<span>国家</span>
+									</li>-->
+								</ul>
 							</div>
+							<div class="axis-empty empty">拖入字段</div>
 						</div>
-						<div class="type-bar clearY">
-							<div class="fold-button">
-								<img src="images/btn_shouqi.png" alt="" />
+						<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
+						<div class="set-y set-axis">
+							<p>Y轴</p>
+							<div class="y-pills pills">
+								<ul>
+									<!--<li>
+										<span>度量值</span>
+									</li>
+									<li>
+										<span>邮寄方式</span>
+									</li>-->
+								</ul>
 							</div>
-							<div class="chart-type-box">
-								<img src="images/bar.png" alt=""  data-type="chart" class="u-btn-class"/>
-								<img src="images/biaoge.png" alt=""  data-type="table" class="u-btn-class"/>
-								<img src="images/txt.png" alt=""  data-type="text" class="u-btn-class"/>
-								<form class="upload-img-box" id="fileForm">
-									<input type="file" id="uploadFile" onchange="imageUpload(this);"/>
-									<img src="images/img.png" alt=""  data-type="image" class="u-btn-class"/>
-								</form>
-								<img src="images/button.png" alt=""  data-type="button" class="u-btn-class"/>
-							</div>
+							<div class="axis-empty empty">拖入字段</div>
 						</div>
-						<div class="drag-bar clearfix">
-							<div class="op-box1 op-box">
-								<!--图表 start-->
-								<div class="chart-attr-box">
-									<div class="title-box">
-										<h3>图表</h3>
-									</div>
-									<div class="set-axis-box">
-										<div class="set-x set-axis">
-											<p>X轴</p>
-											<div class="x-pills pills">
-												<ul>
-													<!--<li>
-														<span>年-月-日（发货日期）</span>
-													</li>
-													<li>
-														<span>国家</span>
-													</li>-->
-												</ul>
-											</div>
-											<div class="axis-empty empty">拖入字段</div>
-										</div>
-										<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
-										<div class="set-y set-axis">
-											<p>Y轴</p>
-											<div class="y-pills pills">
-												<ul>
-													<!--<li>
-														<span>度量值</span>
-													</li>
-													<li>
-														<span>邮寄方式</span>
-													</li>-->
-												</ul>
-											</div>
-											<div class="axis-empty empty">拖入字段</div>
-										</div>
-									</div>
-									<div class="opt-attr-box">
-										<p>属性</p>
-										<div class="opt-chart-type">
-											<div class="chart-type-val">
-												<span>柱状图</span>
-												<i class="fa fa-caret-down fr"></i>
-											</div>
-											<div class="chart-type-lists">
-												<ul>
-													<li data-type="101" class="active">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl"/>
-															<span>柱状图</span>
-														</div>
-													</li>
-													<li data-type="102">
-														<div>
-															<img src="images/icon_line_on.png" alt="" class="fl" />
-															<span>折线图</span>
-														</div>
-													</li>
-													<li data-type="103">
-														<div>
-															<img src="images/icon_pie_on.png" alt="" class="fl" />
-															<span>饼图</span>
-														</div>
-													</li>
-													<li data-type="0">
-														<div>
-															<img src="images/icon_table_on.png" alt="" class="fl" />
-															<span>表格</span>
-														</div>
-													</li>
-													<li data-type="104">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>堆叠柱状图</span>
-														</div>
-													</li>
-													<li data-type="105">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>区域图</span>
-														</div>
-													</li>
-													<li data-type="106">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>散点图</span>
-														</div>
-													</li>
-													<li data-type="107">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>甘特图</span>
-														</div>
-													</li>
-													<li data-type="108">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>仪表盘</span>
-														</div>
-													</li>
-													<li data-type="109">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>漏斗图</span>
-														</div>
-													</li>
-													<li data-type="110">
-														<div>
-															<img src="images/icon_bar_on.png" alt="" class="fl" />
-															<span>矩阵图<span>
-														</div>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<!--数据筛选-->
-									<div class="data-screening">
-										<p>数据筛选</p>
-										<div class="datas-pills pills">
-												<ul>
-													<!--<li>
-														<span>度量值</span>
-													</li>
-													<li>
-														<span>邮寄方式</span>
-													</li>-->
-												</ul>
-											</div>
-											<div class="data-empty empty">拖入字段</div>
-									</div>
-									<!--保存刷新-->
-									<div class="data-refresh">
-										<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
-									</div>
-								</div>
-								<!--图表 end-->
-								<!--表格 start-->
-								<div class="table-attr-box">
-									<div class="title-box">
-										<h3>表格</h3>
-									</div>
-									<div class="set-axis-box">
-										<div class="set-x set-axis">
-											<p>X轴</p>
-											<div class="x-pills pills">
-												<ul>
-													<!--<li>
-														<span>年-月-日（发货日期）</span>
-													</li>
-													<li>
-														<span>国家</span>
-													</li>-->
-												</ul>
-											</div>
-											<div class="axis-empty empty">拖入字段</div>
-										</div>
-										<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
-										<div class="set-y set-axis">
-											<p>Y轴</p>
-											<div class="y-pills pills">
-												<ul>
-													<!--<li>
-														<span>度量值</span>
-													</li>
-													<li>
-														<span>邮寄方式</span>
-													</li>-->
-												</ul>
-											</div>
-											<div class="axis-empty empty">拖入字段</div>
-										</div>
-									</div>
-									<!--数据筛选-->
-									<div class="data-screening">
-										<p>数据筛选</p>
-										<div class="datas-pills pills">
-												<ul>
-													<!--<li>
-														<span>度量值</span>
-													</li>
-													<li>
-														<span>邮寄方式</span>
-													</li>-->
-												</ul>
-											</div>
-											<div class="data-empty empty">拖入字段</div>
-									</div>
-									<!--保存刷新-->
-									<div class="data-refresh">
-										<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
-									</div>
-								</div>
-								<!--表格 end-->
-								<!--文本 start-->
-								<div class="text-attr-box" style="display: none;">
-									<div class="title-box">
-										<h3>文本</h3>
-										<div class="set-text-attr">
-											<p>字体段落</p>
-											<div class="set-text-attr-wrap">
-												<div class="set-text-color">
-													<div class="color-row">
-														<input type="hidden" name="unique-name-1" data-palette='["#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#00B8D4">
-													</div>
-												</div>
-												<div class="set-text-size sc-color">
-													<select name="">
-														<option value="1">9</option>
-														<option value="2">10</option>
-														<option selected value="3">12</option>
-														<option value="4">14</option>
-														<option value="5">16</option>
-														<option value="6">20</option>
-														<option value="7">24</option>
-													</select>
-													<i class="fa fa-caret-down"></i>
-												</div>
-												<div class="set-text-family sc-color">
-													<select name="">
-														<option value="微软雅黑">微软雅黑</option>
-														<option value="中易宋体">中易宋体</option>
-														<option value="Helvetica">Helvetica</option>
-														<option value="Arial">Arial</option>
-														<option value="Lucida Family">Lucida Family</option>
-														<option value="Verdana">Verdana</option>
-														<option value="Tahoma">Tahoma</option>
-													</select>
-													<i class="fa fa-caret-down"></i>
-												</div>
-												<div class="set-text-weight wa-text">
-													<span>样式</span>
-													<img src="images/t_bold.png" alt="" title="font-size:bold" class="bold"/>
-													<img src="images/t_italic.png" alt="" title="fotn-style:italic"  class="italic" />
-													<img src="images/t_underline.png" alt="" title="text-decoration:underline" class="underline" />
-												</div>
-												<div class="set-text-align wa-text">
-													<span>对齐</span>
-													<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
-													<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
-													<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--文本 end-->
-								<!--按钮 start-->
-								<div class="button-attr-box">
-									<div class="title-box">
-										<h3>按钮</h3>
-										<div class="set-button-price-text">
-											<p>设置按钮字体</p>
-											<input type="text" id="buttonText">
-										</div>
-										<div class="set-button-color set-button">
-											<div>按钮颜色</div>
-											<div class="set-text-color">
-												<div class="color-row">
-													<input type="hidden" name="unique-name-2" data-palette='["#DDDDDD","#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#DDDDDD">
-												</div>
-											</div>
-										</div>
-										<div class="set-button-size set-button">
-											<div>字体大小</div>
-											<div class="set-text-size sc-color">
-												<select name="">
-													<option selected value="12">12</option>
-													<option value="14">14</option>
-													<option selected value="16">16</option>
-													<option value="20">20</option>
-													<option value="24">24</option>
-													<option value="28">28</option>
-													<option value="32">32</option>
-												</select>
-												<i class="fa fa-caret-down"></i>
-											</div>
-										</div>
-										<div class="set-button-SizeColor set-button">
-											<div>字体颜色</div>
-											<div class="set-text-color">
-												<div class="color-row">
-													<input type="hidden" name="unique-name-3" data-palette='["#000","#ffffff","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000">
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--按钮 end-->
-								<!--图片 start-->
-								<div class="price-attr-box">
-									<div class="title-box">
-										<h3>图片</h3>
-										<div class="set-price-prop set-index-box">
-											<input type="checkbox"/>
-											<img src="images/xuankuang.png" alt="" />
-											<span>保持宽高比</span>
-										</div>
-										<div class="set-price-border-style set-price">
-											<div>边框样式</div>
-											<div class="set-text-size sc-color">
-												<select name="">
-													<option value="实线">实线</option>
-													<option value="点线">点线</option>
-													<option value="虚线">虚线</option>
-												</select>
-												<i class="fa fa-caret-down"></i>
-											</div>
-										</div>
-										<div class="set-price-color set-price">
-											<div>边框颜色</div>
-											<div class="set-text-color">
-												<div class="color-row">
-													<input type="hidden" name="unique-name-4" data-palette='["#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000000">
-												</div>
-											</div>
-										</div>
-										<div class="set-price-border set-price">
-											<div>边框宽度</div>
-											<div class="set-text-size sc-color">
-												<select name="">
-													<option value="0">0</option>
-													<option value="1">1</option>
-													<option value="2">2</option>
-													<option value="3">3</option>
-													<option value="4">4</option>
-													<option value="5">5</option>
-												</select>
-												<i class="fa fa-caret-down"></i>
-											</div>
-										</div>
-										<div class="set-price-radius set-price">
-											<div>圆角</div>
-											<input type="number" placeholder="0" maxlength="2">
-										</div>
-									</div>
-								</div>
-
-								<!--图片 end-->
+					</div>
+					<div class="opt-attr-box">
+						<p>属性</p>
+						<div class="opt-chart-type">
+							<div class="chart-type-val">
+								<span>柱状图</span>
+								<i class="fa fa-caret-down fr"></i>
 							</div>
-							<div class="op-box2 op-box">
-								<div class="title-box">
-									<h3>数据源</h3>
-								</div>
-								<div class="data-source-box">
-									<select name="">
-										<!--<option value="选择数据源">选择数据源</option>
-										<option value="选择数据源">数据1</option>
-										<option value="选择数据源">数据2</option>
-										<option value="选择数据源">数据3</option>-->
-									</select>
-									<i class="fa fa-caret-down"></i>
-								</div>
-								<div class="set-param-box">
-									<!--维度-->
-									<div class="dimension-box same-resource">
-										<div class="dimension-title">
-											<p>维度</p>
+							<div class="chart-type-lists">
+								<ul>
+									<li data-type="101" class="active">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl"/>
+											<span>柱状图</span>
 										</div>
-										<ul class="placeholder">
-											<!--<li>城市</li>
-											<li>省份</li>
-											<li>度量名称</li>
-											<li>年-月-日</li>-->
-										</ul>
-									</div>
-									<!--度量-->
-									<div class="metric-box same-resource">
-										<div class="dimension-title">
-											<p>度量</p>
+									</li>
+									<li data-type="102">
+										<div>
+											<img src="images/icon_line_on.png" alt="" class="fl" />
+											<span>折线图</span>
 										</div>
-										<ul class="placeholder">
-											<!--<li>城市</li>
-											<li>省份</li>
-											<li>度量名称</li>-->
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="chart-main-box">
-							<div class="edit-content">
-								<div class="edit-libs-box"></div>
+									</li>
+									<li data-type="103">
+										<div>
+											<img src="images/icon_pie_on.png" alt="" class="fl" />
+											<span>饼图</span>
+										</div>
+									</li>
+									<li data-type="0">
+										<div>
+											<img src="images/icon_table_on.png" alt="" class="fl" />
+											<span>表格</span>
+										</div>
+									</li>
+									<li data-type="104">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>堆叠柱状图</span>
+										</div>
+									</li>
+									<li data-type="105">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>区域图</span>
+										</div>
+									</li>
+									<li data-type="106">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>散点图</span>
+										</div>
+									</li>
+									<li data-type="107">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>甘特图</span>
+										</div>
+									</li>
+									<li data-type="108">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>仪表盘</span>
+										</div>
+									</li>
+									<li data-type="109">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>漏斗图</span>
+										</div>
+									</li>
+									<li data-type="110">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>矩阵图<span>
+										</div>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
-			<!--	</div>-->
-			<!--</div>-->
-	
-		
-		<!--数据筛选(求和)-->
-		<div class="data-filter-mod modal">
-			<h3>数据筛选（求和（值））<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="s-data-val">
-				<ul class="clearfix">
-					<li class="fl">
-						<img src="images/icon_circle_on.png" alt="" />
-						<input type="radio" name="range" checked="true"/>
-						<span>范围</span>
-					</li>
-					<li class="fl">
-						<img src="images/icon_circle.png" alt="" />
-						<input type="radio" name="range"/>
-						<span>至少</span>
-					</li>
-					<li class="fr">
-						<img src="images/icon_circle.png" alt="" />
-						<input type="radio" name="range"/>
-						<span>至多</span>
-					</li>
-				</ul>
-				<div class="s-range-val">
-					<input type="text" class="min"/>
-					<input type="text" class="max"/>
-				</div>
-				<button class="s-more-btn">加载范围</button>
-				<div class="s-slider-box">
-					<div id="slider-range" class="s-slider-range"></div>
-				</div>
-			</div>
-			<div class="file-btns-col mcenter">
-				<span>
-					<button onclick="swRag.save()">确定</button>
-					<button onclick="swRag.cancel()">取消</button>
-				</span>
-			</div>
-		</div>
-		
-		<!--项目过滤属性-->
-		<div id="filter-attr" class="filter-attr  modal" >
-			<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="f-attr-box clearfix">
-				<div class="f-attr-left fl">
-					<ul class="f-name clearfix">
-						<li class="active"><a href="javascript:;">列表筛选</a></li>
-						<li><a href="javascript:;">文本筛选</a></li>
-						<li><a href="javascript:;">条件筛选</a></li>
-						<li><a href="javascript:;">高级筛选</a></li>
-					</ul>
-					<div class="f-box">
-						<div class="f-box1">
-							<ul class="clearfix f-category">
-								<li class="fl">
-									<img src="images/icon_circle_on.png" alt="" />
-									<input type="radio" name="methods" checked="true"/>
-									<span>列表</span>
-								</li>
-								<li class="fl">
-									<img src="images/icon_circle.png" alt="" />
-									<input type="radio" name="methods"/>
-									<span>自动</span>
-								</li>
-							</ul>
-							<div class="f-search-box">
-								<input type="text" onchange="project.search(this)" placeholder="请输入您要添加的内容"/>
-							</div>
-							<div class="f-addbtn-box f-addbtn-box-1" style="margin-left: 47px;display: none">
-								<button onclick="project.textAdd()"><i class="fa fa-plus"></i>添加</button>
-							</div>
-							<div class="f-addbtn-box-auto">
+					<!--数据筛选-->
+					<div class="data-screening">
+						<p>数据筛选</p>
+						<div class="datas-pills pills">
 								<ul>
+									<!--<li>
+										<span>度量值</span>
+									</li>
+									<li>
+										<span>邮寄方式</span>
+									</li>-->
 								</ul>
 							</div>
-							<div class="f-select-cont">
+							<div class="data-empty empty">拖入字段</div>
+					</div>
+					<!--保存刷新-->
+					<div class="data-refresh">
+						<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+					</div>
+				</div>
+				<!--图表 end-->
+				<!--表格 start-->
+				<div class="table-attr-box">
+					<div class="title-box">
+						<h3>表格</h3>
+					</div>
+					<div class="set-axis-box">
+						<div class="set-x set-axis">
+							<p>X轴</p>
+							<div class="x-pills pills">
 								<ul>
-									<li>
-										<img src="images/icon_checked.png" alt="" />
-										<input type="checkbox"/>
-										<span>上海</span>
+									<!--<li>
+										<span>年-月-日（发货日期）</span>
 									</li>
 									<li>
-										<img src="images/icon_checked.png" alt="" />
-										<input type="checkbox"/>
-										<span>北京</span>
-									</li>
-									<li>
-										<img src="images/icon_checked.png" alt="" />
-										<input type="checkbox"/>
-										<span>天津</span>
-									</li>
-									<li>
-										<img src="images/icon_checked.png" alt="" />
-										<input type="checkbox"/>
-										<span>重庆</span>
-									</li>
+										<span>国家</span>
+									</li>-->
 								</ul>
+							</div>
+							<div class="axis-empty empty">拖入字段</div>
+						</div>
+						<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
+						<div class="set-y set-axis">
+							<p>Y轴</p>
+							<div class="y-pills pills">
+								<ul>
+									<!--<li>
+										<span>度量值</span>
+									</li>
+									<li>
+										<span>邮寄方式</span>
+									</li>-->
+								</ul>
+							</div>
+							<div class="axis-empty empty">拖入字段</div>
+						</div>
+					</div>
+					<!--数据筛选-->
+					<div class="data-screening">
+						<p>数据筛选</p>
+						<div class="datas-pills pills">
+								<ul>
+									<!--<li>
+										<span>度量值</span>
+									</li>
+									<li>
+										<span>邮寄方式</span>
+									</li>-->
+								</ul>
+							</div>
+							<div class="data-empty empty">拖入字段</div>
+					</div>
+					<!--保存刷新-->
+					<div class="data-refresh">
+						<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+					</div>
+				</div>
+				<!--表格 end-->
+				<!--文本 start-->
+				<div class="text-attr-box" style="display: none;">
+					<div class="title-box">
+						<h3>文本</h3>
+						<div class="set-text-attr">
+							<p>字体段落</p>
+							<div class="set-text-attr-wrap">
+								<div class="set-text-color">
+									<div class="color-row">
+										<input type="hidden" name="unique-name-1" data-palette='["#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#00B8D4">
+									</div>
+								</div>
+								<div class="set-text-size sc-color">
+									<select name="">
+										<option value="1">9</option>
+										<option value="2">10</option>
+										<option selected value="3">12</option>
+										<option value="4">14</option>
+										<option value="5">16</option>
+										<option value="6">20</option>
+										<option value="7">24</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-family sc-color">
+									<select name="">
+										<option value="微软雅黑">微软雅黑</option>
+										<option value="中易宋体">中易宋体</option>
+										<option value="Helvetica">Helvetica</option>
+										<option value="Arial">Arial</option>
+										<option value="Lucida Family">Lucida Family</option>
+										<option value="Verdana">Verdana</option>
+										<option value="Tahoma">Tahoma</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-weight wa-text">
+									<span>样式</span>
+									<img src="images/t_bold.png" alt="" title="font-size:bold" class="bold"/>
+									<img src="images/t_italic.png" alt="" title="fotn-style:italic"  class="italic" />
+									<img src="images/t_underline.png" alt="" title="text-decoration:underline" class="underline" />
+								</div>
+								<div class="set-text-align wa-text">
+									<span>对齐</span>
+									<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
+									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
+									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
+								</div>
 							</div>
 						</div>
-						<div class="f-box2">
-							<div class="f-select-box1">
+					</div>
+				</div>
+				<!--文本 end-->
+				<!--按钮 start-->
+				<div class="button-attr-box">
+					<div class="title-box">
+						<h3>按钮</h3>
+						<div class="set-button-price-text">
+							<p>设置按钮字体</p>
+							<input type="text" id="buttonText">
+						</div>
+						<div class="set-button-color set-button">
+							<div>按钮颜色</div>
+							<div class="set-text-color">
+								<div class="color-row">
+									<input type="hidden" name="unique-name-2" data-palette='["#DDDDDD","#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#DDDDDD">
+								</div>
+							</div>
+						</div>
+						<div class="set-button-size set-button">
+							<div>字体大小</div>
+							<div class="set-text-size sc-color">
 								<select name="">
-									<option value="AND">包含以下所有条件</option>
-									<option value="OR">包含以下任一条件</option>
+									<option selected value="12">12</option>
+									<option value="14">14</option>
+									<option selected value="16">16</option>
+									<option value="20">20</option>
+									<option value="24">24</option>
+									<option value="28">28</option>
+									<option value="32">32</option>
 								</select>
 								<i class="fa fa-caret-down"></i>
 							</div>
-							<div class="f-select-box2">
-								<div>
-									<div class="f-subselect">
-										<select onchange="project.textData()" name="">
-											<option value="CONTAIN">包含</option>
-											<option value="START WITH">开头是</option>
-											<option value="END WITH">结尾是</option>
-											<option value="NOT CONTAIN">不包含</option>
-											<option value="EQUAL">等于</option>
-										</select>
-										<i class="fa fa-caret-down"></i>
-									</div>
-									<input onchange="project.textData()" type="text" class="f-subselect-val" />
-									<img onclick="project.textDelete(this)" src="images/delete_01.png" alt="" class="f-del-btn"/>
-								</div>
-							</div>
-							<div class="f-addbtn-box">
-								<button onclick="project.textAddTo();"><i class="fa fa-plus"></i>添加</button>
-							</div>
 						</div>
-						<div class="f-box3">
-							<div class="f-subbox1 clearfix">
-								按照
-								<div class="ff-select1 w160">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
+						<div class="set-button-SizeColor set-button">
+							<div>字体颜色</div>
+							<div class="set-text-color">
+								<div class="color-row">
+									<input type="hidden" name="unique-name-3" data-palette='["#000","#ffffff","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000">
 								</div>
-								和
-								<div class="ff-select1 w160">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
-								</div>
-							</div>
-							<div class="f-subbox2">
-								<button>加载范围</button>
-								<ul class="f-load-range">
-									<li>
-										<span>最小值：</span>
-										<input type="text" />
-									</li>
-									<li>
-										<span>最大值：</span>
-										<input type="text" />
-									</li>
-								</ul>
-							</div>
-							<div class="f-subbox3">
-								<div class="ff-select1 w180">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
-								</div>
-								<input type="text" class="ff-sele-val" value="值"/>
-							</div>
-						</div>
-						<div class="f-box4">
-							<div class="f-subbox1 clearfix">
-								按照
-								<div class="ff-select1 w160">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
-								</div>
-								和
-								<div class="ff-select1 w160">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
-								</div>
-							</div>
-							<div class="f-subbox3">
-								<div class="ff-select1 w180">
-									<select name="">
-										<option value="">包含</option>
-										<option value="">排除</option>
-										<option value="">全选</option>
-									</select>
-									<i class="fa fa-caret-down"></i>
-								</div>
-								<input type="text" class="ff-sele-val" value="" placeholder="请输入数字"/>
 							</div>
 						</div>
 					</div>
-					<!--筛选类型-->
-					<ul class="f-select-methods clearfix">
-						<li class="fl" onclick="project.contain(this)">
-							<img src="images/icon_circle_on.png" alt="" />
-							<input type="radio" checked />
-							<span>包含</span>
+				</div>
+				<!--按钮 end-->
+				<!--图片 start-->
+				<div class="price-attr-box">
+					<div class="title-box">
+						<h3>图片</h3>
+						<div class="set-price-prop set-index-box">
+							<input type="checkbox"/>
+							<img src="images/xuankuang.png" alt="" />
+							<span>保持宽高比</span>
+						</div>
+						<div class="set-price-border-style set-price">
+							<div>边框样式</div>
+							<div class="set-text-size sc-color">
+								<select name="">
+									<option value="实线">实线</option>
+									<option value="点线">点线</option>
+									<option value="虚线">虚线</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+						</div>
+						<div class="set-price-color set-price">
+							<div>边框颜色</div>
+							<div class="set-text-color">
+								<div class="color-row">
+									<input type="hidden" name="unique-name-4" data-palette='["#000000","#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#000000">
+								</div>
+							</div>
+						</div>
+						<div class="set-price-border set-price">
+							<div>边框宽度</div>
+							<div class="set-text-size sc-color">
+								<select name="">
+									<option value="0">0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+						</div>
+						<div class="set-price-radius set-price">
+							<div>圆角</div>
+							<input type="number" placeholder="0" maxlength="2">
+						</div>
+					</div>
+				</div>
+
+				<!--图片 end-->
+			</div>
+			<div class="op-box2 op-box">
+				<div class="title-box">
+					<h3>数据源</h3>
+				</div>
+				<div class="data-source-box">
+					<select name="">
+						<!--<option value="选择数据源">选择数据源</option>
+						<option value="选择数据源">数据1</option>
+						<option value="选择数据源">数据2</option>
+						<option value="选择数据源">数据3</option>-->
+					</select>
+					<i class="fa fa-caret-down"></i>
+				</div>
+				<div class="set-param-box">
+					<!--维度-->
+					<div class="dimension-box same-resource">
+						<div class="dimension-title">
+							<p>维度</p>
+						</div>
+						<ul class="placeholder">
+							<!--<li>城市</li>
+							<li>省份</li>
+							<li>度量名称</li>
+							<li>年-月-日</li>-->
+						</ul>
+					</div>
+					<!--度量-->
+					<div class="metric-box same-resource">
+						<div class="dimension-title">
+							<p>度量</p>
+						</div>
+						<ul class="placeholder">
+							<!--<li>城市</li>
+							<li>省份</li>
+							<li>度量名称</li>-->
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="chart-main-box">
+			<div class="edit-content">
+				<div class="edit-libs-box"></div>
+			</div>
+		</div>
+		<!--生成环境 预览页面-->
+		<div class="generateEditBi"></div>
+	</div>
+
+
+
+
+
+	<!--项目过滤属性-->
+	<!--数据筛选(求和)-->
+	<div class="data-filter-mod modal">
+		<h3>数据筛选（求和（值））<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="s-data-val">
+			<ul class="clearfix">
+				<li class="fl">
+					<img src="images/icon_circle_on.png" alt="" />
+					<input type="radio" name="range" checked="true"/>
+					<span>范围</span>
+				</li>
+				<li class="fl">
+					<img src="images/icon_circle.png" alt="" />
+					<input type="radio" name="range"/>
+					<span>至少</span>
+				</li>
+				<li class="fr">
+					<img src="images/icon_circle.png" alt="" />
+					<input type="radio" name="range"/>
+					<span>至多</span>
+				</li>
+			</ul>
+			<div class="s-range-val">
+				<input type="text" class="min"/>
+				<input type="text" class="max"/>
+			</div>
+			<button class="s-more-btn">加载范围</button>
+			<div class="s-slider-box">
+				<div id="slider-range" class="s-slider-range"></div>
+			</div>
+		</div>
+		<div class="file-btns-col mcenter">
+			<span>
+				<button onclick="swRag.save()">确定</button>
+				<button onclick="swRag.cancel()">取消</button>
+			</span>
+		</div>
+	</div>
+	<!--文本筛选-->
+	<div id="filter-attr" class="filter-attr  modal" >
+		<h3>项目属性（城市）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="f-attr-box clearfix">
+			<div class="f-attr-left fl">
+				<ul class="f-name clearfix">
+					<li class="active"><a href="javascript:;">列表筛选</a></li>
+					<li><a href="javascript:;">文本筛选</a></li>
+					<li><a href="javascript:;">条件筛选</a></li>
+					<li><a href="javascript:;">高级筛选</a></li>
+				</ul>
+				<div class="f-box">
+					<div class="f-box1">
+						<ul class="clearfix f-category">
+							<li class="fl">
+								<img src="images/icon_circle_on.png" alt="" />
+								<input type="radio" name="methods" checked="true"/>
+								<span>列表</span>
+							</li>
+							<li class="fl">
+								<img src="images/icon_circle.png" alt="" />
+								<input type="radio" name="methods"/>
+								<span>自动</span>
+							</li>
+						</ul>
+						<div class="f-search-box">
+							<input type="text" onchange="project.search(this)" placeholder="请输入您要添加的内容"/>
+						</div>
+						<div class="f-addbtn-box f-addbtn-box-1" style="margin-left: 47px;display: none">
+							<button onclick="project.textAdd()"><i class="fa fa-plus"></i>添加</button>
+						</div>
+						<div class="f-addbtn-box-auto">
+							<ul>
+							</ul>
+						</div>
+						<div class="f-select-cont">
+							<ul>
+								<li>
+									<img src="images/icon_checked.png" alt="" />
+									<input type="checkbox"/>
+									<span>上海</span>
+								</li>
+								<li>
+									<img src="images/icon_checked.png" alt="" />
+									<input type="checkbox"/>
+									<span>北京</span>
+								</li>
+								<li>
+									<img src="images/icon_checked.png" alt="" />
+									<input type="checkbox"/>
+									<span>天津</span>
+								</li>
+								<li>
+									<img src="images/icon_checked.png" alt="" />
+									<input type="checkbox"/>
+									<span>重庆</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="f-box2">
+						<div class="f-select-box1">
+							<select name="">
+								<option value="AND">包含以下所有条件</option>
+								<option value="OR">包含以下任一条件</option>
+							</select>
+							<i class="fa fa-caret-down"></i>
+						</div>
+						<div class="f-select-box2">
+							<div>
+								<div class="f-subselect">
+									<select onchange="project.textData()" name="">
+										<option value="CONTAIN">包含</option>
+										<option value="START WITH">开头是</option>
+										<option value="END WITH">结尾是</option>
+										<option value="NOT CONTAIN">不包含</option>
+										<option value="EQUAL">等于</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<input onchange="project.textData()" type="text" class="f-subselect-val" />
+								<img onclick="project.textDelete(this)" src="images/delete_01.png" alt="" class="f-del-btn"/>
+							</div>
+						</div>
+						<div class="f-addbtn-box">
+							<button onclick="project.textAddTo();"><i class="fa fa-plus"></i>添加</button>
+						</div>
+					</div>
+					<div class="f-box3">
+						<div class="f-subbox1 clearfix">
+							按照
+							<div class="ff-select1 w160">
+								<select name="">
+									<option value="">包含</option>
+									<option value="">排除</option>
+									<option value="">全选</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+							和
+							<div class="ff-select1 w160">
+								<select name="">
+									<option value="">包含</option>
+									<option value="">排除</option>
+									<option value="">全选</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+						</div>
+						<div class="f-subbox2">
+							<button>加载范围</button>
+							<ul class="f-load-range">
+								<li>
+									<span>最小值：</span>
+									<input type="text" />
+								</li>
+								<li>
+									<span>最大值：</span>
+									<input type="text" />
+								</li>
+							</ul>
+						</div>
+						<div class="f-subbox3">
+							<div class="ff-select1 w180">
+								<select name="">
+									<option value="">包含</option>
+									<option value="">排除</option>
+									<option value="">全选</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+							<input type="text" class="ff-sele-val" value="值"/>
+						</div>
+					</div>
+					<div class="f-box4">
+						<div class="f-subbox1 clearfix">
+							按照
+							<div class="ff-select1 w160">
+								<select name="">
+									<option value="">包含</option>
+									<option value="">排除</option>
+									<option value="">全选</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+							和
+							<div class="ff-select1 w160">
+								<select name="">
+									<option value="">包含</option>
+									<option value="">排除</option>
+									<option value="">全选</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+						</div>
+						<div class="f-subbox3">
+							<div class="ff-select1 w180">
+								<select name="">
+									<option value="">包含</option>
+									<option value="">排除</option>
+									<option value="">全选</option>
+								</select>
+								<i class="fa fa-caret-down"></i>
+							</div>
+							<input type="text" class="ff-sele-val" value="" placeholder="请输入数字"/>
+						</div>
+					</div>
+				</div>
+				<!--筛选类型-->
+				<ul class="f-select-methods clearfix">
+					<li class="fl" onclick="project.contain(this)">
+						<img src="images/icon_circle_on.png" alt="" />
+						<input type="radio" checked />
+						<span>包含</span>
+					</li>
+					<li class="fl fl-automatic" onclick="project.filter(this)">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio"/>
+						<span>排除</span>
+					</li>
+					<li class="fl" onclick="project.all(this)">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio"/>
+						<span>使用全部</span>
+					</li>
+				</ul>
+			</div>
+			<div class="f-attr-right fr">
+				<h3>筛选汇总</h3>
+				<div class="f-filter-result">
+					<ul>
+						<li>
+							<span>筛选字段：</span><em>城市</em>
 						</li>
-						<li class="fl fl-automatic" onclick="project.filter(this)">
-							<img src="images/icon_circle.png" alt="" />
-							<input type="radio"/>
-							<span>排除</span>
+						<li class="active">
+							<span>列表筛选：</span><em>无</em>
 						</li>
-						<li class="fl" onclick="project.all(this)">
-							<img src="images/icon_circle.png" alt="" />
-							<input type="radio"/>
-							<span>使用全部</span>
+						<li>
+							<span>文本筛选：</span><em>无</em>
+						</li>
+						<li>
+							<span>条件筛选：</span><em>无</em>
+						</li>
+						<li>
+							<span>高级筛选：</span><em>无</em>
 						</li>
 					</ul>
 				</div>
-				<div class="f-attr-right fr">
-					<h3>筛选汇总</h3>
-					<div class="f-filter-result">
-						<ul>
-							<li>
-								<span>筛选字段：</span><em>城市</em>
-							</li>
-							<li class="active">
-								<span>列表筛选：</span><em>无</em>
-							</li>
-							<li>
-								<span>文本筛选：</span><em>无</em>
-							</li>
-							<li>
-								<span>条件筛选：</span><em>无</em>
-							</li>
-							<li>
-								<span>高级筛选：</span><em>无</em>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="file-btns-col mcenter">
-				<span>
-					<button onclick="project.saveData()">确定</button>
-					<button onclick="project.close()">取消</button>
-				</span>
 			</div>
 		</div>
-		<div class="filter-attr data-filter-time modal">
-			<h3>数据筛选（日期）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="f-attr-box clearfix">
-				<div class="f-attr-left fl">
-					<div class="relative-time">
-						<div class="radio time-select">
-							<img src="images/icon_circle_on.png" alt="" />
-							<input type="radio" checked="checked"/>
-							<span>相对时间</span>
-						</div>
-						<div class="select">
-							<select id="time-select" onchange="timeSng.IldToday()" name="" >
-								<option data-days="7" value="10">前天</option>
-								<option data-days="14" value="10">前14天</option>
-								<option data-days="28" value="10">前28天</option>
-								<option data-days="30" value="10">前30天</option>
-								<option value="20">今天</option>
-								<option value="21">昨天</option>
-								<option value="30">本周</option>
-								<option value="31">上周</option>
-								<option value="40">本月</option>
-								<option value="41">上月</option>
-								<option value="50">本季度</option>
-								<option value="51">上季度</option>
-								<option value="60">本年</option>
-								<option value="61">去年</option>
-							</select>
-							<i class="fa fa-caret-down"></i>
-							<div id="IldToday" class="radio" onclick="timeSng.IldToday(this)">
-								<img src="images/xuankuang.png" alt="" />
-								<input type="checkbox"/>
-								<span>包含今天</span>
-							</div>
-						</div>
+		<div class="file-btns-col mcenter">
+			<span>
+				<button onclick="project.saveData()">确定</button>
+				<button onclick="project.close()">取消</button>
+			</span>
+		</div>
+	</div>
+	<!--时间筛选-->
+	<div class="filter-attr data-filter-time modal">
+		<h3>数据筛选（日期）<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
+		<div class="f-attr-box clearfix">
+			<div class="f-attr-left fl">
+				<div class="relative-time">
+					<div class="radio time-select">
+						<img src="images/icon_circle_on.png" alt="" />
+						<input type="radio" checked="checked"/>
+						<span>相对时间</span>
 					</div>
-					<div class="date-range">
-						<div class="radio time-select">
-							<img src="images/icon_circle.png" alt="" />
-							<input type="radio" checked="checked"/>
-							<span>日期范围</span>
-						</div>
-						<div class="time">
-							<input id="start" type="text" class="start" /><span></span><input id="end" type="text" class="end" />
-							<img onclick="timeSng.timeDelete(this)" class="delete-icon" src="images/icon_close_02.png" alt="">
-							<img class="time-icon" src="images/biaoge.png" alt="">
+					<div class="select">
+						<select id="time-select" onchange="timeSng.IldToday()" name="" >
+							<option data-days="7" value="10">前天</option>
+							<option data-days="14" value="10">前14天</option>
+							<option data-days="28" value="10">前28天</option>
+							<option data-days="30" value="10">前30天</option>
+							<option value="20">今天</option>
+							<option value="21">昨天</option>
+							<option value="30">本周</option>
+							<option value="31">上周</option>
+							<option value="40">本月</option>
+							<option value="41">上月</option>
+							<option value="50">本季度</option>
+							<option value="51">上季度</option>
+							<option value="60">本年</option>
+							<option value="61">去年</option>
+						</select>
+						<i class="fa fa-caret-down"></i>
+						<div id="IldToday" class="radio" onclick="timeSng.IldToday(this)">
+							<img src="images/xuankuang.png" alt="" />
+							<input type="checkbox"/>
+							<span>包含今天</span>
 						</div>
 					</div>
 				</div>
-				<div class="f-attr-right fr">
-					<h3>筛选汇总</h3>
-					<div class="f-filter-result">
-						<ul>
-							<li>
-								<span>所选字段：</span><em>时间</em>
-							</li>
-							<li class="active">
-								<span>时间范围：</span><em>无</em>
-							</li>
-						</ul>
+				<div class="date-range">
+					<div class="radio time-select">
+						<img src="images/icon_circle.png" alt="" />
+						<input type="radio" checked="checked"/>
+						<span>日期范围</span>
+					</div>
+					<div class="time">
+						<input id="start" type="text" class="start" /><span></span><input id="end" type="text" class="end" />
+						<img onclick="timeSng.timeDelete(this)" class="delete-icon" src="images/icon_close_02.png" alt="">
+						<img class="time-icon" src="images/biaoge.png" alt="">
 					</div>
 				</div>
 			</div>
-			<div class="file-btns-col mcenter">
-	<span>
-		<button onclick="timeSng.save();">确定</button>
-		<button onclick="timeSng.clone();">取消</button>
-	</span>
+			<div class="f-attr-right fr">
+				<h3>筛选汇总</h3>
+				<div class="f-filter-result">
+					<ul>
+						<li>
+							<span>所选字段：</span><em>时间</em>
+						</li>
+						<li class="active">
+							<span>时间范围：</span><em>无</em>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-		
+		<div class="file-btns-col mcenter">
+<span>
+	<button onclick="timeSng.save();">确定</button>
+	<button onclick="timeSng.clone();">取消</button>
+</span>
+		</div>
+	</div>
 
 	<div class="hint"></div>
 	

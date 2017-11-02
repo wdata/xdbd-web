@@ -9,6 +9,15 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,modelId = null // 记录dataModelId值；
     ,url = "http://192.168.1.42:8084/xdbd-bi";
 
+var surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
+if(surroundings === "测试环境"){
+    $("#preview").siblings().hide().parent().siblings().hide();
+    $('.generateEditBi').show().siblings("");
+}
+
+
+
+
 
 // 右键功能
 $(document).ready(function() {
@@ -715,13 +724,19 @@ var obtain = {
             dataType:"json",
             success:function(data){
                 if(data.code === 0){
-                    if(data.data.htmlJson){
-                        obtain.reduction(data.data);
-                    }
-                    if(data.data.index){
-                        $(".top-bar .set-index-box input").attr({"checked":"checked","disabled":"disabled"}).siblings("img").attr("src","images/icon_checked.png");
-                    }else{
-                        $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
+                    if(surroundings === "开发环境"){
+                        if(data.data.htmlJson){
+                            obtain.reduction(data.data);
+                        }
+                        if(data.data.index){
+                            $(".top-bar .set-index-box input").attr({"checked":"checked","disabled":"disabled"}).siblings("img").attr("src","images/icon_checked.png");
+                        }else{
+                            $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
+                        }
+                    }else if(surroundings === "测试环境"){
+                        if(data.data.htmlJson){
+                            obtain.generate(data.data);
+                        }
                     }
 
                 }
@@ -731,6 +746,32 @@ var obtain = {
             }
         })
     },
+    // 为测试环境
+    generate:function(data){
+        var html = '';
+        $.each(data.htmlJson.controls,function(index,val){
+            var text = ''            // html
+                ,style =  val.style  // 宽、高
+                ,dataType = val.customData.dataType;  // 类型
+
+            // 判断图形、表格、文本、图片、按钮
+            // 如果是文本和图片，则复制内容不同
+            if(dataType === "text" || dataType === "button" || dataType === "image"){
+                text = val.customData.controls.html;
+            }else if(dataType === "table" || dataType === "chart"){
+                // 将数据存入检索数据中
+                var chart_date = {
+                    'cid':val.cid,
+                    "type":val.type,
+                    "queryJson":val.queryJson,
+                };
+                DataIndexes.inAjax(chart_date,val.cid);
+            }
+            html += '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+        });
+        $(".generateEditBi").empty().append(html);
+    },
+    // 为开发环境
     reduction:function(data){
         if(data.htmlJson.controls){
             // 赋值数据
