@@ -193,7 +193,7 @@ $(function(){
 			case "测试环境":
 				onCurEnv = "test";
 			break;
-			case "开发环境":
+			case "生产环境":
 				onCurEnv = "prod";
 			break;
 			default:
@@ -206,11 +206,10 @@ $(function(){
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
             dataType:'json',
-	        contentType: "application/json",
-			data:JSON.stringify({
+			data:{
 				"id":id,
 				"env":onCurEnv
-			}),
+			},
 			success:function(res){
               	if(res.code===0){
               		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
