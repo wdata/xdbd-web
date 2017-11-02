@@ -56,9 +56,9 @@
       var this_actionCompType;
       var $url = '../xdbd-etl'; ///xdbd-etl
 
-      if(this_onenv == '开发环境') {
+      if(this_onenv == 'dev') {
         onenv = true;
-      } else if(this_onenv == '测试环境') {
+      } else if(this_onenv == 'test') {
         onenv = false;
       }
 
@@ -575,7 +575,8 @@
         function fn_upload_parquet() {
           var load = {
             "actionId":this_actionId,
-            "versionId":this_versionId
+            "versionId":this_versionId,
+            "ctionId": this_onenv
           }
           $.ajax({
             type:"POST",
