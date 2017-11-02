@@ -42,22 +42,25 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	let onCurEnv = "开发环境";
+	var onCurEnv = $(".set-cur-env select option:selected").val();console.log(onCurEnv);
 	userRight();
 	function userRight(){
 		$.ajax({
 			type:"POST",
 			url:$url3+"/api/resource/v1/resources",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
 				
 			}),
 			success:function(res){
+				console.log(res);
               	if(res.code===0){
               		var menuLv1 = res.data;
               		var htmlLv1 = "";
-
 					//一级菜单
               		$.each(menuLv1, function(i,v) {
               			htmlLv1 += `

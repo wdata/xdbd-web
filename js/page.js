@@ -95,7 +95,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".p-cont"+$idx).show().siblings().hide();
 		if($idx===1){
-			curTreePages(lv1DirId);
+			curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
 		}else if($idx===0){
 //			getFirstPages(projectId,versionId,pageFlowDirId);
 		}
@@ -247,8 +247,8 @@ $(function(){
 	})
 	
 	//根据BIdirId查询项目树.（首页2与BI报表10）
-	curTreePages(lv1DirId);
-	function curTreePages(BIdirId){
+	curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
+	function curTreePages(BIdirId,versionId,directoryTypes){
 		$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/project/findProjectTreeById',
@@ -258,7 +258,9 @@ $(function(){
 	            dataType:'json',
 	            contentType: "application/json",
 				data:JSON.stringify({
-					"id":BIdirId
+					"directoryId":BIdirId,
+					"versionId":versionId,
+					"directoryTypes":directoryTypes
 				}),
 				success:function(res){
 	              	if(res.code===0){
