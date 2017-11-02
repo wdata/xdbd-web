@@ -44,9 +44,18 @@
       var this_createUser = localStorage.getItem("createUser");
       var this_updateUser = localStorage.getItem("updateUser");
       var template = sessionStorage.getItem("isTemplate");
+      var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
       var this_isTemplate = false;  //是否为模板
       var this_type = '';
+      var onenv = true;
       var $url = '../xdbd-wf';  //../xdbd-wf
+      console.log(this_onenv)
+
+      if(this_onenv == '开发环境') {
+        onenv = true;
+      } else if(this_onenv == '测试环境') {
+        onenv = false;
+      }
 
       if(template){
         this_isTemplate = true;
@@ -66,7 +75,7 @@
 //        headLabel:true,
         initLabelText:'流程图',
         headBtns:["new","undo","redo","reload","print","save","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
-        haveTool:true,
+        haveTool:onenv,
         haveDashed:true,
         haveGroup:true,
         useOperStack:true
