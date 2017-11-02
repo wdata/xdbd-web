@@ -1,273 +1,314 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小道大数据平台</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="plugin/font-awesome-4.7.0/css/font-awesome.css" />
-    <link rel="stylesheet" href="plugin/zTree/css/zTreeStyle/zTreeStyle.css" />
-    <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
-    <link rel="stylesheet" href="plugin/basicContext/default.min.css" />
-    <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
-    <link rel="stylesheet" href="css/form.css" />
-    <!--[if lt IE 9]>
-      <script src="common/html5shiv.min.js"></script>
-      <script src="common/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-		<div class="wrapper">
-				<div class="ban-box">
-					<div class="ban-main">
-						<img src="images/ban.png" alt="" />
-						<a href="index.html" class="logo-link">
-							<img src="images/logo.png" alt="" title="小道科技" />
-						</a>
-						<div class="user-box">
-							<!--<div class="msg-unread">
-								<img src="images/bell.png" alt="" />
-								<span class="unread-msg">1</span>
-							</div>-->
-							<div class="user-info">
-								<img src="images/dog.png" alt="" class="headimg"/>
-								<em class="byusername" id="username"></em>
-								<img src="images/down.png" alt="" class="rdown"/>
-								<ul>
-									<li><a href="#">个人中心</a></li>
-									<li><a href="javascript:logOut();" class="active">退出</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="set-cur-env">
-							<select name="" id="">
-								<!--<option value="">开发环境</option>
-								<option value="">测试环境</option>
-								<option value="">生产环境</option>-->
-							</select>
-							<i class="fa fa-caret-down"></i>
-						</div>
-					</div>
-				</div>
-				<div class="menu-top">
-					<ul>
-						<!--<li class="active"><a href="#">项目管理</a></li>
-						<li><a href="#">系统管理</a></li>-->
-					</ul>
-				</div>
-				<div class="bd">
-					<div class="bd-body bd-body-1">
-						<div class="sider">
-							<div class="tree-nav">
-								<div class="new-project">
-									<a href="javascript:;" id="create-proj-btn">创建项目</a>
-								</div>
-								<div class="m-folder-wrap">
-									  <div class="g-folders">
-									  	<ul id="treeDemo" class="ztree"></ul>
-									  </div>
-								</div>
-							</div>
-						</div>
-						<div class="content-col">
-							<div class="content-wrapper">
-								<iframe id="iframepage1" src="" scrolling="no" style="width:94.6%;height: 100%;" frameborder=0></iframe>							</div>
-						</div>
-					</div>
-					<div class="bd-body bd-body-2">
-						<div class="sider">
-							<div class="sider-nav">
-								<ul>
-									<li>
-										<a href="javascript:;">系统管理</a>
-										<ul class="sys-menus">
-											<!--<li><a href="#">账号管理</a></li>
-											<li><a href="#">角色管理</a></li>
-											<li><a href="#">日志管理</a></li>
-											<li><a href="#">企业中心</a></li>-->
-										</ul>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div class="content-col">
-							<div class="content-wrapper">
-								<iframe id="iframepage2" src="html/loglist.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
-							</div>
-						</div>
-					</div>
-				</div>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>小道科技</title>
+	<meta name="author" content="Alvaro Trigo Lopez" />
+	<meta name="description" content="fullPage fixed header and footer." />
+	<meta name="keywords"  content="fullpage,jquery,demo,screen,fixed, header,footer, absolute, positioned,css" />
+	<meta name="Resource-type" content="Document" />
+	<link rel="stylesheet" type="text/css" href="plugin/fullpage/jquery.fullPage.css" />
+	<link rel="stylesheet" type="text/css" href="plugin/fullpage/examples.css" />
+	<link rel="stylesheet" href="plugin/swiper/swiper.min.css" />
+	<link rel="stylesheet" href="css/first.css" />
+	<!--[if IE]>
+		<script type="text/javascript">
+			 var console = { log: function() {} };
+		</script>
+	<![endif]-->
+
+	<script src="plugin/jQuery/jquery.min.js"></script>
+	<script src="plugin/jQuery/jQuery_ui.js"></script>
+	<script src="plugin/swiper/swiper.min.js"></script>
+	<script type="text/javascript" src="plugin/fullpage/vendors/scrolloverflow.js"></script>
+	<script type="text/javascript" src="plugin/fullpage/jquery.fullPage.js"></script>
+	<script type="text/javascript" src="plugin/fullpage/examples.js"></script>
+	<script src="js/first.js"></script>
+</head>
+<body>
+
+<div id="header">
+	<div class="head-bar main">
+		<a href="#">
+			<img src="images/logo.png" alt="" />
+		</a>
+		<ul>
+			<li>
+				<a href="#">产品</a>
+			</li>
+			<li>
+				<a href="#">解决方案</a>
+			</li>
+			<li>
+				<a href="#">案例</a>
+			</li>
+			<li>
+				<a href="#">下载</a>
+			</li>
+			<li>
+				<a href="#">联系我们</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="footer">
+	<div class="foot-bar main">
+		<p>深圳市南山区科技园东方科技大厦505-507室</p>
+		<p>Copyright ©2017 深圳小道科技有限公司 版权所有 粤ICP备 11298888号-6</p>
+	</div>
+</div>
+
+<div id="fullpage">
+	<!--<div class="section " id="section0">
+		<div class="intro">
+			<h1>Fixed elements</h1>
+			<p>Create your own headers and footers</p>
 		</div>
-		<!--模态框-->
-		<!--创建文件夹-->
-		<div class="file-mod" style="display: none">
-			<div id="fileTrees" class="select-tree-box ztree">
-			</div>
-			<p class="file-name-after">
-				<label for="">文件夹名称：</label>
-				<input type="text" />
-			</p>
+	</div>-->
+	<!--<div class="section" id="section1">
+
+	</div>
+	<div class="section" id="section2">
+		<div class="intro">
+			<h1>Enjoy it</h1>
 		</div>
-		
-		<!--创建子模块-->
-		<div class="submodule" style="display: none;">
-			<div  id="subTrees" class="select-tree-box ztree">
-			</div>
-			<p class="file-name-after">
-				<label for="">子模块名称：</label>
-				<input type="text" />
-			</p>
-		</div>
-		
-		<!--创建最终子模块-->
-		<div class="subfinalmodule" style="display: none;">
-			<div id="finalSubTrees" class="select-tree-box ztree">
-			</div>
-			<p class="file-name-after">
-				<label for="">最终子模块名称：</label>
-				<input type="text" />
-			</p>
-		</div>
-		
-		<!--切换版本-->
-		<div class="cut-version" style="display: none;">
-			<div class="version-lists-box">
-				<ul></ul>
-			</div>
-		</div>
-		
-		<!--项目属性-->
-		<div class="proj-attr modal">
-			<h3>项目属性<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<div class="proj-attr-detail">
-				<div class="item1 item">
-					<p>项目名称：<span>迪庆大数据</span></p>
-					<p>项目ID：<span>迪庆大数据</span></p>
-				</div>
-				<div class="item2 item">
-					<p>上级项目：<span>迪庆大数据</span></p>
-					<p>创建人：<span>迪庆</span></p>
-					<p>创建时间：<span>2017.09.13</span></p>
-					<p>最后修改时间：<span>2017.11.20</span></p>
-				</div>
-				<div class="item3 item">
-					<p>当前版本：<span>1.0.0</span></p>
-					<p>项目描述：<span>迪庆大数据</span></p>
-					<p>代码库路径：<span>迪庆大数据</span></p>
-					<p>调度类型：<span>迪庆大数据</span></p>
-				</div>
-			</div>
-		</div>
-		
-		<!--创建项目-->
-		<div class="creat-new-projs" style="display: none;">
-			<div class="create-proj-detail">
-					<div>
-						<label for=""><em>*</em>项目名称：</label>
-						<input type="text" name="projname" id="projname"/>
-					</div>
-					<div>
-						<label for=""><em>*</em>项目描述：</label>
-						<textarea name="projdesp" placeholder="20个字以内" id="projdesp" maxlength="20"></textarea>
-					</div>
-					<div>
-						<label for=""><em>*</em>代码库路径：</label>
-						<input type="text" name="projpath" id="projpath"/>
-					</div>
-					<div>
-						<label for=""><em>*</em>调度类型：</label>
-						<input type="text" name="projtype" id="projtype"/>
-					</div>
-			</div>
-		</div>
-		
-		<!--修改显示名称-->
-		<div class="modify-param-name" style="display: none;">
-			<!--<h3>修改显示名称<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>-->
-			<p class="file-name-after">
-				<label for="">显示名称：</label>
-				<input type="text" />
-			</p>
-			<!--<div class="file-btns-col">
-				<span>
-					<button>确定</button>
-					<button>取消</button>
-				</span>
-			</div>-->
-		</div>
-		
-		<!--提交测试-->
-		<div class="submit-test" style="display:none">
-			<input type="text" placeholder="请输入版本号" />
-		</div>
-		
-		<!--数据源配置-->
-		<div class="data-source-config modal">
-			<h3>数据源配置<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>
-			<!--<ul class="da-source-type clearfix">-->
-				<!--<li class="fl">-->
-						<!--<img src="images/icon_circle_on.png" alt="" />-->
-						<!--<input type="radio" name="da" checked="true"/>-->
-						<!--<span>原始数据表</span>-->
-					<!--</li>-->
-					<!--<li class="fr">-->
-						<!--<img src="images/icon_circle.png" alt="" />-->
-						<!--<input type="radio" name="da"/>-->
-						<!--<span>ETL数据表</span>-->
-					<!--</li>-->
-			<!--</ul>-->
-			<div class="da-source-origin">
-				<ul>
-					<li>
-						<span>数据源类型：</span>
-						<div class="da-sele-box">
-							<select name="" id="db_type">
-								<option value="mysql">mysql</option>
-							</select>
-							<i class="fa fa-caret-down"></i>
-						</div>
-					</li>
-					<!--<li>-->
-						<!--<span>数据库：</span>-->
-						<!--<div class="da-sele-box">-->
-							<!--<select name="" id="">-->
-								<!--<option value="数据库0">数据库0</option>-->
-								<!--<option value="数据库1">数据库1</option>-->
-							<!--</select>-->
-							<!--<i class="fa fa-caret-down"></i>-->
-						<!--</div>-->
-					<!--</li>-->
-				</ul>
-				<div class="da-source-account">
-					<p><label>显示名称：</label><input class="db_name" type="text" placeholder="请输入名称" /></p>
-                    <p><label>数据库地址：</label><input class="db_site" type="text" placeholder="请输入数据库地址"/></p>
-                    <p><label>端口：</label><input class="db_port" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " placeholder="只能输入数字" /></p>
-                    <p><label>数据库：</label><input class="db_database" type="text" placeholder="请输入数据库"/></p>
-                    <p><label>用户名：</label><input class="db_user" type="text" placeholder="请输入用户名"/></p>
-                    <p><label>密码：</label><input class="db_password" type="text" placeholder="请输入密码"/></p>
-				</div>
-			</div>
-			<div class="file-btns-col mcenter">
-				<span>
-					<button class="addBtn">添加</button>
-                    <button class="linkBtn">链接测试</button>
-					<button class="closeBtn">关闭</button>
-				</span>
-			</div>
-		</div>
-		<!--导入文件-->
-		<form id="import-form" class="import-file"  enctype="multipart/form-data">
-			<input type="file" id="import-file" name="file1" />
-		</form>
-    <script src="plugin/jQuery/jquery.min.js"></script>
-    <script src="js/login.js"></script>
-    <script src="plugin/zTree/jquery.ztree.all.min.js"></script>
-    <script src="plugin/layer/layer.js"></script>
-    <script src="plugin/basicContext/basicContext.min.js"></script>
-    <script src="js/todo.js"></script>
-    <script src="js/tree.js"></script>
-  </body>
+	</div>-->
+	<!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+            	<div class="section0 section">
+            		<div class="video-box">
+            			<video  poster="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" autoplay="autoplay">
+				          <source src="plugin/website_main_bg.mp4" type="video/mp4">
+				        </video>
+            		</div>
+            		<!--<img src="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" alt=""/>-->
+            		<h1 class="title">大数据平台精准服务</h1>
+    				<a href="index.html" class="xdbd-btn">点击进入</a>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<div class="section1 section">
+            		<div class="business main">
+            			<!--1 start-->
+				        <h2>主营业务</h2>
+				        <ul>
+				        	<!--1-->
+				          <li>
+				            <div class="intro">
+				            	<img src="https://assets.megvii.com/static%2Fimages/home/business/business_faceid-9b3e68a560.jpg" alt="FaceID在线身份验证服务">
+				              <h3>FaceID 在线身份验证服务</h3>
+				              <p>刷脸验人<br>为关键业务保驾护航</p>
+				              <div class="company">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/alipay-e6863c4e0c.jpg" alt="支付宝">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/zxbank-67b2c92104.jpg" alt="中信银行">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/szcx-a0a8198006.jpg" alt="神州出行">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/xhqb-e9e16d19d0.jpg" alt="小花钱包">
+				              </div>
+				            </div>
+				            <div class="detail faceid">
+				              <div class="detail-header">
+				                <h3><span>FaceID 在线身份验证服务</span></h3>
+				                <p>通过先进的人脸识别技术，FaceID 正在为超过 200 个互联网金融、出行、直播等行业客户，以及超过 20 家银行机构验证用户身份，为身份敏感的关键业务保驾护航。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li><i class="icon1"></i>
+				                  <h4>活体检测</h4>
+				                  <p>Android</p>
+				                  <p>iOS</p>
+				                  <p>H5</p>
+				                  <p>公众号</p>
+				                  <p>小程序</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>人脸比对</h4>
+				                  <p>识别能力超越人眼</p>
+				                  <p>年龄光照配饰无关</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>证件识别</h4>
+				                  <p>身份证识别与验真</p>
+				                  <p>驾驶证</p>
+				                  <p>行驶证</p>
+				                  <p>银行卡</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>云服务<span>/解决方案</span></h4>
+				                  <p>公有云服务</p>
+				                  <p>私有云方案</p>
+				                  <p>生物特征平台</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>他们正在使用</p>
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/alipay-e6863c4e0c.jpg" alt="支付宝">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/zxbank-67b2c92104.jpg" alt="中信银行">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/szcx-a0a8198006.jpg" alt="神州出行">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/xhqb-e9e16d19d0.jpg" alt="小花钱包">
+				              </div>
+				              <div class="detail-link"><a href="https://faceid.com" target="_blank">进入 FaceID 官网<span>&gt;&gt;</span></a></div>
+				            </div>
+				          </li>
+				          <!--2-->
+				          <li>
+				            <div class="intro">
+				            	<img src="https://assets.megvii.com/static%2Fimages/home/business/business_facepp-0e901fb263.jpg" alt="Face++人工智能开放平台">
+				              <h3>Face++ 人工智能开放平台</h3>
+				              <p>人脸识别、证件识别、图像识别<br>尖端能力全开放</p>
+				              <div class="company">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img1-ff7004c12f.jpg" alt="10 万+ 开发者">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img2-71d23baef4.jpg" alt="1 千万+日调用量">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img3-d964b33d6f.jpg" alt="国内站 国际站">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img4-6f88caf09d.jpg" alt="API SDK"></div>
+				            </div>
+				            <div class="detail facepp">
+				              <div class="detail-header">
+				                <h3><span>Face++ 人工智能开放平台</span></h3>
+				                <p>Face++ 人工智能开放平台以 API 或 SDK 的形式为开发者提供人脸识别、文字识别、图像识别、物体识别、场景识别及其他人工智能能力，旨在帮助开发者用最简便的方式实现 AI 赋能。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li><i class="icon1"></i>
+				                  <h4>算法先进</h4>
+				                  <p>算法升级，检测更准、<br> 更快、更稳</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>能力丰富</h4>
+				                  <p>更多 API、更多能力</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>服务透明</h4>
+				                  <p>服务状态透明，可监控</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>免费接入</h4>
+				                  <p>免费创建 API Key<br>无限次调用</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>平台正在支持/提供</p>
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img1-ff7004c12f.jpg" alt="10万+ 开发者">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img2-71d23baef4.jpg" alt="1千万+日调用量">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img3-d964b33d6f.jpg" alt="国内站 国际站">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/facepp_img4-6f88caf09d.jpg" alt="API SDK">
+				              </div>
+				              <div class="detail-link"><span><a href="https://www.faceplusplus.com.cn" target="_blank">进入 Face++<span>&gt;&gt;</span></a></span><span><a href="https://www.faceplusplus.com" target="_blank">进入 Face++ 国际站<span>&gt;&gt;</span></a></span></div>
+				            </div>
+				          </li>
+				          <!--3-->
+				          <li>
+				            <div class="intro"><img src="https://assets.megvii.com/static%2Fimages/home/business/business_cases-0c7756fbb9.jpg" alt="智能地产解决方案">
+				              <h3>智能地产解决方案</h3>
+				              <p>用人工智能的方式改善人们工作、<br>生活、商业环境中的交互体验</p>
+				              <div class="company"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_sohu-e662846a70.jpg" alt="sohu"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_work-a4de80c11a.jpg" alt="work"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic3-d9c0511dce.png" alt="凯德集团"><img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic4-dc469d4b95.png" alt="阿里巴巴"></div>
+				            </div>
+				            <div class="detail cases">
+				              <div class="detail-header">
+				                <h3><span>智能地产解决方案</span></h3>
+				                <p>通过软硬一体的系统集成和计算机视觉技术，帮助企业管理者和地产、零售等行业建立以“人核心数据”为中心的底层感知体系、打通线上和线下的数据孤岛，实现感知融合和不同商业场景中的人机互联。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li>
+				            	<i class="icon1"></i>
+				                  <h4>人员通行</h4>
+				                  <p>人员通行管理</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>车辆定位</h4>
+				                  <p>车辆定位管理</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>视频监控</h4>
+				                  <p>智能视频监控</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>零售模块</h4>
+				                  <p>智能零售模块</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>平台正在支持/提供</p>
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_sohu-e662846a70.jpg" alt="sohu">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_work-a4de80c11a.jpg" alt="work">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic3-d9c0511dce.png" alt="凯德集团">
+				                <img src="https://assets.megvii.com/static%2Fimages/home/business/cases_pic4-dc469d4b95.png" alt="阿里巴巴">
+				              </div>
+				              <div class="detail-link"><span><a href="/smart-commerce/">了解更多<span>&gt;&gt;</span></a></span></div>
+				            </div>
+				          </li>
+				          <!--4-->
+				          <li>
+				            <div class="intro">
+				            	<img src="https://assets.megvii.com/static%2Fimages/home/business/business_ssn-358ead4952.jpg" alt="智能安防大数据解决方案">
+				              <h3>智能安防解决方案</h3>
+				              <p>为社会治安综合治理<br>提供视频结构化技术及服务</p>
+				              <div class="company">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img1-5567736132.jpg" alt="公安部第一研究所">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img2-bd4a9a871a.jpg" alt="无锡市局">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img3-b986f355a2.jpg" alt="合肥市局">
+				              	<img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img4-3f90acf78d.jpg" alt="苏州市局">
+				              </div>
+				            </div>
+				            <div class="detail ssn">
+				              <div class="detail-header">
+				                <h3><span>智能安防解决方案</span></h3>
+				                <p>整合大数据和计算机视觉技术，将监控系统、人员卡口与智能警务工具及安防业务结合，解决公安、海关、机场、铁路等机构对于实名制认证、人脸电子围栏、重点人员布控告警等实战诉求。</p>
+				              </div>
+				              <ul class="type_1">
+				                <li><i class="icon1"></i>
+				                  <h4>人脸识别</h4>
+				                  <p>人脸识别系列</p>
+				                </li>
+				                <li><i class="icon2"></i>
+				                  <h4>视频结构化</h4>
+				                  <p>视频结构化系列</p>
+				                </li>
+				                <li><i class="icon3"></i>
+				                  <h4>智能硬件</h4>
+				                  <p>智能硬件系列</p>
+				                </li>
+				                <li><i class="icon4"></i>
+				                  <h4>临侦</h4>
+				                  <p>临侦系列</p>
+				                </li>
+				              </ul>
+				              <div class="detail-using">
+				                <p>平台正在支持/提供</p><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img1-5567736132.jpg" alt="青羊市局"><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img2-bd4a9a871a.jpg" alt="无锡市局"><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img3-b986f355a2.jpg" alt="合肥市局"><img src="https://assets.megvii.com/static%2Fimages/home/business/ssn_img4-3f90acf78d.jpg" alt="厦门市局">
+				              </div>
+				              <div class="detail-link"><span><a href="/smart-security/">了解更多<span>&gt;&gt;</span></a></span></div>
+				            </div>
+				          </li>
+				        </ul>
+				        <!--1 end-->
+            		</div>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<div class="section2 section">
+        			<iframe id="iframepage" src="html/3d/index.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<div class="section3 section">
+            		<div class="chart main">
+            			<h2>自助式探索分析</h2>
+            			<p>PPT模式的界面和交互方式，易学易用，业务人员只需简单拖拽，就能轻松制作出兼具敏捷分析与精美展示的报告。支持实时预警、定时邮件，支持参考线、下钻、联动、表计算等强大分析功能。</p>
+            			<div class="chart-video">
+            				<video  poster="images/yemian.png" autoplay="autoplay">
+					          <source src="plugin/xdbd.mp4" type="video/mp4">
+					        </video>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <!--<div class="swiper-slide">
+            	<div class="section4 section">5</div>
+            </div>-->
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+</body>
 </html>
