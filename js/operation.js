@@ -1736,6 +1736,7 @@ function imgPreview(_this){
                         var left =  (cW - w) / 2; // 距离左边距离
                         var top =   (cH - h) / 2; // 距离顶部边距离
 
+                        var editID = cahrt_type + uuid(8,16);
 
                         if(width >= cW){
                             // 如果图片真实大小大于内容区，则最大宽度为内容区宽度；
@@ -1745,9 +1746,9 @@ function imgPreview(_this){
                             top =   (cH - h) / 2;
                         }
                         // console.log("图片宽度：" + width,"内容区宽度：" + cW,"元素宽度：" + w,"元素高度：" + h,"图片宽度：" + height,"比例：" + p,"距离左边距离：" + left,"距离顶部边距离：" + top);
-                        c.append('<div data-ratio="'+ p +'" data-type="'+ cahrt_type +'" type="'+ cahrt_type +'" style=" z-index:'+ number +'; left:'+ left +'px;top:'+ top +'px;width:'+ w +'px;height:'+ h +'px;" id="'+ cahrt_type + number +'" class="resize-item"><div class="image-class"><img src="'+ dataURL +'"></div></div>');
+                        c.append('<div data-ratio="'+ p +'" data-type="'+ cahrt_type +'" type="'+ cahrt_type +'" style=" z-index:'+ number +'; left:'+ left +'px;top:'+ top +'px;width:'+ w +'px;height:'+ h +'px;" id="'+ editID +'" class="resize-item"><div class="image-class"><img src="'+ dataURL +'"></div></div>');
 
-                        id_ = cahrt_type + number;
+                        id_ = editID;
                         number++;
                         new ZResize({
                             stage: '.edit-libs-box', //舞台
@@ -1779,6 +1780,34 @@ function imgPreview(_this){
     return true;
 }
 
+//生成一个32位的uuid
+function uuid(len, radix) {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    var uuid = [], i;
+    radix = radix || chars.length;
+
+    if (len) {
+        // Compact form
+        for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
+    } else {
+        // rfc4122, version 4 form
+        var r;
+
+        // rfc4122 requires these characters
+        uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+        uuid[14] = '4';
+
+        // Fill in random data.  At i==19 set the high bits of clock sequence as
+        // per rfc4122, sec. 4.1.5
+        for (i = 0; i < 36; i++) {
+            if (!uuid[i]) {
+                r = 0 | Math.random()*16;
+                uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+            }
+        }
+    }
+    return uuid.join('');
+}
 
 // 输入监听，只调用一次; 参数为JS元素
 function enterListen(z){
