@@ -1,7 +1,7 @@
 var appkey = 'xddb';//应用的appkey
 var cas_sever = 'http://192.168.1.15:8445';
 sessionStorage.setItem("ByuserName","admin");
-sessionStorage.setItem("userId","2026");
+sessionStorage.setItem("userId","2060");
 //cas服务器地址
 var urlArguments = parseQueryString(location.href);//获取URL的参数JSON格式
 var reUrl = location.href.split('?')[0];//本项目的地址(回调地址)

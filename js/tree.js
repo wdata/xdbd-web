@@ -53,9 +53,6 @@ $(function(){
             },
 			dataType:'json',
             contentType: "application/json",
-			data:JSON.stringify({
-				
-			}),
 			success:function(res){
 				console.log(res);
               	if(res.code===0){
