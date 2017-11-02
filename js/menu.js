@@ -919,7 +919,8 @@ $(function(){
             dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
-				"id":lv1DirId
+				"directoryId":lv1DirId,
+				"versionId":versionId
 			}),
 			success:function(res){
 				console.log(res.data);
