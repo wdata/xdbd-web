@@ -16,7 +16,7 @@
         .myForm .form_profile tr{margin-top: 14px;}
         .myForm .form_content tr td input,.myForm .form_content tr td select{height: 26px;width: 260px;border:1px solid #ccc;border-radius: 2px;}
         .myForm .form_profile tr td:first-child{width: 113px;text-align: right}
-        .myForm .form_profile tr td input{ display:block;height: 26px;width: 260px;border: 1px solid #ccc;border-radius: 2px;}
+        .myForm .form_profile tr td input,.myForm .form_profile tr td select{ display:block;height: 26px;width: 260px;border: 1px solid #ccc;border-radius: 2px;}
         /*.myForm .form_content .form_profile tr td.add_Btn{display:inline-block;width:18px;height:18px;line-height: 18px;*/
             /*color: #fff;text-align: center;background: #40AFFE;border-radius: 50%;*/
             /*cursor: pointer;}*/
@@ -46,6 +46,7 @@
       var template = sessionStorage.getItem("isTemplate");
       var JobId = sessionStorage.getItem("jobId");
       var this_isTemplate = false;  //是否为模板
+      var this_type = '';
       var $url = '../xdbd-wf';  //../xdbd-wf
 
       if(template){
@@ -56,7 +57,7 @@
       }
 
       init_dag();
-      init_task();
+//      init_task();
 
       var property={
         width:1230,
@@ -154,16 +155,21 @@
             //obj=this.$nodeData[id];
           }else if(model=="dataSheet") {
             obj=this.params[id];
+            if(obj == null) {
+              return false;
+            }
+            this_type = obj.type;
             var formProperty = [];
             //java的详细属性
             if(obj.type=='java') {
                 formProperty.push('' +
+                  '<tr style="display: block"><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>'+
                   '<tr class="hide"><td class="th">error：</td><td class="java_error"><input type="text" value='+obj.action.error+'></td></tr>' +
-                  '<tr style="display: block"><td class="th">名称</td><td class="java_name"><input type="text" placeholder="请输入java名称" value='+obj.action.name+'></td></tr>' +
+                  '<tr style="display: block"><td class="th">任务名称</td><td class="java_name property_name"><input type="text" readonly="readonly" placeholder="请输入java的名称" value='+this.$nodeData[id].name+'></td></tr>' +
                   '<tr class="hide"><td class="th">ok：</td><td class="java_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
                   '<tr class="hide"><td class="th">java-capture_output：</td><td class="java_output"><input type="text" value='+obj.action.java.capture_output+'></td></tr>' +
                   '<tr class="hide"><td class="th">java-job_tracker：</td><td class="java_tracker"><input type="text" value='+obj.action.java.job_tracker+'></td></tr>' +
-                  '<tr style="display: block"><td class="th">传入java的名称</td><td class="java_class"><input type="text" placeholder="请输入java的calss值" value='+obj.action.java.main_class+'></td></tr>' +
+                  '<tr style="display: block"><td class="th">传入名称</td><td class="java_class"><input type="text" placeholder="请输入java的calss值" value='+obj.action.java.main_class+'></td></tr>' +
                   '<tr class="hide"><td class="th">java-name_node：</td><td class="java_node"><input type="text" value='+obj.action.java.name_node+'></td></tr>' +
                   '<tr style="display: block"><td class="th">环境参数</td><td class="java_opts"><input type="text" placeholder="请输入环境参数" value='+obj.action.java.java_opts+'></td></tr>' +
                   '');
@@ -187,12 +193,14 @@
                   $.each(obj.action.java.prepare.mkdir,function(i,item) {
                     formProperty.push('<tr class="archive hide"><td class="th">java-prepare-mkdir：</td><td class="son_archive java_mkdir"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
                   })
+                  init_task();
               };
              //shell的详细属性
             if(obj.type=="shell") {
               formProperty.push('' +
+                '<tr style="display: block"><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>'+
                 '<tr class="hide"><td class="th">error：</td><td class="shell_error"><input type="text" value='+obj.action.error+'></td></tr>' +
-                '<tr style="display: block"><td class="th">名称</td><td class="shell_name"><input type="text" placeholder="请输入shell名称" value='+obj.action.name+'></td></tr>' +
+                '<tr style="display: block"><td class="th">任务名称</td><td class="shell_name property_name"><input type="text" readonly="readonly" placeholder="请输入shell的名称" value='+this.$nodeData[id].name+'></td></tr>' +
                 '<tr class="hide"><td class="th">ok：</td><td class="shell_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
 //                '<tr class="hide"><td class="th">shell-capture_output：</td><td class="shell_output"><input type="text" value='+obj.action.shell.capture_output+'></td></tr>' +
                 '<tr style="display: block"><td class="th">文件路径</td><td class="shell_exec"><input type="text" placeholder="请输入shell文件路径" value='+obj.action.shell.exec+'></td></tr>' +
@@ -219,12 +227,14 @@
                   $.each(obj.action.shell.prepare.mkdir,function(i,item) {
                     formProperty.push('<tr class="archive hide"><td class="th">shell-prepare-mkdir：</td><td class="son_archive shell_mkdir"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
                   })
+              init_task();
             };
             //spark的详细属性
             if(obj.type=='spark') {
               formProperty.push('' +
+                '<tr style="display: block"><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>'+
                 '<tr class="hide"><td class="th">error：</td><td class="spark_error"><input type="text" value='+obj.action.error+'></td></tr>' +
-                '<tr style="display: block;"><td class="th">任务名称</td><td class="spark_task"><input type="text" placeholder="请输入任务名称" value='+obj.action.name+'></td></tr>' +
+                '<tr style="display: block;"><td class="th">任务名称</td><td class="spark_task property_name"><input type="text" readonly="readonly" placeholder="请输入spark的名称" value='+this.$nodeData[id].name+'></td></tr>' +
                 '<tr class="hide"><td class="th">ok：</td><td class="spark_ok"><input type="text" value='+obj.action.ok+'></td></tr>' +
                 '<tr class="hide"><td class="th">class名</td><td class="spark_clazz"><input type="text" placeholder="请输入spark的class值" value='+obj.action.spark.clazz+'></td></tr>' +
                 '<tr class="hide"><td class="th">jar包名</td><td class="spark_jar"><input type="text" placeholder="请输入spark的jar包名" value='+obj.action.spark.jar+'></td></tr>' +
@@ -252,6 +262,7 @@
               $.each(obj.action.spark.prepare.mkdir,function(i,item) {
                 formProperty.push('<tr class="archive hide"><td class="th">spark-prepare-mkdir：</td><td class="son_archive spark_mkdir"><input type="text" value='+item+'></td><td class="add_Btn" onclick="add(this)">+</td><td class="add_Btn" onclick="down(this)">-</td></tr>')
               })
+              init_task();
             }
            if(obj.type=='start'){
                 $('#ele_start').val(obj.start);
@@ -406,7 +417,7 @@
 
       function updataBtn() {
 
-        var types = $('#ele_type').val();
+        var types = this_type;
         var jsonStr = {};
         if(types == 'start'){
           jsonStr = {
@@ -625,6 +636,7 @@
           }
         }
         this.propertyAlter = false;
+        console.log(JSON.stringify(jsonStr))
         $.ajax({
           type:"POST",
           url:$url+'/api/jobComp/v1/save',///xdbd-etl
@@ -632,11 +644,11 @@
           contentType:"application/json",
           data:JSON.stringify({
             "webComponentId": $('#ele_id').val(),
-            "name":'拉了个并行',
+            "name":$('.property_name').find('input').val(),
             "jobId":jobid,
             "sysJobCompId":'comp0003',
             "createUser": this_createUser,
-            "remark":'lalala',
+            "remark":'',
             "versionId": this_versionId,
             "attValue":JSON.stringify(jsonStr)
           }),success:function(data){
@@ -737,9 +749,9 @@
     <div class="form_title">属性设置</div>
     <div>
         <table class="form_content">
-            <tr><td class="th">程序ID</td><td><input type="text" id="ele_id"/></td></tr>
+            <tr style="display: none;"><td class="th">程序ID</td><td><input type="text" id="ele_id"/></td></tr>
             <!--<tr><td class="th">Name：</td><td><input type="text" id="ele_name" placeholder="name值"/></td></tr>-->
-            <tr><td class="th">数据类型</td><td><input type="text" id="ele_type"/></td></tr>
+            <tr style="display: none"><td class="th">数据类型</td><td><input type="text" id="ele_type"/></td></tr>
             <!--<tr><td class="th">Model：</td><td><input type="text" id="ele_model"/></td></tr>-->
             <!--<tr><td class="th">开始名称：</td><td><input type="text" id="ele_start"/></td></tr>-->
             <!--<tr><td class="th">结束名称：</td><td><input type="text" id="ele_end"/></td></tr>-->
@@ -749,8 +761,8 @@
             <!--<tr><td class="th">Height：</td><td><input type="text" id="ele_height"/></td></tr>-->
             <!--<tr><td class="th">连接线初始点</td><td><input type="text" id="ele_from"/></td></tr>-->
             <!--<tr><td class="th">连接线结束点</td><td><input type="text" id="ele_to"/></td></tr>-->
-            <tr><td class="th">算法参数</td><td><input type="text" id="ele_alg" /></td></tr>
-            <tr><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>
+            <!--<tr><td class="th">算法参数</td><td><input type="text" id="ele_alg" /></td></tr>-->
+            <!--<tr><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>-->
         </table>
         <table class="form_profile"></table>
     </div>
