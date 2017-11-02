@@ -66,7 +66,7 @@ function deleteBtn(_this) {
 //查看工作流
 function demandBtn(_this) {
   console.log(_this)
-  sessionStorage.setItem('jobId',$(_this).parents(".new_demand").attr("id"));
+  localStorage.setItem('directoryId',$(_this).parents(".new_demand").attr("id"));
   window.location.href = 'etlChart.html';
   // var demandId = {
   //   id: $(_this).parents(".new_demand").attr("id"),
