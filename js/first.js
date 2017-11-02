@@ -13,6 +13,15 @@ $(document).ready(function() {
         spaceBetween: 0,
         mousewheelControl: true
         ,autoplay: 10000
-   });
-  
+    });
+  	
+  	//section1
+  	$(".business .intro").hover(
+  		function(){
+  			$(this).next(".detail").css({"backgoundColor":"red"})
+  		},
+  		function(){
+  			
+  		}
+  	)
 });
