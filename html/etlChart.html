@@ -44,7 +44,6 @@
       var this_createUser = localStorage.getItem("createUser");
       var this_updateUser = localStorage.getItem("updateUser");
       var template = sessionStorage.getItem("isTemplate");
-      var JobId = sessionStorage.getItem("jobId");
       var this_isTemplate = false;  //是否为模板
       var this_type = '';
       var $url = '../xdbd-wf';  //../xdbd-wf
@@ -52,9 +51,9 @@
       if(template){
         this_isTemplate = true;
       }
-      if(JobId) {
-        jobid = JobId;
-      }
+//      if(JobId) {
+//        jobid = JobId;
+//      }
 
       init_dag();
 //      init_task();
