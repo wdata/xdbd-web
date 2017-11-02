@@ -16,12 +16,13 @@ $(document).ready(function() {
     });
   	
   	//section1
-  	$(".business .intro").hover(
+  	$(".business li>.intro").hover(
   		function(){
-  			$(this).next(".detail").css({"backgroundColor":"red"})
+//			$(this).next(".detail").hide();
+  			$(this).next(".detail").css({"opacity":"1","filter":"Alpha(Opacity=1)","z-index":"5","-webkit-transform":"scale(1)","transform":"scale(1)"})
   		},
   		function(){
-  			
+//			$(this).next(".detail").hide();
   		}
   	)
 });
