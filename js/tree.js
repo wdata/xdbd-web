@@ -42,7 +42,7 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	var onCurEnv = $(".set-cur-env select option:selected").val();console.log(onCurEnv);
+	var onCurEnv = $(".set-cur-env select option:selected").val()||"开发环境";console.log(onCurEnv);
 	userRight();
 	function userRight(){
 		$.ajax({
