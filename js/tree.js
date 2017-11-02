@@ -48,7 +48,7 @@ $(function(){
 	function userRight(){
 		$.ajax({
 			type:"POST",
-			url:"/api/resource/v1/resources",
+			url:$url0+"/api/resource/v1/resources",
 			dataType:'json',
             contentType: "application/json",
 			data:JSON.stringify({
