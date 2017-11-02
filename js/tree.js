@@ -42,8 +42,9 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	var onCurEnv = $(".set-cur-env select option:selected").val()||"开发环境";console.log(onCurEnv);
+	
 	userRight();
+	let onCurEnv = sessionStorage.getItem("onEnv");
 	function userRight(){
 		$.ajax({
 			type:"POST",
@@ -54,7 +55,6 @@ $(function(){
 			dataType:'json',
             contentType: "application/json",
 			success:function(res){
-				console.log(res);
               	if(res.code===0){
               		var menuLv1 = res.data;
               		var htmlLv1 = "";
@@ -73,6 +73,10 @@ $(function(){
               			htmlEnv += `
               				<option value="${v.name}">${v.name}</option>
               			`;
+              			if(i===0){
+              				onCurEnv = v.name;
+              				sessionStorage.setItem("onEnv",onCurEnv);
+              			}
               		});
               		$(".set-cur-env select").empty().append(htmlEnv);
               		//系统管理菜单
@@ -98,6 +102,9 @@ $(function(){
 	 */
 	$(".set-cur-env select").on("change",function(){
 		onCurEnv = $(this).find("option:selected").val();
+		sessionStorage.setItem("onEnv",onCurEnv)
+		getProjName(0);//切换环境,刷新项目树
+		
 		if(onCurEnv==="测试环境"){
 			$("#create-proj-btn").hide();
 		}else if(onCurEnv==="开发环境"){
@@ -179,6 +186,19 @@ $(function(){
 	var directoryName = "";//目录名称
 	getProjName(0);
 	function getProjName(id){
+		switch(onCurEnv){
+			case "开发环境":
+				onCurEnv = "dev";
+			break;
+			case "测试环境":
+				onCurEnv = "test";
+			break;
+			case "开发环境":
+				onCurEnv = "prod";
+			break;
+			default:
+		}
+		console.log(onCurEnv);
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectTree',
@@ -188,7 +208,8 @@ $(function(){
             dataType:'json',
 	        contentType: "application/json",
 			data:JSON.stringify({
-				"id":id
+				"id":id,
+				"env":onCurEnv
 			}),
 			success:function(res){
               	if(res.code===0){
