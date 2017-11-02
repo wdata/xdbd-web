@@ -142,7 +142,7 @@ function newBtn(popups) {
       data:JSON.stringify(res),
       success:function(data){
         if(data.code == 0) {
-          sessionStorage.setItem('jobId',data.data);
+          localStorage.setItem('directoryId',data.data);
           window.location.href = 'etlChart.html';
         }
       },error:function(data){
