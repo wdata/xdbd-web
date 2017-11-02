@@ -122,11 +122,10 @@ $(function(){
                     html = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
                     break;
             }
+            var editID = cahrt_type + uuid(8,16);
 
-            $(this).append('<div data-type="'+ cahrt_type +'" type="'+type+'" style="z-index:'+number+'; left:'+left+'px;top:'+top+'px;" id="'+cahrt_type+number+'" class="resize-item">'+ html +'</div>');
-            id_=cahrt_type+number;
-            //聚合方式
-            aggregation='';
+            $(this).append('<div data-type="'+ cahrt_type +'" type="'+type+'" style="z-index:'+ number +'; left:'+left+'px;top:'+top+'px;" id="'+ editID +'" class="resize-item">'+ html +'</div>');
+            id_ = editID;
             number++;
             new ZResize({
                 stage: '.edit-libs-box', //舞台
