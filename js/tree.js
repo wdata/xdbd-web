@@ -12,6 +12,7 @@ $(function(){
 	var $url2 = "/xdbd-etl";
 	var $url3 = "/xdbd-pm";
 	var $url4 = "/xdbd-wf";
+	var $url0 = "http://192.168.1.14:8449/crm2";//菜单权限
 	
 	/*
 	 
@@ -520,11 +521,10 @@ $(function(){
 			      yes: function(index2, layero){
 			      	var $curLi = $(".cut-version li input:checked").parent("li"),
 			      		curVersion = $curLi.attr("version"),
-			      		curVersionId = $curLi.attr("versionid"),
+			      		versionIdTo = $curLi.attr("versionid"),
 			      		curProjectId = $curLi.attr("projectid"),
 			      		curRemark = $curLi.attr("remark");
-			      		//console.log(curVersionId);
-			      		switchProjVersion(curVersionId);
+			      		switchProjVersion(versionId,versionIdTo);
 			      	layer.close(index2);
 			      },
 			      btn2:function(){
@@ -603,7 +603,7 @@ $(function(){
 		}
 		
 		//切换版本
-		function switchProjVersion(versionId){
+		function switchProjVersion(versionIdFrom,versionIdTo){
 			$.ajax({
 				type:'POST',
 	            url:$url3+'/bigdata/projectVersion/changeVersion',
@@ -612,9 +612,10 @@ $(function(){
 	            },
 	            dataType:'json',
 	            contentType: "application/json",
-				data:JSON.stringify({
-					"versionId":versionId
-				}),
+				data:{
+					"versionIdFrom":versionIdFrom,
+					"versionIdTo":versionIdTo
+				},
 				success:function(res){
 					console.log(res);
 	              	if(res.code===0){
