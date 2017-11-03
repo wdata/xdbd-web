@@ -8,7 +8,6 @@ $(function(){
   bind_click_saveActionComp();
   setVal();
   $(".stepName").val(etlName);
-  $(".tableOut").val(etlName);
 
   function initFromTable(){
     $.each(demo.exportData().lines,function(){
@@ -108,6 +107,8 @@ $(function(){
       set_groups(attValue.groups);
       fn_set_extractFields(attValue.extractFields);
       fn_set_sqlOut(actionComp.sqlOut);
+    } else {
+      $(".tableOut").val(etlName);
     }
   }
 

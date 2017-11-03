@@ -228,6 +228,8 @@
           console.log(res);
           if (res.code === 0) {
             layer.msg('成功链接测试');
+          } else {
+            layer.msg('测试失败')
           }
         },
         error: function (err) {
