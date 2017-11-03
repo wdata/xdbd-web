@@ -933,23 +933,21 @@ let project = {
                             ,c = '';
                         // 重置数据
                         if(listFilter){
-                            if(listFilter.values)
-                            $.each(listFilter.values,function(x,y){
-                                if(val === y){
-                                    console.log(listFilter.operator);
-                                    a = 'icon_checked';
-                                    b = "checked='checked'";
-                                    if(listFilter.operator === "NOT IN"){
-                                        c = 'style="text-decoration: line-through;"';
-                                    }else if(listFilter.operator === "all"){
-                                        console.log(listFilter.operator);
+                            if(listFilter.values){
+                                $.each(listFilter.values,function(x,y){
+                                    if(val === y){
+                                        a = 'icon_checked';
+                                        b = "checked='checked'";
+                                        if(listFilter.operator === "NOT IN"){
+                                            c = 'style="text-decoration: line-through;"';
+                                        }
                                     }
-                                }
-                                if(listFilter.operator === "all"){
-                                    a = 'icon_checked';
-                                    b = "checked = 'checked'";
-                                }
-                            });
+                                });
+                            }
+                            if(listFilter.operator === "all"){
+                                a = 'icon_checked';
+                                b = "checked = 'checked'";
+                            }
                         }
                         html += `<li>
                                     <img src="images/${ a }.png" alt="">
