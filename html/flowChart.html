@@ -106,26 +106,8 @@
         demo.setNodeRemarks(remark);
         demo.onItemDel=function(id,type){
           if(confirm("确定要删除该单元吗?")){
-            var delActionComp = {
-              actionId: this_actionId,
-              webComponentId: id,
-              versionId: this_versionId
-            };
-            $.ajax({
-              type:"POST",
-              url:$url+"/api/action/v1/delActionComp",
-              dataType:"json",
-              contentType:"application/json",
-              data:JSON.stringify(delActionComp),
-              success:function(data){
-                if(data.code == 0) {
-                  layer.msg('删除成功')
-                }
-              },error:function(data){
-                layer.msg(JSON.stringify(data))
-              }
-            })
             this.blurItem();
+            init_delace(id)
             return true;
           }else{
             return false;
@@ -519,7 +501,7 @@
             }),
             success:function(data){
               if(data.code == 0) {
-                console.log(data)
+               alert(data)
                 this_actionId = data.data.actionId;
                 this_isTemplate = false;
                 init_actionComp();
@@ -607,6 +589,29 @@
               $('.generateSql').trigger('click');
               $('.saveActionComp').trigger('click');
             })
+        }
+        function init_delace(id) {
+          var delActionComp = {
+          };
+          $.ajax({
+            type:"POST",
+            url:$url+"/api/action/v1/delActionComp",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "actionId": this_actionId,
+              "webComponentId": id,
+              "versionId": this_versionId,
+              "dag": Export()
+            }),
+            success:function(data){
+              if(data.code == 0) {
+                layer.msg('删除成功')
+              }
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
+            }
+          })
         }
 
     </script>
