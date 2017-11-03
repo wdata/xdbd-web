@@ -674,8 +674,7 @@ $(function(){
 //		reportMenuId = curDom[0].reportMenuId;
 		dirType = curDom[0].directoryType;
 		switch(dirType){
-			case "12":
-			case "13":
+			case "14":
 			case "15":
 				pageId = curDom[0].directoryId;
 			break;
@@ -1034,6 +1033,8 @@ $(function(){
 		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
     	window.open("../html/preview.html" + url);
 	})
+	
+
 	
 });//jq end
 
