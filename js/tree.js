@@ -136,8 +136,8 @@ $(function(){
 			$("#create-proj-btn").show();
 		}else if(onCurEnv==="prod"){
 			$("#create-proj-btn").hide();
-			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
-    		window.open("../html/preview.html" + url);
+//			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+//  		window.open("../html/preview.html" + url);
 		}
 	})
 	
