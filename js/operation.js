@@ -1737,10 +1737,11 @@ function imgPreview(_this){
 
         var form = new FormData($("#fileForm")[0]);
         var cahrt_type = $(_this).siblings("img").attr("data-type");    // 类型
+        var editID = cahrt_type + uuid(8,16);
 
         form.append("file",fileObj.files[0]);
         form.append("pageId",dirId);  // 页面ID
-        form.append("cid",cahrt_type + number);  // 控件ID
+        form.append("cid",editID);  // 控件ID
         form.append("projectId",projectId);
         form.append("versionId",versionId);
 
@@ -1777,7 +1778,6 @@ function imgPreview(_this){
                         var left =  (cW - w) / 2; // 距离左边距离
                         var top =   (cH - h) / 2; // 距离顶部边距离
 
-                        var editID = cahrt_type + uuid(8,16);
 
                         if(width >= cW){
                             // 如果图片真实大小大于内容区，则最大宽度为内容区宽度；
