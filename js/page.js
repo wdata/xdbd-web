@@ -306,7 +306,7 @@ $(function(){
 		var dirType =  curDom[0].directoryType;//目录类型
 		var directoryId =  curDom[0].directoryId;//目录id
 		var pageName = curDom[0].name;//目录名称
-		if(dirType==="15"){
+		if(dirType==="15"||dirType==="14"){
 			linkPageId = directoryId;
 			$(".page-tooltip li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
 			$(".page-tooltip1 li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
@@ -323,7 +323,7 @@ $(function(){
 		var directoryId =  curDom[0].directoryId;//目录id
 		var pageName = curDom[0].name;//目录名称
 //		pageId = directoryId;
-		if(dirType==="15"){
+		if(dirType==="15"||dirType==="14"){
 			linkPageId = directoryId;
 			pageName = pageName;
 			$(".p-opage-select select option:selected").val(linkPageId).text(pageName);
