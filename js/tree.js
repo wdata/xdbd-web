@@ -44,7 +44,7 @@ $(function(){
 	 */
 	
 	userRight();
-	let onCurEnv = sessionStorage.getItem("onEnv");
+	let onCurEnv = sessionStorage.setItem("onEnv","");
 	function userRight(){
 		$.ajax({
 			type:"POST",
@@ -75,7 +75,20 @@ $(function(){
               			`;
               			if(i===0){
               				onCurEnv = v.name;
+              				switch(onCurEnv){
+								case "开发环境":
+									onCurEnv = "dev";
+								break;
+								case "测试环境":
+									onCurEnv = "test";
+								break;
+								case "生产环境":
+									onCurEnv = "prod";
+								break;
+								default:
+							}
               				sessionStorage.setItem("onEnv",onCurEnv);
+              				getProjName(0);//刷新项目树
               			}
               		});
               		$(".set-cur-env select").empty().append(htmlEnv);
@@ -102,16 +115,29 @@ $(function(){
 	 */
 	$(".set-cur-env select").on("change",function(){
 		onCurEnv = $(this).find("option:selected").val();
+		switch(onCurEnv){
+			case "开发环境":
+				onCurEnv = "dev";
+			break;
+			case "测试环境":
+				onCurEnv = "test";
+			break;
+			case "生产环境":
+				onCurEnv = "prod";
+			break;
+			default:
+		}
 		sessionStorage.setItem("onEnv",onCurEnv)
 		getProjName(0);//切换环境,刷新项目树
 		
-		if(onCurEnv==="测试环境"){
+		if(onCurEnv==="test"){
 			$("#create-proj-btn").hide();
-		}else if(onCurEnv==="开发环境"){
+		}else if(onCurEnv==="dev"){
 			$("#create-proj-btn").show();
-		}else if(onCurEnv==="生产环境"){
-			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
-    		window.open("../html/preview.html" + url);
+		}else if(onCurEnv==="prod"){
+			$("#create-proj-btn").hide();
+//			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+//  		window.open("../html/preview.html" + url);
 		}
 	})
 	
@@ -122,6 +148,9 @@ $(function(){
 		let url;
 		let name = $(this).find("a").text();
 		switch(name){
+			case "个人信息":
+				url = "http://192.168.1.43:8086/page/person/person.html";
+			break;
 			case "组织管理":
 				url = "http://192.168.1.43:8086/page/org_control/org_control.html";
 			break;
@@ -211,20 +240,9 @@ $(function(){
 	var dirType = "";//目录类型
 	var directoryId ="";//目录id
 	var directoryName = "";//目录名称
-	getProjName(0);
-	function getProjName(id){
-		switch(onCurEnv){
-			case "开发环境":
-				onCurEnv = "dev";
-			break;
-			case "测试环境":
-				onCurEnv = "test";
-			break;
-			case "生产环境":
-				onCurEnv = "prod";
-			break;
-			default:
-		}
+//	getProjName(0);
+	function getProjName(id){ 
+		
 		console.log(onCurEnv);
 		$.ajax({
 			type:'POST',
@@ -926,8 +944,8 @@ $(function(){
 			console.log("1="+dirType);
 			console.log("2="+directoryId);
 			
-			
-			if(onCurEnv==="开发环境"){
+			console.log(onCurEnv);
+			if(onCurEnv==="dev"){
 				var items0 = [
 						{ title: '创建子模块', fn: createSubmodule},
 						{ title: '创建最终子模块', fn: createFinalSubmodule },
@@ -960,7 +978,7 @@ $(function(){
 						{ title: '新建文件夹', fn: newFile},
 						{ title: '创建页面', fn: createFpage}
 					];
-			}else if(onCurEnv==="测试环境"){
+			}else if(onCurEnv==="test"||onCurEnv==="prod"){
 					var items0 = [
 						{ title: '提交发布', fn: checkInTest },
 						{ title: '数据源配置', fn: dataSourceConfig },

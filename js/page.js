@@ -146,7 +146,8 @@ $(function(){
                         	displayPage(data);
                     	}
 					}else{
-						layer.msg("请先为BI页面添加组件", {icon: 0});
+						$("#f-fpage-name").text("未设置");
+						layer.msg("未设置首页", {icon: 0});
 					}
 				}
 			},
@@ -266,12 +267,17 @@ $(function(){
 	              	if(res.code===0){
 	              		var data = res.data;
 	              		zNodes = data;
-						$.fn.zTree.init($("#flow-tree"), setting, zNodes);
-						$.fn.zTree.init($("#other-tree"), setting1, zNodes);
-						var curObj1 = $.fn.zTree.getZTreeObj("flow-tree");
-						curObj1.expandAll(true);
-						var curObj2 = $.fn.zTree.getZTreeObj("other-tree");
-						curObj2.expandAll(true);
+	              		if(zNodes){
+	              			$.fn.zTree.init($("#flow-tree"), setting, zNodes);
+							$.fn.zTree.init($("#other-tree"), setting1, zNodes);
+							var curObj1 = $.fn.zTree.getZTreeObj("flow-tree");
+							curObj1.expandAll(true);
+							var curObj2 = $.fn.zTree.getZTreeObj("other-tree");
+							curObj2.expandAll(true);
+	              		}else{
+	              			layer.msg("请先创建页面!", {icon: 0});
+	              		}
+						
 	              	}
 				},
 				error:function(err){

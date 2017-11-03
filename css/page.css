@@ -73,6 +73,7 @@
 	text-align: center;
 	float: left;
 	cursor: default;
+	overflow: hidden;
 }
 .p-setlink-box li>span {
 	cursor: pointer;
