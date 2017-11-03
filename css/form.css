@@ -211,7 +211,7 @@ body {
 .form-btn input {
 	width: 100%;
 	height: 44px;
-	box-sizing: box;
+	box-sizing: border-box;
 	background-color: #FFFFFF;
 	border: 2px solid #578fe6;
 	font-size: 16px;
@@ -310,7 +310,7 @@ body {
 	border: 1px solid #D9D9D9;
 }
 .select-file>span {
-	display: inline-block
+	display: inline-block;
 	margin-left:36px;
 	vertical-align: bottom;
 }
@@ -653,7 +653,7 @@ div.tree-nav {
 	color: #bbb;
 	font-size: 14px;
 }
-::-ms-input-placeholder {
+:-ms-input-placeholder {
 	color: #bbb;
 	font-size: 14px;
 }
@@ -737,7 +737,7 @@ div.tree-nav {
 .table-box td:nth-of-type(1).on{
 	background-image: url(../images/icon_checked.png);
 }
-.table-box tbody tr td:first.on {
+.table-box tbody tr td:first-child.on {
 	background-image: url(../images/icon_checked.png);
 }
 .table-box td:last-of-type {
@@ -1028,7 +1028,7 @@ div.tree-nav {
 .s-slider-box .ui-slider .ui-slider-handle {
 	width: 10px;
     height: 22px;
-    border-radius: none!important;
+    border-radius: 0!important;
 }
 .s-slider-box .ui-state-default,.s-slider-box .ui-widget-content .ui-state-default,.s-slider-box .ui-widget-header .ui-state-default{
 	background: #FFFFFF;
