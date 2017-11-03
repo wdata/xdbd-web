@@ -434,6 +434,13 @@ $(function(){
 		});
 	}
 	
+	//
+	$(".edit-content").delegate(".resize-item","click",function(){
+		var id = $(this).attr("id");
+		var linkPageId = $(this).attr("linkpageid");
+		console.log(id,linkPageId);
+	})
+	
 });//JQ END
 
 
