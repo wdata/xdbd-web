@@ -59,6 +59,8 @@ $(function(){
              		let data = res.data,
                         dhtml = '',
                         mhtml = '';
+
+                    modelId = data.modelId;
              		//维度
              		$.each(data.dimensions,function(i,item){
              			dhtml += `
