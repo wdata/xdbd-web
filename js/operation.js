@@ -1,4 +1,4 @@
-var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,dim_mea=null,dis_con=null,aggregation=null
+let id_='',field=null,fieldAlias=null,order=null,dataType=null,dim_mea=null,dis_con=null,aggregation=null
     ,save_arr=[]  // 保存全部数据；
     ,index_arr=[]  // 保存索引数据；
     ,copy_data = {} // 复制后保存数据；
@@ -6,16 +6,16 @@ var id_='',search_date={},field=null,fieldAlias=null,order=null,dataType=null,di
     ,data_type = ""  // 作为判断图形的；
     ,number=0   // 层级
     ,fieldId = null  // 记录数据筛选时候的ID
-    ,modelId = null // 记录dataModelId值；
-    ,url = "http://192.168.1.42:8084/xdbd-bi";
+    ,modelId = null; // 记录dataModelId值；
 
-var surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
+const url = "http://192.168.1.42:8084/xdbd-bi";
+
+// var surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
+const surroundings = sessionStorage.getItem("onEnv");
 if(surroundings === "测试环境"){
     $("#preview").siblings().hide().parent().siblings().hide();
     $('.generateEditBi').show().siblings("");
 }
-
-
 
 
 
@@ -49,9 +49,9 @@ $(document).ready(function() {
     context.attach('.resize-item', [
         {header: '菜单设置'},
         {text: '复制',action: function(e){
-            var  ele = context.getClickEle();
+            const  ele = context.getClickEle();
             e.preventDefault();
-            var id = ele.attr("id");
+            const id = ele.attr("id");
             operating.copy(id); // 复制
         }},
         {text: '粘贴',action: function(e){
@@ -60,33 +60,33 @@ $(document).ready(function() {
         }},
         {text: '删除', action: function(e){
             e.preventDefault();
-            var id = context.getClickEle().attr("id");
+            const id = context.getClickEle().attr("id");
             operating.clickDelete(id);      // 删除功能
         }},
         {text: '排列', subMenu: [
             {header: '默认值'},
             {
                 text: '置于顶层',
-                action: function (e) {
+                action: function () {
                     context.getClickEle().css("z-index",(number+1));
                 }
             },
             {
                 text: '置于低层',
-                action: function (e) {
+                action: function () {
                     context.getClickEle().css("z-index",0);
                 }
             },
             {
                 text: '上移一层',
-                action: function (e) {
-                    var zIndex=parseInt(context.getClickEle().css("z-index"));
+                action: function () {
+                    const zIndex = parseInt(context.getClickEle().css("z-index"));
                     context.getClickEle().css("z-index",zIndex+1);
                 }
             },{
                 text: '下移一层',
-                action: function (e) {
-                    var zIndex=parseInt(context.getClickEle().css("z-index"));
+                action: function () {
+                    const zIndex = parseInt(context.getClickEle().css("z-index"));
                     context.getClickEle().css("z-index",zIndex-1);
                 }
             }
@@ -102,7 +102,7 @@ $(document).ready(function() {
 });
 
 // 保存数据，保存数据索引
-var refresh = {
+let refresh = {
     // 刷新按钮
     save_config:function(id){
         // 上传数据索引
@@ -112,7 +112,7 @@ var refresh = {
     },
     // 检索数据 -- 图表和表格的检索数据
     indexes:function(id){
-        var chart_date={
+        let chart_date={
             'cid':id,
             "queryJson":{
                 "biSetId": $(".data-source-box option:selected").attr("bisetid"),
@@ -131,11 +131,9 @@ var refresh = {
     },
     // 图表和表格数据
     retrieve:function(id){
-        var self = this;
-        var chart_date={
+        let chart_date={
             'cid':id,
             "style":{},
-            // "linkPageId":null,    // 点击控件要跳转的页面ID
             "customData":null,    // 各控件类型自定义的数据
             "queryJson":{
                 "biSetId": $(".data-source-box option:selected").attr("bisetid"),
@@ -156,8 +154,8 @@ var refresh = {
     },
     // 修改文本内容，并存入数据save_arr中
     textData:function(id){
-        var self = this;
-        var chart_date= {
+        const idEle = $("#" + id);
+        let chart_date= {
             'cid': id,
             "style": {},
             // "linkPageId":null,    // 点击控件要跳转的页面ID
@@ -165,19 +163,13 @@ var refresh = {
             "queryJson": null
         };
         // 自定义数据
-        var text = $("#" + id).find(".content-text>div");
+        const text = idEle.find(".content-text>div");
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "controls":{
-                "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),                    // 对齐方式
+                "html":idEle.find(".resize-panel").siblings().prop("outerHTML"),                    // 对齐方式
                 "text":$(text).html(),                    // 对齐方式
                 "color":text.css("color"),                             // 颜色
-                // "fontSize":text.css("font-size"),                      // 大小       (这些全部包含在HTML中，和富文本编辑器类似，因为选择颜色会修改焦点，所以没有办法在HTML中修改颜色)
-                // "fontFamily":text.css("font-family"),                 // 字体
-                // "fontWeight":text.css("font-weight"),                  // 加粗
-                // "fontStyle":text.css("font-style"),                    // 斜体
-                // "textDecorationLine":text.css("text-decoration-line"),        // 下划线
-                // "textAlign":text.css("text-align"),                    // 对齐方式
             }
         };
         this.whz(id,chart_date);// 根据ID返回宽、高、度、定位、层级、控件类型type值
@@ -186,25 +178,25 @@ var refresh = {
     },
     // 修改图片内容时，保存数据到svae_arr中
     priceData:function(id){
-        var chart_date= {
+        const idEle = $("#" + id);
+        let chart_date= {
             'cid': id,
             "style": {},
-            // "linkPageId":null,    // 点击控件要跳转的页面ID
             "customData": null,    // 各控件类型自定义的数据
             "queryJson": null
         };
         // 自定义数据
-        var ele = $("#" + id).find(".image-class");
+        const ele = idEle.find(".image-class");
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "controls":{
-                "url":$(ele).html(), // 图片路径
-                "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),
-                "ratio":$(".set-price-prop input").is(":checked"), //是否保存宽高比缩放
-                "border-color":$(ele).css("border-color"), //边框颜色
-                "border-style":$(ele).css("border-style"), //边框样式
-                "border-width":$(ele).css("border-width"), //边框宽度
-                "border-radius":$(ele).css("border-radius"), //边框圆角
+                "url": $(ele).html(), // 图片路径
+                "html": idEle.find(".resize-panel").siblings().prop("outerHTML"),
+                "ratio": $(".set-price-prop input").is(":checked"), //是否保存宽高比缩放
+                "border-color": $(ele).css("border-color"), //边框颜色
+                "border-style": $(ele).css("border-style"), //边框样式
+                "border-width": $(ele).css("border-width"), //边框宽度
+                "border-radius": $(ele).css("border-radius"), //边框圆角
             }
         };
         this.whz(id,chart_date);// 根据ID返回宽、高、度、定位、层级、控件类型type值
@@ -213,7 +205,8 @@ var refresh = {
     },
     // 修改按钮内容时，保存数据到svae_arr中
     buttonData:function(id){
-        var chart_date= {
+        const idEle = $("#" + id);
+        let chart_date= {
             'cid': id,
             "style": {},
             // "linkPageId":null,    // 点击控件要跳转的页面ID
@@ -221,16 +214,16 @@ var refresh = {
             "queryJson": null
         };
         // 自定义数据
-        var ele = $("#" + id).find(".content-button button");
-        var color = $(ele).css("font-color")?$(ele).css("font-color"):"#000";
+        const ele = idEle.find(".content-button button");
+        const color = $(ele).css("font-color")?$(ele).css("font-color"):"#000";
         chart_date.customData = {
-            "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
+            "dataType": $("#"+ id +"").attr("data-type"),             // 控件类型
             "controls":{
-                "text":$(ele).html(), // 按钮文本内容
-                "html":$("#"+id).find(".resize-panel").siblings().prop("outerHTML"),
-                "background-color":$(ele).css("background-color"), // 背景颜色和边框颜色
-                "font-size":$(ele).css("font-size"), // 文本字体大小
-                "font-color":color, // 文本字体颜色
+                "text": $(ele).html(), // 按钮文本内容
+                "html": idEle.find(".resize-panel").siblings().prop("outerHTML"),
+                "background-color": $(ele).css("background-color"), // 背景颜色和边框颜色
+                "font-size": $(ele).css("font-size"), // 文本字体大小
+                "font-color": color, // 文本字体颜色
             }
         };
         this.whz(id,chart_date);// 根据ID返回宽、高、度、定位、层级、控件类型type值
@@ -240,29 +233,19 @@ var refresh = {
     // 根据不同的data-type类型，来执行不同的存储;以此减少存储的次数
     storage:function(type){
         switch(type){
-            case "chart":
-                refresh.retrieve(id_);
-                break;
-            case "table":
-                refresh.retrieve(id_);
-                break;
-            case "text":
-                refresh.textData(id_);
-                break;
-            case "image":
-                refresh.priceData(id_);
-                break;
-            case "button":
-                refresh.buttonData(id_);
-                break;
+            case "chart":refresh.retrieve(id_);break;
+            case "table":refresh.retrieve(id_);break;
+            case "text":refresh.textData(id_);break;
+            case "image":refresh.priceData(id_);break;
+            case "button":refresh.buttonData(id_);break;
         }
     },
     // 获取右侧维度、度量、数据筛选
     // 图表：chart-attr-box 表格：table-attr-box
     dataSource:function(id,chart_date){
-        var type = $("#" + id).attr("data-type");
+        const type = $("#" + id).attr("data-type");
         $.each($("."+ type +"-attr-box .x-pills ul li"),function(index,icon){
-            var search_attr= {
+            let search_attr= {
                 'field': $(icon).attr("fieldname"),
                 'fieldAlias': $(icon).text(),
                 'order': "ASC",
@@ -276,7 +259,7 @@ var refresh = {
             chart_date.queryJson.x.push(search_attr);
         });
         $.each($("."+ type +"-attr-box .y-pills ul li"),function(index,icon){
-            var search_attr={
+            let search_attr={
                 'field':$(icon).attr("fieldname"),
                 'fieldAlias':$(icon).text(),
                 'order':"ASC",
@@ -290,7 +273,7 @@ var refresh = {
             chart_date.queryJson.y.push(search_attr);
         });
         $.each($("."+ type +"-attr-box .datas-pills ul li"),function(index,icon){
-            var search_attr={
+            let search_attr={
                 'field':$(icon).attr("fieldname"),
                 'fieldAlias':$(icon).text(),
                 'order':"ASC",
@@ -307,7 +290,6 @@ var refresh = {
     },
     // 搜索匹配项（匹配：fieldId 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
     screen:function(icon,search_attr,number){
-        // console.log(screen_data);
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
             if($(icon).attr("fieldId") === y.fieldId && y.number === number && y.cid === id_){
@@ -345,7 +327,7 @@ var refresh = {
     },
     // 根据不同的类型和图形，返回不同的控件类型
     typeData:function(dataType){
-        var type = null;
+        let type = null;
     // 控件类型：0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
         switch(dataType){
             case "chart":
@@ -363,7 +345,7 @@ var refresh = {
     // 数据根据ID唯一，并将数据添加进入保存数组
     only:function(d,chart_date,id){
         // 根据ID唯一活动数据唯一
-        var bur = true;
+        let bur = true;
         $.each(d,function(index,item){
             if(item.cid === id){
                 d.splice(index,1,chart_date);
@@ -379,7 +361,7 @@ var refresh = {
 };
 
 // 文本编辑器
-var textEdit = {
+let textEdit = {
     // 文本字体颜色
   color:function(){
       $(document).on("click",".set-text-attr-wrap .color-row span",function(){
@@ -433,7 +415,7 @@ textEdit.fontStyle();// 文本字体：加粗、斜体、下划线
 textEdit.textAlign(); // 文本对齐方式：向左、居中、向右
 
 // 按钮编辑
-var buttonEdit = {
+let buttonEdit = {
     main:function(){
         refresh.buttonData(id_);
     },
@@ -457,14 +439,14 @@ var buttonEdit = {
     // 按钮文字
     ButtonSize:function(){
         $(".set-button-size select").on("change",function(){
-            $("#"+id_).find("button").css("font-size",$(this).val() + "px")
+            $("#"+id_).find("button").css("font-size",$(this).val() + "px");
             buttonEdit.main();
         })
     },
     // 按钮字体颜色
     BackSizeColor:function(){
         $(document).on("click",".set-button-SizeColor .color-row span",function(){
-            $("#"+id_).find("button").css('color',$(this).attr("data-color"))
+            $("#"+id_).find("button").css('color',$(this).attr("data-color"));
             buttonEdit.main();
         })
     }
@@ -475,7 +457,7 @@ buttonEdit.ButtonSize();// 按钮文字
 buttonEdit.BackSizeColor();// 按钮字体颜色
 
 // 图片编辑
-var priceEdit = {
+let priceEdit = {
     main:function(){
         refresh.priceData(id_);
     },
@@ -493,10 +475,10 @@ var priceEdit = {
     },
     // 边框 样式
     borderStyle:function(){
-        var self = this;
+        const self = this;
         $(".set-price-border-style select").on("change",function(){
             // dotted	定义点状边框。在大多数浏览器中呈现为实线。       dashed	定义虚线。在大多数浏览器中呈现为实线。     solid	定义实线。
-            var style = self.borderStyleJud($(this).val());
+            const style = self.borderStyleJud($(this).val());
             $("#"+id_).find(".image-class").css("border-style",style);
             priceEdit.main();
         })
@@ -504,17 +486,17 @@ var priceEdit = {
     // 边框 颜色
     borderColor:function(){
         $(document).on("click",".set-price-color .color-row span",function(){
-            $("#"+id_).find(".image-class").css("border-color",$(this).attr("data-color"))
+            $("#"+id_).find(".image-class").css("border-color",$(this).attr("data-color"));
             priceEdit.main();
         });
     },
     // 边框 宽度
     borderWidth:function(){
-        var self = this;
+        const self = this;
         $(".set-price-border select").on("change",function(){
-            var color = $(".set-price-color .palette-color-picker-button").css("background-color") + " ";
-            var style = self.borderStyleJud($(".set-price-border-style select").val()) + " ";
-            var width = $(this).val() + "px ";
+            const color = $(".set-price-color .palette-color-picker-button").css("background-color") + " ";
+            const style = self.borderStyleJud($(".set-price-border-style select").val()) + " ";
+            const width = $(this).val() + "px ";
             $("#"+id_).find(".image-class").css("border",width + style + color);
             priceEdit.main();
         })
@@ -522,12 +504,12 @@ var priceEdit = {
     // 边框 圆角
     borderRadius:function(){
         $(".set-price-radius input").on("change",function(){
-            $("#"+id_).find(".image-class").css("border-radius",$(this).val() + "px")
+            $("#"+id_).find(".image-class").css("border-radius",$(this).val() + "px");
             priceEdit.main();
         })
     },
     borderStyleJud:function(data){
-        var style = null;
+        let style = null;
         switch(data){
             case "点线":style = "dotted";
                 break;
@@ -547,17 +529,17 @@ priceEdit.borderWidth();// 边框 宽度
 priceEdit.borderRadius();// 边框 圆角
 
 // BI左上角，一排功能项
-var operating = {
+let operating = {
     // 保存
     save:function(){
         // 先更新数据
-        var isIndex = null;
+        let isIndex = null;
         if($(".top-bar .set-index-box input").prop("checked")){
             isIndex = 1;
         }else{
             isIndex = 0
         }
-        var data = {
+        let data = {
             "isIndex":isIndex,
             "controls":save_arr,
             "customData":screen_data,
@@ -586,7 +568,7 @@ var operating = {
     },
     // 删除
     clickDelete:function(id){
-        var deleted = true;
+        let deleted = true;
         // 删除保存中的数据，并删除cid为空的数据，以防出现bug
         $.each(save_arr,function(index,item){
             // 删除出现的bug数据
@@ -610,7 +592,7 @@ var operating = {
             if(item.cid + "" === id){
                 // 如果cid相同，则将item数据复制给copy_data
                 copy_data = JSON.parse(JSON.stringify(item));
-                var dataType = item.customData.dataType;
+                const dataType = item.customData.dataType;
                 if(dataType === "text"|| dataType === "button" || dataType === "image" ){
                     copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
                 }
@@ -621,28 +603,40 @@ var operating = {
     paste:function(){
         // 判断是否为空对象！
         if(!(JSON.stringify(copy_data) === "{}")){
-            var customData = copy_data.customData;
-            var id = customData.dataType + number;
-            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
-            var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
+            const clearY = $(".clearY");
+            const editBox = $(".edit-libs-box");
 
-            var z = '';
+            const customData = copy_data.customData;
+            const dataType = customData.dataType;
+            const id = dataType + uuid(8,16);
+            const left = event.pageX - parseFloat(clearY.width()) - parseFloat(clearY.css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
+            const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat(editBox.css("margin-top"));
+
+            let z = '';
             // 如果是文本和图片，则复制内容不同
-            if(customData.dataType === "text" || customData.dataType === "button" || customData.dataType === "image"){
+            if(dataType === "text" || dataType === "button" || dataType === "image"){
                 z = customData.html;
+            }else if(dataType === "table" || dataType === "chart"){
+                // 绘制图形
+                const chart_date = {
+                    'cid':copy_data.cid,
+                    "type":copy_data.type,
+                    "queryJson":copy_data.queryJson,
+                };
+                DataIndexes.inAjax(chart_date,id);
             }
 
-            var html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ customData.dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
-            $(".edit-libs-box").append(html);
+            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
+            editBox.append(html);
 
 
             // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
-            if(copy_data.queryJson && customData.dataType === "chart" || customData.dataType === "table" ){
-                var z = JSON.parse(JSON.stringify(copy_data));
+            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
+                const z = JSON.parse(JSON.stringify(copy_data));
                 z.cid = id;
                 save_arr.push(z);
             }
-            refresh.storage(customData.dataType); // 判断不同的TYPE执行不同的采取函数
+            refresh.storage(dataType); // 判断不同的TYPE执行不同的采取函数
             // 拖拽初始化！
             id_ = id; // 拖拽必须修改id_
             number++; // ID不重复！
@@ -670,7 +664,7 @@ var operating = {
         // $(".resize-item").css("border","none")
         //     .find(".resize-panel").remove()
         // $(".resize-item").find(".content-text").removeClass("edit");
-        var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+        const url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
         window.open("../html/preview.html" + url);
 
     },
@@ -706,7 +700,7 @@ operating.moveLayer(); // 移入提示
 
 
 // 获取页面，编辑成编辑页面
-var obtain = {
+let obtain = {
     // 根据pageId获取数据
     request:function(){
         $.ajax({
@@ -748,19 +742,18 @@ var obtain = {
     },
     // 为测试环境
     generate:function(data){
-        var html = '';
+        let html = '';
         $.each(data.htmlJson.controls,function(index,val){
-            var text = ''            // html
-                ,style =  val.style  // 宽、高
-                ,dataType = val.customData.dataType;  // 类型
-
+            let text = '';            // html
+            const dataType = val.customData.dataType  // 类型
+                  ,style =  val.style; // 宽、高
             // 判断图形、表格、文本、图片、按钮
             // 如果是文本和图片，则复制内容不同
             if(dataType === "text" || dataType === "button" || dataType === "image"){
                 text = val.customData.controls.html;
             }else if(dataType === "table" || dataType === "chart"){
                 // 将数据存入检索数据中
-                var chart_date = {
+                const chart_date = {
                     'cid':val.cid,
                     "type":val.type,
                     "queryJson":val.queryJson,
@@ -778,21 +771,21 @@ var obtain = {
             save_arr = data.htmlJson.controls;
             screen_data = data.htmlJson.customData;
             // 遍历数据,生成图形
-            var html = '';
+            let html = '';
             $.each(data.htmlJson.controls,function(index,val){
                 // 判断图形、表格、文本、图片、按钮
-                var text = '';
+                let text = '';
                 // 如果是文本和图片，则复制内容不同
-                var style =  val.style;
-                var controls = val.customData.controls;
-                var dataType = val.customData.dataType;
+                const style =  val.style;
+                const controls = val.customData.controls;
+                const dataType = val.customData.dataType;
 
                 id_ = val.cid; // 拖拽必须修改id_
                 if(dataType === "text" || dataType === "button" || dataType === "image"){
                     text = controls.html;
                 }else if(dataType === "table" || dataType === "chart"){
                     // 将数据存入检索数据中
-                    var chart_date = {
+                    const chart_date = {
                         'cid':val.cid,
                         "type":val.type,
                         "queryJson":val.queryJson,
@@ -818,7 +811,7 @@ var obtain = {
 obtain.request();  // 根据pageId获取数据
 
 // 文本筛选和列表筛选
-var project = {
+let project = {
     "list":null,
     "fieldId": null,
     "number":null,
@@ -827,8 +820,8 @@ var project = {
     "textFilter":{},
     "listFilterB":[],
     TFilter:function(field, name,fieldId,number,cid){
-        var self = this;
-        var listFilter = null;
+        const self = this;
+        let listFilter = null;
         this.fieldId = fieldId;    // 保存fieldid作为索引
         this.number = number;
         this.cid = cid;
@@ -855,9 +848,9 @@ var project = {
                     project.chear($(".f-select-methods li").eq(0));
                 }
 
-                var html = '';
+                let html = '';
                 $.each(val.listFilterB,function(x,y){
-                    var c = '';
+                    let c = '';
                     if(val.listFilter.operator === "NOT IN"){
                         c = 'style="text-decoration: line-through;"'
                     }
@@ -865,8 +858,8 @@ var project = {
                 });
                 $(".f-addbtn-box-auto ul").empty().append(html);
 
-                var htmlA = '';
-                var z1 = '';
+                let htmlA = '';
+                let z1 = '';
                 if(val.textFilter.items){
                     $.each(val.textFilter.items,function(x,y){
                         var a1,a2,a3,a4,a5;
@@ -899,16 +892,17 @@ var project = {
                         z1 += y.operator + " " + y.value + " ";
                     });
                 }
-                $(".f-filter-result li").eq(2).find("em").text(z1);
+                const filter = $(".f-filter-result li");
+                filter.eq(2).find("em").text(z1);
                 $(".f-select-box2").empty().append(htmlA);
 
-                var z2 = '';
+                let z2 = '';
                 if(self.listFilter.value){
                     $.each(self.listFilter.value,function(x,y){
                         z2 += self.listFilter.operator +  y + ' ';
                     })
                 }
-                $(".f-filter-result li").eq(1).find("em").text(z2);
+                filter.eq(1).find("em").text(z2);
 
 
             }
@@ -931,13 +925,12 @@ var project = {
             success:function(data){
                 if(data.code === 0){
                     project.list = data.data;   // 存储数据
-                    var html = '';
-                    var l = $(".f-select-cont ul").empty();
+                    let html = '';
+                    const l = $(".f-select-cont ul").empty();
                     $.each(data.data,function(index,val){
-                        var a = "xuankuang"
+                        let a = "xuankuang"
                             ,b = ""
-                            ,c = ''
-                            ,z1= ''
+                            ,c = '';
                         // 重置数据
                         if(listFilter){
                             if(listFilter.values)
@@ -967,7 +960,7 @@ var project = {
             error:function(res){
                 console.log(res);
             }
-        })
+        });
 
         // 初始化
         $("#filter-attr").show();
@@ -977,7 +970,7 @@ var project = {
     pjEvent:function(){
         //项目（过滤)属性
         $(".f-name").on("click","li",function(){
-            var $idx = $(this).index();
+            const $idx = $(this).index();
             // 区分
             if($idx >= 2){
                 layer.msg("暂未实现！");
@@ -1026,7 +1019,7 @@ var project = {
     },
     // 列表筛选 -- 列表 -- 勾选
     check:function(ele,type,inType){
-        var imgA = ""
+        let imgA = ""
             ,imgB = "";
         switch(type){
             case 0:
@@ -1073,7 +1066,7 @@ var project = {
     },
     // 列表筛选 -- 列表 -- 搜索
     search:function(_this){
-        var text = $(_this).val();
+        const text = $(_this).val();
         if(text.length > 0 && text !== " "){
             $.each($(".f-select-cont li"),function(index,val){
                 if($(val).find("span").text().indexOf(text) === 0){
@@ -1088,9 +1081,9 @@ var project = {
     },
     // 列表筛选 -- 自动 -- 添加
     textAdd:function(){
-        var text = $(".f-search-box input").val();
+        const text = $(".f-search-box input").val();
         if(text.length >0 && text !== " "){
-            var html = '<li><p>'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
+            let html = '<li><p>'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
             if($(".fl-automatic input").prop("checked")){
                 html = '<li><p style="text-decoration: line-through;">'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
             }
@@ -1109,10 +1102,10 @@ var project = {
     listData:function(){
         project.listFilter.values = [];
         project.listFilterB = [];
-        var text = ""
-            ,index = $(".f-select-methods li input:checked").parent().index();
+        let text = "";
+        const index = $(".f-select-methods li input:checked").parent().index();
         if(index === 0 || index === 1){
-            var r = "",n = '';
+            let r = "",n = '';
             if(index === 0){
                 r = "包含";
                 project.listFilter.operator = "IN"
@@ -1141,7 +1134,7 @@ var project = {
     },
     // 文本筛选 -- 添加
     textAddTo:function(){
-        var html = `<div>
+        const html = `<div>
                         <div class="f-subselect">
                             <select onchange="project.textData()" name="">
                                 <option value="CONTAIN">包含</option>
@@ -1159,14 +1152,14 @@ var project = {
     },
     // 文本筛选 -- 修改（并保存）
     textData:function(){
-        var x = "";
+        let x = "";
         project.textFilter.items = [];
         $.each($(".f-select-box2>div"),function(index,val){
-            var text = $(val).find("input").val();
-            var operator = $(val).find("select").val();
+            const text = $(val).find("input").val();
+            const operator = $(val).find("select").val();
             if(text.length > 0 && text !== ""){
                 x +=  operator + " " + text + " ";
-                var  p = {
+                const  p = {
                     "value":text,
                     "operator":operator
                 };
@@ -1184,8 +1177,8 @@ var project = {
     },
     // 保存
     saveData:function(){
-        var self = this;
-        var data = {
+        const self = this;
+        const data = {
             "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
             "cid":timeSng.reJson(this.cid),
@@ -1203,7 +1196,7 @@ var project = {
 };
 
 // 数据筛选(求和(值))range 初始化
-var swRag = {
+let swRag = {
     "min":$(".s-range-val .min"),
     "max":$(".s-range-val .max"),
     "minData":null,
@@ -1229,8 +1222,8 @@ var swRag = {
                 swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
             }
         });
-        var min = swRag.min.val();
-        var max = swRag.max.val();
+        const min = swRag.min.val();
+        const max = swRag.max.val();
 
         if(min && !max){
             swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
@@ -1257,7 +1250,7 @@ var swRag = {
     },
     // 取得范围
     rangeAjax:function(field){
-        var dimensions = [];  // 维度字段名
+        let dimensions = [];  // 维度字段名
         $.each($(".x-pills li"),function(index,val){
             if($(val).attr("dim_mea") === "0"){
                 dimensions.push($(val).attr("fieldname"));
@@ -1294,7 +1287,7 @@ var swRag = {
     // 事件
     ele:function(){
         $(".s-data-val ul>li").on("click",function(){
-            var $s = $(this).find("input");
+            const $s = $(this).find("input");
             swRag.selec(($s));
 
             // 重置加载范围
@@ -1305,7 +1298,7 @@ var swRag = {
         });
         //点击加载更多,显示范围
         $(".s-more-btn").click(function(){
-            var index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
+            const index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
             switch(index){
                 case 0 :
                     swRag.range(index);
@@ -1324,19 +1317,19 @@ var swRag = {
     // 根据不同的index变化
     selec:function($s){
         $s.attr("checked","checked");
-        var $idx = $s.parent().index();
+        const $idx = $s.parent().index();
         $s.prev("img").attr("src","images/icon_circle_on.png");
         $s.parent("li").siblings().find("img").attr("src","images/icon_circle.png");
         swRag.switchRange($idx);
     },
     // 保存
     save:function(){
-        var self = this;
-        var index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
-        if(!swRag.judgment(index)){	return	};
+        const self = this;
+        const index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
+        if(!swRag.judgment(index)){	return	}
 
         // 根据记录的ID，作为判断
-        var data = {
+        const data = {
             "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
             "cid":timeSng.reJson(this.cid),
@@ -1400,11 +1393,11 @@ var swRag = {
     },
     // 范围
     range:function(type){
-        var slider = $( "#slider-range" );
-        var minD = swRag.minData;
-        var maxD = swRag.maxData;
-        var minA = swRag.min.val().length>0?parseInt(swRag.min.val()):minD;
-        var maxA = swRag.max.val().length>0?parseInt(swRag.max.val()):maxD;
+        const slider = $( "#slider-range" );
+        const minD = swRag.minData;
+        const maxD = swRag.maxData;
+        const minA = swRag.min.val().length>0?parseInt(swRag.min.val()):minD;
+        const maxA = swRag.max.val().length>0?parseInt(swRag.max.val()):maxD;
         switch(type){
             case 0:
                 slider.slider({
@@ -1449,14 +1442,14 @@ var swRag = {
 };
 
 // 时间筛选器
-var timeSng = {
+let timeSng = {
     "fieldId":null,
     "number":null,
     "cid":null,
     "dateFilter":{},
     // 引用
     quotes:function(name,fieldId,number,cid){
-        var self = this;
+        const self = this;
         self.fieldId = fieldId;
         self.cid = cid;
         self.number = number;
@@ -1465,7 +1458,7 @@ var timeSng = {
         // 初始化清空
         $("#start").val("");
         $("#end").val("");
-        $("#IldToday input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");  // 清除
+        $("#ildTodayEle .checkbox").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");  // 清除
 
         $.each(screen_data,function(index,val){
             if(val.fieldId === self.fieldId && val.number === self.number && val.cid === cid) {
@@ -1475,7 +1468,7 @@ var timeSng = {
                     // 为相对时间
                     // 是否选择今天
                     if(val.dateFilter.relative.containToday){
-                        $("#IldToday  ").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");  // 选中
+                        $("#ildTodayEle").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");  // 选中
                     }
                     // 下拉框
                     $.each($("#time-select option"),function(x,y){
@@ -1620,24 +1613,26 @@ var timeSng = {
         // 判断是相对时间，还是日期范围
         if($(".time-select input:first").prop("checked")){
             // 相对时间
-            var rType = $("#time-select").val();
-            var days = null;
-            var text = $("#IldToday input").prop("checked")?"包含今天":"";
+            const rType = $("#time-select").val();
+            const timeOption = $("#time-select option:selected");
+            const ildTodayInput = $("#ildTodayEle .checkbox");
+            let days = null;
+            const text = ildTodayInput.prop("checked")?"包含今天":"";
             if(rType + "" === "10"){
-                days = $("#time-select option:selected").attr('data-days');
+                days = timeOption.attr('data-days');
             }
             this.dateFilter.relative = {
                 "rType":rType,
-                "containToday":$("#IldToday input").prop("checked"),
+                "containToday":ildTodayInput.prop("checked"),
                 "days":days,
             };
-            $(".data-filter-time .f-filter-result li").eq(1).find("em").text($("#time-select option:selected").text() + " " + text);
+            $(".data-filter-time .f-filter-result li").eq(1).find("em").text(timeOption.text() + " " + text);
             // 删除日期范围数值
             this.dateFilter.absolute = null;
         }else{
             // 日期范围
-            var firstDay = $("#start").val();
-            var lastDay = $("#end").val();
+            const firstDay = $("#start").val();
+            const lastDay = $("#end").val();
             this.dateFilter.absolute = {
                 "firstDay":firstDay,
                 "lastDay":lastDay,
@@ -1656,7 +1651,7 @@ var timeSng = {
             }
         }
        // 根据记录的ID，作为判断
-        var data = {
+        const data = {
             "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
             "cid":timeSng.reJson(this.cid),
@@ -1671,7 +1666,7 @@ var timeSng = {
     },
     // 唯一性
     only:function(data){
-        var bur = true;
+        let bur = true;
         $.each(screen_data,function(index,val){
             if(val.fieldId === data.fieldId && val.number === data.number && val.cid === data.cid) {
                 screen_data.splice(index,1,data);
@@ -1696,28 +1691,26 @@ timeSng.selectRadio(); // 事件和时间插件
 // 图片
 /*  上传图片大小格式验证  */
 function imageUpload(_this){
-    var fileSize = 0;
-    var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
-    var name=_this.value;
-    var postfix=name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+    let fileSize = 0;
+    const isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+    const name=_this.value;
+    const postfix = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
     if(isIE && !_this.files) {
-        var filePath = _this.value;
-        var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
-        var file = fileSystem.GetFile(filePath);
+        const filePath = _this.value;
+        const fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+        const file = fileSystem.GetFile(filePath);
         fileSize = file.Size;
     } else {
         fileSize = _this.files[0].size;
     }
-    var size = fileSize / 1024;
+    const size = fileSize / 1024;
     if(size > 5000) {
         layer.msg('附件不能大于5M！');
-        _this.value==' ';
         $(_this).attr('src','');
         return false;
     }else{
-        if(postfix!='jpg' && postfix!='jpeg'&& postfix!='png'&& postfix!='bmp'){
+        if(postfix!=='jpg' && postfix!=='jpeg'&& postfix!=='png'&& postfix!=='bmp'){
             layer.msg('不支持的图片格式');
-            _this.value==' ';
             $(_this).attr('src',' ');
             return false;
         }else{
@@ -1728,16 +1721,16 @@ function imageUpload(_this){
 /*  上传图片预览  */
 function imgPreview(_this){
     if(_this.value==='')return false;
-    var $file = $(_this);
-    var fileObj = $file[0];
+    const $file = $(_this);
+    const fileObj = $file[0];
     // var windowURL = window.URL || window.webkitURL;
-    var dataURL;
+    let dataURL;
 
     if(fileObj && fileObj.files && fileObj.files[0]) {
 
-        var form = new FormData($("#fileForm")[0]);
-        var cahrt_type = $(_this).siblings("img").attr("data-type");    // 类型
-        var editID = cahrt_type + uuid(8,16);
+        const form = new FormData($("#fileForm")[0]);
+        const cahrt_type = $(_this).siblings("img").attr("data-type");    // 类型
+        const editID = cahrt_type + uuid(8,16);
 
         form.append("file",fileObj.files[0]);
         form.append("pageId",dirId);  // 页面ID
@@ -1760,23 +1753,23 @@ function imgPreview(_this){
                 // dataURL = windowURL.createObjectURL(fileObj.files[0]);
                 dataURL = url + data.data.url;
                 //读取图片数据
-                var reader = new FileReader();
+                const reader = new FileReader();
                 reader.onload = function (e) {
-                    var data = e.target.result;
+                    const data = e.target.result;
                     //加载图片获取图片真实宽度和高度
-                    var image = new Image();
+                    const image = new Image();
                     image.onload = function(){
                         // 这部分是显示图片
-                        var width = image.width;
-                        var height = image.height;
-                        var p =  ( width / height ).toFixed(2);   // 宽高比例，小数点后两位
-                        var c = $(".edit-libs-box");  // 内容区
-                        var cW = parseInt(c.css("width"));  // 内容区宽度
-                        var cH = parseInt(c.css("height"));  // 内容区宽度
-                        var w = width;  // 元素宽度
-                        var h = height;  // 元素高度
-                        var left =  (cW - w) / 2; // 距离左边距离
-                        var top =   (cH - h) / 2; // 距离顶部边距离
+                        const width = image.width;
+                        const height = image.height;
+                        const p =  ( width / height ).toFixed(2);   // 宽高比例，小数点后两位
+                        const c = $(".edit-libs-box");  // 内容区
+                        const cW = parseInt(c.css("width"));  // 内容区宽度
+                        const cH = parseInt(c.css("height"));  // 内容区宽度
+                        let w = width;  // 元素宽度
+                        let h = height;  // 元素高度
+                        let left =  (cW - w) / 2; // 距离左边距离
+                        let top =   (cH - h) / 2; // 距离顶部边距离
 
 
                         if(width >= cW){
@@ -1814,7 +1807,7 @@ function imgPreview(_this){
 
     } else {
         dataURL = $file.val();
-        var imgObj = $img.get(0);
+        const imgObj = $img.get(0);
         imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
         imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
     }
@@ -1823,8 +1816,8 @@ function imgPreview(_this){
 
 //生成一个32位的uuid
 function uuid(len, radix) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
-    var uuid = [], i;
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    let uuid = [], i;
     radix = radix || chars.length;
 
     if (len) {
@@ -1832,7 +1825,7 @@ function uuid(len, radix) {
         for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
     } else {
         // rfc4122, version 4 form
-        var r;
+        let r;
 
         // rfc4122 requires these characters
         uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
@@ -1843,7 +1836,7 @@ function uuid(len, radix) {
         for (i = 0; i < 36; i++) {
             if (!uuid[i]) {
                 r = 0 | Math.random()*16;
-                uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+                uuid[i] = chars[(i === 19) ? (r & 0x3) | 0x8 : r];
             }
         }
     }
@@ -1853,13 +1846,13 @@ function uuid(len, radix) {
 // 输入监听，只调用一次; 参数为JS元素
 function enterListen(z){
     duplexContenteditable(z, function() {
-        var id = $(this).parent().parent().attr("id");
+        const id = $(this).parent().parent().attr("id");
         refresh.textData(id);
     });
 }
 //  监听文本框内容变化
-var duplexContenteditable = new function() {
-    var useDOMCharacterDataModified = false, target
+let duplexContenteditable = new function() {
+    let useDOMCharacterDataModified = false, target;
     if (document.attachEvent && document.addEventListener) {
         document.attachEvent("onselectionchange", function() {
             if (target && target.duplexCallback) {
@@ -1868,15 +1861,15 @@ var duplexContenteditable = new function() {
         })
     }
     if ("MutationEvent" in window) {
-        var test = document.createElement("div")
-        var root = document.body || document.documentElement
-        root.appendChild(test)
+        const test = document.createElement("div");
+        const root = document.body || document.documentElement;
+        root.appendChild(test);
         test.addEventListener("DOMCharacterDataModified", function(e) {
             useDOMCharacterDataModified = true
-        })
+        });
         try {
             //http://www.programcreek.com/java-api-examples/index.php?api=org.w3c.dom.events.MutationEvent
-            var event = document.createEvent("MutationEvents");
+            const event = document.createEvent("MutationEvents");
             event.initMutationEvent("DOMCharacterDataModified", true, false, null, "x", "y", null, 0);
             test.dispatchEvent(event)
         } catch (e) {
@@ -1887,9 +1880,9 @@ var duplexContenteditable = new function() {
     }
     return function(element, callback) {
         function cb() {
-            var curValue = element.innerHTML
+            const curValue = element.innerHTML;
             if (curValue !== oldValue) {
-                oldValue = curValue
+                oldValue = curValue;
                 callback.call(element)
             }
         }
@@ -1910,17 +1903,17 @@ var duplexContenteditable = new function() {
                 element.addEventListener("input", cb)
             }
         } else {
-            var oldValue = NaN
+            let oldValue = NaN;
             element.attachEvent("onfocus", function(e) {
-                target = element
-            })
+                target = element;
+            });
             element.attachEvent("onblur", function(e) {
-                target = null
+                target = null;
                 oldValue = NaN
-            })
+            });
 
-            element.duplexCallback = cb
+            element.duplexCallback = cb;
             element.attachEvent("onkeyup", cb)
         }
     }
-}
+};

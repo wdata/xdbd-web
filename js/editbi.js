@@ -15,9 +15,9 @@ $(function(){
             success:function(res){
               if(res.code===0){
               	if(res.message && res.data.length >0){
-              		var data = res.data,
-              		html = '+',
-              		biSetId = '';
+              		let data = res.data,
+                        html = '+',
+                        biSetId = '';
               		$.each(data,function(i,item){
               			html += `
 						<option value="${item.biSetName}" biSetId="${item.biSetId}">${item.biSetName}</option>
@@ -35,10 +35,9 @@ $(function(){
         });
 	}
 	$(".data-source-box select").change(function(){
-		var $biSetId = $(this).find("option:selected").attr("biSetId");
-		console.log($biSetId);
+		const $biSetId = $(this).find("option:selected").attr("biSetId");
 		getBiDataModel($biSetId);
-	})
+	});
 	
 	//获取数据模型接口
 	//getBiDataModel(biSetId);
@@ -57,21 +56,18 @@ $(function(){
             success:function(res){
              if(res.code === 0){
              	if(res.message){
-             		var data = res.data,
-             		dimensions = data.dimensions;
-             		measures = data.measures;
-             		modelId = data.modelId;
-                    dhtml = '';
-             		mhtml = '';
+             		let data = res.data,
+                        dhtml = '',
+                        mhtml = '';
              		//维度
-             		$.each(dimensions,function(i,item){
+             		$.each(data.dimensions,function(i,item){
              			dhtml += `
              				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="0">${item.fieldAlias}</li>
              			`;
              		});
              		$(".dimension-box .placeholder").empty().append(dhtml);
              		//度量
-             		$.each(measures, function(i,item) {
+             		$.each(data.measures, function(i,item) {
              			mhtml += `
              				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="1">${item.fieldAlias}</li>
              			`;
@@ -100,11 +96,11 @@ $(function(){
     $(".edit-libs-box").droppable({
         accept: ":not(.ui-sortable-helper)",
         drop: function( event, ui ) {
-            var left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
-            var top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
-            var cahrt_type = $(ui.draggable).attr("data-type");
-            var type = null;
-            var html = '';  // 当是文本框时
+            const left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
+            const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
+            const cahrt_type = $(ui.draggable).attr("data-type");
+            let type = null;
+            let html = '';  // 当是文本框时
 
             // 根据拖拽区的data-type来显示type
             switch(cahrt_type){
@@ -122,7 +118,7 @@ $(function(){
                     html = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
                     break;
             }
-            var editID = cahrt_type + uuid(8,16);
+            const editID = cahrt_type + uuid(8,16);
 
             $(this).append('<div data-type="'+ cahrt_type +'" type="'+type+'" style="z-index:'+ number +'; left:'+left+'px;top:'+top+'px;" id="'+ editID +'" class="resize-item">'+ html +'</div>');
             id_ = editID;
@@ -138,16 +134,16 @@ $(function(){
 	$(".set-axis").droppable({
 		accept: ".placeholder li",
 		drop:function(event, ui){
-			var lis = [];
+            let lis = [];
 			$(this).find("li").each(function(){
 				lis.push($(this).attr("fieldId"));
 			});
 			if($.inArray(ui.draggable.attr("fieldId"),lis)===-1 && id_!==""){
 
-			    var dim_mea = ui.draggable.attr("dim_mea");
-			    var type = $(".chart-type-val span").text();   // 类型
-                var dimQ = 0;
-                var meaQ = 0;
+                const dim_mea = ui.draggable.attr("dim_mea");
+                const type = $(".chart-type-val span").text();   // 类型
+                let dimQ = 0;
+                let meaQ = 0;
                 $.each($(".pills li"),function(index,val){
                     if($(val).attr("dim_mea") === "0"){ dimQ++; }
                     if($(val).attr("dim_mea") === "1"){ meaQ++; }
@@ -176,51 +172,26 @@ $(function(){
 			}
 		}
 	});
-	
-	//y Axis
-	// $(".set-y").droppable({
-	// 	accept: ".placeholder li",
-	// 	drop:function(event, ui){
-	// 		var lis = [];
-	// 		$(this).find("li").each(function(){
-	// 			lis.push($(this).attr("fieldId"));
-	// 		});
-	// 		if($.inArray(ui.draggable.attr("fieldId"),lis)==-1&&id_!="") {
-     //            $("<li dataType=" + ui.draggable.attr("dataType") + " dim_mea=" + ui.draggable.attr("dim_mea") + " fieldName=" + ui.draggable.attr("fieldName") + " disCon=" + ui.draggable.attr("disCon") + " defaultAggregation='" + ui.draggable.attr("defaultAggregation") + "' fieldId='" + ui.draggable.attr("fieldId") + "'></li>").html(ui.draggable.html()).appendTo($(this).find("ul"));
-     //            $("#" + id_).find("svg").remove();
-     //            if (id_.indexOf("chart") != -1) {
-    //
-     //            } else if ($.inArray(ui.draggable.attr("fieldId"), lis) != -1 && id_ != "") {
-     //                layer.alert('已存在！！！')
-     //            } else {
-     //                layer.alert('请先选择添加数据的图表元素')
-     //            }
-     //        }
-	// 	}
-	// });
-
 	//定义接收筛选器的元素
     //拖拽度量和维度到数据筛选框
 	$( ".data-screening" ).droppable({
 		accept: ".placeholder li",
 		drop: function( event, ui ) {
-			var lis = [];
+            let lis = [];
 			$(this).find("li").each(function(){
 				lis.push($(this).attr("fieldId"));
 			});
-			if($.inArray(ui.draggable.attr("fieldId"),lis)==-1&&id_!=""){
+			if($.inArray(ui.draggable.attr("fieldId"),lis)===-1&&id_!==""){
                 $( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
 
 
-                var uiEle = $(ui.draggable[0]);
-                var datatype= parseInt(uiEle.attr("datatype"));
-                fieldId = uiEle.attr("fieldId");
+                let uiEle = $(ui.draggable[0]);
 
-                var fieldname = uiEle.attr("fieldname")
+                const fieldname = uiEle.attr("fieldname")
                     ,text = uiEle.text()
-                    ,fieldId = uiEle.attr("fieldId")
+                    ,fieldId = uiEle.attr("fieldId");
 
-                switch(datatype){
+                switch(parseInt(uiEle.attr("datatype"))){
                     case 1:
                         project.TFilter(fieldname,text,fieldId,2,id_); // 文本筛选框
                         break;
@@ -233,7 +204,7 @@ $(function(){
                         break;
                 }
 
-			}else if($.inArray(ui.draggable.attr("fieldId"),lis)!=-1&&id_!=""){
+			}else if($.inArray(ui.draggable.attr("fieldId"),lis) !== -1&&id_ !== ""){
                 layer.alert('已存在！！！')
             }else{
                 layer.alert('请先选择添加数据的图表元素')
@@ -244,7 +215,7 @@ $(function(){
     $(".set-param-box").droppable({
         accept: ".pills li",
         drop: function( event, ui ) {
-            if($(ui.draggable).parents(".data").length==0){
+            if($(ui.draggable).parents(".data").length === 0){
                 $(ui.draggable).remove();
             }
         }
@@ -265,7 +236,7 @@ $(function(){
             },
             success:function(res){
               if(res.code===0){
-				layer.msg('修改成功!')
+				layer.msg('修改成功!');
                 getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
               }
             },
@@ -274,12 +245,12 @@ $(function(){
             }
         });
 	}
-    var cgt = {
+    let cgt = {
 	    "name":{
                 text: '修改显示名称',
                 action: function (e) {
-                    var fieldAlias = '';
-                    var id = context.getClickEle().attr("fieldId");
+                    let fieldAlias = '';
+                    const id = context.getClickEle().attr("fieldId");
                     console.log(context.getClickEle());
                     layer.confirm('<input class="none" type="text" style="display:block;margin:0 auto;width:160px;height:14px;padding:6px;border:1px solid #ccc;font-size:12px;" value="' + $.trim(context.getClickEle().text()) + '"/>', {
                         btn: ['确定', '取消'], //按钮
@@ -340,10 +311,9 @@ $(function(){
                 // var text="<li dataType="+context.getClickEle().attr("dataType")+" dim_mea="+context.getClickEle().attr("dim_mea")+" dis_con="+context.getClickEle().attr('dis_con')+" data_id='"+context.getClickEle().attr('data_id')+"' aggregation='"+context.getClickEle().attr('aggregation')+"'>"+context.getClickEle().html()+"</li>";
                 // $("#filter .ui-widget-content ol").append(text);
                 // 数据类型：1-文本（字符串）；2-日期；3-日期和时间；4-数字；5-布尔；6-地理（用于地图）
-                var dataType = parseInt(context.getClickEle().attr("datatype"));
-                fieldId = context.getClickEle().attr("fieldId");
-                var z = context.getClickEle().parent().parent();
-                var n = null;
+                const dataType = parseInt(context.getClickEle().attr("datatype"));
+                const z = context.getClickEle().parent().parent();
+                let n = null;
                 if(z.is(".datas-pills")){
                     n = 2;
                 }else if(z.is(".y-pills")){
@@ -352,9 +322,9 @@ $(function(){
                     n = 0;
                 }
 
-                var field = context.getClickEle().attr("fieldname")  // 字段名
+                const field = context.getClickEle().attr("fieldname")  // 字段名
                     ,text = context.getClickEle().text()    // 名称
-                    ,fieldId = context.getClickEle().attr("fieldId")    // id
+                    ,fieldId = context.getClickEle().attr("fieldId");    // id
 
                 switch(dataType){
                     case 1:
@@ -391,21 +361,15 @@ $(function(){
         },
         agmClick:function(){
             $(document).on("mouseover",".dropdown-menu .agm-default",function(){
-                var defaultaggregation = context.getClickEle().attr("defaultaggregation");
-                var z = null;
+                const defaultaggregation = context.getClickEle().attr("defaultaggregation");
+                let z = null;
                 switch(defaultaggregation){
-                    case "MAX": z = 1;
-                        break;
-                    case "MIN": z = 2;
-                        break;
-                    case "AVG": z = 3;
-                        break;
-                    case "SUM": z = 4;
-                        break;
-                    case "COUNT": z = 5;
-                        break;
-                    case "DCOUNT": z = 6;
-                        break;
+                    case "MAX": z = 1;break;
+                    case "MIN": z = 2;break;
+                    case "AVG": z = 3;break;
+                    case "SUM": z = 4;break;
+                    case "COUNT": z = 5;break;
+                    case "DCOUNT": z = 6;break;
                 }
                 $(this).parent().siblings("ul").find(".def").remove();
                 $(this).parent().siblings("ul").find("li").eq(z).find("a").append('<span class="def" style="color:#666"> 默认</span>');
@@ -432,10 +396,9 @@ $(function(){
 
 // 调换X轴和Y轴
 function xyChange(){
-    var htmlX = $(".x-pills ul").html();
-    var htmlY = $(".y-pills ul").html();
-    $(".x-pills ul").empty().html(htmlY);
-    $(".y-pills ul").empty().html(htmlX);
+    const xPills = $(".x-pills ul"),yPills = $(".y-pills ul");
+    xPills.html(xPills.html());
+    yPills.html(yPills.html());
     pillsLi();
 }
 
@@ -446,11 +409,11 @@ function pillsLi(){
     });
 }
 function clear(id){
-    var choose = true;
+    let choose = true;
     eleFocus(); // 根据现在选中类型，变化
     $.each(save_arr,function(index,item) {
         if(item.cid === id && item.queryJson && (item.customData.dataType === "chart" || item.customData.dataType === "table" )) {
-            var x_param='',y_param='',filter='';
+            let x_param='',y_param='',filter='';
             if(item.queryJson.x){
                 $.each(item.queryJson.x,function(x,item){
                     x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
@@ -463,26 +426,26 @@ function clear(id){
             }
             if(item.queryJson.filter){
                 $.each(item.queryJson.filter,function(y,item){
-                    var min = item.numericFilter?item.numericFilter.range.min:"";
-                    var max = item.numericFilter?item.numericFilter.range.max:"";
+                    const min = item.numericFilter?item.numericFilter.range.min:"";
+                    const max = item.numericFilter?item.numericFilter.range.max:"";
                     filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
 
             if(item.customData.dataType === "chart"){
-                $(".chart-attr-box .x-pills ul").empty().html(x_param);
-                $(".chart-attr-box .y-pills ul").empty().html(y_param);
-                $(".chart-attr-box .datas-pills ul").empty().html(filter);
+                $(".chart-attr-box .x-pills ul").html(x_param);
+                $(".chart-attr-box .y-pills ul").html(y_param);
+                $(".chart-attr-box .datas-pills ul").html(filter);
             }else{
-                $(".table-attr-box .x-pills ul").empty().html(x_param);
-                $(".table-attr-box .y-pills ul").empty().html(y_param);
-                $(".table-attr-box .datas-pills ul").empty().html(filter);
+                $(".table-attr-box .x-pills ul").html(x_param);
+                $(".table-attr-box .y-pills ul").html(y_param);
+                $(".table-attr-box .datas-pills ul").html(filter);
             }
 
             pillsLi();
 
             // 全部属性
-            var type = $(".chart-type-lists ul li[data-type="+ item.type +"] span").text();
+            const type = $(".chart-type-lists ul li[data-type="+ item.type +"] span").text();
             $(".chart-type-val span").text(type).attr("data-type",item.type);
             // 遍历修改属性颜色
             $.each($(".chart-type-lists ul li "),function(index,val){
@@ -503,22 +466,18 @@ function clear(id){
         }
         // 图片
         if(item.cid === id && item.customData.dataType === "image"){
-            var price = item.customData.controls;
+            const price = item.customData.controls;
             if(price.ratio){
                 $(".set-price-prop input").attr("checked","checked").siblings("img").attr("src","images/icon_checked.png");
             }else{
                 $(".set-price-prop input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
             }
-            var style = "";
+            let style = "";
             switch(price["border-style"]){
-                case "dotted":style = "点线";
-                    break;
-                case "dashed":style = "虚线";
-                    break;
-                case "solid":style = "实线";
-                    break;
-                case "none":style = "实线";
-                    break;
+                case "dotted":style = "点线";break;
+                case "dashed":style = "虚线";break;
+                case "solid":style = "实线";break;
+                case "none":style = "实线";break;
             }
             $(".set-price-color .palette-color-picker-button").css("background-color",price["border-color"]);
             $(".set-price-border-style select").val(style);
@@ -527,12 +486,12 @@ function clear(id){
         }
         // 文本
         if(item.cid === id && item.customData.dataType === "text"){
-            var text = item.customData.controls;
+            const text = item.customData.controls;
             $(".set-text-attr-wrap .palette-color-picker-button").css("background-color",text.color);
         }
         // 按钮
         if(item.cid === id && item.customData.dataType === "button"){
-            var button = item.customData.controls;
+            const button = item.customData.controls;
             $("#buttonText").val(button.text);
             $(".set-button-color .palette-color-picker-button").css("background-color",button["background-color"]);
             $(".set-button-size select").val(parseInt(button['font-size']));
@@ -545,7 +504,7 @@ function clear(id){
 
 // 根据现在选中类型，变化
 function eleFocus(){
-    var bur = true;
+    let bur = true;
     $.each($(".resize-item"),function(index,val){
         if($(val).find(".resize-panel").css("display") === "block"){
             typeHideShow($(val).attr("id"),$(val).attr("data-type"));
