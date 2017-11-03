@@ -1,12 +1,5 @@
-
-
-
-
-
-
 $(function(){
 
-	
 	/*
 	 
 	 * 常用参数设置
@@ -141,30 +134,32 @@ $(function(){
               		var html = "";
               		var html2 = "";//页面展示
               		topMenu = data;
-              		$.each(data, function(i,item) {
-              			if(i===0){
-							findLeftMenu(projectId,versionId,item.reportMenuId);
-              			}
-              			html += `
-              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
-								<span class="m-menu-tag">${item.menuName}</span>
-								<input type="text" class="top-reedit" value="${item.menuName}"/>
-								<div class="m-navs-order-btns">
-									${i===0?'':'<img src="../images/t_up.png" alt="" class="t-up"/>'}
-									${i===data.length-1?'':'<img src="../images/t_down.png" alt="" class="t-down"/>'}
-									<img src="../images/icon_close_02.png" alt="" class="t-del" />
-								</div>
-							</li>
-              			`;
-              			html2 += `
-              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
-              			`;
-              			
-              			
-              		});
-              		
-              		$(".top-menu-15").empty().append(html);
-              		$(".mn-menu").empty().append(html2);
+              		if(data){
+              			$.each(data, function(i,item) {
+	              			if(i===0){
+								findLeftMenu(projectId,versionId,item.reportMenuId);
+	              			}
+	              			html += `
+	              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
+									<span class="m-menu-tag">${item.menuName}</span>
+									<input type="text" class="top-reedit" value="${item.menuName}"/>
+									<div class="m-navs-order-btns">
+										${i===0?'':'<img src="../images/t_up.png" alt="" class="t-up"/>'}
+										${i===data.length-1?'':'<img src="../images/t_down.png" alt="" class="t-down"/>'}
+										<img src="../images/icon_close_02.png" alt="" class="t-del" />
+									</div>
+								</li>
+	              			`;
+	              			html2 += `
+	              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
+	              			`;
+	              			
+	              			
+	              		});
+	              		
+	              		$(".top-menu-15").empty().append(html);
+	              		$(".mn-menu").empty().append(html2);
+              		}
               		
 	            }
 			},
@@ -458,7 +453,6 @@ $(function(){
 	
 	//点击页面头部获取左部菜单
 	$(".mn-menu").delegate("li","click",function(){
-		console.log("222222222222222")
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
 		parentId = $(this).attr("reportmenuid");
@@ -497,7 +491,6 @@ $(function(){
 //	findLeftMenu(projectId,versionId,0);
 	//查询左侧菜单
 	function findLeftMenu(projectId,versionId,reportMenuId){
-		console.log("111111111111111")
 		$.ajax({
 			type:'GET',
             url:$url1+'/bi/report/v1/menu/findReportMenu',
