@@ -10,9 +10,9 @@ let id_='',field=null,fieldAlias=null,order=null,dataType=null,dim_mea=null,dis_
 
 const url = "http://192.168.1.42:8084/xdbd-bi";
 
-// var surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
+// const surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
 const surroundings = sessionStorage.getItem("onEnv");
-if(surroundings === "测试环境"){
+if(surroundings === "test" || surroundings === "prod"){
     $("#preview").siblings().hide().parent().siblings().hide();
     $('.generateEditBi').show().siblings("");
 }
@@ -718,16 +718,17 @@ let obtain = {
             dataType:"json",
             success:function(data){
                 if(data.code === 0){
-                    if(surroundings === "开发环境"){
+                    if(surroundings === "dev"){
                         if(data.data.htmlJson){
                             obtain.reduction(data.data);
                         }
                         if(data.data.index){
+                            console.log(data.data.index);
                             $(".top-bar .set-index-box input").attr({"checked":"checked","disabled":"disabled"}).siblings("img").attr("src","images/icon_checked.png");
                         }else{
                             $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
                         }
-                    }else if(surroundings === "测试环境"){
+                    }else if(surroundings === "test" || surroundings === "prod"){
                         if(data.data.htmlJson){
                             obtain.generate(data.data);
                         }
@@ -1851,8 +1852,8 @@ function enterListen(z){
     });
 }
 //  监听文本框内容变化
-let duplexContenteditable = new function() {
-    let useDOMCharacterDataModified = false, target;
+var duplexContenteditable = new function() {
+    var useDOMCharacterDataModified = false, target;
     if (document.attachEvent && document.addEventListener) {
         document.attachEvent("onselectionchange", function() {
             if (target && target.duplexCallback) {
@@ -1861,15 +1862,15 @@ let duplexContenteditable = new function() {
         })
     }
     if ("MutationEvent" in window) {
-        const test = document.createElement("div");
-        const root = document.body || document.documentElement;
+        var test = document.createElement("div");
+        var root = document.body || document.documentElement;
         root.appendChild(test);
         test.addEventListener("DOMCharacterDataModified", function(e) {
             useDOMCharacterDataModified = true
         });
         try {
             //http://www.programcreek.com/java-api-examples/index.php?api=org.w3c.dom.events.MutationEvent
-            const event = document.createEvent("MutationEvents");
+            var event = document.createEvent("MutationEvents");
             event.initMutationEvent("DOMCharacterDataModified", true, false, null, "x", "y", null, 0);
             test.dispatchEvent(event)
         } catch (e) {
@@ -1880,7 +1881,7 @@ let duplexContenteditable = new function() {
     }
     return function(element, callback) {
         function cb() {
-            const curValue = element.innerHTML;
+            var curValue = element.innerHTML;
             if (curValue !== oldValue) {
                 oldValue = curValue;
                 callback.call(element)
@@ -1903,7 +1904,7 @@ let duplexContenteditable = new function() {
                 element.addEventListener("input", cb)
             }
         } else {
-            let oldValue = NaN;
+            var oldValue = NaN;
             element.attachEvent("onfocus", function(e) {
                 target = element;
             });
