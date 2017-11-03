@@ -36,7 +36,7 @@
 	}
 	
 	#header.header{
-		background:#000;
+		background:#282830;
 	}
 	#footer{
 		height: 60px;
@@ -169,7 +169,7 @@
     font-size: 24px;
     color: #666;
     text-align: center;
-    padding: 90px 0 70px;
+    padding: 175px 0 70px;
     font-weight: 500;
 }
 .business>ul {
