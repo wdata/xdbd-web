@@ -286,6 +286,7 @@ let refresh = {
             refresh.screen(icon,search_attr,2); // 筛选项
             chart_date.queryJson.filter.push(search_attr);
         });
+        chart_date.linkPageId = $("#"+ id +"").attr("linkPageId");
         return chart_date;
     },
     // 搜索匹配项（匹配：fieldId 和 number（X轴为：0，y轴为：1，筛选轴为：2）)，返回筛选内容
@@ -327,7 +328,7 @@ let refresh = {
     },
     // 根据不同的类型和图形，返回不同的控件类型
     typeData:function(dataType){
-        let type = null;
+        var type = null;
     // 控件类型：0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
         switch(dataType){
             case "chart":
@@ -404,7 +405,6 @@ let textEdit = {
           }else if($(this).is(".justifyRight")){
               document.execCommand("justifyRight",false);
           }
-          console.log(document.execCommand("bold"));
       })
   }
 };
@@ -723,7 +723,6 @@ let obtain = {
                             obtain.reduction(data.data);
                         }
                         if(data.data.index){
-                            console.log(data.data.index);
                             $(".top-bar .set-index-box input").attr({"checked":"checked","disabled":"disabled"}).siblings("img").attr("src","images/icon_checked.png");
                         }else{
                             $(".top-bar .set-index-box input").removeAttr("checked").siblings("img").attr("src","images/xuankuang.png");
@@ -761,7 +760,7 @@ let obtain = {
                 };
                 DataIndexes.inAjax(chart_date,val.cid);
             }
-            html += '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+            html += '<div linkPageId = "'+ val.linkPageId +'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
         });
         $(".generateEditBi").empty().append(html);
     },
@@ -795,7 +794,7 @@ let obtain = {
                     index_arr.push(chart_date);
                 }
                 number++; // ID不重复！
-                html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+                html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
                 // 拖拽初始化！
@@ -822,7 +821,7 @@ let project = {
     "listFilterB":[],
     TFilter:function(field, name,fieldId,number,cid){
         const self = this;
-        let listFilter = null;
+        var listFilter = null;
         this.fieldId = fieldId;    // 保存fieldid作为索引
         this.number = number;
         this.cid = cid;
@@ -937,10 +936,13 @@ let project = {
                             if(listFilter.values)
                             $.each(listFilter.values,function(x,y){
                                 if(val === y){
+                                    console.log(listFilter.operator);
                                     a = 'icon_checked';
                                     b = "checked='checked'";
                                     if(listFilter.operator === "NOT IN"){
                                         c = 'style="text-decoration: line-through;"';
+                                    }else if(listFilter.operator === "all"){
+                                        console.log(listFilter.operator);
                                     }
                                 }
                                 if(listFilter.operator === "all"){
@@ -959,7 +961,6 @@ let project = {
                 }
             },
             error:function(res){
-                console.log(res);
             }
         });
 
@@ -1104,7 +1105,7 @@ let project = {
         project.listFilter.values = [];
         project.listFilterB = [];
         let text = "";
-        const index = $(".f-select-methods li input:checked").parent().index();
+        var index = $(".f-select-methods li input[checked=checked]").parent().index();
         if(index === 0 || index === 1){
             let r = "",n = '';
             if(index === 0){
@@ -1112,7 +1113,7 @@ let project = {
                 project.listFilter.operator = "IN"
             }else{
                 r = "排除";
-                project.listFilter.operator = "NOT IN"
+                project.listFilter.operator = "NOT IN";
             }
             $.each($(".f-select-cont li"),function(x,y){
                 if($(y).find("input").prop("checked")){
@@ -1281,7 +1282,6 @@ let swRag = {
                 }
             },
             error:function(res){
-                // console.log(res);
             }
         });
     },
@@ -1667,7 +1667,7 @@ let timeSng = {
     },
     // 唯一性
     only:function(data){
-        let bur = true;
+        var bur = true;
         $.each(screen_data,function(index,val){
             if(val.fieldId === data.fieldId && val.number === data.number && val.cid === data.cid) {
                 screen_data.splice(index,1,data);
