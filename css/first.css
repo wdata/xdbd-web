@@ -23,7 +23,6 @@
 	#header, #footer{
 		position:fixed;
 		height: 84px;
-		display:block;
 		width: 100%;
 		background: rgba(0,0,0,.3);
 		z-index:9;
@@ -32,7 +31,12 @@
 	}
 	#header{
 		top:0px;
+		background:transparent;
 		/*background: transparent;*/
+	}
+	
+	#header.header{
+		background:#000;
 	}
 	#footer{
 		height: 60px;
@@ -50,7 +54,9 @@
 		color: #fff;
 		z-index: 999;
 	}
-	
+	.hidden{
+		display:none;
+	}
 /*swiper*/
  .swiper-container {
     width: 100%;
@@ -215,240 +221,30 @@
 .business>ul>li .intro img {
     width: 100%;
 }
+.business .img-inner {
+	width: 100%;
+	height: 197px;
+	overflow: hidden;
+}
+.business>ul>li .intro img:hover{
+	transform: scale(1.2);
+    transition: transform 0.3s ease-out 0s;
+}
 .business>ul>li .intro h3 {
     font-size: 18px;
     color: #2d2d2d;
     line-height: 44px;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 .business>ul>li .intro p {
     font-size: 14px;
     color: #838383;
     line-height: 26px;
+    width: 88%;
 }
-.business>ul>li .intro .company {
-    zoom: 1;
-    position: absolute;
-    left: 0;
-    bottom: 5px;
-}
-.business>ul>li .intro .company img {
-    display: inline-block;
-    width: 102px;
-    margin: 0 7px 12px;
-}
-.business>ul>li .intro .company:after {
-    clear: both;
-    content: ".";
-    display: block;
-    height: 0;
-    visibility: hidden;
-    overflow: hidden;
-}
-
-.business>ul>li .detail.faceid {
-    left: 100%;
-    -webkit-transform-origin: left center;
-    transform-origin: left center;
-    /*background-color: yellowgreen;*/
-}
-.business>ul>li .detail .detail-header {
-    padding: 46px 30px 0;
-   	/*padding: 0 30px 0;*/
-    color: #fff;
-    /*width: 100%;*/
-    height: 198px;
-}
-.business>ul>li .detail.faceid .detail-header {
-	background: url(https://assets.megvii.com/static/images/home/business/business_faceid_pop.jpg) no-repeat 0 0;
-}
-.business>ul>li .detail.facepp .detail-header {
-	background: url(https://assets.megvii.com/static/images/home/business/business_facepp_pop.jpg) no-repeat 0 0;
-}
-.business>ul>li .detail.cases .detail-header {
-	background: url(https://assets.megvii.com/static/images/home/business/business_cases_pop.jpg) no-repeat 0 0;
-}
-.business>ul>li .detail.ssn .detail-header {
-	background: url(https://assets.megvii.com/static/images/home/business/business_ssn_pop.jpg) no-repeat 0 0;
-}
-.business>ul>li .detail .detail-header h3 {
-    background-image: none;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: cover;
-    height: auto;
-    text-align: left;
-    line-height: inherit;
-    position: relative;
-}
-.business>ul>li .detail .detail-header h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #fff;
-}
-.business>ul>li .detail .detail-header p {
-    line-height: 24px;
-    text-align: left;
-    font-size: 14px;
-    color: #fff;
-    margin-top: 20px;
-}
-.business>ul>li .detail ul {
-    text-align: justify;
-    text-align-last: justify;
-    line-height: 0;
-    padding: 36px 28px;
-    /*width: 100%;*/
-}
-.business>ul>li .detail ul li {
-    text-align-last: auto;
-    text-align: center;
-    display: inline-block;
-    vertical-align: top;
-}
-.business>ul>li .detail.faceid .icon1, .business>ul>li .detail i {
-	width: 44px;
-    height: 44px;
-    display: inline-block;
-    background-repeat: no-repeat;
-    vertical-align: middle;
-    background-position: bottom;
-}
-.business>ul>li .detail.faceid .icon1 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_faceid_icon1.png);
-}
-.business>ul>li .detail.faceid .icon2 {
-    width: 43px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_faceid_icon2.png);
-}
-.business>ul>li .detail.faceid .icon3 {
-    width: 51px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_faceid_icon3.png);
-}
-.business>ul>li .detail.faceid .icon4 {
-    width: 47px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_faceid_icon4.png);
-}
-.business>ul>li .detail.facepp .icon1 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_facepp_icon1.png);
-}
-.business>ul>li .detail.facepp .icon2 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_facepp_icon2.png);
-}
-.business>ul>li .detail.facepp .icon3 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_facepp_icon3.png);
-}
-.business>ul>li .detail.facepp .icon4 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_facepp_icon4.png);
-}
-.business>ul>li .detail.cases .icon1 {
-    width: 35px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_cases_icon1.png);
-}
-.business>ul>li .detail.cases .icon2 {
-    width: 49px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_cases_icon2.png);
-}
-.business>ul>li .detail.cases .icon3 {
-    width: 44px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_cases_icon3.png);
-}
-.business>ul>li .detail.cases .icon4 {
-    width: 56px;
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_cases_icon4.png);
-}
-.business>ul>li .detail.ssn .icon1 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_ssn_icon1.png);
-}
-.business>ul>li .detail.ssn .icon2 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_ssn_icon2.png);
-}
-.business>ul>li .detail.ssn .icon3 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_ssn_icon3.png);
-}
-.business>ul>li .detail.ssn .icon4 {
-    background-image: url(https://assets.megvii.com/static/images/home/business/business_ssn_icon4.png);
-}
-.business>ul>li .detail.facepp ul li i {
-    margin-bottom: 10px;
-}
-.business>ul>li .detail ul li h4 {
-    font-size: 14px;
-    color: #7b7b7b;
-    line-height: 34px;
-}
-.business>ul>li .detail ul li p {
-    display: block;
-    font-size: 14px;
-    line-height: 20px;
-    color: #7b7b7b;
-    width: 100px;
-}
-.business>ul>li .detail.faceid ul li p {
-    font-size: 12px;
-    text-align: center;
-}
-.business>ul>li .detail .detail-using {
-    text-align: center;
-    padding: 0 28px;
-    display: block;
-    /*width: 100%;*/
-}
-.business>ul>li .detail .detail-using p {
-    text-align: left;
-    font-size: 14px;
-    margin-bottom: 14px;
-    color: #2d2d2d;
-}
-.business>ul>li .detail .detail-using img {
-    margin: 0 3px;
-}
-.business>ul>li .detail .detail-link {
-    display: block;
-    text-align: right;
-    font-size: 14px;
-    padding: 20px 28px 0 0;
-    /*width: 100%;*/
-}
-.business>ul>li .detail .detail-link a {
-    color: #1199df;
-    padding: 10px 0 0;
-    margin: 0;
-    width: auto;
-    font-size: 14px;
-    border: none;
-    display: inline;
-    text-align: left;
-}
-.business>ul>li .detail .detail-link span {
-    color: #767777;
-    margin-left: 10px;
-}
-.business>ul>li .detail {
-    position: absolute;
-    opacity: 0;
-    filter: Alpha(Opacity=0);
-    margin-left: -253px;
-    margin-top: -300px;
-    width: 505px;
-    height: 600px;
-    margin: -300px 0 0 -253px;
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    background-color: #fff;
-    -ms-box-shadow: 0 2px 14px 4px rgba(14,5,10,.15);
-    -o-box-shadow: 0 2px 14px 4px rgba(14,5,10,.15);
-    box-shadow: 0 2px 14px 4px rgba(14,5,10,.15);
-    transition: all .3s ease 0s;
-    -webkit-transform: scale(0);
-    transform: scale(0);
-}
-.business>ul>li .detail.facepp .detail-header {
-    color: #fff;
-    background: url(https://assets.megvii.com/static/images/home/business/business_facepp_pop.jpg) no-repeat 0 0;
-    height: 198px;
-    padding: 46px 30px 0;
+.business .intro .icon-s {
+	width: 22%;
+	margin-top: 20px;
 }
 /*section2*/
 
@@ -469,6 +265,9 @@
 	color: #5f6a72;
 	line-height: 2;
 	margin-bottom: 10px;
+}
+.chart-video {
+	border: 1px solid #f0f0f0;
 }
 .chart-video>video {
 	width: 100%;
