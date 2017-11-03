@@ -17,6 +17,11 @@ $(function(){
 		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".bd-body").eq($idx).show().siblings().hide();
+		if($idx===1){
+			$(".set-cur-env").hide();
+		}else{
+			$(".set-cur-env").show();
+		}
 	});
 	
 	/*

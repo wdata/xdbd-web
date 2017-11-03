@@ -2,27 +2,35 @@ $(document).ready(function() {
 	$('#fullpage').fullpage({
 		anchors: ['firstPage', 'secondPage', '3rdPage'],
 		sectionsColor: ['#ffffff', '#ffffff', '#ffffff','#f8f8f8'],
-		css3: true
+		css3: true,
+		afterLoad: function(anchorLink, index){
+			document.getElementById('video1').play();
+			document.getElementById('video2').play();
+		}
 	});
 	
 	var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
+        onSlideChangeStart(swiper){
+        	if(swiper.activeIndex==3){
+        		$('#footer').removeClass('hidden')
+        	}else{
+        		$('#footer').addClass('hidden')
+        	}
+        	if(swiper.activeIndex==1||swiper.activeIndex==2){
+        		$('#header').addClass('header')        		
+        	}else{
+        		$('#header').removeClass('header')        		
+        	}
+        },
         direction: 'vertical',
         slidesPerView: 1,
         paginationClickable: true,
         spaceBetween: 0,
         mousewheelControl: true
-        ,autoplay: 10000
+        ,autoplay: 15000
     });
   	
   	//section1
-  	$(".business li>.intro").hover(
-  		function(){
-//			$(this).next(".detail").hide();
-  			$(this).next(".detail").css({"opacity":"1","filter":"Alpha(Opacity=1)","z-index":"5","-webkit-transform":"scale(1)","transform":"scale(1)"})
-  		},
-  		function(){
-//			$(this).next(".detail").hide();
-  		}
-  	)
+  
 });
