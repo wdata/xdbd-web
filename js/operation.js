@@ -8,8 +8,6 @@ let id_='',field=null,fieldAlias=null,order=null,dataType=null,dim_mea=null,dis_
     ,fieldId = null  // 记录数据筛选时候的ID
     ,modelId = null; // 记录dataModelId值；
 
-const url = "http://192.168.1.42:8084/xdbd-bi";
-
 // const surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
 const surroundings = sessionStorage.getItem("onEnv");
 if(surroundings === "test" || surroundings === "prod"){
@@ -568,19 +566,13 @@ let operating = {
     },
     // 删除
     clickDelete:function(id){
-        let deleted = true;
         // 删除保存中的数据，并删除cid为空的数据，以防出现bug
         $.each(save_arr,function(index,item){
-            // 删除出现的bug数据
-            // if(!item.cid){
-            //     save_arr.splice(index,1);
-            // }
             if(deleted && item.cid === id){
                 save_arr.splice(index,1);
-                deleted = false;
             }
         });
-        if(deleted){
+        if(id === "" || id.length <= 0){
             layer.msg("请点击需删除的控件！");
         }
         // 删除该ID的元素
@@ -804,7 +796,7 @@ let obtain = {
                 });
 
             });
-            clear(id_);
+            // clear(id_);
         }
     },
 };
@@ -933,23 +925,21 @@ let project = {
                             ,c = '';
                         // 重置数据
                         if(listFilter){
-                            if(listFilter.values)
-                            $.each(listFilter.values,function(x,y){
-                                if(val === y){
-                                    console.log(listFilter.operator);
-                                    a = 'icon_checked';
-                                    b = "checked='checked'";
-                                    if(listFilter.operator === "NOT IN"){
-                                        c = 'style="text-decoration: line-through;"';
-                                    }else if(listFilter.operator === "all"){
-                                        console.log(listFilter.operator);
+                            if(listFilter.values){
+                                $.each(listFilter.values,function(x,y){
+                                    if(val === y){
+                                        a = 'icon_checked';
+                                        b = "checked='checked'";
+                                        if(listFilter.operator === "NOT IN"){
+                                            c = 'style="text-decoration: line-through;"';
+                                        }
                                     }
-                                }
-                                if(listFilter.operator === "all"){
-                                    a = 'icon_checked';
-                                    b = "checked = 'checked'";
-                                }
-                            });
+                                });
+                            }
+                            if(listFilter.operator === "all"){
+                                a = 'icon_checked';
+                                b = "checked = 'checked'";
+                            }
                         }
                         html += `<li>
                                     <img src="images/${ a }.png" alt="">
@@ -1752,7 +1742,7 @@ function imgPreview(_this){
             processData: false,
             success:function(data){
                 // dataURL = windowURL.createObjectURL(fileObj.files[0]);
-                dataURL = url + data.data.url;
+                dataURL = $url1 + data.data.url;
                 //读取图片数据
                 const reader = new FileReader();
                 reader.onload = function (e) {
