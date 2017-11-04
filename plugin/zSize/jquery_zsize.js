@@ -47,7 +47,7 @@
                         position: 'absolute',
                         'background-color': 'rgba(0,0,0,0.5)',
                         cursor: 'move',
-                        display: 'block'
+                        display: 'none'
                     });
                     //添加拖拽框到目标元素
                     self.appendHandler(resizePanel, $("#"+id_));
