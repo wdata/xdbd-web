@@ -54,10 +54,6 @@ $(function(){
       }
     });
 
-	//消息状态
-	/*$("#msg-state").change(function(){
-		$stxt =  $(this).find("option:selected").text();
-	})*/
 	
 	//全选
 	$(".log-bot thead").on("click",function(){
@@ -191,7 +187,6 @@ $(function(){
 	
 	
 	//layui 分页
-//	getPagination();
 	function getPagination(){
 		layui.use(['laypage', 'layer'], function(){
 		  var laypage = layui.laypage

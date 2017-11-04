@@ -14,7 +14,6 @@ $(function(){
 	
 	var topMenu = [];//顶部导航菜单
 	var topMenuId = "";//topMenu--id
-	//var projectMenuId;//projectMenuId
 	var reportMenuId;
 	var zNodes = [];//存放子菜单的数据
 	var LeftMenu = [];//存放左侧所有菜单
@@ -180,7 +179,6 @@ $(function(){
 		if(e.which===13){
 			if(e.target.nodeName==='INPUT'&&$(e.target).attr("class")==="top-reedit"){
 				var reportMenuId = $(e.target).parent("li").attr("reportmenuid");
-//				var updateUser = $(e.target).parent("li").attr("updateuser");
 				var old = $(e.target).prev().text();
 				var re = $.trim($(e.target).val());
 				var menuName = (old===re?old:re);

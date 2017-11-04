@@ -23,8 +23,7 @@
 	var templateId = "";
 	var popups;
 	
-	console.log(projectId,versionId);
-	getBiTemplet(projectId);//初始化获取bi模板列表
+	getBiTemplet(projectId,versionId);//初始化获取bi模板列表
 	
 	//点击bi搜索按钮查询模板列表
 	$("#bitemp-search-btn").click(function(){
@@ -49,7 +48,6 @@
 	        },
 	        success:function(res){
 	          if(res.code===0){
-//	          	console.log(res);
 	          	var arr = new Array;
 		      	$.each(res.data,function(index,item) {
 		        	arr.push('<dl class="new_demand" id='+item.templateId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class="" onclick="deleteBtn(this)">X</div><img src="../images/bi_moren.png"></dt> <dd onclick="demandBtn(this)"> <p>'+item.templateName+'</p> <span>'+item.templateComment+'</span> </dd> </dl>')
@@ -124,7 +122,7 @@
 	  	}
 	  	layer.close(popups);
 	   	newBiTemplete(projectId,versionId,dirId,newName,newType,newDescribe,templateId);
-	   	getProjName(0);//新建Bi页面成功，刷新项目树
+	   	parent.location.reload();//刷新父级项目树
 	  }
 	}
 
@@ -158,39 +156,3 @@
 	            }
 	        });
 	}
-	
-	//刷新项目树
-//	function getProjName(id){
-//		$.ajax({
-//			type:'POST',
-//          url:$url3+'/bigdata/project/findProjectTree',
-//          headers:{
-//          	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
-//          },
-//          dataType:'json',
-//	        contentType: "application/json",
-//			data:JSON.stringify({
-//				"id":id
-//			}),
-//			success:function(res){
-//            	if(res.code===0){
-//            		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
-//					var treeObj = $("#treeDemo");
-//					$.fn.zTree.init(treeObj, setting, zNodes);
-//					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-//					curMenu = zTree_Menu.getNodes()[0].children[0];
-//					zTree_Menu.selectNode(curMenu);
-//					treeObj.hover(function () {
-//						if (!treeObj.hasClass("showIcon")) {
-//							treeObj.addClass("showIcon");
-//						}
-//					}, function() {
-//						treeObj.removeClass("showIcon");
-//					});
-//	            }
-//			},
-//			error:function(err){
-//				console.log(err);
-//			}
-//		});
-//	}

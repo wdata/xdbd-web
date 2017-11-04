@@ -12,6 +12,7 @@ $(function(){
 	var $url2 = "/xdbd-etl";
 	var $url3 = "/xdbd-pm";
 	var $url4 = "/xdbd-wf";
+	var $url = "http://192.168.1.43:8086";//公共页面
 	
 	/*
 	 
@@ -149,22 +150,22 @@ $(function(){
 		let name = $(this).find("a").text();
 		switch(name){
 			case "个人信息":
-				url = "http://192.168.1.43:8086/page/person/person.html";
+				url = $url+"/page/person/person.html";
 			break;
 			case "组织管理":
-				url = "http://192.168.1.43:8086/page/org_control/org_control.html";
+				url = $url+"/page/org_control/org_control.html";
 			break;
 			case "账号管理":
-				url = "http://192.168.1.43:8086/page/account/account.html";
+				url = $url+"/page/account/account.html";
 			break;
 			case "角色管理":
-				url = "http://192.168.1.43:8086/page/character/character.html";
+				url = $url+"/page/character/character.html";
 			break;
 			case "日志管理":
 				url = "html/loglist.html";
 			break;
 			case "企业中心":
-				url = "http://192.168.1.43:8086/page/org_control/not_org.html";
+				url = $url+"/page/org_control/not_org.html";
 			break;
 			default:
 		}
@@ -883,8 +884,8 @@ $(function(){
     		$("#iframepage1").attr("src","html/biTemplet.html");
     	};
     	var fnRenameFile = function(){
-    		var index = layer.open({
-		      type: 1,
+    		var index = layer.open({		      
+    			type: 1,
 		      btn: ['确定', '取消'],
 		      area: ['300px', '200px'],
 		      title:'修改文件名称',
@@ -978,6 +979,10 @@ $(function(){
 						{ title: '新建文件夹', fn: newFile},
 						{ title: '创建页面', fn: createFpage}
 					];
+					var items6 = [
+						{ title: '修改名称',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
 			}else if(onCurEnv==="test"||onCurEnv==="prod"){
 					var items0 = [
 						{ title: '提交发布', fn: checkInTest },
@@ -1032,16 +1037,16 @@ $(function(){
 					$("#iframepage1").attr("src","html/pageFlow.html?directoryId="+directoryId);//页面流
 					break;
 				case "12":
-					items = [];
+					items = items6;
 					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
 					break;
 				case "13":
-					items = [];
+					items = items6;
 					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
 					break;
 				case "15":
 				case "14":
-					items = [];
+					items = items6;
 					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
 					break;
 				case "2":
@@ -1049,6 +1054,9 @@ $(function(){
 					items = [];
 					pageFlowId = directoryId;
 					localStorage.setItem("pageFlowId",pageFlowId);
+					break;
+				case "7":
+					items = items6;
 					break;
 				default:
 					items = [];
@@ -1143,15 +1151,16 @@ $(function(){
 		function deleteFile(directoryId){
 			$.ajax({
 				type:'POST',
-	            url:$url3+'/bigdata/project/deleteProjectFile',
+	            url:$url3+'/bigdata/project/deleteDirectory',
 	            headers:{
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
 	            dataType:'json',
-	            contentType: "application/json",
-				data:JSON.stringify({
+				data:{
+					"projectId":projectId,
+					"versionId":versionId,
 					"directoryId":directoryId
-				}),
+				},
 				success:function(res){
 					console.log(res);
 	              	if(res.code===0){
@@ -1170,16 +1179,17 @@ $(function(){
 		function renameFile(directoryId,name){
 			$.ajax({
 				type:'POST',
-	            url:$url3+'/bigdata/project/updateProjectFile',
+	            url:$url3+'/bigdata/project/renameDirectory',
 	            headers:{
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
 	            dataType:'json',
-	            contentType: "application/json",
-				data:JSON.stringify({
+				data:{
+					"projectId":projectId,
+					"versionId":versionId,
 					"directoryId":directoryId,
 					"name":name
-				}),
+				},
 				success:function(res){
 					console.log(res);
 	              	if(res.code===0){

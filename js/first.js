@@ -30,7 +30,5 @@ $(document).ready(function() {
         mousewheelControl: true
         ,autoplay: 15000
     });
-  	
-  	//section1
-  
+
 });
