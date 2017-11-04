@@ -566,10 +566,12 @@ let operating = {
     },
     // 删除
     clickDelete:function(id){
+        let deleted = true;
         // 删除保存中的数据，并删除cid为空的数据，以防出现bug
         $.each(save_arr,function(index,item){
             if(deleted && item.cid === id){
                 save_arr.splice(index,1);
+                deleted = false;
             }
         });
         if(id === "" || id.length <= 0){
