@@ -12,7 +12,6 @@ $(function(){
   bind_click_onLessen();
   setVal();
   $(".stepName").val(etlName);
-  $(".tableOut").val(etlName);
 
   function bind_click_saveActionComp(){
     // demo.onBtnSaveClick = function() {
@@ -50,6 +49,8 @@ $(function(){
       set_wheres(attValue.wheres);
       fn_set_extractFields(attValue.extractFields);
       fn_set_sqlOut(actionComp.sqlOut);
+    } else {
+      $(".tableOut").val(etlName);
     }
   }
 
