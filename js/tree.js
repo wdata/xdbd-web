@@ -334,10 +334,10 @@ $(function(){
 		 * 5=页面,(首页目录下边子目录)---可 创建文件夹类型和（14）
 		 * 6=模块,---- items4
 		 * 7=最终模块,
-		 * 8=ETL文件夹,--------------- items1 ETL右键目录
-		 * 9=作业流文件夹,------------- items3 作业流文件夹
+		 * 8=ETL文件夹,--------------- items1 ETL右键目录---
+		 * 9=作业流文件夹,------------- items3 作业流文件夹---
 		 * 10=BI报表
-		 * 11=BI页面---------------- items2 BI右键目录
+		 * 11=BI页面---------------- items2 BI右键目录---
 		 * 12=ETL文件,
 		 * 13=作业流文件,
 		 * 14=页面文件（首页5目录下创建的页面的类型）
@@ -441,7 +441,6 @@ $(function(){
 					"name":name
 				}),
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 	              		getProjName(0);//刷新左侧树数据
 						layer.msg(res.message, {icon: 6});
@@ -494,7 +493,6 @@ $(function(){
 					"publishType":publishType
 				}),
 				success:function(res){
-					//console.log(res);
 	              	if(res.code===0){
 						layer.msg(res.message, {icon: 6});
 		            }
@@ -521,8 +519,6 @@ $(function(){
 	              	if(res.code===0){
 						var data = res.data;
 						var versionLen = data.length;
-//						console.log(data);
-//						console.log(versionLen);
 						var saveOldVersion = "";
 						var oldVersionName = "";
 						var versionIdTo = "";
@@ -644,7 +640,6 @@ $(function(){
 					"versionId":versionId
 				}),
 				success:function(res){
-//					console.log(res);
 	              	if(res.code===0){
 						var data = res.data;
 						var html = "";
@@ -676,7 +671,6 @@ $(function(){
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
 	            dataType:'json',
-//	            contentType: "application/json",
 				data:{
 					"versionIdFrom":versionIdFrom,
 					"versionIdTo":versionIdTo,
@@ -779,67 +773,7 @@ $(function(){
       		$("#iframepage1").attr("src","html/origin.html");
 			// $('.data-source-config').css('display','block');
 		};
-    // // 添加数据源
-    // $('.addBtn').click(function() {
-    //   var dbType = $('#db_type').val();
-    //   var dbName = $('.db_name').val();
-    //   var dbSite = $('.db_site').val();
-    //   var dbPort = $('.db_port').val();
-    //   var dbDatabase = $('.db_database').val();
-    //   var dbUser = $('.db_user').val();
-    //   var dbPassword = $('.db_password').val();
-    //   if (dbName == '') {
-    //     layer.msg('请输入名称');
-    //   } else if (dbSite == '') {
-    //     layer.msg('请输入数据库地址');
-    //   } else if (dbPort == '') {
-    //     layer.msg('请输入端口');
-    //   } else if (dbDatabase == '') {
-    //     layer.msg('请输入数据库')
-    //   } else if (dbUser == '') {
-    //     layer.msg('请输入用户名')
-    //   } else if (dbPassword == '') {
-    //     layer.msg('请输入密码')
-    //   } else {
-    //     $.ajax({
-    //       type: 'POST',
-    //       url: $url2 +'/api/datasource/v1/saveDataSource', //$url2 +
-    //       dataType: 'json',
-    //       contentType: "application/json",
-    //       data: JSON.stringify({
-    //         "projectId": projectId,
-    //         "name": dbName,
-    //         "conHost": dbSite,
-    //         "conPort": dbPort,
-    //         "conType": "jdbc",
-    //         "dbName": dbDatabase,
-    //         "dbType": dbType,
-    //         "password": dbPassword,
-    //         "username": dbUser,
-    //         "dsId": "",
-    //         "companyId":companyId
-    //       }),
-    //       success: function (res) {
-    //         console.log(res);
-    //         if (res.code === 0) {
-    //           $('.data-source-config').css('display', 'none');
-    //           layer.msg('成功添加数据源');
-    //         }
-    //       },
-    //       error: function (err) {
-    //         console.log(err);
-    //       }
-    //     });
-    //   }
-    // });
-    // // 链接测试
-    // $('.linkBtn').click(function() {
-    //     layer.msg('此功能暂未实现')
-    // });
-    // // 关闭数据源
-    // $('.closeBtn').click(function() {
-    //   $('.data-source-config').css('display','none');
-    // });
+   
 		var setProperty = function(){
 			$(".proj-attr").show();
 		};
@@ -945,7 +879,6 @@ $(function(){
 			console.log("1="+dirType);
 			console.log("2="+directoryId);
 			
-			console.log(onCurEnv);
 			if(onCurEnv==="dev"){
 				var items0 = [
 						{ title: '创建子模块', fn: createSubmodule},
@@ -1002,6 +935,9 @@ $(function(){
 						
 					];
 					var items5 = [
+						
+					];
+					var items6 = [
 						
 					];
 				}
@@ -1130,8 +1066,6 @@ $(function(){
 						var treeObj = $("#"+selectorId+"");
 						$.fn.zTree.init(treeObj, setting, res.data);
 						zTree_Menu = $.fn.zTree.getZTreeObj(""+selectorId+"");
-//						curMenu = zTree_Menu.getNodes()[0];
-//						zTree_Menu.selectNode(curMenu);
 						treeObj.hover(function () {
 							if (!treeObj.hasClass("showIcon")) {
 								treeObj.addClass("showIcon");
