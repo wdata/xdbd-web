@@ -23,6 +23,7 @@
 	var templateId = "";
 	var popups;
 	
+	console.log(projectId,versionId);
 	getBiTemplet(projectId);//初始化获取bi模板列表
 	
 	//点击bi搜索按钮查询模板列表

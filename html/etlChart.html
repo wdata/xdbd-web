@@ -273,13 +273,14 @@
               init_task();
             }
            if(obj.type=='start'){
-                $('#ele_start').val(obj.start);
-            } else if(obj.type=='end') {
-                $('#ele_end').val(obj.end);
-            } else if(obj.type=='decision') {
-
-            } else if(obj.type=='action') {
-
+             formProperty.push(
+               '<tr style="display: block"><td class="th">任务名称</td><td class="property_name"><input type="text" id="ele_start" value='+this.$nodeData[id].name+'></td></tr>'
+             )
+            }
+            if(obj.type=='end') {
+              formProperty.push(
+             '<tr style="display: block"><td class="th">任务名称</td><td class="property_name"><input type="text" id="ele_end" value='+this.$nodeData[id].name+'></td></tr>'
+              )
             }
             $(".form_profile").html(formProperty);
           }else if(model=="area") {
@@ -429,12 +430,14 @@
         var jsonStr = {};
         if(types == 'start'){
           jsonStr = {
-            "start": $('#ele_start').val()
+            "start": $('#ele_start').val(),
+            "type": 'start'
           }
         }
         if(types == 'end') {
           jsonStr = {
-            "end": $('#ele_end').val()
+            "end": $('#ele_end').val(),
+            "type": 'end'
           }
         }
         if(types == 'parallel') {

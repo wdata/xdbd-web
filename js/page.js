@@ -134,7 +134,7 @@ $(function(){
 						cid = data.htmlJson.controls;					
 						$.each(cid,function(i,item){
 							html += `
-								<li>
+								<li cid="${item.cid}">
 									<a href="javascript:;">${item.cid}</a>
 									<span class="set-flow-btn">设置链接</span>
 								</li>
@@ -306,10 +306,11 @@ $(function(){
 		var dirType =  curDom[0].directoryType;//目录类型
 		var directoryId =  curDom[0].directoryId;//目录id
 		var pageName = curDom[0].name;//目录名称
-		if(dirType==="15"){
+		if(dirType==="15"||dirType==="14"){
 			linkPageId = directoryId;
 			$(".page-tooltip li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
 			$(".page-tooltip1 li").eq($idx).attr("linkPageId",linkPageId).find("span").text("已设置链接");
+//			savePage(linkPageId);
 			layer.closeAll();
 		}else{
 			layer.msg("请选择BI页面文件", {icon: 0});
@@ -323,7 +324,7 @@ $(function(){
 		var directoryId =  curDom[0].directoryId;//目录id
 		var pageName = curDom[0].name;//目录名称
 //		pageId = directoryId;
-		if(dirType==="15"){
+		if(dirType==="15"||dirType==="14"){
 			linkPageId = directoryId;
 			pageName = pageName;
 			$(".p-opage-select select option:selected").val(linkPageId).text(pageName);
@@ -339,6 +340,7 @@ $(function(){
 		var aLi = $(".page-tooltip li");
 		for(let i=0;i<aLi.length;i++){
 			aLi.eq(i).attr("linkPageId","").find("span").text("设置链接");
+//			savePage("");//保存
 		}
 	});
 	
@@ -346,6 +348,7 @@ $(function(){
 	$(".delOnly-btn").click(function(){
 		var aLi = $(".page-tooltip li");
 		aLi.eq($idx).attr("linkPageId","").find("span").text("设置链接");
+//		savePage("");//保存
 	});
 	
 	/*
@@ -433,6 +436,25 @@ $(function(){
 			}
 		});
 	}
+	
+	//
+	$(".edit-content").delegate(".resize-item","click",function(){
+		var id = $(this).attr("id");
+		var linkPageId ="";
+		let i;
+		var aLi = $(".page-tooltip").find("li");
+		for(i=0;i<aLi.length;i++){
+			if(id===aLi.eq(i).attr("cid")){
+				aLi.eq(i).find("a").css("color","blue").end().siblings("li").find("a").css("color","");
+				linkPageId = aLi.eq(i).attr("linkpageid");
+			}
+		}
+		$(this).attr("linkPageId",linkPageId);
+		if(linkPageId){
+			window.open("../editBI.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+		}
+		
+	})
 	
 });//JQ END
 
