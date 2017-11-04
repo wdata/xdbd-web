@@ -358,7 +358,6 @@ $(function(){
 		var name = $(this).val();
 		 index = layer.open({
 		      type: 1,
-//		      btn: ['确定', '取消'],
 		      area: ['490px', '330px'],
 		      title:'链接页面',
 		      shadeClose: true, //点击遮罩关闭
