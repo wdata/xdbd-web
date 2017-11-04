@@ -13,7 +13,6 @@ $(function(){
   bind_click_lessen();
   $('.fromTable').trigger('change');
 
-  $(".stepName").val(etlName);
   setVal();
 
   function bind_click_saveActionComp(){
@@ -30,6 +29,8 @@ $(function(){
       fn_set_fromTable(actionComp.fromTable);
       set_extractFields(attValue.extractFields);
       fn_set_sqlOut(actionComp.sqlOut);
+    } else {
+      $(".stepName").val(etlName);
     }
   }
 

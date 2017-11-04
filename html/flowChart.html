@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../css/gooflow/GooFlow.css"/>
     <link rel="stylesheet" type="text/css" href="../css/gooflow/default.css"/>
     <style>
-        .myForm{display:block;margin:0px;padding:0px;line-height:1.5;border:#ccc 1px solid;font: 12px Arial, Helvetica, sans-serif;margin:5px 5px 0px 0px;border-radius:4px;}
+        .myForm{display:block;margin:0px;padding:0px;line-height:1.5;font: 12px Arial, Helvetica, sans-serif;margin:5px 5px 0px 0px;border-radius:4px;}
         .myForm .form_title{background:#428bca;padding:4px;color:#fff;border-radius:3px 3px 0px 0px;}
         .myForm .form_content{padding:4px;background:#fff;}
         .myForm .form_content table{border:0px}
@@ -28,6 +28,7 @@
         .list thead tr.list_head{height: 36px;line-height: 36px;color: #666;}
         .list tbody tr td{  border: 1px solid #ccc;  padding: 3px;}
         .padlock{width: 90px;height: 30px;margin: 10px auto;background: #578FE6;color: #fff;line-height: 30px;text-align: center;border-radius: 5px;cursor: pointer;font-size: 14px;}
+        .showSql{padding: 5px;overflow: hidden;margin: 10px;line-height: 20px;text-indent: 28px;font-size: 14px;}
     </style>
     <script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
     <script src="../js/login.js"></script>
@@ -105,26 +106,8 @@
         demo.setNodeRemarks(remark);
         demo.onItemDel=function(id,type){
           if(confirm("确定要删除该单元吗?")){
-            var delActionComp = {
-              actionId: this_actionId,
-              webComponentId: id,
-              versionId: this_versionId
-            };
-            $.ajax({
-              type:"POST",
-              url:$url+"/api/action/v1/delActionComp",
-              dataType:"json",
-              contentType:"application/json",
-              data:JSON.stringify(delActionComp),
-              success:function(data){
-                if(data.code == 0) {
-                  layer.msg('删除成功')
-                }
-              },error:function(data){
-                layer.msg(JSON.stringify(data))
-              }
-            })
             this.blurItem();
+            init_delace(id)
             return true;
           }else{
             return false;
@@ -518,6 +501,7 @@
             }),
             success:function(data){
               if(data.code == 0) {
+               alert(data)
                 this_actionId = data.data.actionId;
                 this_isTemplate = false;
                 init_actionComp();
@@ -605,6 +589,29 @@
               $('.generateSql').trigger('click');
               $('.saveActionComp').trigger('click');
             })
+        }
+        function init_delace(id) {
+          var delActionComp = {
+          };
+          $.ajax({
+            type:"POST",
+            url:$url+"/api/action/v1/delActionComp",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "actionId": this_actionId,
+              "webComponentId": id,
+              "versionId": this_versionId,
+              "dag": Export()
+            }),
+            success:function(data){
+              if(data.code == 0) {
+                layer.msg('删除成功')
+              }
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
+            }
+          })
         }
 
     </script>

@@ -16,7 +16,6 @@ $(function(){
   setVal();
 
   $(".stepName").val(etlName);
-  $(".tableOut").val(etlName);
 
   function bind_change_fromTable(){
     $(document.body)
@@ -52,6 +51,8 @@ $(function(){
       fn_set_tableOut(actionComp.tableOut);
       set_sortFields(attValue.sorts);
       fn_set_sqlOut(actionComp.sqlOut);
+    } else {
+      $(".tableOut").val(etlName);
     }
   }
 

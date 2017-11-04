@@ -19,15 +19,10 @@ $(function(){
 //alert(JSON.stringify(tables))
 
   $(".stepName").val(etlName);
-  $(".tableOut").val(etlName);
 
   $('.extractField .table').trigger('change');
   $('.fromTable').trigger('change');
   $('.selectTable').trigger('change');
-
-
-
-
 
   setVal();
 
@@ -140,6 +135,8 @@ $(function(){
       set_joinTables(attValue.joinTables);
       fn_set_extractFields(attValue.extractFields);
       fn_set_sqlOut(actionComp.sqlOut);
+    } else {
+      $(".tableOut").val(etlName);
     }
   }
 
