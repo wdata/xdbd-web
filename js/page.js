@@ -451,7 +451,7 @@ $(function(){
 		}
 		$(this).attr("linkPageId",linkPageId);
 		if(linkPageId){
-			window.open("../editBI.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
 		}
 		
 	})
