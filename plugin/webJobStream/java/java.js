@@ -8,12 +8,13 @@ $(function() {
   function bind_saveJobStream() {
     $('.saveJobStream').click(function(){
       fn_save(getVal());
-      this_data.push(this_actionCompId+':'+JSON.stringify(getVal()))
+      this_data[this_actionCompId] = getVal();
     });
   }
 
   function getVal() {
     var data = {};
+    alert($('.java_opts').val())
     data = {
            "action":
              {
@@ -46,7 +47,8 @@ $(function() {
   }
 
   function setVal() {
-    $('.java_task').val(this_actionCompName)
-    $(".java_name").val(this_actionComp.action.java.main_class)
+    $('.java_task').val(this_actionCompName);
+    $(".java_name").val(this_actionComp.action.java.main_class);
+    $('.java_opts').val(this_actionComp.action.java.java_opts);
   }
 })
