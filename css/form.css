@@ -2086,13 +2086,13 @@ div.f-addbtn-box-auto li{
 	left:48px;
 	bottom:0;
 	right:404px;
-	background: url(../images/fangge.png) repeat 0 0;
 }
 .edit-content{
 	height:100%;
 	width:100%;
 	overflow-y:auto;
 	overflow-x:hidden;
+	background: url(../images/fangge.png) repeat 0 0;
 }
 .component-libs-box {
 	width: 80%;
@@ -2160,9 +2160,9 @@ div.f-addbtn-box-auto li{
 .resize-item{
 	width: 150px;
 	height:150px;
-	border: 1px solid red;
+	border: 1px solid rgba(57,155,252,0.6);
 	position: absolute;
-	z-index: 10000;
+	background-color:#fff;
 }
 .set-cur-env {
 	position: absolute;
