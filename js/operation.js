@@ -4,7 +4,7 @@ let id_='',field=null,fieldAlias=null,order=null,dataType=null,dim_mea=null,dis_
     ,copy_data = {} // 复制后保存数据；
     ,screen_data = [] // 用以保存筛选后的数据,以fieldid作为指引
     ,data_type = ""  // 作为判断图形的；
-    ,number=0   // 层级
+    ,number = 1   // 层级
     ,fieldId = null  // 记录数据筛选时候的ID
     ,modelId = null; // 记录dataModelId值；
 
@@ -60,26 +60,36 @@ $(document).ready(function() {
             e.preventDefault();
             const id = context.getClickEle().attr("id");
             operating.clickDelete(id);      // 删除功能
+
+            // 层级重新排序
+            let eleLevel = 1;
+            $(".resize-item").each(function(){
+                $(this).css("z-index",eleLevel);
+                eleLevel ++;
+            });
+            // 保存数据
+            const type = context.getClickEle().attr("data-type");
+            refresh.storage(type,id);
         }},
         {text: '排列', subMenu: [
             {header: '默认值'},
             {
                 text: '置于顶层',
                 action: function () {
-                    context.getClickEle().css("z-index",(number+1));
+                    context.getClickEle().css("z-index",(number + 1));
                 }
             },
             {
                 text: '置于低层',
                 action: function () {
-                    context.getClickEle().css("z-index",0);
+                    context.getClickEle().css("z-index",1);
                 }
             },
             {
                 text: '上移一层',
                 action: function () {
                     const zIndex = parseInt(context.getClickEle().css("z-index"));
-                    context.getClickEle().css("z-index",zIndex+1);
+                    context.getClickEle().css("z-index",zIndex + 1);
                 }
             },{
                 text: '下移一层',
@@ -229,13 +239,13 @@ let refresh = {
         // console.log(chart_date);
     },
     // 根据不同的data-type类型，来执行不同的存储;以此减少存储的次数
-    storage:function(type){
+    storage:function(type,id){
         switch(type){
-            case "chart":refresh.retrieve(id_);break;
-            case "table":refresh.retrieve(id_);break;
-            case "text":refresh.textData(id_);break;
-            case "image":refresh.priceData(id_);break;
-            case "button":refresh.buttonData(id_);break;
+            case "chart":refresh.retrieve(id);break;
+            case "table":refresh.retrieve(id);break;
+            case "text":refresh.textData(id);break;
+            case "image":refresh.priceData(id);break;
+            case "button":refresh.buttonData(id);break;
         }
     },
     // 获取右侧维度、度量、数据筛选
@@ -630,7 +640,7 @@ let operating = {
                 z.cid = id;
                 save_arr.push(z);
             }
-            refresh.storage(dataType); // 判断不同的TYPE执行不同的采取函数
+            refresh.storage(dataType,id); // 判断不同的TYPE执行不同的采取函数
             // 拖拽初始化！
             id_ = id; // 拖拽必须修改id_
             number++; // ID不重复！
