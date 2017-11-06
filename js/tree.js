@@ -190,12 +190,23 @@ $(function(){
 					$projdesp = $.trim($("#projdesp").val()),
 					$projpath = $.trim($("#projpath").val()),
 					$projtype = $.trim($("#projtype").val());
-				if($projname&&$projdesp&&$projpath&&$projtype){
+				var reg = /^[\\/]?[\w\u4e00-\u9fa5-]+([\\/][\w\u4e00-\u9fa5-]+)*[\\/]?$/;
+				if(!$projname){
+					layer.msg("项目名称不能为空", {icon: 0});
+				}else if(!$projdesp){
+					layer.msg("项目描述不能为空", {icon: 0});
+				}else if($projdesp.length>85){
+					layer.msg("项目描述不得超过85个字", {icon: 0});
+				}else if(!$projpath){
+					layer.msg("项目路径不能为空", {icon: 0});
+				}else if(!reg.test($projpath)){
+					layer.msg("项目路径支持字母、数字、横杠、下划线、汉字，路径分隔符支持'/'或'\'", {icon: 0});
+				}else if(!$projtype){
+					layer.msg("调度类型不能为空", {icon: 0});
+				}else if($projname&&$projdesp&&$projpath&&$projtype&&$projdesp.length<86&&reg.test($projpath)){
 					createProjInfo($projname,$projdesp,$projpath,$projtype);
-				}else{
-					layer.msg("不能有空字段", {icon: 5});
+					layer.close(index);
 				}
-		      	layer.close(index);
 		      },
 		      btn2:function(){
 		      	layer.close(index);
@@ -204,6 +215,11 @@ $(function(){
 		      	layer.close(index);
 		      }
 		   });
+		   //表单数据初始化
+			$("#projname").val("");
+	  		$("#projdesp").val("");
+	  		$("#projpath").val("");
+	  		$("#projtype").val("");
 	});
 	function createProjInfo(name,desp,path,type){
 		$.ajax({
@@ -319,7 +335,7 @@ $(function(){
 		},
 		callback: {
 			beforeClick: beforeClick,
-			onClick: leftKeyClick
+			onClick: leftKeyClick			
 		}
 	};
 	
@@ -360,10 +376,11 @@ $(function(){
 			      	if(submoduleName){
 			      		confirmCreateSubmodule(directoryId,submoduleName);//创建子模块
 			      		getProjName(0);//刷新左侧树数据
+			      		layer.close(index);
 			      	}else{
-			      		layer.msg("请输入文件夹名称", {icon: 5});
+			      		layer.msg("请输入子模块名称", {icon: 0});
 			      	}
-			      	layer.close(index);
+			 
 			      },
 			      btn2:function(){
 			      	layer.close(index);
@@ -413,10 +430,11 @@ $(function(){
 			      	if(subfinalmoduleName){
 			      		confirmCreateFinalSubmodule(directoryId,subfinalmoduleName);//创建最终子模块
 			      		getProjName(0);//刷新左侧树数据
+			      		layer.close(index);
 			      	}else{
-			      		layer.msg("请输入文件夹名称", {icon: 5});
+			      		layer.msg("请输入最终子模块名称", {icon: 5});
 			      	}
-			      	layer.close(index);
+			      	
 			      },
 			      btn2:function(){
 			      	layer.close(index);
@@ -774,7 +792,8 @@ $(function(){
 			// $('.data-source-config').css('display','block');
 		};
    
-		var setProperty = function(){
+		var setProperty = function(){//项目属性
+			findCurTree(dirId,versionId);
 			$(".proj-attr").show();
 		};
 		var newFile = function(){
@@ -822,7 +841,7 @@ $(function(){
     			type: 1,
 		      btn: ['确定', '取消'],
 		      area: ['300px', '200px'],
-		      title:'修改文件名称',
+		      title:'重命名',
 		      shade: 0, 
 		      content:'<input type="text" placeholder="请输入新名称" class="rename-file"/>',
 		      yes: function(index, layero){
@@ -843,7 +862,7 @@ $(function(){
 		   });
     	};
     	var fnDeleteFile = function(){
-    		var index = layer.confirm('确认删除文件?', {
+    		var index = layer.confirm('确认删除?', {
 			  btn: ['确定','取消'] //按钮
 			}, function(index){
  			  deleteFile(directoryId);
@@ -889,7 +908,7 @@ $(function(){
 						{ title: '导出', fn: leadingOut},
 						{ title: '数据源配置', fn: dataSourceConfig },
 						{ title: '属性', fn: setProperty },
-						{ title: '修改名称',fn:fnRenameFile},
+						{ title: '重命名',fn:fnRenameFile},
 						{ title: '删除',fn:fnDeleteFile}
 					];
 					var items1 = [
@@ -913,7 +932,7 @@ $(function(){
 						{ title: '创建页面', fn: createFpage}
 					];
 					var items6 = [
-						{ title: '修改名称',fn:fnRenameFile},
+						{ title: '重命名',fn:fnRenameFile},
 						{ title: '删除',fn:fnDeleteFile}
 					];
 			}else if(onCurEnv==="test"||onCurEnv==="prod"){
@@ -1129,7 +1148,7 @@ $(function(){
 	              	if(res.code===0){
 						//修改名称成功,刷新项目树
 						getProjName(0);
-						layer.msg("修改名称成功", {icon: 6});
+						layer.msg("重命名成功", {icon: 6});
 		            }
 				},
 				error:function(err){
