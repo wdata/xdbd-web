@@ -895,8 +895,8 @@ $(function(){
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-			console.log("1="+dirType);
-			console.log("2="+directoryId);
+			// console.log("1="+dirType);
+			// console.log("2="+directoryId);
 			
 			if(onCurEnv==="dev"){
 				var items0 = [

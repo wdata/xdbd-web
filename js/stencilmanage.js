@@ -144,6 +144,7 @@ function newBtn(popups) {
         if(data.code == 0) {
           localStorage.setItem('directoryId',data.data);
           window.location.href = 'etlChart.html';
+          parent.location.reload();
         }
       },error:function(data){
         console.log(JSON.stringify(data))

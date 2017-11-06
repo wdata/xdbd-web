@@ -45,7 +45,7 @@
                         top: 0,
                         left: 0,
                         position: 'absolute',
-                        'background-color': 'rgba(0,0,0,0.5)',
+                        'background-color': 'rgba(0,0,0,0.2)',
                         cursor: 'move',
                         display: 'none'
                     });
@@ -135,10 +135,12 @@
                     position: 'absolute',
                     width: '8px',
                     height: '8px',
-                    background: '#ff6600',
+                    // background: '#ff6600',
+                    background: '#09f',
                     margin: '0',
                     'border-radius': '2px',
-                    border: '1px solid #dd5500',
+                    // border: '1px solid #dd5500',
+                    border: '1px solid #09f',
                 });
             }
         },
@@ -380,7 +382,6 @@
                         left: oleft + x,
                         top: otop + y
                     });
-                    refresh.storage($(org).attr("data-type")); // 判断不同的TYPE执行不同的采取函数
                 }
             }).on('mouseup', function(e) {
                 emove = false;
@@ -392,6 +393,9 @@
                 swmove = false;
                 semove = false;
                 drag = false;
+                const id = $(el).parent().attr("id");
+                const type = $(el).parent().attr("data-type");
+                refresh.storage(type,id); // 判断不同的TYPE执行不同的采取函数
             });
         },
         /**

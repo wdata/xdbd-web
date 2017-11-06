@@ -35,7 +35,6 @@ function GooFlow(bgDiv,property){
 	this.$lineDom={};
 	this.$nodeDom={};
 	this.$areaDom={};
-	this.params = [];//各模块的详细属性
   this.propertyAlter = true;
 	this.$max=property.initNum||1;//计算默认ID值的起始SEQUENCE
 	this.$focus="";//当前被选定的结点/转换线ID,如果没选中或者工作区被清空,则为""
@@ -148,7 +147,7 @@ function GooFlow(bgDiv,property){
 	if(this.$editable){
 	  //绑定工作区事件
 	  this.$workArea.on("click",{inthis:this},function(e){
-	    console.log(e)
+	    //console.log(e)
 		if(!e)e=window.event;
 		var This=e.data.inthis;
 		if(!This.$editable)return;
@@ -159,7 +158,7 @@ function GooFlow(bgDiv,property){
 			//alert(n);
 			if(n=="svg"||(n=="DIV"&&t.prop("class").indexOf("GooFlow_work")>-1)||n=="LABEL"){
         if(This.$lineOper.data("tid")){
-          console.log(This.$lineOper.data("tid"))
+          //console.log(This.$lineOper.data("tid"))
           This.focusItem(This.$lineOper.data("tid"),false);
           //This.$mpFrom.removeData("p");
         }
@@ -776,34 +775,8 @@ GooFlow.prototype={
 		}
 		if(this.$textArea.css("display")=="none")	this.$textArea.removeData("id").val("").hide();
 	},
-  getParams:function (id,type) {
-    var self = this;
-    if(id == '') {
-      return false;
-    }
-    $.post('../xdbd-wf/api/sysJobComp/v1/getByType',{ ///xdbd-wf
-      'webComponentId':id,
-      'jobId':jobid,
-      'type':type
-    },function(data){
-      if(data.success) {
-        console.log(data)
-
-        delete self.params[id];
-        // console.log(self.params[id])
-        // console.log(data.data)
-        if(typeof(data.data) == "string"||data.data ==null) {
-          self.params[id] = JSON.parse(data.data)
-        }else {
-          self.params[id] = JSON.parse(data.data.attValue)
-        }
-        // console.log(self.params)
-      }
-    })
-  },
 	//增加一个流程结点,传参为一个JSON,有id,name,top,left,width,height,type(结点类型)等属性
 	addNode:function(id,json){
-	  this.getParams(id,json.type);
 		if(this.onItemAdd!=null&&!this.onItemAdd(id,"node",json))return;
 		if(this.$undoStack&&this.$editable){
 			this.pushOper("delNode",[id]);
@@ -854,7 +827,6 @@ GooFlow.prototype={
 	initWorkForNode:function(){
 		//绑定点击事件
 		this.$workArea.delegate(".GooFlow_item","click",{inthis:this},function(e){
-		  console.log(e)
 			e.data.inthis.focusItem(this.id,true);
 			$(this).removeClass("item_mark");
 		});
@@ -945,7 +917,6 @@ GooFlow.prototype={
 		});
 		//绑定连线时确定结束点
 		this.$workArea.delegate(".GooFlow_item","mouseup",{inthis:this},function(e){
-		  console.log(e)
 			var This=e.data.inthis;
 			if((This.$nowType!="direct"&&This.$nowType!="dashed")&&!This.$mpTo.data("p"))	return;
 			var lineStart=This.$workArea.data("lineStart");
@@ -1070,7 +1041,7 @@ GooFlow.prototype={
 	},
 	//获取结点/连线/分组区域的详细信息
 	getItemInfo:function(id,type){
-	  console.log(type)
+	  //console.log(type)
 		switch(type){
 			case "node":	return this.$nodeData[id]||null;
 			case "line":	return this.$lineData[id]||null;
@@ -1083,7 +1054,6 @@ GooFlow.prototype={
 			var jq=$("#"+this.$focus);
 			if(jq.prop("tagName")=="DIV"){
 				if(this.onItemBlur!=null&&!this.onItemBlur(this.$focus,"node"))	return false;
-        if(this.onItemBlur!=null&&!this.onItemBlur(this.$focus,"dataSheet"))	return false;
 				jq.removeClass("item_focus").children("div:eq(0)").css("display","none");
 				if(this.$nodeData[this.$focus].marked){
 					jq.addClass("item_mark").css("border-color",GooFlow.prototype.color.mark||'#ff8800');
@@ -1115,14 +1085,12 @@ GooFlow.prototype={
 	},
 	//选定某个结点/转换线 bool:TRUE决定了要触发选中事件，FALSE则不触发选中事件，多用在程序内部调用。
 	focusItem:function(id,bool){
-    this.getParams(id,'');
-	  console.log(id)
+	  //console.log(id)
 		var jq=$("#"+id);
 		if(jq.length==0)	return;
 		if(!this.blurItem())	return;//先执行"取消选中",如果返回FLASE,则也会阻止选定事件继续进行.
 		if(jq.prop("tagName")=="DIV"){
 			if(bool&&this.onItemFocus!=null&&!this.onItemFocus(id,"node"))	return;
-			if(bool&&this.onItemFocus!=null&&!this.onItemFocus(id,"dataSheet")) return;
 			jq.addClass("item_focus");
 			if(GooFlow.prototype.color.line){
         jq.css("border-color",GooFlow.prototype.color.line);
@@ -1142,7 +1110,7 @@ GooFlow.prototype={
 			if(!this.$editable)	return;
 			var x,y,from,to,n;
 			if(GooFlow.prototype.useSVG!=""){
-			  console.log(GooFlow.prototype.useSVG)
+			  // console.log(GooFlow.prototype.useSVG)
 				from=jq.attr("from").split(",");
 				to=jq.attr("to").split(",");
 				n=[from[0],from[1],to[0],to[1]];
@@ -1412,7 +1380,7 @@ GooFlow.prototype={
 	//用AJAX方式，远程读取一组数据
 	//参数para为JSON结构，与JQUERY中$.ajax()方法的传参一样
 	loadDataAjax:function(para){
-	  console.log(para)
+	  //console.log(para)
 		var This=this;
 		$.ajax({
 			type:para.type,
@@ -1437,7 +1405,6 @@ GooFlow.prototype={
 		ret.nodes={};
 		ret.lines={};
 		ret.areas={};
-		ret.dataSheet={};
 		ret.initNum=this.$max;
 		for(var k1 in this.$nodeData){
 			if(!this.$nodeData[k1].marked){
@@ -1457,18 +1424,11 @@ GooFlow.prototype={
         }
         ret.areas[k3]=JSON.parse(JSON.stringify(this.$areaData[k3]));
     }
-    for(var k4 in self.params){
-      console.log(self.params[k4])
-      if(!this.params[k4].marked) {
-        delete this.params[k4]["marked"];
-      }
-      ret.dataSheet[k4]=JSON.parse(JSON.stringify(this.params[k4]));
-    }
 		return ret;
 	},
 	//只把本次编辑流程图中作了变更(包括增删改)的元素导出到一个变量中,以方便用户每次编辑载入的流程图后只获取变更过的数据
 	exportAlter:function(){
-		var ret={nodes:{},lines:{},areas:{},dataSheet:{}};
+		var ret={nodes:{},lines:{},areas:{}};
 		for(var k1 in this.$nodeData){
 			if(this.$nodeData[k1].alt){
 				ret.nodes[k1]=this.$nodeData[k1];
@@ -1484,11 +1444,6 @@ GooFlow.prototype={
 				ret.areas[k3]=this.$areaData[k3];
 			}
 		}
-    for(var k4 in this.params) {
-		  if(this.params[k4].alt) {
-		    ret.dataSheet[k4]=this.params[k4]
-      }
-    }
 		ret.deletedItem=this.$deletedItem;
 		return ret;
 	},
