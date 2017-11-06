@@ -43,9 +43,9 @@
       var this_actionCompId;
       var this_actionCompName;
       var this_actionComp = '';
-      var this_data = [];
+      var this_data = {};
       var onenv = true;
-      var $url = '';  //../xdbd-wf
+      var $url = '../xdbd-wf';  //../xdbd-wf
       console.log(this_onenv)
 
       if(this_onenv == 'dev') {
@@ -353,7 +353,7 @@
               if(data.code == 0) {
                 layer.msg('删除成功')
                 this_data.splice(arr,1)
-//                alert(JSON.stringify(this_data))
+               alert(JSON.stringify(this_data))
               }
             }, error: function (data) {
               layer.msg(JSON.stringify(data))
