@@ -11,6 +11,7 @@ $(function(){
 	 * directoryId 根据 directoryId 查询
 	 * parentId
 	 * */
+
 	
 	var topMenu = [];//顶部导航菜单
 	var topMenuId = "";//topMenu--id
@@ -790,6 +791,7 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
+              		console.log(res);
               		$(".mn-headtxt").text(navigationText);
               		sessionStorage.setItem("tempTxt",navigationText)
               		layer.msg(res.message, {icon: 6});
@@ -823,6 +825,9 @@ $(function(){
 			data:formData,
 			processData: false,
 		    contentType: false,
+		    headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			success:function(res){
 				console.log(res);
 				if(res.code===0){
@@ -1004,11 +1009,14 @@ $(function(){
 	}
 	
 	//1.6 获取默认的左菜单
-	findDefinedLeftMenu(projectId,versionId);
+	//findDefinedLeftMenu(projectId,versionId);
 	function findDefinedLeftMenu(projectId,versionId){
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/menu/findReportMenuLeftDefault",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
 			data:{
 				"projectId":projectId,
 				"versionId":versionId
@@ -1025,6 +1033,45 @@ $(function(){
 			}
 		});
 	}
+	
+	//1.7 查询模板
+	findTemp()
+	function findTemp(){
+		$.ajax({
+			type:"GET",
+			url:$url1+"/api/v1/findTemplateStyle",
+			headers:{
+            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+            },
+			data:{
+				"projectId":projectId,
+				"versionId":versionId
+			},
+			success:function(res){
+				if(res.code===0){
+					var data = res.data;
+					var logo = data.logo,
+						leftHeight = data.leftHeight,
+						leftWidth = data.leftWidth,
+						navigationText = data.navigationText,
+						topHeight = data.topHeight,
+						topWidth = data.topWidth;
+						
+						//存储
+						sessionStorage.setItem("tempLogo",logo);
+						sessionStorage.setItem("tempTxt",navigationText);
+						sessionStorage.setItem("leftHeight",leftHeight);
+						sessionStorage.setItem("leftWidth",leftWidth);
+						sessionStorage.setItem("topHeight",topHeight);
+						sessionStorage.setItem("topWidth",topWidth);
+				}
+			},
+			error:function(res){
+				console.log(res);
+			}
+		});
+	}
+	
 	
 	//预览
 	$("#preview").click(function(){
