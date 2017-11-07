@@ -14,7 +14,7 @@ $(function() {
 
   function getVal() {
     var data = {};
-    alert($('.java_opts').val())
+    // alert($('.java_opts').val())
     data = {
            "action":
              {

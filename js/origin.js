@@ -179,7 +179,7 @@
       });
     }, function(){
       layer.msg('已保留该数据源', {
-        time: 20000 //20s后自动关闭
+        time: 2000 //20s后自动关闭
       });
     });
   }
@@ -229,7 +229,7 @@
           if (res.code === 0) {
             layer.msg('成功链接测试');
           } else {
-            layer.msg('测试失败')
+            layer.msg(res.message)
           }
         },
         error: function (err) {
