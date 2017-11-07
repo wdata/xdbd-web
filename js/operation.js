@@ -801,13 +801,13 @@ let obtain = {
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
-                // 拖拽初始化！
-                new ZResize({
-                    stage: '.edit-libs-box', //舞台
-                    itemClass: 'resize-item'//可缩放的类名
-                });
-
             });
+            // 拖拽初始化！
+            new ZResize({
+                stage: '.edit-libs-box', //舞台
+                itemClass: 'resize-item'//可缩放的类名
+            });
+
             // clear(id_);
         }
     },
