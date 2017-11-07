@@ -7,6 +7,7 @@
         stage: '.content', //舞台
         item: '.resize-item' //可缩放的类名
     };
+    let recordingId = null;
 
     /**
      * 定义类
@@ -26,7 +27,7 @@
             var self = this;
             $('.' + self.options.itemClass).each(function(index,item) {
 
-                if((index+1)==$('.' + self.options.itemClass).length){
+                // if((index+1) === $('.' + self.options.itemClass).length){
 
                     // 删除之前DIV的边框线
                     $(".resize-item .resize-panel").css("display","none");
@@ -36,8 +37,8 @@
                     // }
 
                     //创建面板
-                    var width = $("#"+id_).width();
-                    var height = $("#"+id_).height();
+                    var width = $(this).width();
+                    var height = $(this).height();
                     var resizePanel = $('<div class="resize-panel"></div>');
                     resizePanel.css({
                         width: width,
@@ -50,7 +51,7 @@
                         display: 'none'
                     });
                     //添加拖拽框到目标元素
-                    self.appendHandler(resizePanel, $("#"+id_));
+                    self.appendHandler(resizePanel, $(this));
                     //id_=$(this).attr("id");
                     /**
                      * 创建控制点
@@ -113,17 +114,17 @@
                     });
                     // 添加项目
                     self.appendHandler([n, s, w, e, ne, nw, se, sw], resizePanel);
-                    //绑定拖拽缩放事件
-                    self.bindResizeEvent(resizePanel, $("#"+id_));
-                    //绑定触发事件
-                    self.bindTrigger($("#"+id_));
-                    //根据ID，显示右侧菜单
+                    // 绑定拖拽缩放事件
+                    self.bindResizeEvent($(this).find(".resize-panel"),);
+                    // 绑定触发事件
+                    self.bindTrigger($(this));
+                    // 根据ID，显示右侧菜单
                     clear(id_);
-                    //根据this的data-type为文本时调用函数，绑定监听事件
+                    // 根据this的data-type为文本时调用函数，绑定监听事件
                     if($(this).attr("data-type") === "text"){
                         enterListen($(this).find(".content-text>div")[0]);
                     }
-                }
+                // }
             });
             self.bindHidePanel();
         },
@@ -266,136 +267,155 @@
                 otop = parseInt(org.css('top').replace('px', ''));
                 oleft = parseInt(org.css('left').replace('px', ''));
                 drag = true;
-            });
+                let recordingBur = false;
 
-            $(self.options.stage).on('mousemove', function(e) {
-                if(emove) {
-                    var x = (e.pageX - ox);
-                    el.css({
-                        width: ow + x
-                    });
-                    org.css({
-                        width: ow + x
-                    });
-
-                    self.scaleScaling(el,org,(ow + x),"height");   // 等比缩放
-
-                } else if(smove) {
-                    var y = (e.pageY - oy);
-                    el.css({
-                        height: oh + y
-                    });
-                    org.css({
-                        height: oh + y
-                    });
-                    self.scaleScaling(el,org,(oh + y),"width");   // 等比缩放
-
-                } else if(wmove) {
-                    var x = (e.pageX - ox);
-                    el.css({
-                        width: ow - x,
-                        // left: oleft + x
-                    });
-                    org.css({
-                        width: ow - x,
-                        left: oleft + x
-                    });
-                    self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
-                } else if(nmove) {
-                    var y = (e.pageY - oy);
-                    el.css({
-                        height: oh - y,
-                        // top: otop + y
-                    });
-                    org.css({
-                        height: oh - y,
-                        top: otop + y
-                    });
-                    self.scaleScaling(el,org,(oh - y),"width");   // 等比缩放
-                } else if(nemove) {
-                    var x = e.pageX - ox;
-                    var y = e.pageY - oy;
-                    el.css({
-                        height: oh - y,
-                        // top: otop + y,
-                        width: ow + x
-                    });
-                    org.css({
-                        height: oh - y,
-                        top: otop + y,
-                        width: ow + x
-                    });
-                    self.scaleScaling(el,org,(oh - y),"width");   // 等比缩放
-                } else if(nwmove) {
-                    var x = e.pageX - ox;
-                    var y = e.pageY - oy;
-                    el.css({
-                        height: oh - y,
-                        // top: otop + y,
-                        width: ow - x,
-                        // left: oleft + x
-                    });
-                    org.css({
-                        height: oh - y,
-                        top: Math.min(otop + y,otop + oh),
-                        width: ow - x,
-                        left: Math.min(oleft + x,oleft + ow)
-                    });
-                    self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
-                    if(org.attr("data-ratio-bur") === "true") {
-                        var p = parseFloat(org.attr("data-ratio"));
+                $(self.options.stage).on('mousemove', function(e) {
+                    if(emove) {
+                        var x = (e.pageX - ox);
+                        el.css({
+                            width: ow + x
+                        });
                         org.css({
-                            top: otop - (ow - x)/p + oh
+                            width: ow + x
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(ow + x),"height");   // 等比缩放
+
+                    } else if(smove) {
+                        var y = (e.pageY - oy);
+                        el.css({
+                            height: oh + y
+                        });
+                        org.css({
+                            height: oh + y
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(oh + y),"width");   // 等比缩放
+
+                    } else if(wmove) {
+                        var x = (e.pageX - ox);
+                        el.css({
+                            width: ow - x,
+                            // left: oleft + x
+                        });
+                        org.css({
+                            width: ow - x,
+                            left: oleft + x
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
+                    } else if(nmove) {
+                        var y = (e.pageY - oy);
+                        el.css({
+                            height: oh - y,
+                            // top: otop + y
+                        });
+                        org.css({
+                            height: oh - y,
+                            top: otop + y
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(oh - y),"width");   // 等比缩放
+                    } else if(nemove) {
+                        var x = e.pageX - ox;
+                        var y = e.pageY - oy;
+                        el.css({
+                            height: oh - y,
+                            // top: otop + y,
+                            width: ow + x
+                        });
+                        org.css({
+                            height: oh - y,
+                            top: otop + y,
+                            width: ow + x
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(oh - y),"width");   // 等比缩放
+                    } else if(nwmove) {
+                        var x = e.pageX - ox;
+                        var y = e.pageY - oy;
+                        el.css({
+                            height: oh - y,
+                            // top: otop + y,
+                            width: ow - x,
+                            // left: oleft + x
+                        });
+                        org.css({
+                            height: oh - y,
+                            top: Math.min(otop + y,otop + oh),
+                            width: ow - x,
+                            left: Math.min(oleft + x,oleft + ow)
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
+                        if(org.attr("data-ratio-bur") === "true") {
+                            var p = parseFloat(org.attr("data-ratio"));
+                            org.css({
+                                top: otop - (ow - x)/p + oh
+                            });
+                        }
+
+                    } else if(semove) {
+                        var x = e.pageX - ox;
+                        var y = e.pageY - oy;
+                        el.css({
+                            width: ow + x,
+                            height: oh + y
+                        });
+                        org.css({
+                            width: ow + x,
+                            height: oh + y
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(oh + y),"width");   // 等比缩放
+                    } else if(swmove) {
+                        var x = e.pageX - ox;
+                        var y = e.pageY - oy;
+                        el.css({
+                            width: ow - x,
+                            // left: oleft + x,
+                            height: oh + y
+                        });
+                        org.css({
+                            width: ow - x,
+                            left: oleft + x,
+                            height: oh + y
+                        });
+                        recordingBur = true;
+                        self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
+                    } else if(drag) {
+                        var x = e.pageX - ox;
+                        var y = e.pageY - oy;
+                        org.css({
+                            left: oleft + x,
+                            top: otop + y
                         });
                     }
 
-                } else if(semove) {
-                    var x = e.pageX - ox;
-                    var y = e.pageY - oy;
-                    el.css({
-                        width: ow + x,
-                        height: oh + y
-                    });
-                    org.css({
-                        width: ow + x,
-                        height: oh + y
-                    });
-                    self.scaleScaling(el,org,(oh + y),"width");   // 等比缩放
-                } else if(swmove) {
-                    var x = e.pageX - ox;
-                    var y = e.pageY - oy;
-                    el.css({
-                        width: ow - x,
-                        // left: oleft + x,
-                        height: oh + y
-                    });
-                    org.css({
-                        width: ow - x,
-                        left: oleft + x,
-                        height: oh + y
-                    });
-                    self.scaleScaling(el,org,(ow - x),"height");   // 等比缩放
-                } else if(drag) {
-                    var x = e.pageX - ox;
-                    var y = e.pageY - oy;
-                    org.css({
-                        left: oleft + x,
-                        top: otop + y
-                    });
-                }
-            }).on('mouseup', function(e) {
-                emove = false;
-                smove = false;
-                wmove = false;
-                nmove = false;
-                nemove = false;
-                nwmove = false;
-                swmove = false;
-                semove = false;
-                drag = false;
-                const id = $(el).parent().attr("id");
-                const type = $(el).parent().attr("data-type");
-                refresh.storage(type,id); // 判断不同的TYPE执行不同的采取函数
+                }).on('mouseup', function(e) {
+                    emove = false;
+                    smove = false;
+                    wmove = false;
+                    nmove = false;
+                    nemove = false;
+                    nwmove = false;
+                    swmove = false;
+                    semove = false;
+                    drag = false;
+
+                    const id = $(el).parent().attr("id");
+                    const type = $(el).parent().attr("data-type");
+                    refresh.storage(type,id); // 判断不同的TYPE执行不同的采取函数
+
+                    // 当recordingBur为ture时，已经放大缩小，所以重新获取图形显示；
+                    if(recordingBur && type === "chart" || type === "text"){
+                        refresh.save_config(recordingId);
+                    }
+
+                    $(this).off("mousemove");
+                    $(this).off("mouseup");
+
+                });
             });
         },
         /**
@@ -424,13 +444,17 @@
                 e.stopPropagation();
                 self.triggerResize(el);
                 //console.log(save_arr);
-                if($(this).attr("id")!=id_){
+                if($(this).attr("id") !== id_){
                     id_ = $(this).attr("id");
                     data_type = $(this).attr("data-type");
                     clear(id_);
                 }
+                recordingId = id_;  // 点击时记录id，
                 // shutDownC();  //    关闭文本编辑区
             });
+
+            // $(self.options.item).on("")
+
             el.on('dblclick', function(e) {
                 e.stopPropagation();
                 // 文本区双击事件；
