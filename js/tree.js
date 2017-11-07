@@ -241,6 +241,10 @@ $(function(){
               	if(res.code===0){
               		getProjName(0);//刷新项目树
 					layer.msg(res.message, {icon: 6});
+	            }else if(res.code===403){
+	            	layer.msg("该名称已存在,请更换!", {icon: 0});
+	            }else{
+	            	layer.msg("创建项目失败!", {icon: 5});
 	            }
 			},
 			error:function(err){
@@ -479,12 +483,14 @@ $(function(){
 			      content:$(".submit-test"),
 			      yes: function(index, layero){
 			      	var version = $.trim($(".submit-test input").val());
-			      	if(version){
+			      	if(version==="workspace"){
+			      		layer.msg("该版本名称不能使用", {icon: 0});
+			      	}else if(version&&version!=="workspace"){
 			      		confirmCheckedInTest(projectId,versionId,version,publishType);
+			      		layer.close(index);
 			      	}else{
 			      		layer.msg("请输入版本号", {icon: 5});
 			      	}
-			      	layer.close(index);
 			      },
 			      btn2:function(){
 			      	layer.close(index);
@@ -513,6 +519,10 @@ $(function(){
 				success:function(res){
 	              	if(res.code===0){
 						layer.msg(res.message, {icon: 6});
+		            }else if(res.code===403){
+		            	layer.msg("该命名已存在,请更换!", {icon: 0});
+		            }else{
+		            	layer.msg("提交失败!", {icon: 5});
 		            }
 				},
 				error:function(err){
@@ -540,7 +550,7 @@ $(function(){
 						var saveOldVersion = "";
 						var oldVersionName = "";
 						var versionIdTo = "";
-						if(versionLen>=1){//切换版本
+						if(versionLen){//切换版本
 							var index = layer.confirm('是否保存当前版本?', {
 							  btn: ['是','否','取消'], //按钮
 							  yes:function(index,layero){//输入版本号
@@ -793,7 +803,7 @@ $(function(){
 		};
    
 		var setProperty = function(){//项目属性
-			findCurTree(dirId,versionId);
+			getProjInfo();
 			$(".proj-attr").show();
 		};
 		var newFile = function(){
@@ -895,8 +905,8 @@ $(function(){
 			localStorage.setItem("createUser",createUser);
 			localStorage.setItem("updateUser",updateUser);
 			localStorage.setItem("rootPath",rootPath);
-			// console.log("1="+dirType);
-			// console.log("2="+directoryId);
+			 console.log("1="+dirType);
+			 console.log("2="+directoryId);
 			
 			if(onCurEnv==="dev"){
 				var items0 = [
@@ -935,6 +945,24 @@ $(function(){
 						{ title: '重命名',fn:fnRenameFile},
 						{ title: '删除',fn:fnDeleteFile}
 					];
+					var items7 = [
+						{ title: '新建BI文件', fn: newBi},
+						{ title: '新建文件夹', fn: newFile},
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items8 = [
+						{ title: '新建ETL', fn: newEtl},
+						{ title: '新建文件夹', fn: newFile},
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items9 = [
+						{ title: '新建作业流', fn: newJob},
+						{ title: '新建文件夹', fn: newFile },
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					]
 			}else if(onCurEnv==="test"||onCurEnv==="prod"){
 					var items0 = [
 						{ title: '提交发布', fn: checkInTest },
@@ -957,6 +985,15 @@ $(function(){
 						
 					];
 					var items6 = [
+						
+					];
+					var items7 = [
+						
+					];
+					var items8 = [
+						
+					];
+					var items9 = [
 						
 					];
 				}
@@ -1012,6 +1049,16 @@ $(function(){
 					break;
 				case "7":
 					items = items6;
+					break;
+				case "16":
+				case "19":
+					items = items7;
+					break;
+				case "17":
+					items = items8;
+					break;
+				case "18":
+					items = items9;
 					break;
 				default:
 					items = [];
@@ -1149,7 +1196,56 @@ $(function(){
 						//修改名称成功,刷新项目树
 						getProjName(0);
 						layer.msg("重命名成功", {icon: 6});
+		            }else if(res.code===403){
+		            	layer.msg("该名称已存在,请更换!", {icon: 0});
+		            }else{
+		            	layer.msg("命名失败!", {icon: 5});
 		            }
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		}
+		
+		//获取项目信息(属性)
+		function getProjInfo(){
+			$.ajax({
+				type:'POST',
+	            url:$url3+'/bigdata/project/getProjectInfo',
+	            headers:{
+	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+	            },
+	            dataType:'json',
+				contentType: "application/json",
+				data:JSON.stringify({
+					"projectId":projectId,
+					"versionId":versionId
+				}),
+				success:function(res){
+					console.log(res);
+					if(res.code===0){
+						var data = res.data;
+						var html = `
+							<div class="item1 item">
+								<p>项目名称：<span>${data.name}</span></p>
+								<p>项目ID：<span>${data.projectId}</span></p>
+							</div>
+							<div class="item2 item">
+								<p>创建人：<span>${data.createUser}</span></p>
+								<p>创建时间：<span>${data.createTime}</span></p>
+								<p>最后修改时间：<span>${data.updateTime}</span></p>
+							</div>
+							<div class="item3 item">
+								<p>当前版本：<span>${data.version}</span></p>
+								<p>项目描述：<span>${data.remark}</span></p>
+								<p>代码库路径：<span>${data.path}</span></p>
+								<p>调度类型：<span>${data.scheduledType}</span></p>
+							</div>
+						`;
+						$(".proj-attr-detail").empty().append(html);
+					}
+	              	
 				},
 				error:function(err){
 					console.log(err);

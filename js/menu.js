@@ -1079,7 +1079,13 @@ $(function(){
     	window.open("../html/preview.html" + url);
 	})
 	
-
+	//页面跳转
+	$(".mn-htmlmain").delegate(".resize-item","click",function(){
+		var linkPageId = $(this).attr("linkpageid");
+		if(linkPageId){
+			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+		}
+	})
 	
 });//jq end
 
@@ -1139,7 +1145,7 @@ $(function(){
                 };
                 DataIndexes.inAjax(chart_date,val.cid);
             }
-            html += '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+            html += '<div linkPageId="'+val.linkPageId+'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
         });
         $(".mn-htmlmain").empty().append(html);
     }
