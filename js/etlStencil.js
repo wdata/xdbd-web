@@ -1,13 +1,13 @@
 /**
  * Created by qiangxl on 2017/9/27.
  */
-//var graphDiagram = [];
-  var itemId;
-  var this_versionId = localStorage.getItem("versionId");
-  var this_projectId = localStorage.getItem("projectId");
-  var this_directoryId = localStorage.getItem("directoryId");
-  var this_companyId = localStorage.getItem("companyId");
-  var $url = '../xdbd-etl'; //../xdbd-etl
+var itemId;
+var this_versionId = localStorage.getItem("versionId");
+var this_projectId = localStorage.getItem("projectId");
+var this_directoryId = localStorage.getItem("directoryId");
+var this_companyId = localStorage.getItem("companyId");
+var $url = '../xdbd-etl'; //../xdbd-etl
+$(function() {
 //获取ETL列表
 var parens = {
   projectId: this_projectId
@@ -81,13 +81,15 @@ function newEtlBtn() {
     content: '' +
     '<div class="demand_name"><label>ETL名称：<span>*</span></label><input class="new_name" type="text" ></div>' +
     '<div class="demand_name"><label>数据源:<span>*</span></label><select class="new_ds"></select></div>'+
-    '<div class="demand_name"><label>行业类型：<span>*</span></label><select class="new_type" onchange="method(this)"><option>全部</option><option>酒店</option></select><input class="new_Inp" type="text" id="input"/></div>' +
-    '<div class="demand_name"><label>ETL描述：<span>*</span></label><textarea maxlength="20" class="new_describe"></textarea></div>' +
-    '<p class="hint">20个字以内</p>' +
+    '<div class="demand_name"><label>行业类型：<span>*</span></label><select class="new_type"></select></div>' +
+    '<div class="demand_name"><label>ETL描述：<span>*</span></label><textarea maxlength="85" class="new_describe"></textarea></div>' +
+    '<p class="hint">85个字以内</p>' +
     '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
   });
+  $('.new_type').html(industryType());
   get_dataSource();
 }
+})
 function get_dataSource() {
   var source = {
     projectId: this_projectId,
@@ -118,12 +120,12 @@ function get_dataSource() {
 function callBtn(popups) {
   layer.close(popups);
 }
-function method(_this) {
-  document.getElementById("input").value = $(_this).val();
-}
+// function method(_this) {
+//   document.getElementById("input").value = $(_this).val();
+// }
 function newBtn(popups) {
   var newName = $(".new_name").val();
-  var newType = $("#input").val();
+  var newType = $(".new_type").val();
   var newDs = $(".new_ds").val();
   var newDescribe = $(".new_describe").val();
   if(newName == '') {

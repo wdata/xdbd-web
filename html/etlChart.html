@@ -352,8 +352,8 @@
             success: function (data) {
               if(data.code == 0) {
                 layer.msg('删除成功')
-                this_data.splice(arr,1)
-               alert(JSON.stringify(this_data))
+                delete this_data[arr];
+//               alert(JSON.stringify(this_data))
               }
             }, error: function (data) {
               layer.msg(JSON.stringify(data))
