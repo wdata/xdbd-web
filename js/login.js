@@ -36,17 +36,13 @@ function logOut(){//登出
 	var $url3 = "/xdbd-pm";
 	var $url4 = "/xdbd-wf";
 	
-
-
-var projectId = localStorage.getItem("projectId");
-var versionId = localStorage.getItem("versionId");
-var dirId = localStorage.getItem("directoryId");
-var createUser = localStorage.getItem("createUser");
-var updateUser = localStorage.getItem("updateUser");
-var username = sessionStorage.getItem("ByuserName"),
-	userId = sessionStorage.getItem("userId");
-
-
+	var projectId = localStorage.getItem("projectId");
+	var versionId = localStorage.getItem("versionId");
+	var dirId = localStorage.getItem("directoryId");
+	var createUser = localStorage.getItem("createUser");
+	var updateUser = localStorage.getItem("updateUser");
+	var username = sessionStorage.getItem("ByuserName"),
+		userId = sessionStorage.getItem("userId");
 
 
 function sysidByusernameAndAppkey(ByuserName){//获取sysid(userId)
@@ -127,5 +123,3 @@ function parseQueryString(url) {//解析url参数为JSON对象
     }
     return ret;
 }
-
-

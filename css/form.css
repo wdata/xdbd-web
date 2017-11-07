@@ -395,7 +395,12 @@ form p.error {
 .byusername {
 	position: absolute;
 	top: 30px;
-	right: 70px;
+	left: 60px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 90px;
 }
 .rdown {
 	position: absolute;
@@ -481,7 +486,7 @@ form p.error {
 	overflow: hidden;
 }
 .content-col{
-	width:100%;
+	/*width:100%;*/
 	margin-left:241px;
 	height:100%;
 	/*background-color:hotpink;*/
@@ -598,7 +603,7 @@ div.tree-nav {
 }
 .content-wrapper {
 	height: 100%;
-	max-width: 87.5%;
+	/*max-width: 87.5%;*/
 }
 .edit-state{
 	position:relative;
@@ -2296,4 +2301,14 @@ div.ztree {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
+}
+
+.ztree .level1 .node_name {
+	/*display: inline-block;
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: auto;*/
+    /*float: right;*/
 }
