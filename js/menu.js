@@ -1087,6 +1087,25 @@ $(function(){
 		}
 	})
 	
+	//提示
+	var todo = {
+		tip:function(){
+			$(".top-bar>img").on("mouseenter",function(){
+	            layer.tips($(this).attr('data-tip'), this,{
+	                tips: 3
+	            });
+	        });
+		},
+		refresh:function(){
+			window.location.reload();
+		}
+	};
+	todo.tip();
+	//刷新
+	$("#page-fresh").click(function(){
+		todo.refresh();
+	})
+	
 });//jq end
 
 
