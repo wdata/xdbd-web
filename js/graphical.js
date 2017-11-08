@@ -4,7 +4,13 @@
 var DataIndexes = {
     // 根据数据索引，请求数据
     inAjax:function(d,id){
-        var self = this;
+        const self = this;
+        // 筛选数据，当数据不为空的时候再执行
+        const queryJson = d.queryJson;
+        if((!(queryJson.x) && !(queryJson.y)) || (queryJson.x.length <= 0 && queryJson.y <= 0)){
+            return
+        }
+
         $("#"+id).find(".resize-panel").siblings().remove();  // 删除之前的图形
 
         $.ajax({

@@ -80,15 +80,12 @@ $(function(){
         extractField.find('.fields').html(optionHtml);
         extractField.find('.fields').val(checkField);
       });
-
-
-
     });
   }
 
   function initFromTable(){
     var optionsHtml = "";
-     //alert(JSON.stringify(tables))
+     // alert(JSON.stringify(tables))
     $.each(tables,function(){
       optionsHtml += "<option>"+this.tableName+"</option>";
     });

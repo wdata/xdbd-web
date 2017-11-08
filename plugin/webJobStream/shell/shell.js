@@ -10,7 +10,7 @@ $(function() {
   function bind_saveJobStream() {
     $('.saveJobStream').click(function(){
       fn_save(getVal());
-      this_data.push(this_actionCompId+':'+JSON.stringify(getVal()))
+      this_data[this_actionCompId] = getVal();
     });
   }
 
@@ -79,10 +79,12 @@ $(function() {
     $('.shell_task').val(this_actionCompName);
     $('.shell_exec').val(this_actionComp.action.shell.exec);
     var extractFieldHtml = $('.extractField').prop('outerHTML');
-    $.each(this_actionComp.action.shell.file,function() {
-      $('.extractFields').append(extractFieldHtml);
-      var extractField = $('.extractField:last');
-      extractField.find('.shell_file').val(this);
-    })
+    if(this_actionComp.action.shell != '') {
+      $.each(this_actionComp.action.shell.file, function () {
+        $('.extractFields').append(extractFieldHtml);
+        var extractField = $('.extractField:last');
+        extractField.find('.shell_file').val(this);
+      })
+    }
   }
 })
