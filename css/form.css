@@ -2164,6 +2164,9 @@ div.f-addbtn-box-auto li{
 	position: absolute;
 	background-color:#fff;
 }
+/*.resize-item:hover{*/
+	/*box-shadow: 0 0 6px #58bee9;*/
+/*}*/
 .set-cur-env {
 	position: absolute;
 	right: 353px;
