@@ -6,13 +6,16 @@ li {
 }
 .drag-bar {
 	width: auto;
+	overflow-y: scroll;
 }
 .op-box {
 	width: 250px;
+	/*border-left: none;*/
 }
 .chart-main-box {
 	left: 0;
-	right: 252px;
+	/*right: 252px;*/
+	right: 268px;
 }
 .m-tabs-title {
 	height: 36px;
@@ -47,6 +50,7 @@ li {
 	left: 0;
 	top: 0;
 	display: none;
+	border-left: 1px solid #ccc;
 }
 .m-tabs-cont>div:first-of-type{
 	display: block;
@@ -157,8 +161,9 @@ li {
 	color: #578FE6;
 	font-size: 10px;
 	position: absolute;
-	left: 70px;
+	left: 60px;
 	cursor: pointer;
+	white-space: nowrap;
 }
 .m-uploadimg>a:hover {
 	color: #038DFF;
@@ -186,7 +191,7 @@ li {
 }
 .m-uploadimg>p {
 	position: absolute;
-	left: -40px;
+	left: -70px;
 	font-size: 10px;
 	color: #999999;
 	white-space: nowrap;
@@ -207,6 +212,8 @@ li {
 }
 .m-sethtxt-btns {
 	display: inline-block;
+	height: 26px;
+	padding-bottom: 50px;
 }
 .m-sethtxt-btns>input {
 	width: 59px;
@@ -382,6 +389,10 @@ li {
 	text-align: center;
 	font-size: 16px;
 	border-radius: 4px 4px 0 0;
+	max-width: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .mn-sider {
 	float: left;
@@ -524,6 +535,7 @@ li {
 .swiper-slide {
 	font-size: 12px;
 	color: #3D5275;
+	line-height: 14px;
 }
 
 .swiper-button-next {
