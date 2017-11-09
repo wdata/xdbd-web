@@ -729,7 +729,7 @@ $(function(){
 		})
 		
 		var leadingIn = function(){
-			var index = layer.confirm('确认导入文件?', {
+			var index = layer.confirm('导入项目将覆盖原项目的数据,确认导入?', {
 			  btn: ['确定','取消'] //按钮
 			}, function(index){
 				$('#import-file').trigger('click');
@@ -747,7 +747,7 @@ $(function(){
 		function confirmLeadingIn(){
 			$.ajax({
 				type:'POST',
-	            url:$url3+'/bigdata/project/exportProject',
+	            url:$url3+'/bigdata/project/importProject',
 	            headers:{
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
@@ -781,7 +781,7 @@ $(function(){
 		};
 		
 		function confirmLeadingOut(projectId){
-			var url = $url3+'/bigdata/project/importProject?projectId='+projectId;
+			var url = $url3+'/bigdata/project/exportProject?projectId='+projectId;
 			downloadFile(url);
 		}
 		
@@ -935,7 +935,9 @@ $(function(){
 					];
 					var items4 = [
 						{ title: '创建子模块', fn: createSubmodule},
-						{ title: '创建最终子模块', fn: createFinalSubmodule}
+						{ title: '创建最终子模块', fn: createFinalSubmodule},
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
 					];
 					var items5 = [
 						{ title: '新建文件夹', fn: newFile},

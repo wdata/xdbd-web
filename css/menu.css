@@ -350,7 +350,7 @@ li {
 	position: absolute;
 	left: 0;
 	top: 0;
-	display: none;
+	/*display: none;*/
 	width: 100%;
 	height: 100%;
 }
@@ -358,30 +358,30 @@ li {
 	display: block;
 }
 /*mn--0*/
-.mn-header {
+.m-html-mod .mn-header {
 	width: 100%;
 	height: 80px;
 	border-bottom: 1px solid #CCCCCC;
 	position: relative;
 }
-.mn-logobox {
+.m-html-mod .mn-logobox {
 	position: absolute;
 }
-.mn-headtxt {
+.m-html-mod .mn-headtxt {
 	position: absolute;
 	font-size: 12px;
 	color: #3D5275;
 }
-.mn-menu {
+.m-html-mod .mn-menu {
 	position: absolute;
 	left: 275px;
 	bottom: 0;
 	height: 34px;
 }
-.mn-menu li {
+.m-html-mod .mn-menu li {
 	float: left;
 }
-.mn-menu li>a {
+.m-html-mod .mn-menu li>a {
 	display: inline-block;
 	padding:0 20px;
 	height: 34px;
@@ -394,7 +394,7 @@ li {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.mn-sider {
+.m-html-mod .mn-sider {
 	float: left;
 	width: 240px;
 	position: absolute;
@@ -402,97 +402,97 @@ li {
 	bottom: 0;
 	border-right: 1px solid #CCCCCC;
 }
-.mn-htmlmain {
+.m-html-mod .mn-htmlmain {
 	position: absolute;
 	top: 81px;
 	left: 241px;
 	right: 0;
 	bottom: 0;
 }
-.m-html-mod0 {
+.m-html-mod.m-html-mod0 {
 	background-color: #F7F7F7;
 }
-.m-html-mod0 .mn-header {
+.m-html-mod.m-html-mod0 .mn-header {
 	background-color: #FFFFFF;
 }
-.m-html-mod0 .mn-logobox {
+.m-html-mod.m-html-mod0 .mn-logobox {
 	width: 120px;
 	height: 40px;
 	left: 50px;
 	top: 20px;
 }
-.m-html-mod0 .mn-logobox>img {
+.m-html-mod.m-html-mod0 .mn-logobox>img {
 	height: 100%;
 }
-.m-html-mod0 .mn-headtxt {
+.m-html-mod.m-html-mod0 .mn-headtxt {
 	right: 100px;
 	top: 20px;
 }
-.m-html-mod0 .mn-menu li>a {
+.m-html-mod.m-html-mod0 .mn-menu li>a {
 	color: #3D5275;
 }
-.m-html-mod0 .mn-menu li.active>a {
+.m-html-mod.m-html-mod0 .mn-menu li.active>a {
 	color: #FFFFFF;
 	background-color: #038DFF;
 }
-.m-html-mod0 .mn-sider {
+.m-html-mod.m-html-mod0 .mn-sider {
 	background-color: #FFFFFF;
 	padding-top: 40px;
 }
-.m-html-mod1 {
+.m-html-mod.m-html-mod1 {
 	background-color: #f7f7f7;
 }
-.m-html-mod1 .mn-header {
+.m-html-mod.m-html-mod1 .mn-header {
 	background-color: #038dff;
 }
-.m-html-mod1 .mn-logobox {
+.m-html-mod.m-html-mod1 .mn-logobox {
 	width: 120px;
 	height: 40px;
 	right: 120px;
 	top: 20px;
 }
-.m-html-mod1 .mn-headtxt {
+.m-html-mod.m-html-mod1 .mn-headtxt {
 	left: 30px;
 	top: 20px;
 	color: #FFFFFF;
 }
-.m-html-mod1 .mn-menu li>a {
+.m-html-mod.m-html-mod1 .mn-menu li>a {
 	color: #333;
 }
-.m-html-mod1 .mn-menu li.active>a {
+.m-html-mod.m-html-mod1 .mn-menu li.active>a {
 	color: #FFFFFF;
 	background-color: transparent;
 }
-.m-html-mod1 .mn-sider {
+.m-html-mod.m-html-mod1 .mn-sider {
 	background-color: #076bbd;
 	color: #FFFFFF;
 }
 
-.m-html-mod2 {
+.m-html-mod.m-html-mod2 {
 	background-color: #F7F7F7;
 }
-.m-html-mod2 .mn-header {
+.m-html-mod.m-html-mod2 .mn-header {
 	background-color: #b3b3b3;
 }
-.m-html-mod2 .mn-logobox {
+.m-html-mod.m-html-mod2 .mn-logobox {
 	width: 120px;
 	height: 40px;
 	left: 50px;
 	top: 20px;
 }
-.m-html-mod2 .mn-headtxt {
+.m-html-mod.m-html-mod2 .mn-headtxt {
 	right: 100px;
 	top: 20px;
 	color: #FFFFFF;
 }
-.m-html-mod2 .mn-menu li>a {
+.m-html-mod.m-html-mod2 .mn-menu li>a {
 	color: #FFFFFF;
 }
-.m-html-mod2 .mn-menu li.active>a {
+.m-html-mod.m-html-mod2 .mn-menu li.active>a {
 	color: #038dff;
 	background-color: #FFFFFF;
 }
-.m-html-mod2 .mn-sider {
+.m-html-mod.m-html-mod2 .mn-sider {
 	background-color: #e0e0e0;
 }
 /*mn--1*/
