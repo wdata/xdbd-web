@@ -158,7 +158,7 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
 .ico_groups,.ico_node,.ico_task,.ico_input,.ico_output,.ico_plug,.ico_menu,.ico_sound,
 .ico_open,.ico_new,.ico_reload,.ico_save,.ico_undo,.ico_redo,.ico_print,.ico_java,
 .ico_spark,.ico_shell,ico_parallel,ico_sort,ico_where,.ico_group,ico_sql,.ico_preview
-.ico_saveCopy,.ico_execute{
+.ico_saveCopy,.ico_execute,.ico_algorithm{
     font-family:"iconflow" !important;
     font-size:16px;line-height:19px;
     font-style:normal;
@@ -267,6 +267,11 @@ v\:group,v\:rect,v\:imagedata,v\:oval,v\:line,v\:polyline,v\:stroke,v\:textbox {
     background-size: 18px 18px;
 }
 .GooFlow .ico_join{
+    background: url(../../images/join.png) no-repeat center;
+    -webkit-background-size: 18px 18px;
+    background-size: 18px 18px;
+}
+.GooFlow .ico_algorithm{
     background: url(../../images/join.png) no-repeat center;
     -webkit-background-size: 18px 18px;
     background-size: 18px 18px;

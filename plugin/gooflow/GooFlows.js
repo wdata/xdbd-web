@@ -52,9 +52,9 @@ function GooFlow(bgDiv,property){
       tmp+="<label title='"+(property.initLabelText||"newFlow_1")+"' "
         +(GooFlow.prototype.color.main? "style='background:"+GooFlow.prototype.color.main+"'" : "")+">"+(property.initLabelText||"newFlow_1")+"</label>";
 		}
-		// console.log(property);
+		// console.log(property);title="+property.headBtns[x]+"
 		for(var x=0;x<property.headBtns.length;++x){
-			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn' title="+property.headBtns[x]+"><i class='ico_"+property.headBtns[x]+"'></i></a>"
+			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn'><i class='ico_"+property.headBtns[x]+"'></i></a>"
 		}
 		tmp+="</div>";
 		this.$head=$(tmp);
