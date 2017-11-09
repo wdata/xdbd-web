@@ -823,6 +823,7 @@ let project = {
     "listFilter":{},
     "textFilter":{},
     "listFilterB":[],
+    "allBur":false,
     TFilter:function(field, name,fieldId,number,cid){
         const self = this;
         var listFilter = null;
@@ -994,12 +995,13 @@ let project = {
         $(document).on("click",".f-select-cont li",function(){
             if($(this).find("input").prop("checked")){
                 project.check($(this),0,0);
-                if($(".f-select-methods li").eq(1).find("input").prop("checked")){
-                    $(this).find("span").css("text-decoration","line-through");
-                }
             }else{
                 project.check($(this),1,0);
-                $(this).find("span").css("text-decoration","none");
+            }
+            if($(".fl-automatic input").attr("checked")){
+                project.horizontalLine(true);
+            }else{
+                project.horizontalLine(false);
             }
             project.listData();
         });
@@ -1041,32 +1043,34 @@ let project = {
     // 列表筛选 -- 列表 -- 包含
     contain:function(_this){
         project.chear(_this);
-        $.each($(".f-select-cont li"),function(index,val){
-            if($(val).find("input").prop("checked")){
-                $(val).find("span").css("text-decoration","none");
-            }
-        });
-        $(".f-select-methods").find("input").removeAttr("disabled","disabled");
+        if(this.allBur){
+            project.check($(".f-select-cont li"),1,0);
+            this.allBur = false;
+        }
+        this.horizontalLine(false);  // 无横线
+        this.disabled(false);  // 是否禁止点击
         this.listData();
     },
     // 列表筛选 -- 列表 -- 排除
     filter:function(_this){
         project.chear(_this);
-        $.each($(".f-select-cont li"),function(index,val){
-            if($(val).find("input").prop("checked")){
-                $(val).find("span").css("text-decoration","line-through");
-            }
-        });
-        $(".f-select-methods").find("input").removeAttr("disabled","disabled");
+        if(this.allBur){
+            project.check($(".f-select-cont li"),1,0);
+            this.allBur = false;
+        }
+        this.horizontalLine(true);  // 有横线
+        this.disabled(false);  // 是否禁止点击
         this.listData();
     },
     // 列表筛选 -- 列表 -- 使用全部
     all:function(_this){
         project.chear(_this);
         project.check($(".f-select-cont li"),0,0);
-        $(".f-select-methods").find("input").attr("disabled","disabled");
-        $(".f-select-cont li span").css("text-decoration","none");
+        this.horizontalLine(false);  // 无横线
+        this.disabled(true);  // 是否禁止点击
+
         this.listData();
+        this.allBur = true;
     },
     // 列表筛选 -- 列表 -- 搜索
     search:function(_this){
@@ -1088,7 +1092,7 @@ let project = {
         const text = $(".f-search-box input").val();
         if(text.length >0 && text !== " "){
             let html = '<li><p>'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
-            if($(".fl-automatic input").prop("checked")){
+            if($(".fl-automatic input").attr("checked")){
                 html = '<li><p style="text-decoration: line-through;">'+ text +'</p><span onclick="project.textDelete(this)">删除</span></li>';
             }
             $(".f-addbtn-box-auto ul").append(html);
@@ -1172,6 +1176,25 @@ let project = {
         });
         project.textFilter.andOr = $(".f-select-box1 select").val();
         $(".f-filter-result li").eq(2).find("em").empty().text(x);
+    },
+    // 横线变化
+    horizontalLine:function(bur){
+        let textDecoration = bur?"line-through":"none";
+        if(bur){
+            $(".f-select-cont li input:checked").siblings("span").css("text-decoration",textDecoration);
+            $(".f-addbtn-box-auto li p").css("text-decoration",textDecoration);
+        }else{
+            $(".f-select-cont li input").siblings("span").css("text-decoration",textDecoration);
+            $(".f-addbtn-box-auto li p").css("text-decoration",textDecoration);
+        }
+    },
+    // 是否禁止
+    disabled:function(bur){
+        if(bur){
+            $(".f-select-cont input").attr("disabled","disabled").siblings("span").css("color","#999");
+        }else{
+            $(".f-select-cont input").removeAttr("disabled").siblings("span").css("color","#000");
+        }
     },
     // 勾选变化
     chear:function(_this){
