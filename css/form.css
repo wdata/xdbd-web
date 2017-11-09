@@ -132,7 +132,7 @@ body {
 	position:relative;
 	width:100%;
 	height:100%;
-	min-height:700px;
+	/*min-height:700px;*/
 }
 .nopd {
 	padding-top: 0;
@@ -1760,12 +1760,13 @@ div.f-addbtn-box-auto li{
 	height: 100%;
 	background-color: #FFFFFF;
 	float: right;
+	/*overflow-y: scroll;*/
 }
 .op-box {
 	width: 200px;
 	height: inherit;
 	display: inline-block;
-	border-left: 2px solid #D9D9D9;
+	border-left: 1px solid #D9D9D9;
 	float: left;
 	color: #3D5275;
 	font-size: 14px;
