@@ -123,6 +123,8 @@ $(function(){
             const editID = cahrt_type + uuid(8,16);
 
             $(this).append('<div data-type="'+ cahrt_type +'" type="'+type+'" style="z-index:'+ number +'; left:'+left+'px;top:'+top+'px;" id="'+ editID +'" class="resize-item">'+ html +'</div>');
+
+            refresh.storage(cahrt_type,editID); // 保存
             id_ = editID;
             number++;
             new ZResize({
