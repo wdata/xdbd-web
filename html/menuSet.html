@@ -33,11 +33,11 @@
 		<!--菜单设置-->
 		<div class="edit-state">
 			<div class="top-bar clearfix">
-				<img src="../images/icon_save.png" alt="" title=""/>
-				<img src="../images/icon_prev.png" alt="" title="" />
-				<img src="../images/icon_next.png" alt="" title="" />
-				<img src="../images/icon_fresh.png" alt="" title="" />
-				<img src="../images/icon_preview.png" alt="" title="" id="preview"/>
+				<img src="../images/icon_save.png" alt="" title="" data-tip="保存"/>
+				<img src="../images/icon_prev.png" alt="" title="" data-tip="撤销"/>
+				<img src="../images/icon_next.png" alt="" title="" data-tip="恢复"/>
+				<img src="../images/icon_fresh.png" alt="" title="" id="page-fresh" data-tip="刷新"/>
+				<img src="../images/icon_preview.png" alt="" title="" id="preview" data-tip="预览"/>
 			</div>
 			<div class="drag-bar clearfix">
 				<div class="op-box">
@@ -78,7 +78,7 @@
 								<div class="m-cont-box2">
 									<h4>顶部导航栏设置</h4>
 									<div>
-										<p class="m-pageset-btns">
+										<p class="topsize m-pageset-btns">
 											<button class="active" data-s=>标准</button>
 											<button>自定义</button>
 										</p>
@@ -97,7 +97,7 @@
 								<div class="m-cont-box2">
 									<h4>左侧导航栏设置</h4>
 									<div>
-										<p class="m-pageset-btns">
+										<p class="leftsize m-pageset-btns">
 											<button class="active">标准</button>
 											<button>自定义</button>
 										</p>
@@ -137,17 +137,17 @@
 							<div class="m-cont1">
 								<div class="m-set-navs">
 									<a href="javascript:;" class="active">顶部导航菜单</a>
-									<a href="javascript:;" class="leftMenuBtn">左边菜单</a>
+									<a href="javascript:;" class="leftMenuBtn">左侧边栏菜单</a>
 								</div>
 								<div class="m-set-navscont">
 									<div class="m-navscont0">
 										<div class="m-tcont-box1">
-											<h3>顶部导航菜单内容</h3>
+											<h3>顶部导航菜单添加</h3>
 											<input type="text" id="head-text" maxlength="50"/>
 											<input type="button" value="确定" id="head-text-btn" />
 										</div>
 										<div class="m-tcont-box2">
-											<h3>已添加顶部导航菜单<img src="../images/icon_sxp.png" alt="" id="clearTopMenu"/></h3>
+											<h3>已添加顶部导航菜单<img src="../images/icon_sxp.png" alt="" id="clearTopMenu" data-tip="清除顶部菜单" class="opt-tip"/></h3>
 											<ul class="top-menu-15">
 												<!--<li>
 													<span class="m-menu-tag">财务</span>
@@ -199,9 +199,7 @@
 										  </div>
 										  <div class="match-menu-box">
 										  	<ul id="match-tree" class="ztree"></ul>
-										  	<!--<div class="le-menu-tree">
-										  		
-										  	</div>-->
+										  	
 										  </div>
 										</div>
 									</div>

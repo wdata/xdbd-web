@@ -35,22 +35,26 @@ $(function(){
 		$(".m-cont"+$idx).show().siblings().hide();
 		if($idx===2){
 			getTopMenu(projectId,versionId,0);
-			var html = "";
-			$.each(topMenu, function(i,item) {
-				html += `
-					<div class="swiper-slide ${i===0?'active':''}" reportMenuId="${item.reportMenuId}" parentId="${item.parentId}" sortIndex="${item.sortIndex}">${item.menuName}</div>
-				`;
-			});
-			$("#link-scrollmenu").empty().append(html);
-			topMenuId = $("#link-scrollmenu").find(".active").attr("reportmenuid");
-			findLeftMenu(projectId,versionId,topMenuId);//查询左侧菜单
-			
-			var swiper = new Swiper('.swiper-container', {
-		        nextButton: '.swiper-button-next',
-		        prevButton: '.swiper-button-prev',
-		       	loop:true,
-		       	slidesPerView: 3
-		   });
+			if(topMenu){
+				var html = "";
+				$.each(topMenu, function(i,item) {
+					html += `
+						<div class="swiper-slide ${i===0?'active':''}" reportMenuId="${item.reportMenuId}" parentId="${item.parentId}" sortIndex="${item.sortIndex}">${item.menuName}</div>
+					`;
+				});
+				$("#link-scrollmenu").empty().append(html);
+				topMenuId = $("#link-scrollmenu").find(".active").attr("reportmenuid");
+				findLeftMenu(projectId,versionId,topMenuId);//查询左侧菜单
+				
+				var swiper = new Swiper('.swiper-container', {
+			        nextButton: '.swiper-button-next',
+			        prevButton: '.swiper-button-prev',
+			       	loop:true,
+			       	slidesPerView: 3
+			   });
+			}else{
+				layer.msg("请先添加菜单!", {icon: 0});
+			}
 		}
 	    e.preventDefault()
 	})
@@ -130,36 +134,37 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
-              		var data = res.data;
-              		var html = "";
-              		var html2 = "";//页面展示
-              		topMenu = data;
-              		if(data){
-              			$.each(data, function(i,item) {
-	              			if(i===0){
-								findLeftMenu(projectId,versionId,item.reportMenuId);
-	              			}
-	              			html += `
-	              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
-									<span class="m-menu-tag">${item.menuName}</span>
-									<input type="text" class="top-reedit" value="${item.menuName}"/>
-									<div class="m-navs-order-btns">
-										${i===0?'':'<img src="../images/t_up.png" alt="" class="t-up"/>'}
-										${i===data.length-1?'':'<img src="../images/t_down.png" alt="" class="t-down"/>'}
-										<img src="../images/icon_close_02.png" alt="" class="t-del" />
-									</div>
-								</li>
-	              			`;
-	              			html2 += `
-	              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
-	              			`;
-	              			
-	              			
-	              		});
-	              		
-	              		$(".top-menu-15").empty().append(html);
-	              		$(".mn-menu").empty().append(html2);
-              		}
+	          			var data = res.data.slice(0,6);
+	              		var html = "";
+	              		var html2 = "";//页面展示
+	              		topMenu = data;
+	              		if(data){
+	              			$.each(data, function(i,item) {
+		              			if(i===0){
+									findLeftMenu(projectId,versionId,item.reportMenuId);
+		              			}
+		              			html += `
+		              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
+										<span class="m-menu-tag">${item.menuName}</span>
+										<input type="text" class="top-reedit" value="${item.menuName}"/>
+										<div class="m-navs-order-btns">
+											${i===0?'':'<img src="../images/t_up.png" alt="" class="t-up"/>'}
+											${i===data.length-1?'':'<img src="../images/t_down.png" alt="" class="t-down"/>'}
+											<img src="../images/icon_close_02.png" alt="" class="t-del" />
+										</div>
+									</li>
+		              			`;
+		              			html2 += `
+		              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
+		              			`;
+		              			
+		              			
+		              		});
+		              		
+		              		$(".top-menu-15").empty().append(html);
+		              		$(".mn-menu").empty().append(html2);
+	              		}
+              		
               		
 	            }
 			},
@@ -188,6 +193,17 @@ $(function(){
 					modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser);//修改
 				}
 			}
+		}
+	});
+	//input失去焦点的时候判断input的value是否修改,修改则提交修改信息
+	$(".top-menu-15 li input").blur(function(){
+		console.log($(this));
+		var old = $(this).prev().text();
+		var re = $.trim($(this).val());
+		var menuName = (old===re?old:re);
+		$(this).hide();
+		if(old !== re){
+			modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser);//修改
 		}
 	})
 	function modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser){
@@ -322,15 +338,22 @@ $(function(){
 	//左边菜单
 	$(".leftMenuBtn").click(function(){
 		getTopMenu(projectId,versionId,0);
-		var html = "";
-		$.each(topMenu, function(i,item) {
-			html += `
-				<div class="swiper-slide" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">${item.menuName}</div>
-			`;
-		});
-		$("#scroll-topmenu").empty().append(html);
-//		topMenuId = $("#scroll-topmenu").find(".active").attr("reportmenuid");
-		//findLeftMenu(projectId,versionId,topMenuId);//查询左侧菜单
+		if(topMenu){
+			$(".m-lsetnav-btns").show();
+			$(".m-scroll-navs").show();
+			var html = "";
+			$.each(topMenu, function(i,item) {
+				html += `
+					<div class="swiper-slide ${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">${item.menuName}</div>
+				`;
+			});
+			$("#scroll-topmenu").empty().append(html);
+		}else{
+			layer.msg("请先添加顶部菜单!", {icon: 0});
+			$(".m-lsetnav-btns").hide();
+			$(".m-scroll-navs").hide();
+		}
+		
 	});
 	
 	
@@ -418,28 +441,29 @@ $(function(){
 	//添加
 	$(".le-add").click(function(){
 		var index = layer.open({
-		      type: 1,
-		      btn: ['确定', '取消'],
-		      area: ['300px', '200px'],
-		      title:'添加菜单名称',
-		      shade: 0, 
-		      content:'<input type="text" placeholder="请输入菜单名称" class="le-add-menu"/>',
-		      yes: function(index, layero){
-		      	var menuName = $.trim($(".le-add-menu").val());
-		      		if(menuName){
-				        addLeftMenu(projectId,versionId,createUser,menuName,1,topMenuId);
-		      		}else{
-		      			layer.msg("菜单名称不能为空", {icon: 5});
-		      		}
-		      	layer.close(index);
-		      },
-		      btn2:function(){
-		      	layer.close(index);
-		      },
-		      cancel:function(){
-		      	layer.close(index);
-		      }
-		   });
+	      type: 1,
+	      btn: ['确定', '取消'],
+	      area: ['300px', '200px'],
+	      title:'添加菜单名称',
+	      shade: 0, 
+	      content:'<input type="text" placeholder="请输入菜单名称" class="le-add-menu"/>',
+	      yes: function(index, layero){
+	      	var menuName = $.trim($(".le-add-menu").val());
+	      		if(menuName){
+			        addLeftMenu(projectId,versionId,createUser,menuName,1,topMenuId);
+	      		}else{
+	      			layer.msg("菜单名称不能为空", {icon: 5});
+	      		}
+	      	layer.close(index);
+	      },
+	      btn2:function(){
+	      	layer.close(index);
+	      },
+	      cancel:function(){
+	      	layer.close(index);
+	      }
+	   });
+
 	})
 	
 	//点击头部菜单展示对应的左部菜单
@@ -447,6 +471,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
 		parentId = $(this).attr("reportmenuid");
+		$("#match-tree").html("");
 		findLeftMenu(projectId,versionId,parentId);
 	});
 	
@@ -455,6 +480,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
 		parentId = $(this).attr("reportmenuid");
+		$("#sidebar-tree").html("");
 		findLeftMenu(projectId,versionId,parentId);
 	})
 	
@@ -510,6 +536,8 @@ $(function(){
               			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
               			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
               			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+              			$.fn.zTree.getZTreeObj("match-tree").expandAll(true);
+              			$.fn.zTree.getZTreeObj("link-tree").expandAll(true);
             		}
 	            }
 			},
@@ -633,9 +661,9 @@ $(function(){
 		      type: 1,
 		      btn: ['确定', '取消'],
 		      area: ['300px', '200px'],
-		      title:'添加菜单的子菜单',
+		      title:'添加子菜单',
 		      shade: 0, 
-		      content:'<input type="text" placeholder="请输入子菜单名称" class="le-add-menu"/>',
+		      content:'<input type="text" placeholder="添加子菜单" class="le-add-menu"/>',
 		      yes: function(index, layero){
 		      		menuName = $.trim($(".le-add-menu").val());
 		      		if(menuName){
@@ -684,7 +712,7 @@ $(function(){
 			createPageLink(projectId,versionId,reportMenuId,pageId,updateUser);
 			layer.close(index);
 		}else{
-			layer.msg("请选择页面", {icon: 0});
+			layer.msg("请选择	BI页面", {icon: 0});
 		}
 	}
 	
@@ -887,6 +915,7 @@ $(function(){
 	$("#link-scrollmenu").delegate(".swiper-slide","click",function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
+		$("#link-tree").html("");
 		findLeftMenu(projectId,versionId,topMenuId);
 	})
 		
@@ -1026,6 +1055,7 @@ $(function(){
 				if(res.code===0){
 					var data = res.data;
 					$.fn.zTree.init($("#temp-tree"), setting2, zNodes);
+					$.fn.zTree.getZTreeObj("temp-tree").expandAll(true);
 				}
 			},
 			error:function(res){
@@ -1049,7 +1079,7 @@ $(function(){
 			},
 			success:function(res){
 				if(res.code===0){
-					var data = res.data;
+					var data = res.data[0];
 					var logo = data.logo,
 						leftHeight = data.leftHeight,
 						leftWidth = data.leftWidth,
@@ -1064,6 +1094,27 @@ $(function(){
 						sessionStorage.setItem("leftWidth",leftWidth);
 						sessionStorage.setItem("topHeight",topHeight);
 						sessionStorage.setItem("topWidth",topWidth);
+						console.log(data);
+						if(navigationText!==undefined&&navigationText!==null){
+							$(".mn-headtxt").text(navigationText);
+						}
+						if(logo!==undefined&&logo!==null){
+							$(".mn-logobox>img").attr("src",$url1+logo);
+						}
+						$(".mtop-width").val(topWidth);
+						$(".mtop-height").val(topHeight);
+						$(".mleft-width").val(leftWidth);
+						$(".mleft-height").val(leftHeight);
+						if(topWidth==="1920"&&topHeight==="60"){
+							$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
+						}else{
+							$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
+						}
+						if(leftWidth==="240"&&leftHeight==="240"){
+							$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
+						}else{
+							$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
+						}
 				}
 			},
 			error:function(res){
@@ -1079,7 +1130,40 @@ $(function(){
     	window.open("../html/preview.html" + url);
 	})
 	
-
+	//页面跳转
+	$(".mn-htmlmain").delegate(".resize-item","click",function(){
+		var linkPageId = $(this).attr("linkpageid");
+		if(linkPageId){
+			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+		}
+	})
+	
+	//提示
+	var todo = {
+		tip:function(){
+			$(".top-bar>img").on("mouseenter",function(){
+	            layer.tips($(this).attr('data-tip'), this,{
+	                tips: 3
+	            });
+	        });
+		},
+		deltip:function(){
+			$(".opt-tip").on("mouseenter",function(){
+	            layer.tips($(this).attr('data-tip'), this,{
+	                tips: 3
+	            });
+	        });
+		},
+		refresh:function(){
+			window.location.reload();
+		}
+	};
+	todo.tip();
+	todo.deltip();
+	//刷新
+	$("#page-fresh").click(function(){
+		todo.refresh();
+	})
 	
 });//jq end
 
@@ -1139,7 +1223,7 @@ $(function(){
                 };
                 DataIndexes.inAjax(chart_date,val.cid);
             }
-            html += '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+            html += '<div linkPageId="'+val.linkPageId+'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
         });
         $(".mn-htmlmain").empty().append(html);
     }

@@ -129,18 +129,19 @@ $(function(){
 						customData = data.htmlJson.customData;
 						pageId = data.pageId;
 						sessionStorage.setItem("pageid",pageId);
-						console.log(pageId);
+//						console.log(pageId);
 						$("#f-fpage-name").text(data.pageName);
 						cid = data.htmlJson.controls;					
 						$.each(cid,function(i,item){
+							console.log(item.linkPageId);
 							html += `
-								<li cid="${item.cid}">
+								<li cid="${item.cid}" linkPageId="${item.linkPageId}">
 									<a href="javascript:;">${item.cid}</a>
-									<span class="set-flow-btn">设置链接</span>
+									<span class="set-flow-btn">${item.linkPageId==="null"?'设置链接':'已设置链接'}</span>
 								</li>
 							`;
 						});
-						$(".page-tooltip").append(html);
+						$(".page-tooltip").empty().append(html);
 
                     	if(data.htmlJson && data.htmlJson.controls){                    		
                         	displayPage(data);
@@ -187,10 +188,11 @@ $(function(){
 						customData = data.htmlJson.customData;
 						cid = data.htmlJson.controls;
 						$.each(cid,function(i,item){
+							console.log(typeof item.linkPageId);
 							html += `
-								<li>
+								<li cid="${item.cid}" linkPageId="${item.linkPageId}">
 									<a href="javascript:;">${item.cid}</a>
-									<span class="set-flow-btn1">设置链接</span>
+									<span class="set-flow-btn1">${item.linkPageId==="null"||item.linkPageId===null?'设置链接':'已设置链接'}</span>
 								</li>
 							`;
 						});
@@ -327,7 +329,9 @@ $(function(){
 		if(dirType==="15"||dirType==="14"){
 			linkPageId = directoryId;
 			pageName = pageName;
-			$(".p-opage-select select option:selected").val(linkPageId).text(pageName);
+			$(".page-tooltip1").html("");
+//			$(".p-opage-select select option:selected").val(linkPageId).text(pageName);
+			$(".p-opage-select select option:selected").text(pageName);
 			getOtherPages(projectId,versionId,linkPageId);//调用
 			layer.closeAll();
 		}else{
@@ -449,10 +453,27 @@ $(function(){
 			}
 		}
 		$(this).attr("linkPageId",linkPageId);
-		if(linkPageId){
+		if(linkPageId!=="null"&&linkPageId!=="undefined"){
 			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
 		}
-		
+	})
+	
+	//提示
+	var todo = {
+		tip:function(){
+			$(".top-bar>img").on("mouseenter",function(){
+	            layer.tips($(this).attr('data-tip'), this,{
+	                tips: 3
+	            });
+	        });
+		},
+		refresh:function(){
+			window.location.reload();
+		}
+	};
+	todo.tip();
+	$("#page-fresh").click(function(){
+		todo.refresh();
 	})
 	
 });//JQ END
