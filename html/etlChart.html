@@ -12,7 +12,7 @@
         .myForm{display:block;margin:0px;padding:0px;line-height:1.5;border:#ccc 1px solid;font: 12px Arial, Helvetica, sans-serif;margin:5px 5px 0px 0px;border-radius:4px;}
         .myForm .form_title{background:#f7f9fc;font-size: 14px;color:#3D5275;height: 36px;line-height: 36px;  text-align: center;border-top: 1px solid #f1f1f1;  border-bottom: 1px solid #f1f1f1;}
         .myForm .propertys table tr{margin-top: 10px;display: -webkit-box;font-size: 14px;}
-        .myForm .propertys table tr .th{width: 72px; text-algin: center}
+        .myForm .propertys table tr .th{width: 80px; text-algin: center}
         .myForm .propertys table .select_mission{width: 240px;  height: 28px}
         .myForm .propertys table .manage{display: inline-block; height: 22px; width: 236px;}
         .myForm .propertys table tr .add_Btn{cursor: pointer;padding: 0 2px;line-hegit: 26px; }
@@ -32,6 +32,7 @@
     <script src="../plugin/layer/layer.js"></script>
     <script>
       var jobid = localStorage.getItem('directoryId');
+      var this_userId = sessionStorage.getItem('userId');
       var this_versionId = localStorage.getItem("versionId");
       var this_projectId = localStorage.getItem("projectId");
       var this_createUser = localStorage.getItem("createUser");
@@ -39,6 +40,9 @@
       var template = sessionStorage.getItem("isTemplate");
       var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
       var this_isTemplate = false;  //是否为模板
+      var this_remarkName = [];  //算法备注
+      var this_enName = [];  //算法名称
+      var this_algParam = [];
       var this_actionCompType;
       var this_actionCompId;
       var this_actionCompName;
@@ -67,7 +71,7 @@
       var property={
         width:1230,
         height:800,
-        toolBtns:["start round mix","end round mix","parallel","merge","decision","java","shell","spark"],
+        toolBtns:["start round mix","end round mix","parallel","merge","decision","java","shell","spark","algorithm"],
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
@@ -89,7 +93,8 @@
         group:"组织划分框编辑开关",
         java:"java",
         shell:"shell",
-        spark:"spark"
+        spark:"spark",
+        algorithm:"算法"
       };
       var demo;
       function showDag(getDag) {
@@ -131,6 +136,7 @@
               this_actionCompType = str;
             }
             fn_task();
+            fn_algorithm();
 
             //导入模板
             $('.propertys').empty().load("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".html", function () {
@@ -379,6 +385,42 @@
             }),success:function(data){
               if(data.code == 0) {
                 layer.msg('保存成功！');
+              } else {
+                layer.msg(data.message)
+              }
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
+            }
+          });
+        }
+
+        //算法参数
+        function fn_algorithm() {
+          $.ajax({
+            type:"POST",
+            url:$url+'/api/algorithm/v1/getAll.json',///xdbd-etl
+            dataType:"json",
+            contentType:"application/json"
+            ,success:function(data){
+              if(data.code == 0) {
+                console.log(data)
+                var alg = [];
+                $.each(data.data,function(index,item) {
+                  alg.push('<option value='+item.id+'>'+item.name+'</option>');
+                  var obj = {};
+                  obj.id = item.id;
+                  obj.remark = item.remarkName;
+                  var param = {};
+                  param.id = item.id;
+                  param.algParam = JSON.parse(item.algParam);
+                  var en_name = {};
+                  en_name.id = item.id;
+                  en_name.enName = item.enName;
+                  this_remarkName.push(obj);
+                  this_algParam.push(param)
+                  this_enName.push(en_name);
+                })
+                $("#ele_arithmetic").append(alg);
               } else {
                 layer.msg(data.message)
               }
