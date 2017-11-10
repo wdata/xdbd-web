@@ -53,8 +53,9 @@ function GooFlow(bgDiv,property){
       tmp+="<label title='"+(property.initLabelText||"newFlow_1")+"' "
         +(GooFlow.prototype.color.main? "style='background:"+GooFlow.prototype.color.main+"'" : "")+">"+(property.initLabelText||"newFlow_1")+"</label>";
 		}
+		//title="+property.headBtns[x]+"
 		for(var x=0;x<property.headBtns.length;++x){
-			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn' title="+property.headBtns[x]+"><i class='ico_"+property.headBtns[x]+"'></i></a>"
+			tmp+="<a href='javascript:void(0)' class='GooFlow_head_btn' id='"+this.$id+"_btn_"+property.headBtns[x].split(" ")[0]+"'><i class='ico_"+property.headBtns[x]+"'></i></a>"
 		}
 		tmp+="</div>";
 		this.$head=$(tmp);
@@ -751,9 +752,17 @@ GooFlow.prototype={
 	//每一种类型结点及其按钮的说明文字
 	setNodeRemarks:function(remark){
     if(this.$tool==null)  return;
+    console.log(this.$tool)
+	  console.log(this.$tool.children("a"))
 		this.$tool.children("a").each(function(){
 			this.title=remark[$(this).attr("id").split("btn_")[1]];
 		});
+    // console.log(this.$bgDiv)
+    // console.log(this.$bgDiv.children[1].children);
+    // if(this.$bgDiv==null) return;
+    // this.$bgDiv[0].children[1].children("a").each(function(){
+		 //  this.title=remark[$(this).attr("id").split("btn_")[1]];
+    // })
 		this.$nodeRemark=remark;
 	},
 

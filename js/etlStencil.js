@@ -7,7 +7,6 @@ var this_projectId = localStorage.getItem("projectId");
 var this_directoryId = localStorage.getItem("directoryId");
 var this_companyId = localStorage.getItem("companyId");
 var $url = '../xdbd-etl'; //../xdbd-etl
-$(function() {
 //获取ETL列表
 var parens = {
   projectId: this_projectId
@@ -89,7 +88,6 @@ function newEtlBtn() {
   $('.new_type').html(industryType());
   get_dataSource();
 }
-})
 function get_dataSource() {
   var source = {
     projectId: this_projectId,

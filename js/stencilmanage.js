@@ -10,7 +10,7 @@ var this_createUser = localStorage.getItem("createUser");
 var this_updateUser = localStorage.getItem("updataeUser");
 var this_rootPath = localStorage.getItem("rootPath");
 var $url = '../xdbd-wf';  //../xdbd-wf
-$(function() {
+
 //调用模板列表
 var getAll = {
   projectId: this_projectId
@@ -87,7 +87,6 @@ $("#new_demand_btn").click(function() {
   });
   $('.new_type').html(industryType());
 });
-})
 function callBtn(popups) {
   layer.close(popups);
 }
