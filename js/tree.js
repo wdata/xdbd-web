@@ -759,6 +759,7 @@ $(function(){
 					console.log(res);
 	              	if(res.code===0){
 						layer.msg("导入成功", {icon: 6});
+						getProjName(0);//刷新项目树
 		            }else{
 		            	layer.msg(res.message, {icon: 0});
 		            }
