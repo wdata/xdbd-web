@@ -49,8 +49,8 @@ $(function(){
 				var swiper = new Swiper('.swiper-container', {
 			        nextButton: '.swiper-button-next',
 			        prevButton: '.swiper-button-prev',
-			       	loop:true,
-			       	slidesPerView: 3
+//			       	loop:true,
+			       	slidesPerView: 'auto'
 			   });
 			}else{
 				layer.msg("请先添加菜单!", {icon: 0});
@@ -76,8 +76,8 @@ $(function(){
 		var swiper = new Swiper('.swiper-container', {
 	        nextButton: '.swiper-button-next',
 	        prevButton: '.swiper-button-prev',
-	       	loop:true,
-	       	slidesPerView: 3
+//	       	loop:true,
+	       	slidesPerView: 'auto'
 	    });
 		 e.preventDefault();
 	})
@@ -135,10 +135,15 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
-	          			var data = res.data.slice(0,6);
+              		var data;
+              		if(res.data){
+              			data = res.data.slice(0,6);
+              			topMenu = data;
+              		}
+	          			
 	              		var html = "";
 	              		var html2 = "";//页面展示
-	              		topMenu = data;
+	              		
 	              		if(data){
 	              			$.each(data, function(i,item) {
 		              			if(i===0){
@@ -198,14 +203,12 @@ $(function(){
 		}
 	});
 	//input失去焦点的时候判断input的value是否修改,修改则提交修改信息
-	$(".top-menu-15 li input").blur(function(){
-		console.log($(this));
-		var old = $(this).prev().text();
-		var re = $.trim($(this).val());
-		var menuName = (old===re?old:re);
-		$(this).hide();
-		if(old !== re){
-			modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser);//修改
+	$(document).click(function(e){
+		var target = $(e.target).attr("class");
+		if(target==="top-reedit"){
+			return false;
+		}else{
+			$(".top-reedit").hide();
 		}
 	})
 	function modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser){
@@ -344,7 +347,7 @@ $(function(){
 	//左边菜单
 	$(".leftMenuBtn").click(function(e){
 		getTopMenu(projectId,versionId,0);
-		if(topMenu){
+		if(topMenu.length){
 			$(".m-lsetnav-btns").show();
 			$(".m-scroll-navs").show();
 			var html = "";
@@ -352,6 +355,7 @@ $(function(){
 				html += `
 					<div class="swiper-slide ${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">${item.menuName}</div>
 				`;
+				console.log(html);
 			});
 			$("#scroll-topmenu").empty().append(html);
 		}else{
@@ -834,7 +838,8 @@ $(function(){
 			success:function(res){
               	if(res.code===0){
               		$(".mn-headtxt").text(navigationText);
-              		sessionStorage.setItem("tempTxt",navigationText)
+              		sessionStorage.setItem("tempTxt",navigationText);
+              		$(".mnavigation-text").val("");
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -849,11 +854,17 @@ $(function(){
 	$('.m-uploadimg-box input[type="file"]').on('change',upLoadImg);
 	function upLoadImg(){
 		var file = $(this)[0].files[0];
+		let	filterType=/(?:jpeg|jpg|png|bmp)$/i, /*图片上传类型*/
+			maxSize=1*1024*1024;   /*图片上传的大小最大值*/
 		console.log(file);
-		/*if(!/image\/\w+/.test(file.type)){
-			layer.msg("文件必须为图片!",{icon:0});
+		if(!filterType.test(file.type)){
+			layer.msg("请上传图片文件!",{icon:0});
 			return false;
-		}*/
+		}
+		if(file.size>maxSize){
+			layer.msg("图片大小不能超过1M",{icon:0});
+			return false;
+		}
 		var formData = new FormData($('.m-uploadimg')[0]);
 		formData.append("file",file);
 		formData.append("projectId",projectId);
@@ -889,9 +900,8 @@ $(function(){
 		$(".mn-logobox>img").attr("src",$url1+tempLogo);
 	}
 	
-	$("#del-uploadimg-btn").click(function(e){
+	$("#del-uploadimg-btn").click(function(){
 		delUploadImg(projectId,versionId,typeCode,updateUser,updateUser);
-		e.preventDefault();
 	});
 	//删除图片
 	function delUploadImg(projectId,versionId,typeCode){
@@ -922,6 +932,20 @@ $(function(){
 		})
 	}
 	
+	//点击 标准-自定义按钮的自动设置
+	$(".tbz-btn").click(function(){
+		$(".mtop-width").val("1920");
+		$(".mtop-height").val("60");
+	});
+	$(".lbz-btn").click(function(){
+		$(".mleft-width").val("240");
+		$(".mleft-height").val("600");
+	});
+	
+	//菜单设计
+	$(".m-cont0>div>h4").click(function(){
+		$(this).toggleClass("active").next().toggle();
+	});
 	/* 
 	 * 链接
 	 */
@@ -1134,19 +1158,28 @@ $(function(){
 						if(logo!==undefined&&logo!==null){
 							$(".mn-logobox>img").attr("src",$url1+logo);
 						}
-						$(".mtop-width").val(topWidth);
-						$(".mtop-height").val(topHeight);
-						$(".mleft-width").val(leftWidth);
-						$(".mleft-height").val(leftHeight);
-						if(topWidth==="1920"&&topHeight==="60"){
+//						$(".mtop-width").val(topWidth);
+//						$(".mtop-height").val(topHeight);
+//						$(".mleft-width").val(leftWidth);
+//						$(".mleft-height").val(leftHeight);
+console.log(topWidth,topHeight);
+						if(topWidth===null||topHeight===null||topWidth==="1920"&&topHeight==="60"){
 							$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
+							$(".mtop-width").val("1200");
+							$(".mtop-height").val("60");
 						}else{
 							$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
+							$(".mtop-width").val(topWidth);
+							$(".mtop-height").val(topHeight);
 						}
-						if(leftWidth==="240"&&leftHeight==="240"){
+						if(leftWidth===null||leftHeight===null||leftWidth==="240"&&leftHeight==="600"){
 							$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
+							$(".mleft-width").val("240");
+							$(".mleft-height").val("600");
 						}else{
 							$(".leftsize button").eq(1).addClass("active").siblings().removeClass("active");
+							$(".mleft-width").val(leftWidth);
+							$(".mleft-height").val(leftHeight);
 						}
 						console.log(typeCode);
 						$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+(typeCode-1));
