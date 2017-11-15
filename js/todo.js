@@ -31,10 +31,13 @@ $(function(){
 	
 	//设置首页
 	$(".set-index-box").on("click",function(){
+		if($(this).find("input").prop("disabled")){
+			layer.msg("首页无法取消，可在其他页面设置为首页！");
+		}
 		var $this = $(this),
 		$img = $this.children("img"),
 		$state = $this.children("input").prop("checked");
-		if($state===true){
+		if($state === true){
 			$img.attr("src","images/icon_checked.png");
 		}else{
 			$img.attr("src","images/xuankuang.png");
