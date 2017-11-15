@@ -14,7 +14,7 @@ $(function(){
 
 	
 	var topMenu = [];//顶部导航菜单
-	var topMenuId = "";//topMenu--id
+	var topMenuId = sessionStorage.getItem("tId")||"";//topMenu--id
 	var reportMenuId;
 	var zNodes = [];//存放子菜单的数据
 	var LeftMenu = [];//存放左侧所有菜单
@@ -24,7 +24,6 @@ $(function(){
 	var dirType;//目录类型（12/13/15）
 	var typeCode = "1";//模板1,2,3
 	var parentId = "";
-	
 		
 	var tempLogo = sessionStorage.getItem("tempLogo");
 	var tempTxt = sessionStorage.getItem("tempTxt");
@@ -44,6 +43,7 @@ $(function(){
 				});
 				$("#link-scrollmenu").empty().append(html);
 				topMenuId = $("#link-scrollmenu").find(".active").attr("reportmenuid");
+				sessionStorage.setItem("tId",topMenuId);
 				findLeftMenu(projectId,versionId,topMenuId);//查询左侧菜单
 				
 				var swiper = new Swiper('.swiper-container', {
@@ -134,43 +134,41 @@ $(function(){
 				"menuType":menuType
 			},
 			success:function(res){
+				console.log(res);
               	if(res.code===0){
               		var data;
-              		if(res.data){
-              			data = res.data.slice(0,6);
-              			topMenu = data;
+              		var html = "";
+              		var html2 = "";//页面展示
+              		if(res.data!==null){
+              			data = res.data;
+          				topMenu = data;
+              		}else{
+              			data = [];
               		}
-	          			
-	              		var html = "";
-	              		var html2 = "";//页面展示
-	              		
-	              		if(data){
-	              			$.each(data, function(i,item) {
-		              			if(i===0){
-									findLeftMenu(projectId,versionId,item.reportMenuId);
-		              			}
-		              			html += `
-		              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
-										<span class="m-menu-tag">${item.menuName}</span>
-										<input type="text" class="top-reedit" value="${item.menuName}"/>
-										<div class="m-navs-order-btns">
-											${i===0?'':'<img src="../images/t_up.png" alt="" class="t-up"/>'}
-											${i===data.length-1?'':'<img src="../images/t_down.png" alt="" class="t-down"/>'}
-											<img src="../images/icon_close_02.png" alt="" class="t-del" />
-										</div>
-									</li>
-		              			`;
-		              			html2 += `
-		              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
-		              			`;
-		              			
-		              			
-		              		});
-		              		
-		              		$(".top-menu-15").empty().append(html);
-		              		$(".mn-menu").empty().append(html2);
-	              		}
               		
+          			$.each(data, function(i,item) {
+              			if(i===0){
+							findLeftMenu(projectId,versionId,item.reportMenuId);
+              			}
+              			html += `
+              				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
+								<span class="m-menu-tag">${item.menuName}</span>
+								<input type="text" class="top-reedit" value="${item.menuName}"/>
+								<div class="m-navs-order-btns">
+									${i===0?'':'<img src="../images/t_up.png" alt="" class="t-up"/>'}
+									${i===data.length-1?'':'<img src="../images/t_down.png" alt="" class="t-down"/>'}
+									<img src="../images/icon_close_02.png" alt="" class="t-del" />
+								</div>
+							</li>
+              			`;
+              			html2 += `
+              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
+              			`;
+              			
+              			
+              	});
+              		$(".top-menu-15").empty().append(html);
+              		$(".mn-menu").empty().append(html2);
               		
 	            }
 			},
@@ -303,6 +301,7 @@ $(function(){
 				"updateUser":updateUser
             },
 			success:function(res){
+				console.log(res);
               	if(res.code===0){
               		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
@@ -355,7 +354,9 @@ $(function(){
 				html += `
 					<div class="swiper-slide ${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">${item.menuName}</div>
 				`;
-				console.log(html);
+				if(i===0){
+					sessionStorage.setItem("tId",item.reportMenuId);
+				}
 			});
 			$("#scroll-topmenu").empty().append(html);
 		}else{
@@ -451,6 +452,14 @@ $(function(){
 	//添加
 	$(".le-add").click(function(){
 		layer.closeAll();
+		console.log(topMenuId);
+		var pId = "";
+		if(topMenuId){
+			pId = topMenuId;
+		}else{
+			pId = reportMenuId;
+		}
+		console.log(pId);
 		var index = layer.open({
 	      type: 1,
 	      btn: ['确定', '取消'],
@@ -461,7 +470,7 @@ $(function(){
 	      yes: function(index, layero){
 	      	var menuName = $.trim($(".le-add-menu").val());
 	      		if(menuName){
-			        addLeftMenu(projectId,versionId,createUser,menuName,1,topMenuId);
+			        addLeftMenu(projectId,versionId,createUser,menuName,1,pId);
 			        layer.close(index);
 	      		}else{
 	      			layer.msg("菜单名称不能为空", {icon: 5});
@@ -481,6 +490,7 @@ $(function(){
 	$("#scroll-topmenu").delegate(".swiper-slide","click",function(e){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
+		sessionStorage.setItem("tId",topMenuId);
 		parentId = $(this).attr("reportmenuid");
 		$("#match-tree").html("");
 		findLeftMenu(projectId,versionId,parentId);
@@ -491,13 +501,14 @@ $(function(){
 	$(".mn-menu").delegate("li","click",function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
+		sessionStorage.setItem("tId",topMenuId);
 		parentId = $(this).attr("reportmenuid");
 		$("#sidebar-tree").html("");
 		findLeftMenu(projectId,versionId,parentId);
 	})
 	
 	//添加左侧菜单
-	function addLeftMenu(projectId,versionId,createUser,menuName,menuType,parentId){
+	function addLeftMenu(projectId,versionId,createUser,menuName,menuType,pId){
 		$.ajax({
 			type:'POST',
             url:$url1+'/bi/report/v1/menu/saveReportMenu',
@@ -510,12 +521,12 @@ $(function(){
 				"createUser":createUser,
 				"menuName":menuName,
 				"menuType":menuType,
-				"parentId":parentId
-				
+				"parentId":pId
 			},
 			success:function(res){
+				console.log(res);
               	if(res.code===0){
-                	findLeftMenu(projectId,versionId,topMenuId);//topMenuId
+                	findLeftMenu(projectId,versionId,sessionStorage.getItem("tId"));//topMenuId
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -540,17 +551,15 @@ $(function(){
 				"reportMenuId":reportMenuId
 			},
 			success:function(res){
+				console.log(res);
               	if(res.code===0){
-              		zNodes = res.data;
-              		console.log(zNodes);
-            		if(zNodes){
-              			$.fn.zTree.init($("#match-tree"), setting, zNodes);
-              			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
-              			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
-              			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
-              			$.fn.zTree.getZTreeObj("match-tree").expandAll(true);
-              			$.fn.zTree.getZTreeObj("link-tree").expandAll(true);
-            		}
+              		zNodes = res.data===null?[]:res.data;
+          			$.fn.zTree.init($("#match-tree"), setting, zNodes);
+          			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
+          			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
+          			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+          			$.fn.zTree.getZTreeObj("match-tree").expandAll(true);
+          			$.fn.zTree.getZTreeObj("link-tree").expandAll(true);
 	            }
 			},
 			error:function(err){
@@ -635,7 +644,12 @@ $(function(){
 	
 	//清空--topMenuId对应的 leftMenu
 	$(".le-clear").click(function(e){
-		clearLeftMenu(projectId,versionId,topMenuId,2,updateUser);
+		console.log(sessionStorage.getItem("tId"));
+		if(sessionStorage.getItem("tId")===null){
+			layer.msg("请先选择要清除的子菜单的顶部菜单", {icon: 0});
+		}else{
+			clearLeftMenu(projectId,versionId,sessionStorage.getItem("tId"),2,updateUser);
+		}
 		e.preventDefault();
 	})
 	//清空左部菜单
@@ -672,7 +686,10 @@ $(function(){
 		var pId = curDom[0].pId;
 		var pageId = curDom[0].pageId;
 			reportMenuId = curDom[0].reportMenuId;
-		var menuName = '';
+			topMenuId = "";//设置为空,则添加子菜单
+			console.log('1'+reportMenuId);
+			console.log('2'+topMenuId);
+/*		var menuName = '';
 			layer.closeAll();
 		var index = layer.open({
 		      type: 1,
@@ -697,7 +714,7 @@ $(function(){
 		      	layer.close(index);
 		      }
 		   });
-		 
+		 */
 	}
 	
 	function renameLeftMenu(event, treeId, treeNode, isCancel){
@@ -896,9 +913,9 @@ $(function(){
 			}
 		});
 	}
-	if(tempLogo != ""){
-		$(".mn-logobox>img").attr("src",$url1+tempLogo);
-	}
+//	if(tempLogo != ""){
+//		$(".mn-logobox>img").attr("src",$url1+tempLogo);
+//	}
 	
 	$("#del-uploadimg-btn").click(function(){
 		delUploadImg(projectId,versionId,typeCode,updateUser,updateUser);
@@ -953,6 +970,7 @@ $(function(){
 	$("#link-scrollmenu").delegate(".swiper-slide","click",function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
+		sessionStorage.setItem("tId",topMenuId);
 		$("#link-tree").html("");
 		findLeftMenu(projectId,versionId,topMenuId);
 	})
@@ -1152,17 +1170,14 @@ $(function(){
 							$(".mn-headtxt").text(navigationText);
 							sessionStorage.setItem("tempTxt",navigationText);
 						}else{
-							$(".mn-headtxt").text("");
+							$(".mn-headtxt").text("小道科技欢迎您!");
 							sessionStorage.setItem("tempTxt","");
 						}
 						if(logo!==undefined&&logo!==null){
 							$(".mn-logobox>img").attr("src",$url1+logo);
+						}else{
+							$(".mn-logobox>img").attr("src","../images/mlogo.png");
 						}
-//						$(".mtop-width").val(topWidth);
-//						$(".mtop-height").val(topHeight);
-//						$(".mleft-width").val(leftWidth);
-//						$(".mleft-height").val(leftHeight);
-console.log(topWidth,topHeight);
 						if(topWidth===null||topHeight===null||topWidth==="1920"&&topHeight==="60"){
 							$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
 							$(".mtop-width").val("1200");
