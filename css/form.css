@@ -1756,7 +1756,7 @@ div.f-addbtn-box-auto li{
 	opacity: 0;
 }
 .drag-bar {
-	width: 404px;
+	/*width: 404px;*/
 	height: 100%;
 	background-color: #FFFFFF;
 	float: right;
