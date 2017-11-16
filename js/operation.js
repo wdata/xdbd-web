@@ -6,7 +6,8 @@ let id_='',field=null,fieldAlias=null,order=null,dataType=null,dim_mea=null,dis_
     ,data_type = ""  // 作为判断图形的；
     ,number = 1   // 层级
     ,fieldId = null  // 记录数据筛选时候的ID
-    ,modelId = null; // 记录dataModelId值；
+    ,modelId = null // 记录dataModelId值；
+    ,eleLevel = 1;
 
 // const surroundings = $(".set-cur-env select ", parent.document).find("option:selected").text();
 const surroundings = sessionStorage.getItem("onEnv");
@@ -61,28 +62,26 @@ $(document).ready(function() {
             const id = context.getClickEle().attr("id");
             operating.clickDelete(id);      // 删除功能
 
-            // 层级重新排序
-            let eleLevel = 1;
-            $(".resize-item").each(function(){
-                $(this).css("z-index",eleLevel);
-                eleLevel ++;
-            });
-            // 保存数据
-            const type = context.getClickEle().attr("data-type");
-            refresh.storage(type,id);
+            let level = new Level();
+            level.rearrange();
         }},
         {text: '排列', subMenu: [
             {header: '默认值'},
             {
                 text: '置于顶层',
                 action: function () {
-                    context.getClickEle().css("z-index",(number + 1));
+                    context.getClickEle().css("z-index",( save_arr.length + 1));
+                    let level = new Level();
+                    level.arrangement(context.getClickEle());
                 }
             },
             {
-                text: '置于低层',
+                text: '置于底层',
                 action: function () {
-                    context.getClickEle().css("z-index",1);
+                    /* 设置为0后会重新排序，变成1；所以不用担心排列问题 */
+                    context.getClickEle().css("z-index",0);
+                    let level = new Level();
+                    level.arrangement(context.getClickEle());
                 }
             },
             {
@@ -90,12 +89,18 @@ $(document).ready(function() {
                 action: function () {
                     const zIndex = parseInt(context.getClickEle().css("z-index"));
                     context.getClickEle().css("z-index",zIndex + 1);
+                    /* 上移和下移都不在重新排序，只保存 */
+                    let level = new Level();
+                    level.arrang(context.getClickEle());
                 }
             },{
                 text: '下移一层',
                 action: function () {
                     const zIndex = parseInt(context.getClickEle().css("z-index"));
                     context.getClickEle().css("z-index",zIndex-1);
+                    /* 上移和下移都不在重新排序，只保存 */
+                    let level = new Level();
+                    level.arrang(context.getClickEle());
                 }
             }
         ]}
@@ -175,7 +180,7 @@ let refresh = {
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "controls":{
-                "html":idEle.find(".resize-panel").siblings().prop("outerHTML"),                    // 对齐方式
+                "html":idEle.children(".content-text").prop("outerHTML"),                    // 对齐方式
                 "text":$(text).html(),                    // 对齐方式
                 "color":text.css("color"),                             // 颜色
             }
@@ -368,6 +373,53 @@ let refresh = {
         return d;
     }
 };
+
+// 层级
+/*
+*   arrang：只保存；arrangement：保存和重新排序；rearrange：从1开始重新排序，如果层级相同则继续保持；
+* */
+function Level(){
+    this.eleLevel = 1;
+    this.temporary = null;
+}
+Level.prototype = {
+    arrang:function(ele){
+        const id = ele.attr('id');
+        const type = ele.attr('data-type');
+        refresh.storage(type,id);
+    },
+    arrangement:function(ele){
+        const id = ele.attr('id');
+        const type = ele.attr('data-type');
+        refresh.storage(type,id);
+        this.rearrange();
+    },
+    rearrange:function(){
+        const self = this;
+        /*  层级重新排序
+         重新重置eleLevel，定义temporary记录原来的层级
+         *   先根据原来的层级排序数组；
+         *   在根据排序好的数组，对比与后一个数值是否相同：如果相同这不++；
+         * */
+        const compare = function(a,b){
+            return a.displayLevel - b.displayLevel;
+        };
+        save_arr.sort(compare);
+        $.each(save_arr,function(i){
+            self.temporary = this.displayLevel;
+            this.displayLevel = self.eleLevel;
+            $("#" + this.cid).css("z-index",self.eleLevel);
+            if(save_arr[i + 1]){
+                if(!(save_arr[i + 1].displayLevel === self.temporary)){
+                    self.eleLevel++;
+                }
+            }
+        });
+        console.log(save_arr)
+    }
+};
+
+
 
 // 文本编辑器
 let textEdit = {
@@ -577,16 +629,18 @@ let operating = {
     // 删除
     clickDelete:function(id){
         let deleted = true;
+        if(id === "" || id.length <= 0){
+            layer.msg("请点击需删除的控件！");
+            return
+        }
         // 删除保存中的数据，并删除cid为空的数据，以防出现bug
         $.each(save_arr,function(index,item){
-            if(deleted && item.cid === id){
+            if(deleted && (item.cid === id)){
                 save_arr.splice(index,1);
                 deleted = false;
             }
         });
-        if(id === "" || id.length <= 0){
-            layer.msg("请点击需删除的控件！");
-        }
+
         // 删除该ID的元素
         $("#" + id).remove();
     },
@@ -786,8 +840,14 @@ let obtain = {
 
                 id_ = val.cid; // 拖拽必须修改id_
                 if(dataType === "text" || dataType === "button" || dataType === "image"){
-                    text = controls.html;
-                }else if(dataType === "table" || dataType === "chart"){
+                    if(controls){
+                        text = controls.html;
+                    }else if(dataType === "text"){
+                        text = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
+                    }else if(dataType === "button"){
+                        text = '<div class="content-button"><button></button></div>';
+                    }
+                }else if(dataType === "table" || dataType === "chart" && val.queryJson){
                     // 将数据存入检索数据中
                     const chart_date = {
                         'cid':val.cid,
@@ -798,6 +858,7 @@ let obtain = {
                     index_arr.push(chart_date);
                 }
                 number++; // ID不重复！
+                eleLevel++;
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
@@ -1817,7 +1878,8 @@ function imgPreview(_this){
 
                         // 将图片存入数据库
                         $(_this).val("");   // 清空input的内容
-                        refresh.priceData(id_);   // 保存图片数据
+
+                        refresh.storage(cahrt_type,editID); // 判断不同的TYPE执行不同的采取函数
 
                     };
                     image.src= data;
@@ -1872,7 +1934,7 @@ function uuid(len, radix) {
 // 输入监听，只调用一次; 参数为JS元素
 function enterListen(z){
     duplexContenteditable(z, function() {
-        const id = $(this).parent().parent().attr("id");
+        var id = $(this).parent().parent().attr("id");
         refresh.textData(id);
     });
 }
