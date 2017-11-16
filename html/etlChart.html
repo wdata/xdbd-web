@@ -94,22 +94,40 @@
         java:"java",
         shell:"shell",
         spark:"spark",
-        algorithm:"算法"
+        algorithm:"算法",
+        'new':"新建",
+        undo:"上一步",
+        redo:"下一步",
+        reload:"刷新",
+        print:"打印",
+        save:"保存",
+        execute:"执行",
+        saveCopy:"另存为模板"
       };
       var demo;
       function showDag(getDag) {
         demo = $.createGooFlow($("#demo"), property);
         demo.setNodeRemarks(remark);
         demo.onItemDel = function (id, type) {
-          console.log()
-          if (confirm("确定要删除该单元吗?")) {
-            var self = this;
+          var self = this;
+          console.log(self)
+          // if (confirm("确定要删除该单元吗?")) {
+          //   var self = this;
+          //   init_delec(id);
+          //   self.blurItem();
+          //   return true;
+          // } else {
+          //   return false;
+          // }
+          layer.confirm('确定要删除该组件吗？', {
+            btn: ['确定','取消'] //按钮
+          }, function(){
             init_delec(id);
             self.blurItem();
             return true;
-          } else {
-            return false;
-          }
+          }, function(){
+            // return false;
+          });
         };
         //导出图片功能 END
         var exportName = "流程图";
@@ -227,8 +245,10 @@
               }), success: function (data) {
 //              var data = data.data;
                 if (data.code == 0) {
-                  layer.msg('模板保存成功')
-                  window.location.href = 'stencilmanage.html';
+                  layer.msg('模板保存成功');
+                  setTimeout(function() {
+                    window.location.href = 'stencilmanage.html';
+                  },2000)
                 } else {
                   layer.msg(data.message)
                 }
@@ -436,29 +456,7 @@
 <div id="demo" style="float:left"></div>
 <form class="myForm" id="propertyForm">
     <div class="form_title">属性设置</div>
-    <div class="propertys">
-        <!--<table class="form_content">-->
-            <!--<tr style="display: none;"><td class="th">程序ID</td><td><input type="text" id="ele_id"/></td></tr>-->
-            <!--&lt;!&ndash;<tr><td class="th">Name：</td><td><input type="text" id="ele_name" placeholder="name值"/></td></tr>&ndash;&gt;-->
-            <!--<tr style="display: none"><td class="th">数据类型</td><td><input type="text" id="ele_type"/></td></tr>-->
-            <!--&lt;!&ndash;<tr><td class="th">Model：</td><td><input type="text" id="ele_model"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">开始名称：</td><td><input type="text" id="ele_start"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">结束名称：</td><td><input type="text" id="ele_end"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">Left-r：</td><td><input type="text" id="ele_left"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">Top-r：</td><td><input type="text" id="ele_top"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">Width：</td><td><input type="text" id="ele_width"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">Height：</td><td><input type="text" id="ele_height"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">连接线初始点</td><td><input type="text" id="ele_from"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">连接线结束点</td><td><input type="text" id="ele_to"/></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">算法参数</td><td><input type="text" id="ele_alg" /></td></tr>&ndash;&gt;-->
-            <!--&lt;!&ndash;<tr><td class="th">选择任务</td><td><select type="text" id="ele_genre"></select></td></tr>&ndash;&gt;-->
-        <!--</table>-->
-        <!--<table class="form_profile"></table>-->
-    </div>
-    <!--<div class="form_btn_div">-->
-        <!--<input class="reset_btn" type="reset" value="重置"/>-->
-        <!--<input class="save_btn" type="button" value="确定" onclick="updataBtn()"/>-->
-    <!--</div>-->
+    <div class="propertys"></div>
 </form>
 </body>
 </html>

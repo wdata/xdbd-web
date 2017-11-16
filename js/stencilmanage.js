@@ -11,6 +11,8 @@ var this_updateUser = localStorage.getItem("updataeUser");
 var this_rootPath = localStorage.getItem("rootPath");
 var $url = '../xdbd-wf';  //../xdbd-wf
 
+$('.trade_type').html(industryType());
+
 //调用模板列表
 var getAll = {
   projectId: this_projectId
@@ -26,7 +28,7 @@ $.ajax({
       var arr = new Array;
       console.log(data.data)
       $.each(data.data,function(index,item) {
-        arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)"> <p>'+item.name+'</p> <span>'+item.remark+'</span> </dd> </dl>')
+        arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)"> <p>'+item.name+'_模板</p> <span>'+item.remark+'</span> </dd> </dl>')
       })
       $("#demand_list").html(arr);
     }
@@ -46,23 +48,27 @@ function deleteBtn(_this) {
     ids:[$(_this).parents(".new_demand").attr("id")],
     id: $(_this).attr("class"),
     versionId: this_versionId
-  }
-  $.ajax({
-    type:"POST",
-    url:$url+"/api/job/v1/deleteByIds",
-    dataType:"json",
-    contentType:"application/json",
-    data:JSON.stringify(parans),
-    success:function(data){
-      console.log(data)
-      if(data.code == 0) {
-        $(_this).parents(".new_demand").remove();
-        layer.msg('模板删除成功！');
-      }
-    },error:function(data){
-      console.log(JSON.stringify(data))
-    }
-  })
+  };
+  layer.confirm('是否要删除当前模板？', {
+    btn: ['确定','取消'] //按钮
+  }, function(){
+    $.ajax({
+        type:"POST",
+        url:$url+"/api/job/v1/deleteByIds",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify(parans),
+        success:function(data){
+        console.log(data)
+        if(data.code == 0) {
+            $(_this).parents(".new_demand").remove();
+            layer.msg('模板删除成功！');
+        }
+        },error:function(data){
+            console.log(JSON.stringify(data))
+        }
+    })
+  });
 }
 //查看工作流
 function demandBtn(_this) {

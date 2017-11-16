@@ -7,6 +7,9 @@ var this_projectId = localStorage.getItem("projectId");
 var this_directoryId = localStorage.getItem("directoryId");
 var this_companyId = localStorage.getItem("companyId");
 var $url = '../xdbd-etl'; //../xdbd-etl
+
+$('.trade_type').html(industryType());
+
 //获取ETL列表
 var parens = {
   projectId: this_projectId
@@ -24,7 +27,7 @@ $.ajax({
       itemId = data.data;
       $.each(data.data, function (index, item) {
         //graphDiagram.push(item.actionId+','+item.dag);
-        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '_模板</p> <span>' + item.remark + '</span> </dd> </dl>')
       })
       $("#demand_list").html(arr);
     }
@@ -43,23 +46,27 @@ function deletesBtn(_this) {
   var parans = {
     actionId: $(_this).parents(".new_demand").attr("id"),
     versionId: this_versionId
-  }
-  $.ajax({
-    type:"POST",
-    url:$url+"/api/action/v1/delAction",
-    dataType:"json",
-    contentType:"application/json",
-    data:JSON.stringify(parans),
-    success:function(data){
-      console.log(data)
-      if(data.code == 0) {
-        $(_this).parents(".new_demand").remove();
-        layer.msg('模板删除成功！');
-      }
-    },error:function(data){
-      console.log(JSON.stringify(data))
-    }
-  })
+  };
+  layer.confirm('是否要删除当前模板？', {
+    btn: ['确定','取消'] //按钮
+  }, function(){
+    $.ajax({
+        type:"POST",
+        url:$url+"/api/action/v1/delAction",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify(parans),
+        success:function(data){
+          console.log(data)
+          if(data.code == 0) {
+            $(_this).parents(".new_demand").remove();
+            layer.msg('模板删除成功！');
+          }
+        },error:function(data){
+          console.log(JSON.stringify(data))
+        }
+    })
+  });
 }
 //查看ETL模板
 function demandsBtn(_this) {
