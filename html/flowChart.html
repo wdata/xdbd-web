@@ -77,7 +77,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["save","undo","redo","reload","new","print","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["new","undo","redo","reload","print","save","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
         haveTool:onenv,
         haveDashed:true,
         haveGroup:true,
@@ -87,18 +87,22 @@
         cursor:"选择指针",
         direct:"结点连线",
         dashed:"关联虚线",
-//        start:"开始结点",
-//        "end":"结束结点",
-        //"task":"求和结点",
-        //node:"平均数结点",
         groups:"分组结点",
         sort:"排序结点",
         where:"过滤结点",
         output:"表输出结点",
         input:"表输入结点",
-       // plug:"总行数结点",
         join:"关联结点",
-        group:"组织划分框编辑开关"
+        group:"组织划分框编辑开关",
+        'new':"新建",
+        undo:"上一步",
+        redo:"下一步",
+        reload:"刷新",
+        print:"打印",
+        save:"保存",
+        preview:"浏览",
+        execute:"执行",
+        saveCopy:"另存为模板"
       };
       var demo;
       function showDag(actionDag){
