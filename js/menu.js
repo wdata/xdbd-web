@@ -1300,7 +1300,13 @@ $(function(){
             // 判断图形、表格、文本、图片、按钮
             // 如果是文本和图片，则复制内容不同
             if(dataType === "text" || dataType === "button" || dataType === "image"){
-                text = val.customData.controls.html;
+                if(val.customData.controls){
+                    text = val.customData.controls.html;
+                }else if(dataType === "text"){
+                    text = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
+                }else if(dataType === "button"){
+                    text = '<div class="content-button"><button></button></div>';
+                }
             }else if(dataType === "table" || dataType === "chart"){
                 // 将数据存入检索数据中
                 var chart_date = {
