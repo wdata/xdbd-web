@@ -257,14 +257,223 @@ $(function(){
 	 
 	 * 获取项目树名称
 	 * */
+	var items = [];
 	var zNodes = [];
 	var dirType = "";//目录类型
 	var directoryId ="";//目录id
 	var directoryName = "";//目录名称
+	
+	/**
+	 * treeview
+	 */
+	var treeviewData =localStorage.getItem("treeviewData")||[];
+	var curNodeId = sessionStorage.getItem("curNodeId")||"";
+	var curNodeObj;
+	
+	var $tree = $('#treeview5').treeview({
+      color: "#578fe6",
+      expandIcon: 'glyphicon glyphicon-chevron-right',
+      collapseIcon: 'glyphicon glyphicon-chevron-down',
+      nodeIcon: 'glyphicon glyphicon-bookmark',
+      showTags: true,
+      selectedColor:"#fff",
+      data: treeviewData,
+      selectedBackColor: "#578fe6",
+      onNodeSelected:function(event,node){
+		curNodeId = node.nodeId;
+		sessionStorage.setItem("curNodeId",curNodeId);
+		
+		dirType = node.directoryType;//目录类型
+		directoryId = node.directoryId;//目录id
+		directoryName = node.name;//目录名称
+		projectId = node.projectId;//项目id
+		versionId = node.versionId;//版本id
+  		companyId = node.companyId;
+  		createUser = node.createUser;
+  		updateUser = node.updateUser;
+  		rootPath = node.rootPath;
+
+  		localStorage.setItem("projectId",projectId);
+		localStorage.setItem("versionId",versionId);
+		localStorage.setItem("directoryId",directoryId);
+		localStorage.setItem("companyId",companyId);
+		localStorage.setItem("createUser",createUser);
+		localStorage.setItem("updateUser",updateUser);
+		localStorage.setItem("rootPath",rootPath);
+		
+		var getSiblings=$tree.treeview('getSiblings', node.nodeId),
+			currentNode = $tree.treeview('getNode', node.nodeId);
+		for(let attr in getSiblings){
+			getSiblings[attr].tags=''
+		}
+		if(dirType==="1"||dirType==="14"||dirType==="16"||dirType==="6"
+		||dirType==="7"||dirType==="12"||dirType==="13"||dirType==="15"
+		||dirType==="17"||dirType==="18"||dirType==="19"||dirType==="8"
+		||dirType==="9"||dirType==="11"){
+			currentNode.tags=['1'];
+		}
+		
+		 console.log("1="+dirType);
+//		 console.log("2="+directoryId);
+		 if(onCurEnv==="dev"){
+				var items0 = [
+						{ title: '创建子模块', fn: createSubmodule},
+						{ title: '创建最终子模块', fn: createFinalSubmodule },
+						{ title: '提交测试', fn: checkInTest },
+						{ title: '切换版本', fn: switchVersion },
+						{ title: '导入', fn: leadingIn },
+						{ title: '导出', fn: leadingOut},
+						{ title: '数据源配置', fn: dataSourceConfig },
+						{ title: '属性', fn: setProperty },
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items1 = [
+						{ title: '新建ETL', fn: newEtl},
+						{ title: '新建文件夹', fn: newFile }
+					];
+					var items2 = [
+						{ title: '新建BI文件', fn: newBi},
+						{ title: '新建文件夹', fn: newFile }
+					];
+					var items3 = [
+						{ title: '新建作业流', fn: newJob},
+						{ title: '新建文件夹', fn: newFile }
+					];
+					var items4 = [
+						{ title: '创建子模块', fn: createSubmodule},
+						{ title: '创建最终子模块', fn: createFinalSubmodule},
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items5 = [
+						{ title: '新建文件夹', fn: newFile},
+						{ title: '创建页面', fn: createFpage}
+					];
+					var items6 = [
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items7 = [
+						{ title: '新建BI文件', fn: newBi},
+						{ title: '新建文件夹', fn: newFile},
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items8 = [
+						{ title: '新建ETL', fn: newEtl},
+						{ title: '新建文件夹', fn: newFile},
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					];
+					var items9 = [
+						{ title: '新建作业流', fn: newJob},
+						{ title: '新建文件夹', fn: newFile },
+						{ title: '重命名',fn:fnRenameFile},
+						{ title: '删除',fn:fnDeleteFile}
+					]
+			}else if(onCurEnv==="test"||onCurEnv==="prod"){
+					var items0 = [
+						{ title: '提交发布', fn: checkInTest },
+						{ title: '数据源配置', fn: dataSourceConfig },
+						{ title: '属性', fn: setProperty }
+					];
+					var items1 = [];
+					var items2 = [];
+					var items3 = [];
+					var items4 = [];
+					var items5 = [];
+					var items6 = [];
+					var items7 = [];
+					var items8 = [];
+					var items9 = [];
+				}
+		
+			switch(dirType){
+				case "1":
+					items = items0;
+					lv1DirId = node.directoryId;
+					localStorage.setItem("lv1DirId",lv1DirId);
+				break;
+				case "8":
+					items = items1;
+				break;
+				case "11":
+				case "5":
+					items = items2;
+				break;
+				case "9":
+					items = items3;
+				break;
+				case "6":
+					items = items4;
+				break;
+				case "5":
+					items = items5;
+					break;
+				case "3":
+					items = [];
+					$("#iframepage1").attr("src","html/menuSet.html?directoryId="+directoryId);//菜单设置
+					break;
+				case "4":
+					items = [];
+					$("#iframepage1").attr("src","html/pageFlow.html?directoryId="+directoryId);//页面流
+					break;
+				case "12":
+					items = items6;
+					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
+					break;
+				case "13":
+					items = items6;
+					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
+					break;
+				case "15":
+				case "14":
+					items = items6;
+					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
+					break;
+				case "2":
+				case "10":
+					items = [];
+					pageFlowId = directoryId;
+					localStorage.setItem("pageFlowId",pageFlowId);
+					break;
+				case "7":
+					items = items6;
+					break;
+				case "16":
+				case "19":
+					items = items7;
+					break;
+				case "17":
+					items = items8;
+					break;
+				case "18":
+					items = items9;
+					break;
+				default:
+					items = [];
+			}
+			
+			
+       }
+    });
+	
+	var onLeftKey = function(e){
+		basicContext.show(items,e);
+	}
+  	$("#treeview5").delegate(".badge","click",function(e){
+  		console.log(items);
+    	onLeftKey(e);
+    	return false;
+    });
+    
+	$tree.treeview('collapseAll', { silent: true });
+//	$tree.treeview('expandNode', [curNodeId,{silent: true } ]);
+
+		    
 //	getProjName(0);
 	function getProjName(id){ 
-		
-		console.log(onCurEnv);
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectTree',
@@ -278,19 +487,9 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
-              		zNodes = [{"id":"0","name":"我的项目",children:res.data}];
-					var treeObj = $("#treeDemo");
-					$.fn.zTree.init(treeObj, setting, zNodes);
-					zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-					curMenu = zTree_Menu.getNodes()[0].children[0];
-					zTree_Menu.selectNode(curMenu);
-					treeObj.hover(function () {
-						if (!treeObj.hasClass("showIcon")) {
-							treeObj.addClass("showIcon");
-						}
-					}, function() {
-						treeObj.removeClass("showIcon");
-					});
+              		console.log(res);
+              		treeviewData = res.data;
+              		localStorage.setItem("treeviewData",JSON.stringify(treeviewData));
 	            }
 			},
 			error:function(err){
@@ -298,6 +497,7 @@ $(function(){
 			}
 		});
 	}
+	
 	
 	/*
 	 
@@ -316,10 +516,6 @@ $(function(){
 			simpleData: {
 				enable: true
 			}
-		},
-		callback: {
-			beforeClick: beforeClick,
-			onClick: zTreeOnClick
 		}
 	};
 	
@@ -881,192 +1077,7 @@ $(function(){
 			}, function(index){
 			 	layer.close(index);
 			});
-    	};
-		var items = [];
-		
-		
-		function zTreeOnClick(){
-			var curTreeObj = $.fn.zTree.getZTreeObj("treeDemo");
-			var curClickedDom = curTreeObj.getSelectedNodes();
-			dirType = curTreeObj.getSelectedNodes()[0].directoryType;//目录类型
-			directoryId = curTreeObj.getSelectedNodes()[0].directoryId;//目录id
-			directoryName = curTreeObj.getSelectedNodes()[0].name;//目录名称
-			projectId = curTreeObj.getSelectedNodes()[0].projectId;//项目id
-			versionId = curTreeObj.getSelectedNodes()[0].versionId;//版本id
-			//version = curTreeObj.getSelectedNodes()[0].version;//版本
-      		companyId = curTreeObj.getSelectedNodes()[0].companyId;
-      		createUser = curTreeObj.getSelectedNodes()[0].createUser;
-      		updateUser = curTreeObj.getSelectedNodes()[0].updateUser;
-      		rootPath = curTreeObj.getSelectedNodes()[0].rootPath;
-
-      		localStorage.setItem("projectId",projectId);
-			localStorage.setItem("versionId",versionId);
-			localStorage.setItem("directoryId",directoryId);
-			localStorage.setItem("companyId",companyId);
-			localStorage.setItem("createUser",createUser);
-			localStorage.setItem("updateUser",updateUser);
-			localStorage.setItem("rootPath",rootPath);
-			 // console.log("1="+dirType);
-			 // console.log("2="+directoryId);
-			
-			if(onCurEnv==="dev"){
-				var items0 = [
-						{ title: '创建子模块', fn: createSubmodule},
-						{ title: '创建最终子模块', fn: createFinalSubmodule },
-						{ title: '提交测试', fn: checkInTest },
-						{ title: '切换版本', fn: switchVersion },
-						{ title: '导入', fn: leadingIn },
-						{ title: '导出', fn: leadingOut},
-						{ title: '数据源配置', fn: dataSourceConfig },
-						{ title: '属性', fn: setProperty },
-						{ title: '重命名',fn:fnRenameFile},
-						{ title: '删除',fn:fnDeleteFile}
-					];
-					var items1 = [
-						{ title: '新建ETL', fn: newEtl},
-						{ title: '新建文件夹', fn: newFile }
-					];
-					var items2 = [
-						{ title: '新建BI文件', fn: newBi},
-						{ title: '新建文件夹', fn: newFile }
-					];
-					var items3 = [
-						{ title: '新建作业流', fn: newJob},
-						{ title: '新建文件夹', fn: newFile }
-					];
-					var items4 = [
-						{ title: '创建子模块', fn: createSubmodule},
-						{ title: '创建最终子模块', fn: createFinalSubmodule},
-						{ title: '重命名',fn:fnRenameFile},
-						{ title: '删除',fn:fnDeleteFile}
-					];
-					var items5 = [
-						{ title: '新建文件夹', fn: newFile},
-						{ title: '创建页面', fn: createFpage}
-					];
-					var items6 = [
-						{ title: '重命名',fn:fnRenameFile},
-						{ title: '删除',fn:fnDeleteFile}
-					];
-					var items7 = [
-						{ title: '新建BI文件', fn: newBi},
-						{ title: '新建文件夹', fn: newFile},
-						{ title: '重命名',fn:fnRenameFile},
-						{ title: '删除',fn:fnDeleteFile}
-					];
-					var items8 = [
-						{ title: '新建ETL', fn: newEtl},
-						{ title: '新建文件夹', fn: newFile},
-						{ title: '重命名',fn:fnRenameFile},
-						{ title: '删除',fn:fnDeleteFile}
-					];
-					var items9 = [
-						{ title: '新建作业流', fn: newJob},
-						{ title: '新建文件夹', fn: newFile },
-						{ title: '重命名',fn:fnRenameFile},
-						{ title: '删除',fn:fnDeleteFile}
-					]
-			}else if(onCurEnv==="test"||onCurEnv==="prod"){
-					var items0 = [
-						{ title: '提交发布', fn: checkInTest },
-						{ title: '数据源配置', fn: dataSourceConfig },
-						{ title: '属性', fn: setProperty }
-					];
-					var items1 = [
-						
-					];
-					var items2 = [
-						
-					];
-					var items3 = [
-						
-					];
-					var items4 = [
-						
-					];
-					var items5 = [
-						
-					];
-					var items6 = [
-						
-					];
-					var items7 = [
-						
-					];
-					var items8 = [
-						
-					];
-					var items9 = [
-						
-					];
-				}
-		
-			switch(dirType){
-				case "1":
-					items = items0;
-					lv1DirId = curTreeObj.getSelectedNodes()[0].directoryId;
-					localStorage.setItem("lv1DirId",lv1DirId);
-				break;
-				case "8":
-					items = items1;
-				break;
-				case "11":
-				case "5":
-					items = items2;
-				break;
-				case "9":
-					items = items3;
-				break;
-				case "6":
-					items = items4;
-				break;
-				case "5":
-					items = items5;
-					break;
-				case "3":
-					items = [];
-					$("#iframepage1").attr("src","html/menuSet.html?directoryId="+directoryId);//菜单设置
-					break;
-				case "4":
-					items = [];
-					$("#iframepage1").attr("src","html/pageFlow.html?directoryId="+directoryId);//页面流
-					break;
-				case "12":
-					items = items6;
-					$("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
-					break;
-				case "13":
-					items = items6;
-					$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
-					break;
-				case "15":
-				case "14":
-					items = items6;
-					$("#iframepage1").attr("src","editBI.html?directoryId="+directoryId);//BI页面
-					break;
-				case "2":
-				case "10":
-					items = [];
-					pageFlowId = directoryId;
-					localStorage.setItem("pageFlowId",pageFlowId);
-					break;
-				case "7":
-					items = items6;
-					break;
-				case "16":
-				case "19":
-					items = items7;
-					break;
-				case "17":
-					items = items8;
-					break;
-				case "18":
-					items = items9;
-					break;
-				default:
-					items = [];
-			}
-		}
+    };
 		
 		//弹出框树
 		function leftKeyClick(){
@@ -1077,12 +1088,7 @@ $(function(){
 			console.log("1=="+directoryId)
 		}
 		
-		var onRightKey = function(e){
-				basicContext.show(items, e);
-			}
-		$("#treeDemo").delegate("li","contextmenu",function(e){
-	    	onRightKey(e);
-	    });
+
 		
 		function addDiyDom(treeId, treeNode) {
 			var spaceWidth = 5;

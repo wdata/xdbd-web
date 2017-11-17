@@ -8,12 +8,55 @@
     <title>小道大数据平台</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+   	<link rel="stylesheet" href="plugin/treeview/css/bootstrap.min.css" />
     <link rel="stylesheet" href="plugin/font-awesome-4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="plugin/zTree/css/zTreeStyle/zTreeStyle.css" />
     <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
     <link rel="stylesheet" href="plugin/basicContext/default.min.css" />
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/form.css" />
+    <style type="text/css">
+			.badge {
+			    display: inline-block;
+			    /* min-width: 10px; */
+			     padding: 0px; 
+			    font-size: 0;
+			    font-weight: bold;
+			    line-height: 0;
+			    color: #fff;
+			    text-align: center;
+			    white-space: nowrap;
+			    vertical-align: baseline;
+			     background-color: transparent; 
+			     border-radius: 0; 
+			    width: 0;
+			    height: 0;
+			    border-top:10px solid #fff;
+			    border-left: 6px solid transparent;
+			    border-right: 6px solid transparent;
+			    border-bottom: 5px solid transparent;
+			    /*outline: 5px solid transparent;*/
+			}
+			.list-group-item > .badge {
+			    float: right;
+			    margin-top: 5px;
+			}
+			.node-treeview5:not(.node-disabled):hover {
+			    background-color: #FFFFFF;
+			}
+			.treeview-head {
+				text-indent: 20px;
+		    font-size: 16px;
+		    color: #578fe6;
+		    line-height: 34px;
+		    font-weight: 600;
+			}
+			.list-group-item {
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+			}
+	</style>
     <!--[if lt IE 9]>
       <script src="common/html5shiv.min.js"></script>
       <script src="common/respond.min.js"></script>
@@ -67,7 +110,13 @@
 								</div>
 								<div class="m-folder-wrap">
 									  <div class="g-folders">
-									  	<ul id="treeDemo" class="ztree"></ul>
+									  	<!--<ul id="treeDemo" class="ztree"></ul>-->
+									  	<div class="row">
+								        <div class="col-sm-12">
+								          <h2 class="treeview-head">我的项目</h2>
+								          <div id="treeview5" class=""></div>
+								        </div>
+								      </div>
 									  </div>
 								</div>
 							</div>
@@ -264,9 +313,11 @@
 		</form>
     <script src="plugin/jQuery/jquery.min.js"></script>
     <script src="js/login.js"></script>
+    <script src="plugin/treeview/js/bootstrap.min.js"></script>
     <script src="plugin/zTree/jquery.ztree.all.min.js"></script>
     <script src="plugin/layer/layer.js"></script>
     <script src="plugin/basicContext/basicContext.min.js"></script>
+    <script src="plugin/treeview/bootstrap-treeview.js"></script>
     <script src="js/todo.js"></script>
     <script src="js/tree.js"></script>
   </body>
