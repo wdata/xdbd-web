@@ -213,9 +213,9 @@ $(function(){
       .off('click', '.onAdd')
       .on('click', '.onAdd', function () {
 
-        var extractFieldHtml = $('.onFilter').prop('outerHTML');
+        var onFieldHtml = $('.onFilter').prop('outerHTML');
         //$('.onFilters').remove();
-        $('.onFilters').append(extractFieldHtml);
+        $('.onFilters').append(onFieldHtml);
       })
   }
 

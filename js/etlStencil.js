@@ -27,7 +27,7 @@ $.ajax({
       itemId = data.data;
       $.each(data.data, function (index, item) {
         //graphDiagram.push(item.actionId+','+item.dag);
-        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '_模板</p> <span>' + item.remark + '</span> </dd> </dl>')
+        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
       })
       $("#demand_list").html(arr);
     }
