@@ -19,7 +19,7 @@
 			.badge {
 			    display: inline-block;
 			    /* min-width: 10px; */
-			     padding: 0px; 
+				padding: 0px;
 			    font-size: 0;
 			    font-weight: bold;
 			    line-height: 0;
@@ -27,8 +27,8 @@
 			    text-align: center;
 			    white-space: nowrap;
 			    vertical-align: baseline;
-			     background-color: transparent; 
-			     border-radius: 0; 
+				background-color: transparent;
+				border-radius: 0;
 			    width: 0;
 			    height: 0;
 			    border-top:10px solid #fff;
@@ -46,15 +46,24 @@
 			}
 			.treeview-head {
 				text-indent: 20px;
-		    font-size: 16px;
-		    color: #578fe6;
-		    line-height: 34px;
-		    font-weight: 600;
+				font-size: 16px;
+				color: #578fe6;
+				line-height: 34px;
+				font-weight: 600;
 			}
 			.list-group-item {
-		    white-space: nowrap;
-		    overflow: hidden;
-		    text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.treeview-head>span {
+				font-size: 12px;
+				font-weight: 400;
+				cursor: pointer;
+			}
+			.treeview-head .fa {
+				font-size: 16px;
+				margin-right: 4px;
 			}
 	</style>
     <!--[if lt IE 9]>
@@ -113,7 +122,7 @@
 									  	<!--<ul id="treeDemo" class="ztree"></ul>-->
 									  	<div class="row">
 								        <div class="col-sm-12">
-								          <h2 class="treeview-head">我的项目</h2>
+								          <h2 class="treeview-head">我的项目<span id="importProj"><i class="fa fa-cloud-upload"></i>导入</span></h2>
 								          <div id="treeview5" class=""></div>
 								        </div>
 								      </div>
