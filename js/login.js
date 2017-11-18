@@ -154,7 +154,7 @@ function industryType() {
   ];
   var type = [];
   $.each(arr,function(index,item) {
-    var i = (index+1)<9?('0'+(index+1)):(index+1);
+    var i = (index+1)<10?('0'+(index+1)):(index+1);
     type.push('<option value='+i+'>'+item+'</option>');
   })
   return type;

@@ -127,7 +127,7 @@ $(function(){
       .off('click', '.onLessen')
       .on('click', '.onLessen', function () {
         console.log($(this).parents('.where').length)
-        $(this).parents('.extractField').remove();
+        $(this).parents('.where').remove();
       })
   }
 
