@@ -1570,7 +1570,7 @@ div.f-addbtn-box-auto li{
 .submit-test>input {
 	display: block;
 	width: 350px;
-	height: 20px;
+	/*height: 20px;*/
 	padding: 3px 9px;
 	border:1px solid #CCCCCC;
 	margin: 50px auto 0;
@@ -2291,7 +2291,7 @@ div.ztree {
 	margin:40px auto 10px;
 	padding:5px 9px;
 	width:180px;
-	height:14px;
+	/*height:14px;*/
 	font-size:12px;
 }
 /*BI页面 -- 生成环境*/
