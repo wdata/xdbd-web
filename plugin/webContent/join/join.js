@@ -212,7 +212,7 @@ $(function(){
     $(document.body)
       .off('click', '.onAdd')
       .on('click', '.onAdd', function () {
-        alert('111')
+        // alert('111')
         var onFieldsHtml = $('.onFilter').prop('outerHTML');
         //$('.onFilters').remove();
         $('.onFilters').append(onFieldsHtml);
@@ -232,7 +232,7 @@ $(function(){
     $(document.body)
       .off('click', '.extractAdd')
       .on('click', '.extractAdd', function () {
-        alert("222")
+        // alert("222")
         var extractFieldsHtml = $('.extractField').prop('outerHTML');
         //$('.onFilters').remove();
         $('.extractFields').append(extractFieldsHtml);

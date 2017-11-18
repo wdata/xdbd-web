@@ -85,10 +85,10 @@ $(function(){
     $(document.body)
       .off('click', '.extractAdd')
       .on('click', '.extractAdd', function () {
-        var extractsFieldHtml = $('.extractField').prop('outerHTML');
+        var extractsFieldsHtml = $('.extractField').prop('outerHTML');
         //$('.extractField').remove();
-        console.log(extractsFieldHtml)
-        $('.extractFields').append(extractsFieldHtml);
+        // console.log(extractsFieldHtml)
+        $('.extractFields').append(extractsFieldsHtml);
       })
   }
 
