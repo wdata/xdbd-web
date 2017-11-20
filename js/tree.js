@@ -302,6 +302,7 @@ $(function(){
                 localStorage.setItem("createUser",createUser);
                 localStorage.setItem("updateUser",updateUser);
                 localStorage.setItem("rootPath",rootPath);
+                localStorage.setItem("isTemplate",false);
 
                 var getSiblings=$tree.treeview('getSiblings', node.nodeId),
                     currentNode = $tree.treeview('getNode', node.nodeId);
