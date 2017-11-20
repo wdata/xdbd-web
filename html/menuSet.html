@@ -33,7 +33,7 @@
 		<!--菜单设置-->
 		<div class="edit-state">
 			<div class="top-bar clearfix">
-				<img src="../images/icon_save.png" alt="" title="" data-tip="保存"/>
+				<!--<img src="../images/icon_save.png" alt="" title="" data-tip="保存"/>-->
 				<img src="../images/icon_prev.png" alt="" title="" data-tip="撤销"/>
 				<img src="../images/icon_next.png" alt="" title="" data-tip="恢复"/>
 				<img src="../images/icon_fresh.png" alt="" title="" id="page-fresh" data-tip="刷新"/>
@@ -198,7 +198,7 @@
 										    <div class="swiper-button-next"></div>
 										  </div>
 										  <div class="match-menu-box">
-										  	<ul id="match-tree" class="ztree"></ul>
+										  	<ul id="match-tree" class="ztree showIcon"></ul>
 										  	
 										  </div>
 										</div>
@@ -222,8 +222,12 @@
 										  	<span>创建链接</span>
 										  </div>
 										  <div class="match-menu-box">
-										  	<ul id="link-tree" class="ztree"></ul>
+										  	<ul id="link-tree" class="ztree showIcon"></ul>
 										  </div>
+											<div class="set-link-btn-box">
+												<button id="del-pagelink-btn" class="set-link-btn">取消链接</button>
+												<button id="clear-pagelink-btn" class="set-link-btn">清除链接</button>
+											</div>
 										</div>
 							</div>
 						</div>
@@ -246,8 +250,8 @@
 								</ul>
 							</div>
 							<div class="mn-sider">
-								<ul id="sidebar-tree" class="ztree"></ul>
-								<ul id="temp-tree" class="ztree" style="display: none;"></ul>
+								<ul id="sidebar-tree" class="ztree showIcon"></ul>
+								<!--<ul id="temp-tree" class="ztree" style="display: none;"></ul>-->
 							</div>
 							<div  class="mn-htmlmain">
 							<!--	主体区域-->
@@ -259,7 +263,7 @@
 		</div>
 		<!--页面链接弹出框-->
 		<div class="link-modal">
-			<ul id="modal-tree" class="ztree"></ul>
+			<ul id="modal-tree" class="ztree showIcon"></ul>
 		</div>
     <script src="../plugin/jQuery/jquery.min.js"></script>
 		<script src="../plugin/d3/d3.v3.min.js"></script>

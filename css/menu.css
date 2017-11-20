@@ -594,6 +594,9 @@ li {
 	background-color: #FFFFFF;
 }
 /*tree*/
+ul.ztree {
+	height: auto;
+}
 .ztree li ul{ 
 	margin:0; 
 	padding:0;
@@ -624,6 +627,7 @@ li {
 	float:right;
 	color:#007AFF;
 	padding: 0;
+	margin-right: 15px;
 }
 .ztree .page-link-btn:hover {
 	background-color: transparent;
@@ -632,4 +636,25 @@ li {
 	display: inline-block;
 	font-size: 18px;
 	margin-left: 20px;
+}
+.match-menu-box {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 20px;
+}
+.set-link-btn {
+	width: 60px;
+	height: 28px;
+	border: 1px solid #5786e6;
+	background-color: transparent;
+	color: #578FE6;
+	font-size: 12px;
+	cursor: pointer;
+}
+.set-link-btn:nth-of-type(2){
+	margin-right: 15px;
+	margin-left: 10px;
+}
+.set-link-btn-box {
+	display: inline-block;
+	float: right;
 }
