@@ -114,9 +114,9 @@ $(function(){
       .off('click', '.onAdd')
       .on('click', '.onAdd', function () {
 
-        var extractFieldHtml = $('.where').prop('outerHTML');
+        var whereHtml = $('.where').prop('outerHTML');
         //$('.extractField').remove();
-        $('.wheres').append(extractFieldHtml);
+        $('.wheres').append(whereHtml);
 
 
       })
@@ -126,8 +126,11 @@ $(function(){
     $(document.body)
       .off('click', '.onLessen')
       .on('click', '.onLessen', function () {
-        console.log($(this).parents('.where').length)
-        $(this).parents('.where').remove();
+        if($('.where').length <2) {
+            layer.msg('最后一个提取条件不能删除')
+        } else {
+            $(this).parents('.where').remove();
+        }
       })
   }
 

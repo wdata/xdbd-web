@@ -97,9 +97,9 @@ function bind_click_add() {
     .off('click', '.add')
     .on('click', '.add', function () {
 
-      var extractFieldHtml = $('.extractField').prop('outerHTML');
+      var inputHtml = $('.extractField').prop('outerHTML');
       //$('.extractField').remove();
-      $('.extractFields').append(extractFieldHtml);
+      $('.extractFields').append(inputHtml);
 
 
     })
@@ -110,7 +110,11 @@ function bind_click_add() {
       .off('click', '.lessen')
       .on('click', '.lessen', function () {
         console.log($('.extractField').length)
-          $(this).parents('.extractField').remove();
+          if($('.extractField').length <2) {
+            layer.msg('最后一个提取条件不能删除')
+          } else {
+            $(this).parents('.extractField').remove();
+          }
       })
   }
 
