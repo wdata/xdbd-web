@@ -48,8 +48,9 @@
       var this_actionCompName;
       var this_actionComp = '';
       var this_data = {};
+      var this_delete = true; //新建
       var onenv = true;
-      var $url = '../xdbd-wf';  //../xdbd-wf
+      var $url = '';  //../xdbd-wf
       console.log(this_onenv)
 
       if(this_onenv == 'dev') {
@@ -61,12 +62,8 @@
       if(template){
         this_isTemplate = true;
       }
-//      if(JobId) {
-//        jobid = JobId;
-//      }
 
       init_dag();
-//      init_task();
 
       var property={
         width:1230,
@@ -109,25 +106,24 @@
         demo = $.createGooFlow($("#demo"), property);
         demo.setNodeRemarks(remark);
         demo.onItemDel = function (id, type) {
-          var self = this;
-          console.log(self)
-          // if (confirm("确定要删除该单元吗?")) {
-          //   var self = this;
+            var self = this;
+            console.log(self)
+            if (confirm("确定要删除该单元吗?")) {
+                init_delec(id);
+                self.blurItem();
+                return true;
+            } else {
+                return false;
+            }
+          // layer.confirm('确定要删除该组件吗？', {
+          //   btn: ['确定','取消'] //按钮
+          // }, function(){
           //   init_delec(id);
           //   self.blurItem();
           //   return true;
-          // } else {
-          //   return false;
-          // }
-          layer.confirm('确定要删除该组件吗？', {
-            btn: ['确定','取消'] //按钮
-          }, function(){
-            init_delec(id);
-            self.blurItem();
-            return true;
-          }, function(){
-            // return false;
-          });
+          // }, function(){
+          //   // return false;
+          // });
         };
         //导出图片功能 END
         var exportName = "流程图";
@@ -173,6 +169,7 @@
           };
           //新建流程图
           demo.onBtnNewClick = function () {
+            this_delete = false;
             demo.clearData();
           };
           //保存流程图
@@ -314,6 +311,8 @@
                 getDag = dags.dag;
               }
               showDag(getDag)
+            } else {
+              layer.msg(data.message)
             }
           },error:function(data){
             console.log(data)
@@ -338,6 +337,8 @@
                 arr.push('<option value='+item.actionId+'>'+item.name+'</option>');
               })
               $("#ele_genre").append(arr);
+            } else {
+              layer.msg(data.message)
             }
           },error:function(data){
             layer.msg(JSON.stringify(data))
@@ -360,6 +361,8 @@
             //alert(JSON.stringify(this_actionComp))
             fn();
            //return this_actionComp;
+          } else {
+              layer.msg(data.message)
           }
         })
       }
@@ -380,6 +383,8 @@
                 layer.msg('删除成功')
                 delete this_data[arr];
 //               alert(JSON.stringify(this_data))
+              } else {
+                  layer.msg(data.message)
               }
             }, error: function (data) {
               layer.msg(JSON.stringify(data))
@@ -404,7 +409,7 @@
               "attValue":JSON.stringify(jsonStr)
             }),success:function(data){
               if(data.code == 0) {
-                layer.msg('保存成功！');
+                layer.msg('保存成功!');
               } else {
                 layer.msg(data.message)
               }

@@ -212,10 +212,10 @@ $(function(){
     $(document.body)
       .off('click', '.onAdd')
       .on('click', '.onAdd', function () {
-
-        var extractFieldHtml = $('.onFilter').prop('outerHTML');
+        // alert('111')
+        var onFieldsHtml = $('.onFilter').prop('outerHTML');
         //$('.onFilters').remove();
-        $('.onFilters').append(extractFieldHtml);
+        $('.onFilters').append(onFieldsHtml);
       })
   }
 
@@ -232,10 +232,10 @@ $(function(){
     $(document.body)
       .off('click', '.extractAdd')
       .on('click', '.extractAdd', function () {
-
-        var extractFieldHtml = $('.extractField').prop('outerHTML');
+        // alert("222")
+        var extractFieldsHtml = $('.extractField').prop('outerHTML');
         //$('.onFilters').remove();
-        $('.extractFields').append(extractFieldHtml);
+        $('.extractFields').append(extractFieldsHtml);
       })
   }
 

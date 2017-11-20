@@ -109,7 +109,7 @@ function bind_click_add() {
     $(document.body)
       .off('click', '.lessen')
       .on('click', '.lessen', function () {
-        //console.log($(this).parents('.extractField').length)
+        console.log($('.extractField').length)
           $(this).parents('.extractField').remove();
       })
   }

@@ -13,6 +13,36 @@ var $url = '../xdbd-wf';  //../xdbd-wf
 
 $('.trade_type').html(industryType());
 
+//搜索
+function stencilSeek() {
+    var stencilName = $('.stencil_name').val();
+    var tradeType = $('.trade_type').val();
+    $.ajax({
+        type:"POST",
+        url:$url+"/api/job/v1/search",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify({
+            'projectId': this_projectId,
+            'businessType': tradeType,
+            'name': stencilName
+        }),
+        success:function(rs){
+            console.log(rs)
+            if(rs.code == 0) {
+                var arr = new Array;
+                console.log(data.data)
+                $.each(rs.data,function(index,item) {
+                    arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)"> <p>'+item.name+'_模板</p> <span>'+item.remark+'</span> </dd> </dl>')
+                })
+                $("#demand_list").html(arr);
+            }
+        },error:function(data){
+            console.log(JSON.stringify(data))
+      }
+    })
+}
+
 //调用模板列表
 var getAll = {
   projectId: this_projectId

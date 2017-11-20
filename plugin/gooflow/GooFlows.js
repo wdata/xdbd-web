@@ -250,14 +250,14 @@ function GooFlow(bgDiv,property){
 			  X=X-vX;
 			  if(X<0)	X=0;
 			  else if(X>This.$workArea.width())
-				X=This.$workArea.width();
+				X=This.$workArea.width()-25 ;
 			  This.$lineMove.css({left:X+"px"});
 			}
 			else if(This.$lineMove.data("type")=="tb"){
 			  Y=Y-vY;
 			  if(Y<0)	Y=0;
 			  else if(Y>This.$workArea.height())
-				Y=This.$workArea.height();
+				Y=This.$workArea.height()-2;
 			  This.$lineMove.css({top:Y+"px"});
 		    }
 			isMove=true;
