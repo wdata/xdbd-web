@@ -93,9 +93,9 @@ $(function(){
       .off('click', '.sortAdd')
       .on('click', '.sortAdd', function () {
 
-        var extractFieldHtml = $('.sortField').prop('outerHTML');
+        var sortHtml = $('.sortField').prop('outerHTML');
         //$('.onFilters').remove();
-        $('.sortFields').append(extractFieldHtml);
+        $('.sortFields').append(sortHtml);
       })
   }
 
@@ -103,8 +103,11 @@ $(function(){
     $(document.body)
       .off('click', '.sortLessen')
       .on('click', '.sortLessen', function () {
-        // console.log($(this).parents('.extractField').length)
-        $(this).parents('.sortField').remove();
+        if($('.sortField').length <2) {
+            layer.msg('最后一个提取条件不能删除')
+        } else {
+            $(this).parents('.sortField').remove();
+        }
       })
   }
 

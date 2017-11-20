@@ -2,7 +2,7 @@
  * Created by qiangxl on 2017/10/12.
  */
 //增加字段
-
+alert(1211)
 $(function(){
   initFromTable();
   bind_change_fromTable();
@@ -207,15 +207,14 @@ $(function(){
     });
     return ary;
   }
-
   function bind_click_onAdd() {
     $(document.body)
       .off('click', '.onAdd')
       .on('click', '.onAdd', function () {
-        // alert('111')
-        var onFieldsHtml = $('.onFilter').prop('outerHTML');
+        alert(111)
+        var joinHtml = $('.onFilter').prop('outerHTML');
         //$('.onFilters').remove();
-        $('.onFilters').append(onFieldsHtml);
+        $('.onFilters').append(joinHtml);
       })
   }
 
@@ -223,28 +222,31 @@ $(function(){
     $(document.body)
       .off('click', '.onLessen')
       .on('click', '.onLessen', function () {
-        // console.log($(this).parents('.extractField').length)
-        $(this).parents('.onFilter').remove();
+        if($('.onFilter').length <2) {
+            layer.msg('最后一个提取条件不能删除')
+          } else {
+            $(this).parents('.onFilter').remove();
+          }
       })
   }
-
+alert(111)
   function bind_click_extractAdd() {
     $(document.body)
-      .off('click', '.extractAdd')
-      .on('click', '.extractAdd', function () {
-        // alert("222")
-        var extractFieldsHtml = $('.extractField').prop('outerHTML');
-        //$('.onFilters').remove();
-        $('.extractFields').append(extractFieldsHtml);
-      })
-  }
+      .off('click', '.joinAdd')
+      .on('click', '.joinAdd', function () {
+        var joinsHtml = $('.joinField').prop('outerHTML');
+        $('.joinFields').append(joinsHtml)
+      }
 
   function bind_click_extractLessen() {
     $(document.body)
-      .off('click', '.extractLessen')
-      .on('click', '.extractLessen', function () {
-        // console.log($(this).parents('.extractField').length)
-        $(this).parents('.extractField').remove();
+      .off('click', '.joinLessen')
+      .on('click', '.joinLessen', function () {
+        if($('.joinField').length <2) {
+            layer.msg('最后一个提取条件不能删除')
+        } else {
+            $(this).parents('.joinField').remove();
+        }
       })
   }
 

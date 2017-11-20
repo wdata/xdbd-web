@@ -193,6 +193,9 @@
                 console.log(data)
                 if (data.code == 0) {
                   layer.msg('保存成功！');
+                  setTimeout(function() {
+                    location.reload();
+                  },2000)
                 } else {
                   layer.msg(data.message)
                 }

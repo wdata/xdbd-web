@@ -6,6 +6,10 @@ $(function(){
   initFromTable();
   bind_click_sql();
   bind_click_saveActionComp();
+  bind_click_groupAdd();
+  bind_click_groupLessen();
+  bind_click_extractAdd();
+  bind_click_extractLessen();
   setVal();
   $(".stepName").val(etlName);
 
@@ -45,6 +49,45 @@ $(function(){
       fn_saveActionComp(getVal());
     });
   }
+    function bind_click_groupAdd() {
+        $(document.body)
+        .off('click', '.onAdd')
+        .on('click', '.onAdd', function () {
+            var groupHtml = $('.group').prop('outerHTML');
+            $('.groups').append(groupHtml);
+        })
+    }
+    function bind_click_groupLessen() {
+        $(document.body)
+        .off('click', '.onLessen')
+        .on('click', '.onLessen', function () {
+            if($('.group').length <2) {
+                layer.msg('最后一个提取条件不能删除')
+            } else {
+                $(this).parents('.group').remove();
+            }
+        })
+    }
+    function bind_click_extractAdd() {
+        $(document.body)
+        .off('click', '.extractAdd')
+        .on('click', '.extractAdd', function () {
+            var groupsHtml = $('.groupField').prop('outerHTML');
+            // $('.extractField').remove();
+            $('.groupFields').append(groupsHtml);
+        })
+    }
+    function bind_click_extractLessen() {
+        $(document.body)
+        .off('click', '.extractLessen')
+        .on('click', '.extractLessen', function () {
+            if($('.groupField').length <2) {
+                layer.msg('最后一个提取条件不能删除')
+            } else {
+                $(this).parents('.groupField').remove();
+            }
+        })
+    }
 
   function getVal(){
     var data = {};
