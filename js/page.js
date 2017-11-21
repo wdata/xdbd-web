@@ -456,7 +456,7 @@ $(function(){
 		if(linkPageId!=="null"&&linkPageId!=="undefined"){
 			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
 		}
-	})
+	});
 	
 	//提示
 	var todo = {
