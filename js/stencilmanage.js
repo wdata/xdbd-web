@@ -104,7 +104,7 @@ function deleteBtn(_this) {
 function demandBtn(_this) {
   console.log(_this)
   localStorage.setItem('directoryId',$(_this).parents(".new_demand").attr("id"));
-  sessionStorage.setItem("isTemplate",$(_this).attr('data-id'));
+  localStorage.setItem("isTemplate",$(_this).attr('data-id'));
   window.location.href = 'etlChart.html';
 }
 //弹出层
@@ -146,7 +146,7 @@ function newBtn(popups) {
       createUser: this_createUser,
       rotPath: this_rootPath,
       remark: newDescribe,
-      businesss_type: newType,
+      business_type: newType,
       versionId: this_versionId
     };
     $.ajax({

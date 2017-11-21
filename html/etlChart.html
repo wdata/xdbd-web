@@ -37,9 +37,10 @@
       var this_projectId = localStorage.getItem("projectId");
       var this_createUser = localStorage.getItem("createUser");
       var this_updateUser = localStorage.getItem("updateUser");
-      var template = sessionStorage.getItem("isTemplate");
+      var template = localStorage.getItem("isTemplate"); //是否为模板
+      var this_companyId = localStorage.getItem("companyId");
       var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
-      var this_isTemplate = false;  //是否为模板
+      // var template = false;  
       var this_remarkName = [];  //算法备注
       var this_enName = [];  //算法名称
       var this_algParam = [];
@@ -59,9 +60,9 @@
         onenv = false;
       }
 
-      if(template){
-        this_isTemplate = true;
-      }
+      // if(template){
+      //   template = true;
+      // }
 
       init_dag();
 
@@ -177,12 +178,13 @@
             console.log(Export())
             var jsons = {};
             jsons.jobId = jobid;
-            jsons.isTemplate = this_isTemplate;
+            jsons.isTemplate = JSON.parse(template);
             jsons.updateUser = this_updateUser;
             jsons.versionId = this_versionId;
             jsons.projectId = this_projectId;
             jsons.dag = JSON.stringify(Export());
             jsons.algorithm = $('.ele_alg').find('input').val();
+            jsons.companyId = this_companyId;
             $.ajax({
               type: "POST",
               url: $url + '/api/job/v1/update',
@@ -274,7 +276,6 @@
         if($(_this).parents(".archive").find(".son_archive input").length > 1) {
           $(_this).parents(".archive").find(".son_archive input").last().remove();
         }
-
       }
       //属性详情展示遍历方法
       function ergodic(arr,list) {
