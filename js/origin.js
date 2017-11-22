@@ -156,7 +156,7 @@
   function cancelBtn(_this) {
     ds = $(_this).parents('.list_origin').attr('id');
     layer.confirm('是否要删除该数据源？', {
-      btn: ['是','否'] //按钮
+      btn: ['确认','取消'] //按钮
     }, function(){
       $.ajax({
         type: 'POST',
@@ -169,8 +169,10 @@
         success: function (res) {
           console.log(res);
           if (res.code === 0) {
-            layer.msg('成功删除数据源');
+            layer.msg('成功删除数据源',{time: 1000});
             get_dataSource();
+          } else {
+            layer.msg(res.message,{time: 1000})
           }
         },
         error: function (err) {
@@ -179,7 +181,7 @@
       });
     }, function(){
       layer.msg('已保留该数据源', {
-        time: 2000 //2s后自动关闭
+        time: 1000 //2s后自动关闭
       });
     });
   }
