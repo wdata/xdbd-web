@@ -9,32 +9,42 @@ var this_companyId = localStorage.getItem("companyId");
 var $url = '../xdbd-etl'; //../xdbd-etl
 
 $('.trade_type').html(industryType());
-
-//获取ETL列表
-var parens = {
-  projectId: this_projectId
-}
-$.ajax({
-  type: "POST",
-  url: $url+"/api/action/v1/getActionTemplateList",
-  dataType: "json",
-  contentType: "application/json",
-  data: JSON.stringify(parens),
-  success: function (data) {
-    if (data.code == 0) {
-      var arr = new Array;
-      console.log(data.data)
-      itemId = data.data;
-      $.each(data.data, function (index, item) {
-        //graphDiagram.push(item.actionId+','+item.dag);
-        arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
-      })
-      $("#demand_list").html(arr);
-    }
-  }, error: function (data) {
-    console.log(JSON.stringify(data))
+getTemplateList('','');
+function getTemplateList(name,type) {
+  //获取ETL列表
+  var parens = {
+    'projectId': this_projectId,
+    'actionName':name,
+    'businessType': type
   }
-})
+  $.ajax({
+    type: "POST",
+    url: $url+"/api/action/v1/getActionTemplateList",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify(parens),
+    success: function (data) {
+      if (data.code == 0) {
+        var arr = new Array;
+        console.log(data.data)
+        itemId = data.data;
+        $.each(data.data, function (index, item) {
+          //graphDiagram.push(item.actionId+','+item.dag);
+          arr.push('<dl class="new_demand" id='+item.actionId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class='+item.actionId+' id='+item.versionId+'> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+        })
+        $("#demand_list").html(arr);
+      }
+    }, error: function (data) {
+      console.log(JSON.stringify(data))
+    }
+  })
+};
+//搜索
+function templateBtn() {
+  var tepName = $('.etl-name').val();
+  var tepType = $('.etl-type').val();
+  getTemplateList(tepName,tepType);
+}
 function overBtn(_this) {
   $(_this).find("#demand_delete").css("display","block")
 }

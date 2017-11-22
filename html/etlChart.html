@@ -194,12 +194,12 @@
               success: function (data) {
                 console.log(data)
                 if (data.code == 0) {
-                  layer.msg('保存成功！');
+                  layer.msg('保存成功',{time: 1000});
                   setTimeout(function() {
                     location.reload();
                   },2000)
                 } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
                 }
               }, error: function (data) {
                 layer.msg(JSON.stringify(data))
@@ -223,9 +223,9 @@
               }), success: function (data) {
                 console.log(data);
                 if (data.code == 0) {
-                  layer.msg("执行成功")
+                  layer.msg("执行成功",{time: 1000})
                 } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
                 }
               }, error: function (data) {
                 console.log(JSON.stringify(data))
@@ -247,12 +247,12 @@
               }), success: function (data) {
 //              var data = data.data;
                 if (data.code == 0) {
-                  layer.msg('模板保存成功');
+                  layer.msg('模板保存成功',{time: 1000});
                   setTimeout(function() {
                     window.location.href = 'stencilmanage.html';
                   },2000)
                 } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
                 }
               }, error: function (data) {
                 console.log(JSON.stringify(data))
@@ -316,7 +316,7 @@
               }
               showDag(getDag)
             } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
             }
           },error:function(data){
             console.log(data)
@@ -342,10 +342,10 @@
               })
               $("#ele_genre").append(arr);
             } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
             }
           },error:function(data){
-            layer.msg(JSON.stringify(data))
+            layer.msg(JSON.stringify(data),{time: 1000})
           }
         })
       };
@@ -366,7 +366,7 @@
             fn();
            //return this_actionComp;
           } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
           }
         })
       }
@@ -384,14 +384,14 @@
             }),
             success: function (data) {
               if(data.code == 0) {
-                layer.msg('删除成功')
+                layer.msg('删除成功',{time: 1000})
                 delete this_data[arr];
 //               alert(JSON.stringify(this_data))
               } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
               }
             }, error: function (data) {
-              layer.msg(JSON.stringify(data))
+              layer.msg(JSON.stringify(data),{time: 1000})
             }
           })
         }
@@ -413,12 +413,12 @@
               "attValue":JSON.stringify(jsonStr)
             }),success:function(data){
               if(data.code == 0) {
-                layer.msg('保存成功!');
+                layer.msg('保存成功!',{time: 1000});
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             },error:function(data){
-              layer.msg(JSON.stringify(data))
+              layer.msg(JSON.stringify(data),{time: 1000})
             }
           });
         }
@@ -451,10 +451,10 @@
                 })
                 $("#ele_arithmetic").append(alg);
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             },error:function(data){
-              layer.msg(JSON.stringify(data))
+              layer.msg(JSON.stringify(data),{time: 1000})
             }
           });
         }
