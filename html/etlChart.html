@@ -37,9 +37,10 @@
       var this_projectId = localStorage.getItem("projectId");
       var this_createUser = localStorage.getItem("createUser");
       var this_updateUser = localStorage.getItem("updateUser");
-      var template = sessionStorage.getItem("isTemplate");
+      var template = localStorage.getItem("isTemplate"); //是否为模板
+      var this_companyId = localStorage.getItem("companyId");
       var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
-      var this_isTemplate = false;  //是否为模板
+      // var template = false;  
       var this_remarkName = [];  //算法备注
       var this_enName = [];  //算法名称
       var this_algParam = [];
@@ -50,7 +51,7 @@
       var this_data = {};
       var this_delete = true; //新建
       var onenv = true;
-      var $url = '';  //../xdbd-wf
+      var $url = '../xdbd-wf';  //../xdbd-wf
       console.log(this_onenv)
 
       if(this_onenv == 'dev') {
@@ -59,9 +60,9 @@
         onenv = false;
       }
 
-      if(template){
-        this_isTemplate = true;
-      }
+      // if(template){
+      //   template = true;
+      // }
 
       init_dag();
 
@@ -177,12 +178,13 @@
             console.log(Export())
             var jsons = {};
             jsons.jobId = jobid;
-            jsons.isTemplate = this_isTemplate;
+            jsons.isTemplate = JSON.parse(template);
             jsons.updateUser = this_updateUser;
             jsons.versionId = this_versionId;
             jsons.projectId = this_projectId;
             jsons.dag = JSON.stringify(Export());
             jsons.algorithm = $('.ele_alg').find('input').val();
+            jsons.companyId = this_companyId;
             $.ajax({
               type: "POST",
               url: $url + '/api/job/v1/update',
@@ -192,12 +194,12 @@
               success: function (data) {
                 console.log(data)
                 if (data.code == 0) {
-                  layer.msg('保存成功！');
+                  layer.msg('保存成功',{time: 1000});
                   setTimeout(function() {
                     location.reload();
                   },2000)
                 } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
                 }
               }, error: function (data) {
                 layer.msg(JSON.stringify(data))
@@ -221,9 +223,9 @@
               }), success: function (data) {
                 console.log(data);
                 if (data.code == 0) {
-                  layer.msg("执行成功")
+                  layer.msg("执行成功",{time: 1000})
                 } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
                 }
               }, error: function (data) {
                 console.log(JSON.stringify(data))
@@ -245,12 +247,12 @@
               }), success: function (data) {
 //              var data = data.data;
                 if (data.code == 0) {
-                  layer.msg('模板保存成功');
+                  layer.msg('模板保存成功',{time: 1000});
                   setTimeout(function() {
                     window.location.href = 'stencilmanage.html';
                   },2000)
                 } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
                 }
               }, error: function (data) {
                 console.log(JSON.stringify(data))
@@ -274,7 +276,6 @@
         if($(_this).parents(".archive").find(".son_archive input").length > 1) {
           $(_this).parents(".archive").find(".son_archive input").last().remove();
         }
-
       }
       //属性详情展示遍历方法
       function ergodic(arr,list) {
@@ -315,7 +316,7 @@
               }
               showDag(getDag)
             } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
             }
           },error:function(data){
             console.log(data)
@@ -341,10 +342,10 @@
               })
               $("#ele_genre").append(arr);
             } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
             }
           },error:function(data){
-            layer.msg(JSON.stringify(data))
+            layer.msg(JSON.stringify(data),{time: 1000})
           }
         })
       };
@@ -365,7 +366,7 @@
             fn();
            //return this_actionComp;
           } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
           }
         })
       }
@@ -383,14 +384,14 @@
             }),
             success: function (data) {
               if(data.code == 0) {
-                layer.msg('删除成功')
+                layer.msg('删除成功',{time: 1000})
                 delete this_data[arr];
 //               alert(JSON.stringify(this_data))
               } else {
-                  layer.msg(data.message)
+                  layer.msg(data.message,{time: 1000})
               }
             }, error: function (data) {
-              layer.msg(JSON.stringify(data))
+              layer.msg(JSON.stringify(data),{time: 1000})
             }
           })
         }
@@ -412,12 +413,12 @@
               "attValue":JSON.stringify(jsonStr)
             }),success:function(data){
               if(data.code == 0) {
-                layer.msg('保存成功!');
+                layer.msg('保存成功!',{time: 1000});
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             },error:function(data){
-              layer.msg(JSON.stringify(data))
+              layer.msg(JSON.stringify(data),{time: 1000})
             }
           });
         }
@@ -450,10 +451,10 @@
                 })
                 $("#ele_arithmetic").append(alg);
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             },error:function(data){
-              layer.msg(JSON.stringify(data))
+              layer.msg(JSON.stringify(data),{time: 1000})
             }
           });
         }

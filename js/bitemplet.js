@@ -78,8 +78,8 @@
 	    content: '' +
 	    '<div class="demand_name"><label>页面名称：<span>*</span></label><input class="new_name" type="text" ></div>' +
 	    '<div class="demand_name"><label>行业类型：<span>*</span></label><select class="new_type" onchange="method(this)"><option value="全部">全部</option><option value="房地产">房地产</option><option value="酒店">酒店</option><option value="互联网">互联网</option><option value="自定义">自定义</option></select><input class="new_Inp" type="text" id="input"/></div>' +
-	    '<div class="demand_name"><label>页面描述：<span>*</span></label><textarea maxlength="20" class="new_describe"></textarea></div>' +
-	    '<p class="hint">20个字以内</p>' +
+	    '<div class="demand_name"><label>页面描述：<span>*</span></label><textarea maxlength="100" class="new_describe"></textarea></div>' +
+	    '<p class="hint">100个字以内</p>' +
 	    '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
 	  });
 	});

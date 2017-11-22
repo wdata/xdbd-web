@@ -228,7 +228,7 @@
 
                 fn_preview(previewHead,previewData);
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             }
           });
@@ -250,12 +250,12 @@
             }),
             success:function(data){
               if(data.code == 0) {
-                layer.msg("模板保存成功");
+                layer.msg("模板保存成功",{time: 1000});
                 setTimeout(function() {
                     window.location.href = 'etlStencil.html';
                 },2000)
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
 
             }
@@ -482,7 +482,7 @@
 //              layer.msg('保存成功')
               init_actionComp();
             } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
             }
             //alert(data.message);
           }
@@ -511,11 +511,13 @@
             }),
             success:function(data){
               if(data.code == 0) {
-               alert(data)
+               // alert(data)
                 this_actionId = data.data.actionId;
                 this_isTemplate = false;
                 init_actionComp();
                 fn_saveActionComp_exec(val);
+              } else {
+                layer.msg(data.data.message,{time: 1000})
               }
             },error:function(data){
               console.log(JSON.stringify(data))
@@ -580,9 +582,9 @@
             data:JSON.stringify(load),
             success:function(data){
               if(data.code == 0) {
-                layer.msg('上传成功')
+                layer.msg('上传成功',{time: 1000})
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             }
           });
@@ -619,9 +621,9 @@
             }),
             success:function(data){
               if(data.code == 0) {
-                layer.msg('删除成功')
+                layer.msg('删除成功',{time: 1000})
               }else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             },error:function(data){
               layer.msg(JSON.stringify(data))
