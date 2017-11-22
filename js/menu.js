@@ -140,7 +140,12 @@ $(function(){
               		var html = "";
               		var html2 = "";//页面展示
               		if(res.data!==null){
-              			data = res.data;
+              			if(res.data.length>6){
+                            data = res.data.slice(0,6);
+                            // layer.msg("只显示前6条数据", {icon: 6});
+						}else{
+              				data = res.data;
+						}
           				topMenu = data;
               		}else{
               			data = [];
@@ -314,8 +319,15 @@ $(function(){
 	}
 	
 	$("#clearTopMenu").click(function(e){
-		clearTopMenu(projectId,versionId,updateUser);
-		e.preventDefault();
+        layer.confirm('确定清除顶部菜单？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            clearTopMenu(projectId,versionId,updateUser);
+            e.preventDefault();
+        }, function(){
+            layer.closeAll();
+        });
+
 	})
 	//清空顶部菜单
 	function clearTopMenu(projectId,versionId,updateUser){
@@ -464,7 +476,7 @@ $(function(){
 	      type: 1,
 	      btn: ['确定', '取消'],
 	      area: ['300px', '200px'],
-	      title:'添加菜单名称',
+	      title:'添加左侧菜单',
 	      shade: 0, 
 	      content:'<input type="text" placeholder="请输入菜单名称" class="le-add-menu"/>',
 	      yes: function(index, layero){
@@ -488,7 +500,9 @@ $(function(){
 	
 	//点击头部菜单展示对应的左部菜单
 	$("#scroll-topmenu").delegate(".swiper-slide","click",function(e){
+		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
+		$(".mn-menu li").eq($idx).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
 		sessionStorage.setItem("tId",topMenuId);
 		parentId = $(this).attr("reportmenuid");
@@ -499,7 +513,9 @@ $(function(){
 	
 	//点击页面头部获取左部菜单
 	$(".mn-menu").delegate("li","click",function(){
+		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
+		$(".m-scroll-navs .swiper-slide").eq($idx).addClass("active").siblings().removeClass("active");
 		topMenuId = $(this).attr("reportmenuid");
 		sessionStorage.setItem("tId",topMenuId);
 		parentId = $(this).attr("reportmenuid");
@@ -590,7 +606,7 @@ $(function(){
             },
 			success:function(res){
               	if(res.code===0){
-              		findLeftMenu(projectId,versionId,topMenuId);
+              		findLeftMenu(projectId,versionId,sessionStorage.getItem("tId"));
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -632,7 +648,7 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
-              		findLeftMenu(projectId,versionId,topMenuId);
+                    findLeftMenu(projectId,versionId,sessionStorage.getItem("tId"))//刷新左部菜单列表
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -644,13 +660,19 @@ $(function(){
 	
 	//清空--topMenuId对应的 leftMenu
 	$(".le-clear").click(function(e){
-		console.log(sessionStorage.getItem("tId"));
-		if(sessionStorage.getItem("tId")===null){
-			layer.msg("请先选择要清除的子菜单的顶部菜单", {icon: 0});
-		}else{
-			clearLeftMenu(projectId,versionId,sessionStorage.getItem("tId"),2,updateUser);
-		}
-		e.preventDefault();
+        layer.confirm('确定清除左部菜单？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            if(sessionStorage.getItem("tId")===null){
+                layer.msg("请先选择要清除的子菜单的顶部菜单", {icon: 0});
+            }else{
+                clearLeftMenu(projectId,versionId,sessionStorage.getItem("tId"),2,updateUser);
+            }
+            e.preventDefault();
+        }, function(){
+            layer.closeAll();
+        });
+
 	})
 	//清空左部菜单
 	function clearLeftMenu(projectId,versionId,reportMenuId,menuType,updateUser){
@@ -747,7 +769,7 @@ $(function(){
 			createPageLink(projectId,versionId,reportMenuId,pageId,updateUser);
 			layer.close(index);
 		}else{
-			layer.msg("请选择	BI页面", {icon: 0});
+			layer.msg("请选择BI页面", {icon: 0});
 		}
 	}
 	
@@ -940,7 +962,7 @@ $(function(){
 			success:function(res){
 	          	if(res.code===0){
 	          		$(".m-uploadimg>img").attr("src","../images/c_img.png");
-					$(".mn-logobox>img").attr("src","");
+					$(".mn-logobox>img").attr("src","../images/mlogo.png");
 	          		layer.msg("删除图片成功", {icon: 6});
 	            }else{
 	            	layer.msg("删除图片失败", {icon: 0});
@@ -1197,26 +1219,28 @@ $(function(){
 						}
 						if(logo!==undefined&&logo!==null){
 							$(".mn-logobox>img").attr("src",$url1+logo);
+							$(".m-uploadimg>img").attr("src",$url1+logo);
 						}else{
 							$(".mn-logobox>img").attr("src","../images/mlogo.png");
+                            $(".m-uploadimg>img").attr("src","../images/c_img.png");
 						}
 						if(topWidth===null||topHeight===null||topWidth==="1920"&&topHeight==="60"){
 							$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
-							$(".mtop-width").val("1200");
-							$(".mtop-height").val("60");
+							$(".mtop-width").val("1200").attr("readonly","readonly");
+							$(".mtop-height").val("60").attr("readonly","readonly");
 						}else{
 							$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
-							$(".mtop-width").val(topWidth);
-							$(".mtop-height").val(topHeight);
+							$(".mtop-width").val(topWidth).removeAttr("readonly");
+							$(".mtop-height").val(topHeight).removeAttr("readonly");
 						}
 						if(leftWidth===null||leftHeight===null||leftWidth==="240"&&leftHeight==="600"){
 							$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
-							$(".mleft-width").val("240");
-							$(".mleft-height").val("600");
+							$(".mleft-width").val("240").attr("readonly","readonly");
+							$(".mleft-height").val("600").attr("readonly","readonly");
 						}else{
 							$(".leftsize button").eq(1).addClass("active").siblings().removeClass("active");
-							$(".mleft-width").val(leftWidth);
-							$(".mleft-height").val(leftHeight);
+							$(".mleft-width").val(leftWidth).removeAttr("readonly");
+							$(".mleft-height").val(leftHeight).removeAttr("readonly");
 						}
 						console.log(typeCode);
 						$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+(typeCode-1));

@@ -133,10 +133,13 @@ $(function(){
 		
 		if(onCurEnv==="test"){
 			$("#create-proj-btn").hide();
+			$("#importProj").hide();
 		}else if(onCurEnv==="dev"){
 			$("#create-proj-btn").show();
+            $("#importProj").show();
 		}else if(onCurEnv==="prod"){
 			$("#create-proj-btn").hide();
+            $("#importProj").hide();
 //			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
 //  		window.open("../html/preview.html" + url);
 		}
@@ -312,7 +315,7 @@ $(function(){
                 if(dirType==="1"||dirType==="14"||dirType==="16"||dirType==="6"
                     ||dirType==="7"||dirType==="12"||dirType==="13"||dirType==="15"
                     ||dirType==="17"||dirType==="18"||dirType==="19"||dirType==="8"
-                    ||dirType==="9"||dirType==="11"){
+                    ||dirType==="9"||dirType==="11"||dirType==="5"){
                     currentNode.tags=['1'];
                 }
 
@@ -1186,6 +1189,7 @@ $(function(){
 	              	if(res.code===0){
 						//删除成功,刷新项目树
 						getProjName(0);
+						$("#iframepage1").attr("src","html/void.html");
 						layer.msg("删除成功", {icon: 6});
 		            }
 				},
