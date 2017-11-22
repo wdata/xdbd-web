@@ -130,15 +130,6 @@
           $("#ele_id").val(id);
           if(model=="line"){
             obj=this.$lineData[id];
-            /**
-            $("#ele_type").val(obj.M);
-            $("#ele_left").val("");
-            $("#ele_top").val("");
-            $("#ele_width").val("");
-            $("#ele_height").val("");
-            $("#ele_from").val(obj.from);
-            $("#ele_to").val(obj.to);
-             */
           }else if(model=="node"){
             obj=this.$nodeData[id];
             this_webComponentId=id;
@@ -148,22 +139,6 @@
             $('.propertys').empty().load("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".html",function(){
               $.getScript("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".js");
             });
-//            var bbb = [];
-//            console.log(obj)
-//            for(i in obj) {
-//              bbb.push("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>");
-//              console.log(i,obj[i])
-//              console.log("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>")
-//            }
-//            $(".aaa").html(bbb);
-//            console.log($(".aaa").html());
-//            $("#ele_type").val(obj.type);
-//            $("#ele_left").val(obj.left);
-//            $("#ele_top").val(obj.top);
-//            $("#ele_width").val(obj.width);
-//            $("#ele_height").val(obj.height);
-//            $("#ele_from").val("");
-//            $("#ele_to").val("");
           }else if(model=="area") {
             console.log(model)
           }
@@ -176,20 +151,8 @@
         };
         //新建流程图
         demo.onBtnNewClick=function() {
-          demo.clearData();
+         window.location.href = 'etlStencil.html';
         };
-        // //打开流程图
-        // demo.onBtnOpenClick=function() {
-        //
-        // };
-        //保存流程图
-       // demo.onBtnSaveClick = function () {
-//          fn_saveActionComp(getVal());
-         // $('.saveActionComp').click();
-//            bind_click_saveActionComp();
-//          var saves = JSON.stringify(demo.exportData());
-//          console.log(saves)
-   //     };
         //刷新流程图
         demo.onFreshClick=function() {
           location.reload();
