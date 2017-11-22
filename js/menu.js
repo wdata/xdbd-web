@@ -742,6 +742,7 @@ $(function(){
 			default:
 				pageId = "";	
 		}
+
 		if(pageId){
 			createPageLink(projectId,versionId,reportMenuId,pageId,updateUser);
 			layer.close(index);
@@ -778,15 +779,16 @@ $(function(){
 		
 		var aObj = $("#" + treeNode.tId + IDMark_A);
 		if(treeId==="link-tree"){
-			var editStr = "<a id='+treeNode.id+' style='' class='page-link-btn'>创建链接</a>";
+			console.log(treeNode.pageId);
+			var editStr = `<a id="${treeNode.reportMenuId}" pageId="${treeNode.pageId}"  class="page-link-btn">${treeNode.pageId===null||treeNode.pageId===""?"创建链接":"已创建链接"}</a>`;
 			aObj.append(editStr);
 		}
 	}
-	
-	treeHover($("#match-tree"));
-	treeHover($("#link-tree"));
-	treeHover($("#modal-tree"));
-	treeHover($("#sidebar-tree"));
+	//
+	// treeHover($("#match-tree"));
+	// treeHover($("#link-tree"));
+	// treeHover($("#modal-tree"));
+	// treeHover($("#sidebar-tree"));
 	function treeHover(treeObj){
 		treeObj.hover(function(){
 			if (!treeObj.hasClass("showIcon")){
@@ -796,7 +798,8 @@ $(function(){
 			treeObj.removeClass("showIcon");
 		});
 	}
-	
+
+
 
 	/* 
 	 *样式
@@ -1038,6 +1041,7 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
+					$("#link-tree .curSelectedNode").find(".page-link-btn").text("已创建链接");
               		layer.msg(res.message, {icon: 6});
 	            }
 			},
@@ -1046,7 +1050,23 @@ $(function(){
 			}
 		});
 	}
-	
+
+	//取消链接
+	$("#del-pagelink-btn").click(function(e){
+        deletePageLink(projectId,versionId,reportMenuId,pageId,updateUser);
+        e.preventDefault();
+	});
+
+	//清除链接
+	$("#clear-pagelink-btn").click(function(e){
+		if(sessionStorage.getItem("tId")===null){
+            layer.msg("请先选择要清除的子菜单的顶部菜单", {icon: 0});
+		}else{
+            deletePageLink(projectId,versionId,sessionStorage.getItem("tId"),pageId,updateUser);
+		}
+        e.preventDefault();
+	});
+
 	//取消链接
 	function deletePageLink(projectId,versionId,reportMenuId,pageId,updateUser){
 		$.ajax({
@@ -1064,7 +1084,9 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
+                    findLeftMenu(projectId,versionId,sessionStorage.getItem("tId"));
               		layer.msg(res.message, {icon: 6});
+
 	            }
 			},
 			error:function(err){

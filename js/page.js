@@ -97,7 +97,7 @@ $(function(){
 		if($idx===1){
 			curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
 		}else if($idx===0){
-//			getFirstPages(projectId,versionId,pageFlowDirId);
+			// getFirstPages(projectId,versionId,pageFlowDirId);
 		}
 	})
 	
@@ -137,7 +137,7 @@ $(function(){
 							html += `
 								<li cid="${item.cid}" linkPageId="${item.linkPageId}">
 									<a href="javascript:;">${item.cid}</a>
-									<span class="set-flow-btn">${item.linkPageId==="null"?'设置链接':'已设置链接'}</span>
+									<span class="set-flow-btn">${item.linkPageId===null?'设置链接':'已设置链接'}</span>
 								</li>
 							`;
 						});
@@ -188,7 +188,7 @@ $(function(){
 						customData = data.htmlJson.customData;
 						cid = data.htmlJson.controls;
 						$.each(cid,function(i,item){
-							console.log(typeof item.linkPageId);
+							console.log(item.linkPageId);
 							html += `
 								<li cid="${item.cid}" linkPageId="${item.linkPageId}">
 									<a href="javascript:;">${item.cid}</a>
@@ -453,9 +453,9 @@ $(function(){
 			}
 		}
 		$(this).attr("linkPageId",linkPageId);
-		if(linkPageId!=="null"&&linkPageId!=="undefined"){
-			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
-		}
+		// if(linkPageId!=="null"&&linkPageId!=="undefined"){
+		// 	window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+		// }
 	});
 	
 	//提示
@@ -469,11 +469,19 @@ $(function(){
 		},
 		refresh:function(){
 			window.location.reload();
+		},
+		preview:function(e){
+            var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ pageId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+            window.open("../html/preview.html" + url);
+            e.preventDefault();
 		}
 	};
 	todo.tip();
 	$("#page-fresh").click(function(){
 		todo.refresh();
+	});
+	$("#page-preview").click(function(e){
+		todo.preview(e);
 	})
 	
 });//JQ END
