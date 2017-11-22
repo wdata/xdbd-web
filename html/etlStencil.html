@@ -11,13 +11,13 @@
 <div class="demand_top">
     <div class="form_validator">
         <label>模板名称：</label>
-        <input type="text" />
+        <input type="text" class="etl-name"/>
     </div>
     <div class="form_validator">
         <label>行业类型：</label>
-        <select class="trade_type"></select>
+        <select class="trade_type etl-type"></select>
     </div>
-    <div class="form_btn">搜索</div>
+    <div class="form_btn" onclick="templateBtn()">搜索</div>
 </div>
 <div class="demand_main">
     <dl class="new_demand" onclick="newEtlBtn()">

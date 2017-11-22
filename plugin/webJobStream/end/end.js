@@ -16,7 +16,7 @@ $(function() {
     var data = {};
     data = {
       "start": $('.end_name').val(),
-      "type": "start"
+      "type": "end"
     }
     return data;
   }
