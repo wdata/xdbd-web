@@ -83,23 +83,23 @@ $(function(){
 
   function bind_click_extractAdd() {
     $(document.body)
-      .off('click', '.extractAdd')
-      .on('click', '.extractAdd', function () {
-        var outputHtml = $('.extractField').prop('outerHTML');
-        //$('.extractField').remove();
-        // console.log(extractsFieldHtml)
-        $('.extractFields').append(outputHtml);
+      .off('click', '.outputAdd')
+      .on('click', '.outputAdd', function () {
+        var outputHtml = $('.outputField').prop('outerHTML');
+        //$('.outputField').remove();
+        // console.log(outputsFieldHtml)
+        $('.outputFields').append(outputHtml);
       })
   }
 
   function bind_click_extractLessen() {
     $(document.body)
-      .off('click', '.extractLessen')
-      .on('click', '.extractLessen', function () {
-        if($('.extractField').length <2) {
+      .off('click', '.outputLessen')
+      .on('click', '.outputLessen', function () {
+        if($('.outputField').length <2) {
             layer.msg('最后一个提取条件不能删除')
         } else {
-            $(this).parents('.extractField').remove();
+            $(this).parents('.outputField').remove();
         }
       })
   }
