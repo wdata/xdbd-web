@@ -126,7 +126,8 @@ $(function(){
     $(document.body)
       .off('click', '.onLessen')
       .on('click', '.onLessen', function () {
-        if($('.where').length <2) {
+        var whereJudge = $('.where').length < 2;
+        if(whereJudge) {
             layer.msg('最后一个提取条件不能删除')
         } else {
             $(this).parents('.where').remove();
