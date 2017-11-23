@@ -65,6 +65,9 @@ ins,a {
 a:focus,*:focus {
     outline:none;
 }
+a:focus, a:hover {
+	text-decoration: none;
+}
 .clearfix:after {
   content: " ";
   display: block;
@@ -515,6 +518,9 @@ iframe .content-col{
 	display: block;
 	font-size: 18px;
 	color: #3d5275;
+}
+.sider-nav ul ul li.active>a {
+	color: #578fe6;
 }
 .sider-nav>ul>li>a {
 	display: block;

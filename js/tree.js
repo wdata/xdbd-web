@@ -98,7 +98,7 @@ $(function(){
               		var htmlSys = "";
               		$.each(menuSys, function(i,v) {
               			htmlSys += `
-              				<li><a href="javascript:;">${v.name}</a></li>
+              				<li class="${v.name==='日志管理'?'active':''}"><a href="javascript:;">${v.name}</a></li>
               			`;
               		});
               		$(".sys-menus").empty().append(htmlSys);
@@ -149,6 +149,7 @@ $(function(){
 	/**
 	 * 公共页面*/
 	$(".sys-menus").delegate("li","click",function(){
+		$(this).addClass("active").siblings().removeClass("active");
 		let url;
 		let name = $(this).find("a").text();
 		switch(name){
@@ -462,6 +463,12 @@ $(function(){
                 }
 
 
+            },
+            onNodeExpanded (event, node){
+                localStorage.setItem('expand',JSON.stringify($tree.treeview('getExpanded', node.nodeId)))
+            },
+            onNodeCollapsed (event, node){
+                localStorage.setItem('expand',JSON.stringify($tree.treeview('getExpanded', node.nodeId)))
             }
         });
 
@@ -473,8 +480,18 @@ $(function(){
             onLeftKey(e);
             return false;
         });
-        $tree.treeview('collapseAll', { silent: true });
+        // $tree.treeview('collapseAll', { silent: true });
 		//	$tree.treeview('expandNode', [curNodeId,{silent: true } ]);
+        var expand=JSON.parse(localStorage.getItem('expand'))
+        if(expand!=null && expand.length!=0){
+            $tree.treeview('collapseAll', { silent: true });
+            expand.forEach(item=>{
+                $tree.treeview('expandNode', [item.nodeId, {silent: false }]);
+            })
+            //
+        }else{
+            $tree.treeview('collapseAll', { silent: true });
+        }
     }
 
 
