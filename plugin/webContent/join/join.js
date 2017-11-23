@@ -2,7 +2,6 @@
  * Created by qiangxl on 2017/10/12.
  */
 //增加字段
-alert(1211)
 $(function(){
   initFromTable();
   bind_change_fromTable();
@@ -13,10 +12,8 @@ $(function(){
   bind_click_onLessen();
   bind_click_extractAdd();
   bind_click_extractLessen();
-  //bind_click_generateSql();
   bind_click_saveActionComp();
-  //bind_click_lessen();
-//alert(JSON.stringify(tables))
+  bind_click_sql();
 
   $(".stepName").val(etlName);
 
@@ -37,19 +34,6 @@ $(function(){
         });
         $('.field2').html(optionsHtml);
       });
-  /**
-    $('.fromTable').change(function(){
-      var tbName = $(this).val();
-      var extractFieldHtml = $('.extractField').prop('outerHTML');
-      $('.extractField').remove();
-      $.each(tables[tbName].fieldList,function(){
-        $('.extractFields').append(extractFieldHtml);
-        var extractField = $('.extractField:last');
-        extractField.find('.fields').val(this);
-      });
-    });
-   */
-
   }
 
   function bind_change_selectTable(){
@@ -81,9 +65,6 @@ $(function(){
   }
 
   function bind_click_saveActionComp(){
-    // demo.onBtnSaveClick = function() {
-    //   fn_saveActionComp(getVal());
-    // }
     $('.saveActionComp').click(function(){
       fn_saveActionComp(getVal());
     });
@@ -92,7 +73,6 @@ $(function(){
   function set_joinTables(joinTables){
     if(joinTables!=null){
       var joinTableHtml = $('.joinTable').prop('outerHTML');
-      //alert(joinTables.length)
       $('.joinTable').remove();
       $.each(joinTables,function(){
         var type = this.type;
@@ -113,12 +93,9 @@ $(function(){
           var field2 = this.field2;
           joinTable.find('.onFilters').append(onFilterHtml);
           var onFilter = joinTable.find('.onFilter:last');
-// alert(onFilter.html())
-//           alert(onFilter.find('.field1').html())
           onFilter.find('.field1').val(field1);
           onFilter.find('.expr').val(expr);
           onFilter.find('.field2').val(field2);
-          // onFilter.find('.field1')[1].selected=true;
         });
       });
     }
@@ -159,10 +136,6 @@ $(function(){
   }
 
   function bind_click_generateSql(){
-    // demo.onBtnSqlClick = function() {
-    //   var sql = generate_sql();
-    //   fn_set_sqlOut(sql);
-    // }
     $('.generateSql').click(function(){
       var sql = generate_sql();
       fn_set_sqlOut(sql);
@@ -209,8 +182,8 @@ $(function(){
   }
   function bind_click_onAdd() {
     $(document.body)
-      .off('click', '.onAdd')
-      .on('click', '.onAdd', function () {
+      .off('click', '.joinsAdd')
+      .on('click', '.joinsAdd', function () {
         alert(111)
         var joinHtml = $('.onFilter').prop('outerHTML');
         //$('.onFilters').remove();
@@ -220,8 +193,8 @@ $(function(){
 
   function bind_click_onLessen() {
     $(document.body)
-      .off('click', '.onLessen')
-      .on('click', '.onLessen', function () {
+      .off('click', '.joinsLessen')
+      .on('click', '.joinsLessen', function () {
         if($('.onFilter').length <2) {
             layer.msg('最后一个提取条件不能删除')
           } else {
@@ -229,15 +202,14 @@ $(function(){
           }
       })
   }
-alert(111)
   function bind_click_extractAdd() {
     $(document.body)
       .off('click', '.joinAdd')
       .on('click', '.joinAdd', function () {
         var joinsHtml = $('.joinField').prop('outerHTML');
         $('.joinFields').append(joinsHtml)
-      }
-
+      })
+  }
   function bind_click_extractLessen() {
     $(document.body)
       .off('click', '.joinLessen')
@@ -257,7 +229,6 @@ alert(111)
   }
 
   function generate_sql(){
-    //squel.select({ separator: "<br/>" });
     var s = squel.select();
     var fromTable = fn_get_fromTable();
     s.from("("+fn_get_sqlOut_by_fromTable(fromTable)+")",fromTable);

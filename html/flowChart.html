@@ -140,7 +140,7 @@
               $.getScript("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".js");
             });
           }else if(model=="area") {
-            console.log(model)
+            // console.log(model)
           }
           etlName = obj.name;
           return true;
@@ -169,7 +169,7 @@
               "versionId": this_versionId
             }),
             success:function(data){
-              console.log(data)
+              //console.log(data)
               if(data.code == 0) {
                 var head = data.data.head;
                 var data = data.data.data;
@@ -228,7 +228,7 @@
       var out;
 //      dags = JSON.stringify(demo.exportData());
       function Export(){
-        console.log(JSON.stringify(demo.exportData()))
+        // console.log(JSON.stringify(demo.exportData()))
 //          document.getElementById("result").value=JSON.stringify(demo.exportData());
           return JSON.stringify(demo.exportData());
       }
@@ -352,7 +352,7 @@
           data:JSON.stringify(parameter),
           success:function(data){
             var data = data.data;
-            console.log(data);
+            //console.log(data);
 //            alert(JSON.stringify(data))
             $.each(data,function(){
               tables[this.tableName] = this;
