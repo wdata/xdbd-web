@@ -2280,6 +2280,12 @@ div.ztree {
     border-radius: 2px;
     cursor: pointer;
 }
+.list_tab tbody tr td .code{
+    border: none;
+    background: #f7f7f7;
+    text-align: center;
+    color: #3D5275;
+}
 /*导入文件*/
 .import-file {
 	display: none;

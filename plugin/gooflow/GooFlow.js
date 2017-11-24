@@ -752,13 +752,13 @@ GooFlow.prototype={
 	//每一种类型结点及其按钮的说明文字
 	setNodeRemarks:function(remark){
 	    if(this.$tool==null)  return;
-	    console.log(this.$tool)
-		console.log(this.$tool.children("a"))
+	    //console.log(this.$tool)
+		//console.log(this.$tool.children("a"))
 		this.$tool.children("a").each(function(){
 			this.title=remark[$(this).attr("id").split("btn_")[1]];
 		});
-	    console.log(this.$head)
-	    console.log(this.$head.children("a"));
+	    //console.log(this.$head)
+	    //console.log(this.$head.children("a"));
 	    if(this.$head==null) return;
 	    this.$head.children("a").each(function(){
 			this.title=remark[$(this).attr("id").split("btn_")[1]];

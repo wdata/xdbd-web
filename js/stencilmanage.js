@@ -34,7 +34,7 @@ function stencilSeek() {
                 console.log(rs.data)
                 $("#demand_list").find('.new_demand').remove();
                 $.each(rs.data,function(index,item) {
-                    arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'_模板</p> <span>'+item.remark+'</span> </dd> </dl>')
+                    arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'</p> <span>'+item.remark+'</span> </dd> </dl>')
                 })
                 $("#demand_list").html(arr);
             }
@@ -59,7 +59,7 @@ $.ajax({
       var arr = new Array;
       console.log(data.data)
       $.each(data.data,function(index,item) {
-        arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)" > <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'_模板</p> <span>'+item.remark+'</span> </dd> </dl>')
+        arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)" > <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'</p> <span>'+item.remark+'</span> </dd> </dl>')
       })
       $("#demand_list").html(arr);
     }
