@@ -18,6 +18,9 @@
         .myForm .propertys table tr .add_Btn{cursor: pointer;padding: 0 2px;line-hegit: 26px; }
         .myForm .save{margin: 5px auto;width: 80px;height: 26px;background: #00B4E1;line-height: 26px;text-align: center;color: #fff;border-radius: 3px;cursor: pointer}
         #propertyForm{overflow: hidden}
+        .remarks{overflow: hidden;padding:10px 0;background:#f7f9fc;border-top: 1px solid #f1f1f1;border-bottom: 1px solid #f1f1f1;border: 1px solid #ccc;margin: 5px 5px 0 0;border-radius: 3px}
+        .remarks .remark_key{display: inline-block;width: 80px; text-align: center;font-size: 14px}
+        .remarks .remark_value{font-size: 14px;}
     </style>
     <script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
     <!--<script type="text/javascript" src="../plugin/gooflow/child.js"></script>-->
@@ -49,20 +52,16 @@
       var this_actionCompName;
       var this_actionComp = '';
       var this_data = {};
+      var this_remark = '';
       var this_new = true; //新建
       var onenv = true;
       var $url = '../xdbd-wf';  //../xdbd-wf
-      console.log(this_onenv)
 
       if(this_onenv == 'dev') {
         onenv = true;
       } else if(this_onenv == 'test') {
         onenv = false;
       }
-
-      // if(template){
-      //   template = true;
-      // }
 
       init_dag();
 
@@ -73,7 +72,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print","save","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["undo","redo","reload","print","save","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save""new",,
         haveTool:onenv,
         haveDashed:true,
         haveGroup:true,
@@ -93,7 +92,7 @@
         shell:"shell",
         spark:"spark",
         algorithm:"算法",
-        'new':"新建",
+//        'new':"新建",
         undo:"上一步",
         redo:"下一步",
         reload:"刷新",
@@ -116,26 +115,16 @@
             } else {
                 return false;
             }
-          // layer.confirm('确定要删除该组件吗？', {
-          //   btn: ['确定','取消'] //按钮
-          // }, function(){
-          //   init_delec(id);
-          //   self.blurItem();
-          //   return true;
-          // }, function(){
-          //   // return false;
-          // });
         };
         //导出图片功能 END
         var exportName = "流程图";
         demo.loadData(getDag);
-        console.log(demo)
+//        console.log(this_remark)
         demo.onPrintClick = function () {
           demo.exportDiagram(exportName);
         }
         demo.onItemFocus = function (id, model) {
           var obj;
-//          console.log(this.propertyAlter)
           if (model == "line") {
             obj = this.$lineData[id];
           } else if (model == "node") {
@@ -169,16 +158,16 @@
             return true;
           };
           //新建流程图
-          demo.onBtnNewClick = function () {
-            if(this_new) {
-              layer.msg('请先保存流程图',{time: 1000})
-            } else {
-              window.location.href = 'stencilmanage.html';
-            }
-          };
+//          demo.onBtnNewClick = function () {
+//            if(this_new) {
+//              layer.msg('请先保存流程图',{time: 1000})
+//            } else {
+//              window.location.href = 'stencilmanage.html';
+//            }
+//          };
           //保存流程图
           demo.onBtnSaveClick = function () {
-            console.log(Export())
+//            console.log(Export())
             var jsons = {};
             jsons.jobId = jobid;
             jsons.isTemplate = JSON.parse(template);
@@ -312,6 +301,9 @@
           success:function(data){
             console.log(data)
             if(data.code == 0) {
+              this_remark = data.data.remark;
+//              console.log(this_remark)
+              $('.remark_value').html(this_remark);
               var getDag = "";
               if(data.data != '' && data.data != null && data.data.dag != null && data.data.dag !='null') {
                 var dag = JSON.parse(data.data.dag);
@@ -327,6 +319,7 @@
           }
         })
       };
+      //模板任务
       function fn_task() {
         var version = {
           versionId:this_versionId
@@ -471,5 +464,9 @@
     <div class="form_title">属性设置</div>
     <div class="propertys"></div>
 </form>
+<div class="remarks">
+    <label class="remark_key">任务备注</label>
+    <span class="remark_value"></span>
+</div>
 </body>
 </html>
