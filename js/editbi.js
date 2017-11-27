@@ -1,4 +1,13 @@
 $(function(){
+
+    $(".dimension-title p").on("click",function(){
+        $(this).toggleClass("active")         // 修改背景图标
+            .parent().siblings().toggleClass("hide");  // 列表显示隐藏
+    });
+
+
+
+
 	//获取BI Set列表接口
 	getBiSet(projectId);
 	function getBiSet(projectId){

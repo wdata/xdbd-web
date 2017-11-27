@@ -120,9 +120,7 @@
 				newType = "";
 	  			
 	  	}
-	  	layer.close(popups);
 	   	newBiTemplete(projectId,versionId,dirId,newName,newType,newDescribe,templateId);
-	   	parent.location.reload();//刷新父级项目树
 	  }
 	}
 
@@ -145,12 +143,16 @@
 	                "templateId":templateId
 	            },
 	            success:function(res){
-	              if(res.code===0){
-	              	var data = res.data;
-	              	pageId = data.pageId;
-	              	window.location.href = "../editBI.html?pageId="+pageId;
-	              }
-	            },
+				  if(res.code===0){
+					var data = res.data;
+					pageId = data.pageId;
+					parent.location.reload();//刷新父级项目树
+					window.location.href = "../editBI.html?pageId=" + pageId;
+				    layer.close(popups);
+				  }else if(res.code === 403){
+                      layer.msg('页面名重复！');
+				  }
+				},
 	            error:function(res){
 	                console.log(res);
 	            }
