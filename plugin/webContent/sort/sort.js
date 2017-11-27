@@ -103,6 +103,7 @@ $(function(){
     $(document.body)
       .off('click', '.sortLessen')
       .on('click', '.sortLessen', function () {
+        // alert($('.sortField').length)
         if($('.sortField').length <2) {
             layer.msg('最后一个提取条件不能删除')
         } else {

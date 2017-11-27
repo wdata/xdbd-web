@@ -147,7 +147,7 @@ function GooFlow(bgDiv,property){
 	if(this.$editable){
 	  //绑定工作区事件
 	  this.$workArea.on("click",{inthis:this},function(e){
-	    console.log(e)
+	    //console.log(e)
 		if(!e)e=window.event;
 		var This=e.data.inthis;
 		if(!This.$editable)return;
@@ -921,7 +921,7 @@ GooFlow.prototype={
 		});
     //绑定连线时确定结束点
     this.$workArea.delegate(".GooFlow_item","mouseup",{inthis:this},function(e){
-      console.log(e)
+      //console.log(e)
       var This=e.data.inthis;
       if((This.$nowType!="direct"&&This.$nowType!="dashed")&&!This.$mpTo.data("p"))	return;
       var lineStart=This.$workArea.data("lineStart");
@@ -934,7 +934,7 @@ GooFlow.prototype={
         var actionComp = fn_get_actionComp_by_webComponentId(lineStart.id);
         var b = true;
         if(toType != 'join') {
-          console.log(Export());
+          //console.log(Export());
           $.each( Export().lines,function() {
             if(this.to==toId){
               b = false;

@@ -98,7 +98,7 @@ $(function(){
               		var htmlSys = "";
               		$.each(menuSys, function(i,v) {
               			htmlSys += `
-              				<li><a href="javascript:;">${v.name}</a></li>
+              				<li class="${v.name==='日志管理'?'active':''}"><a href="javascript:;">${v.name}</a></li>
               			`;
               		});
               		$(".sys-menus").empty().append(htmlSys);
@@ -133,10 +133,13 @@ $(function(){
 		
 		if(onCurEnv==="test"){
 			$("#create-proj-btn").hide();
+			$("#importProj").hide();
 		}else if(onCurEnv==="dev"){
 			$("#create-proj-btn").show();
+            $("#importProj").show();
 		}else if(onCurEnv==="prod"){
 			$("#create-proj-btn").hide();
+            $("#importProj").hide();
 //			var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
 //  		window.open("../html/preview.html" + url);
 		}
@@ -146,6 +149,7 @@ $(function(){
 	/**
 	 * 公共页面*/
 	$(".sys-menus").delegate("li","click",function(){
+		$(this).addClass("active").siblings().removeClass("active");
 		let url;
 		let name = $(this).find("a").text();
 		switch(name){
@@ -312,7 +316,7 @@ $(function(){
                 if(dirType==="1"||dirType==="14"||dirType==="16"||dirType==="6"
                     ||dirType==="7"||dirType==="12"||dirType==="13"||dirType==="15"
                     ||dirType==="17"||dirType==="18"||dirType==="19"||dirType==="8"
-                    ||dirType==="9"||dirType==="11"){
+                    ||dirType==="9"||dirType==="11"||dirType==="5"){
                     currentNode.tags=['1'];
                 }
 
@@ -459,6 +463,12 @@ $(function(){
                 }
 
 
+            },
+            onNodeExpanded (event, node){
+                localStorage.setItem('expand',JSON.stringify($tree.treeview('getExpanded', node.nodeId)))
+            },
+            onNodeCollapsed (event, node){
+                localStorage.setItem('expand',JSON.stringify($tree.treeview('getExpanded', node.nodeId)))
             }
         });
 
@@ -470,8 +480,18 @@ $(function(){
             onLeftKey(e);
             return false;
         });
-        $tree.treeview('collapseAll', { silent: true });
+        // $tree.treeview('collapseAll', { silent: true });
 		//	$tree.treeview('expandNode', [curNodeId,{silent: true } ]);
+        var expand=JSON.parse(localStorage.getItem('expand'))
+        if(expand!=null && expand.length!=0){
+            $tree.treeview('collapseAll', { silent: true });
+            expand.forEach(item=>{
+                $tree.treeview('expandNode', [item.nodeId, {silent: false }]);
+            })
+            //
+        }else{
+            $tree.treeview('collapseAll', { silent: true });
+        }
     }
 
 
@@ -1186,6 +1206,7 @@ $(function(){
 	              	if(res.code===0){
 						//删除成功,刷新项目树
 						getProjName(0);
+						$("#iframepage1").attr("src","html/void.html");
 						layer.msg("删除成功", {icon: 6});
 		            }
 				},

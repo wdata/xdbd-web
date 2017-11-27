@@ -36,7 +36,7 @@
                     <td class="dbport">${item.conPort}</td>
                     <td class="dbdatabase">${item.dbName}</td>
                     <td class="dbuser">${item.username}</td>
-                    <td class="dbpassword">${item.password}</td>
+                    <td class="dbpassword"><input type="password" class="code" value="${item.password}"/></td>
                     <td>
                         <botton class="compile" onclick="compileBtn(this)">编辑</botton>
                         <botton class="cancel" onclick="cancelBtn(this)">删除</botton>
@@ -121,7 +121,7 @@
                         <td class="dbport">${item.dbport}</td>
                         <td class="dbdatabase">${item.dbdatabase}</td>
                         <td class="dbuser">${item.dbuser}</td>
-                        <td class="dbpassword">${item.dbpassword}</td>
+                        <td class="dbpassword"><input type="password" class="code" value="${item.dbpassword}"/></td>
                         <td>
                             <botton class="compile" onclick="compileBtn(this)">编辑</botton>
                             <botton class="cancel" onclick="cancelBtn(this)">删除</botton>
@@ -150,13 +150,13 @@
     $('.db_port').val($(_this).parents('.list_origin').find('.dbport').text());
     $('.db_database').val($(_this).parents('.list_origin').find('.dbdatabase').text());
     $('.db_user').val($(_this).parents('.list_origin').find('.dbuser').text());
-    $('.db_password').val($(_this).parents('.list_origin').find('.dbpassword').text());
+    $('.db_password').val($(_this).parents('.list_origin').find('.dbpassword').find('.code').val());
   }
   //删除数据源
   function cancelBtn(_this) {
     ds = $(_this).parents('.list_origin').attr('id');
     layer.confirm('是否要删除该数据源？', {
-      btn: ['是','否'] //按钮
+      btn: ['确认','取消'] //按钮
     }, function(){
       $.ajax({
         type: 'POST',
@@ -164,13 +164,16 @@
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify({
-          "dsId": ds
+          "dsId": ds,
+          "versionId": versionId
         }),
         success: function (res) {
           console.log(res);
           if (res.code === 0) {
-            layer.msg('成功删除数据源');
+            layer.msg('成功删除数据源',{time: 1000});
             get_dataSource();
+          } else {
+            layer.msg(res.message,{time: 1000})
           }
         },
         error: function (err) {
@@ -179,7 +182,7 @@
       });
     }, function(){
       layer.msg('已保留该数据源', {
-        time: 2000 //2s后自动关闭
+        time: 1000 //2s后自动关闭
       });
     });
   }

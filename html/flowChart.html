@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../css/gooflow/default.css"/>
     <style>
         .myForm{display:block;margin:0px;padding:0px;line-height:1.5;font: 12px Arial, Helvetica, sans-serif;margin:5px 5px 0px 0px;border-radius:4px;}
-        .myForm .form_title{background:#428bca;padding:4px;color:#fff;border-radius:3px 3px 0px 0px;}
+        .myForm .form_title{background:#f7f9fc;font-size: 14px;color:#3D5275;height: 36px;line-height: 36px;  text-align: center;border-top: 1px solid #f1f1f1;  border-bottom: 1px solid #f1f1f1;}
         .myForm .form_content{padding:4px;background:#fff;}
         .myForm .form_content table{border:0px}
         .myForm .form_content table td{border:0px}
@@ -53,6 +53,7 @@
       var this_versionId = localStorage.getItem("versionId");
       var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
       var onenv = true;
+      var this_new = true;
       var this_webComponentId;
       var this_actionCompType;
       var $url = '../xdbd-etl'; ///xdbd-etl
@@ -77,7 +78,7 @@
         haveHead:true,
 //        headLabel:true,
         initLabelText:'流程图',
-        headBtns:["new","undo","redo","reload","print","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save",
+        headBtns:["undo","redo","reload","print","preview","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save""new",,
         haveTool:onenv,
         haveDashed:true,
         haveGroup:true,
@@ -94,7 +95,7 @@
         input:"表输入结点",
         join:"关联结点",
         group:"组织划分框编辑开关",
-        'new':"新建",
+//        'new':"新建",
         undo:"上一步",
         redo:"下一步",
         reload:"刷新",
@@ -130,15 +131,6 @@
           $("#ele_id").val(id);
           if(model=="line"){
             obj=this.$lineData[id];
-            /**
-            $("#ele_type").val(obj.M);
-            $("#ele_left").val("");
-            $("#ele_top").val("");
-            $("#ele_width").val("");
-            $("#ele_height").val("");
-            $("#ele_from").val(obj.from);
-            $("#ele_to").val(obj.to);
-             */
           }else if(model=="node"){
             obj=this.$nodeData[id];
             this_webComponentId=id;
@@ -148,24 +140,8 @@
             $('.propertys').empty().load("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".html",function(){
               $.getScript("../plugin/webContent/"+this_actionCompType+"/"+this_actionCompType+".js");
             });
-//            var bbb = [];
-//            console.log(obj)
-//            for(i in obj) {
-//              bbb.push("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>");
-//              console.log(i,obj[i])
-//              console.log("<tr><td>"+i+"</td><td>"+obj[i]+"</td></tr>")
-//            }
-//            $(".aaa").html(bbb);
-//            console.log($(".aaa").html());
-//            $("#ele_type").val(obj.type);
-//            $("#ele_left").val(obj.left);
-//            $("#ele_top").val(obj.top);
-//            $("#ele_width").val(obj.width);
-//            $("#ele_height").val(obj.height);
-//            $("#ele_from").val("");
-//            $("#ele_to").val("");
           }else if(model=="area") {
-            console.log(model)
+            // console.log(model)
           }
           etlName = obj.name;
           return true;
@@ -175,21 +151,19 @@
           return true;
         };
         //新建流程图
-        demo.onBtnNewClick=function() {
-          demo.clearData();
-        };
-        // //打开流程图
-        // demo.onBtnOpenClick=function() {
-        //
-        // };
-        //保存流程图
-       // demo.onBtnSaveClick = function () {
-//          fn_saveActionComp(getVal());
-         // $('.saveActionComp').click();
-//            bind_click_saveActionComp();
-//          var saves = JSON.stringify(demo.exportData());
-//          console.log(saves)
-   //     };
+//        demo.onBtnNewClick=function() {
+//          if(this_new) {
+//            layer.confirm('是否需要保存当前内容？', {
+//              btn: ['确定','取消'] //按钮
+//            }, function(){
+//              fn_saveActionComp_exec(Export());
+//            }, function(){
+//              window.location.href = 'etlStencil.html';
+//            });
+//          } else {
+//            window.location.href = 'etlStencil.html';
+//          }
+//        };
         //刷新流程图
         demo.onFreshClick=function() {
           location.reload();
@@ -206,7 +180,7 @@
               "versionId": this_versionId
             }),
             success:function(data){
-              console.log(data)
+              //console.log(data)
               if(data.code == 0) {
                 var head = data.data.head;
                 var data = data.data.data;
@@ -228,7 +202,7 @@
 
                 fn_preview(previewHead,previewData);
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             }
           });
@@ -250,12 +224,12 @@
             }),
             success:function(data){
               if(data.code == 0) {
-                layer.msg("模板保存成功");
+                layer.msg("模板保存成功",{time: 1000});
                 setTimeout(function() {
                     window.location.href = 'etlStencil.html';
                 },2000)
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
 
             }
@@ -263,14 +237,8 @@
         }
       };
       var out;
-//      dags = JSON.stringify(demo.exportData());
       function Export(){
-        console.log(JSON.stringify(demo.exportData()))
-//          document.getElementById("result").value=JSON.stringify(demo.exportData());
           return JSON.stringify(demo.exportData());
-      }
-      function ResetScale(){
-        demo.resetScale( parseFloat(document.getElementById("wheelDelta").value) );
       }
       // 鼠标滚动流程图放大缩小
       //var rum = 1;
@@ -389,7 +357,7 @@
           data:JSON.stringify(parameter),
           success:function(data){
             var data = data.data;
-            console.log(data);
+            //console.log(data);
 //            alert(JSON.stringify(data))
             $.each(data,function(){
               tables[this.tableName] = this;
@@ -480,9 +448,10 @@
           success:function(data){
             if(data.success){
 //              layer.msg('保存成功')
+              this_new = false;
               init_actionComp();
             } else {
-              layer.msg(data.message)
+              layer.msg(data.message,{time: 1000})
             }
             //alert(data.message);
           }
@@ -511,11 +480,13 @@
             }),
             success:function(data){
               if(data.code == 0) {
-               alert(data)
+               // alert(data)
                 this_actionId = data.data.actionId;
                 this_isTemplate = false;
                 init_actionComp();
                 fn_saveActionComp_exec(val);
+              } else {
+                layer.msg(data.data.message,{time: 1000})
               }
             },error:function(data){
               console.log(JSON.stringify(data))
@@ -580,9 +551,9 @@
             data:JSON.stringify(load),
             success:function(data){
               if(data.code == 0) {
-                layer.msg('上传成功')
+                layer.msg('上传成功',{time: 1000})
               } else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
               }
             }
           });
@@ -619,9 +590,30 @@
             }),
             success:function(data){
               if(data.code == 0) {
-                layer.msg('删除成功')
+                layer.msg('删除成功',{time: 1000})
               }else {
-                layer.msg(data.message)
+                layer.msg(data.message,{time: 1000})
+              }
+            },error:function(data){
+              layer.msg(JSON.stringify(data))
+            }
+          })
+        }
+        //ETL保存
+        function init_updateDay() {
+          $.ajax({
+            type:"POST",
+            url:$url+"/api/action/v1/updateDay",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify({
+              "actionId": this_actionId,
+              "versionId": this_versionId,
+              "dag": Export()
+            }),
+            success:function(data){
+              if(data.code == 0) {
+//                layer.msg('',{time: 1000})
               }
             },error:function(data){
               layer.msg(JSON.stringify(data))

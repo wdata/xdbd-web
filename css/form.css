@@ -65,6 +65,9 @@ ins,a {
 a:focus,*:focus {
     outline:none;
 }
+a:focus, a:hover {
+	text-decoration: none;
+}
 .clearfix:after {
   content: " ";
   display: block;
@@ -515,6 +518,9 @@ iframe .content-col{
 	display: block;
 	font-size: 18px;
 	color: #3d5275;
+}
+.sider-nav ul ul li.active>a {
+	color: #578fe6;
 }
 .sider-nav>ul>li>a {
 	display: block;
@@ -2282,6 +2288,12 @@ div.ztree {
     -moz-border-radius: 2px;
     border-radius: 2px;
     cursor: pointer;
+}
+.list_tab tbody tr td .code{
+    border: none;
+    background: #f7f7f7;
+    text-align: center;
+    color: #3D5275;
 }
 /*导入文件*/
 .import-file {

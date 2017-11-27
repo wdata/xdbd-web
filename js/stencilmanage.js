@@ -31,9 +31,10 @@ function stencilSeek() {
             console.log(rs)
             if(rs.code == 0) {
                 var arr = new Array;
-                console.log(data.data)
+                console.log(rs.data)
+                $("#demand_list").find('.new_demand').remove();
                 $.each(rs.data,function(index,item) {
-                    arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'_模板</p> <span>'+item.remark+'</span> </dd> </dl>')
+                    arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'</p> <span>'+item.remark+'</span> </dd> </dl>')
                 })
                 $("#demand_list").html(arr);
             }
@@ -58,7 +59,7 @@ $.ajax({
       var arr = new Array;
       console.log(data.data)
       $.each(data.data,function(index,item) {
-        arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'_模板</p> <span>'+item.remark+'</span> </dd> </dl>')
+        arr.push('<dl class="new_demand" id='+item.jobId+' onmouseout="outBtn(this)" onmouseover="overBtn(this)" > <dt><div id="demand_delete" class='+item.versionId+' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id='+item.isTemplate+'> <p>'+item.name+'</p> <span>'+item.remark+'</span> </dd> </dl>')
       })
       $("#demand_list").html(arr);
     }
@@ -104,7 +105,7 @@ function deleteBtn(_this) {
 function demandBtn(_this) {
   console.log(_this)
   localStorage.setItem('directoryId',$(_this).parents(".new_demand").attr("id"));
-  sessionStorage.setItem("isTemplate",$(_this).attr('data-id'));
+  localStorage.setItem("isTemplate",$(_this).attr('data-id'));
   window.location.href = 'etlChart.html';
 }
 //弹出层
@@ -146,7 +147,7 @@ function newBtn(popups) {
       createUser: this_createUser,
       rotPath: this_rootPath,
       remark: newDescribe,
-      businesss_type: newType,
+      business_type: newType,
       versionId: this_versionId
     };
     $.ajax({
