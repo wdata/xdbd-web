@@ -1972,7 +1972,10 @@ div.f-addbtn-box-auto li{
 	margin-top: 14px;
 	margin-bottom: 20px;
 }
-/*文本 start*/
+.dimension-title p.active{
+	background-image: url(../images/icon_right.png);
+}
+	/*文本 start*/
 .palette-color-picker-button {
 	display: inline-block;
 	width: 24px;

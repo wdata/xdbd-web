@@ -23,6 +23,7 @@ var DataIndexes = {
             success:function(data){
                 if(data.code === 0){
                     if(data.data){
+                        console.log(JSON.stringify(data.data));
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
@@ -60,6 +61,7 @@ var DataIndexes = {
                                 var c = {"letter":val, "frequency": data.charts.meaList[0].meaValues[0][0][index]};
                                 d.push(c);
                             });
+                            console.log(JSON.stringify(d));
                             bar("#" +id,d);
                             return;
                         }
@@ -85,6 +87,7 @@ var DataIndexes = {
                             var z = [data.key[index],val];
                             pieData.push(z);
                         });
+                        console.log(JSON.stringify(pieData));
                         pieChart("#" + id,pieData,r);
                         break;
                     case 104:
