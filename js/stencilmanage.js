@@ -161,6 +161,8 @@ function newBtn(popups) {
           localStorage.setItem('directoryId',data.data);
           window.location.href = 'etlChart.html';
           parent.location.reload();
+        } else {
+          layer.msg(data.message,{time: 1000})
         }
       },error:function(data){
         console.log(JSON.stringify(data))

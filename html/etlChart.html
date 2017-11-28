@@ -17,7 +17,7 @@
         .myForm .propertys table .manage{display: inline-block; height: 22px; width: 236px;}
         .myForm .propertys table tr .add_Btn{cursor: pointer;padding: 0 2px;line-hegit: 26px; }
         .myForm .save{margin: 5px auto;width: 80px;height: 26px;background: #00B4E1;line-height: 26px;text-align: center;color: #fff;border-radius: 3px;cursor: pointer}
-        #propertyForm{overflow: hidden}
+        #propertyForm{overflow: hidden; height: 500px; overflow-y: visible}
         .remarks{overflow: hidden;padding:10px 0;background:#f7f9fc;border-top: 1px solid #f1f1f1;border-bottom: 1px solid #f1f1f1;border: 1px solid #ccc;margin: 5px 5px 0 0;border-radius: 3px}
         .remarks .remark_key{display: inline-block;width: 80px; text-align: center;font-size: 14px}
         .remarks .remark_value{font-size: 14px;}
@@ -443,7 +443,7 @@
                   en_name.id = item.id;
                   en_name.enName = item.enName;
                   this_remarkName.push(obj);
-                  this_algParam.push(param)
+                  this_algParam.push(param);
                   this_enName.push(en_name);
                 })
                 $("#ele_arithmetic").append(alg);
