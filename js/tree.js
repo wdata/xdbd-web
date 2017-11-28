@@ -128,8 +128,9 @@ $(function(){
 			break;
 			default:
 		}
-		sessionStorage.setItem("onEnv",onCurEnv)
+		sessionStorage.setItem("onEnv",onCurEnv);
 		getProjName(0);//切换环境,刷新项目树
+		$("#iframepage1").attr("src","html/void.html");
 		
 		if(onCurEnv==="test"){
 			$("#create-proj-btn").hide();

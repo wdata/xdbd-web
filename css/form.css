@@ -2331,3 +2331,8 @@ div.ztree {
     height: auto;*/
     /*float: right;*/
 }
+/* BI页面，左上角功能提示 */
+body .biTips.layui-layer .layui-layer-content{
+	color: #6B6B6B;
+	padding: 0 20px;
+}
