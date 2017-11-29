@@ -1972,7 +1972,10 @@ div.f-addbtn-box-auto li{
 	margin-top: 14px;
 	margin-bottom: 20px;
 }
-/*文本 start*/
+.dimension-title p.active{
+	background-image: url(../images/icon_right.png);
+}
+	/*文本 start*/
 .palette-color-picker-button {
 	display: inline-block;
 	width: 24px;
@@ -2327,4 +2330,9 @@ div.ztree {
     white-space: nowrap;
     height: auto;*/
     /*float: right;*/
+}
+/* BI页面，左上角功能提示 */
+body .biTips.layui-layer .layui-layer-content{
+	color: #6B6B6B;
+	padding: 0 20px;
 }
