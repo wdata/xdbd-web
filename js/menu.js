@@ -171,7 +171,7 @@ $(function(){
               		$(".mn-menu").empty().append(html2);
               		
 	            }else{
-                    layer.msg(res.message, {icon: 0});
+                    layer.msg(, {icon: 0});
 				}
 			},
 			error:function(err){
