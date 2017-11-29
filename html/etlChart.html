@@ -139,8 +139,10 @@
             } else {
               this_actionCompType = str;
             }
-            fn_task();
-            fn_algorithm();
+			fn_task();
+			if(this_actionCompType == 'algorithm') {
+				fn_algorithm();
+			}
 
             //导入模板
             $('.propertys').empty().load("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".html", function () {
