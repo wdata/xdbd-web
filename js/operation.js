@@ -748,11 +748,13 @@ let operating = {
     // 移入提示
     moveLayer:function(){
         $(".top-bar>img").on("mouseenter",function(){
-            layer.tips($(this).attr('data-tip'), this,{
-                tips: 3
+            layer.tips($(this).attr('data-tip'),this,{
+                tips: [3,'#F2F2F2'],
+                skin:"biTips",
             });
         });
     },
+// #6B6B6B
 };
 operating.moveLayer(); // 移入提示
 
