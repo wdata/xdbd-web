@@ -25,8 +25,8 @@ $(function(){
 	var typeCode = "1";//模板1,2,3
 	var parentId = "";
 		
-	var tempLogo = sessionStorage.getItem("tempLogo");
-	var tempTxt = sessionStorage.getItem("tempTxt");
+	// var tempLogo = sessionStorage.getItem("tempLogo");
+	// var tempTxt = sessionStorage.getItem("tempTxt");
 	//菜单设置
 	$(".m-tabs-title").on("click","li",function(e){
 		var $idx = $(this).index();
@@ -140,12 +140,7 @@ $(function(){
               		var html = "";
               		var html2 = "";//页面展示
               		if(res.data!==null){
-              			if(res.data.length>6){
-                            data = res.data.slice(0,6);
-                            // layer.msg("只显示前6条数据", {icon: 6});
-						}else{
-              				data = res.data;
-						}
+						data = res.data;
           				topMenu = data;
               		}else{
               			data = [];
@@ -175,7 +170,9 @@ $(function(){
               		$(".top-menu-15").empty().append(html);
               		$(".mn-menu").empty().append(html2);
               		
-	            }
+	            }else{
+                    layer.msg(res.message, {icon: 0});
+				}
 			},
 			error:function(err){
 				console.log(err);
@@ -850,8 +847,8 @@ $(function(){
 			topHeight = $(".mtop-height").val(),
 			leftWidth = $(".mleft-width").val(),
 			leftHeight = $(".mleft-height").val(),
-			navigationText = $(".mnavigation-text").val();
-		if($.trim(topWidth)&&$.trim(topHeight)&&$.trim(leftWidth)&&$.trim(leftHeight)&&$.trim(navigationText)){
+			navigationText = $.trim($(".mnavigation-text").val())?$(".mnavigation-text").val():sessionStorage.getItem("tempTxt");
+		if($.trim(topWidth)&&$.trim(topHeight)&&$.trim(leftWidth)&&$.trim(leftHeight)){
 			addModel(projectId,versionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,updateUser);
 		}else{
 			layer.msg("信息不能为空", {icon: 5});
@@ -927,9 +924,10 @@ $(function(){
 				if(res.code===0){
 					$(".m-uploadimg>img").attr("src",$url1+res.data);
 					$(".mn-logobox>img").attr("src",$url1+res.data);
-					sessionStorage.setItem("tempLogo",res.data);
+					// sessionStorage.setItem("tempLogo",res.data);
 					layer.msg("上传图片成功", {icon: 6});
 				}else{
+                    $(".m-uploadimg>img").attr("src","../images/c_img.png");
 					layer.msg("上传图片失败", {icon: 0});
 				}
 			},
@@ -1205,9 +1203,13 @@ $(function(){
 						sessionStorage.setItem("topWidth",topWidth);
 						if(logo!==null&&logo!=="undefined"){
 							logo = data.logo;
-							sessionStorage.setItem("tempLogo",logo);
+                            $(".m-uploadimg>img").attr("src",$url1+logo);
+                            $(".mn-logobox>img").attr("src",$url1+logo);
+							// sessionStorage.setItem("tempLogo",logo);
 						}else{
-							sessionStorage.setItem("tempLogo","");
+                            $(".m-uploadimg>img").attr("src","../images/c_img.png");
+                            $(".mn-logobox>img").attr("src","../images/c_img.png");
+							// sessionStorage.setItem("tempLogo","");
 						}
 						console.log(data);
 						if(navigationText!==undefined&&navigationText!==null){
@@ -1217,7 +1219,7 @@ $(function(){
 							$(".mn-headtxt").text("小道科技欢迎您!");
 							sessionStorage.setItem("tempTxt","");
 						}
-						if(logo!==undefined&&logo!==null){
+						if(logo!==undefined&&logo!==null&&logo!==""){
 							$(".mn-logobox>img").attr("src",$url1+logo);
 							$(".m-uploadimg>img").attr("src",$url1+logo);
 						}else{
@@ -1242,7 +1244,7 @@ $(function(){
 							$(".mleft-width").val(leftWidth).removeAttr("readonly");
 							$(".mleft-height").val(leftHeight).removeAttr("readonly");
 						}
-						console.log(typeCode);
+						// console.log(typeCode);
 						$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+(typeCode-1));
 						$(".m-cont-box1 ul li").eq(typeCode-1).addClass("active").siblings().removeClass("active");
 						
