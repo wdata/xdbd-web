@@ -980,7 +980,7 @@ GooFlow.prototype={
 			var t=getElCoordinate(This.$workArea[0]);
 			This.$textArea.val(oldTxt).css({display:"block",width:$(this).width(),height:$(this).height()+6,
 				left:t.left+26+This.$nodeData[id].left*This.$scale-This.$workArea[0].parentNode.scrollLeft,
-				top:t.top+2+This.$nodeData[id].top*This.$scale-This.$workArea[0].parentNode.scrollTop})
+				top:t.top+This.$nodeData[id].top*This.$scale-This.$workArea[0].parentNode.scrollTop})
 				.data("id",This.$focus).focus();
 			This.$workArea.parent().one("mousedown",function(e){
 				if(e.button==2)return false;
