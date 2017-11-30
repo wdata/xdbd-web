@@ -23,7 +23,7 @@ var DataIndexes = {
             success:function(data){
                 if(data.code === 0){
                     if(data.data){
-                        console.log(JSON.stringify(data.data));
+                        // console.log(JSON.stringify(data.data));
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
@@ -1836,7 +1836,7 @@ function manyGroup(id,total){
         .attr("font-size", 10)
         .attr("text-anchor", "end")
         .selectAll("g")
-        .data(legendData.slice().reverse())
+        .data(legendData)
         .enter().append("g")
         .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
@@ -1851,7 +1851,7 @@ function manyGroup(id,total){
         .attr("y", 9.5)
         .attr("dy", "0.4em")
         .style("font-size","12px")
-        .text(function(d) { return d; });
+        .text(function(d) { return d;});
 
 
 }

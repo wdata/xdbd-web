@@ -1972,8 +1972,9 @@ div.f-addbtn-box-auto li{
 	margin-top: 14px;
 	margin-bottom: 20px;
 }
-.dimension-title p.active{
-	background-image: url(../images/icon_right.png);
+/*	zoom缩放函数，修改指向图标	*/
+.bi-edit-zoom{
+	background-image: url(../images/icon_right.png)!important;
 }
 	/*文本 start*/
 .palette-color-picker-button {
@@ -2101,6 +2102,7 @@ div.f-addbtn-box-auto li{
 	left:48px;
 	bottom:0;
 	right:404px;
+	overflow: hidden;
 }
 .edit-content{
 	height:100%;
