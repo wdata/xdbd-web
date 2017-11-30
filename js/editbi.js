@@ -1,11 +1,21 @@
 $(function(){
 
+
+    /*
+    *   zoom ：绑定缩放函数；传入参数字符串；
+    * */
     $(".dimension-title p").on("click",function(){
-        $(this).toggleClass("active")         // 修改背景图标
+        $(this).toggleClass("bi-edit-zoom")         // 修改背景图标
             .parent().siblings().toggleClass("hide");  // 列表显示隐藏
     });
-
-
+    $(".set-x>p").on("click",function(){
+        $(this).toggleClass("bi-edit-zoom")         // 修改背景图标
+            .siblings().toggleClass("hide");  // 列表显示隐藏
+    });
+    $(".set-y>p").on("click",function(){
+        $(this).toggleClass("bi-edit-zoom")         // 修改背景图标
+            .siblings().toggleClass("hide");  // 列表显示隐藏
+    });
 
 
 	//获取BI Set列表接口
@@ -410,8 +420,11 @@ $(function(){
 // 调换X轴和Y轴
 function xyChange(){
     const xPills = $(".x-pills ul"),yPills = $(".y-pills ul");
-    xPills.html(xPills.html());
-    yPills.html(yPills.html());
+    const xPillsText = xPills.html();
+    const yPillsText = yPills.html();
+    xPills.html(yPillsText);
+    yPills.html(xPillsText);
+
     pillsLi();
 }
 
@@ -498,7 +511,7 @@ function clear(id){
             $(".set-price-radius input").val(parseInt(price["border-radius"]));
         }
         // 文本
-        if(item.cid === id && item.customData.dataType === "text"){
+        if(item.cid === id && item.customData.dataType === "text" && item.customData.controls){
             const text = item.customData.controls;
             $(".set-text-attr-wrap .palette-color-picker-button").css("background-color",text.color);
         }

@@ -411,9 +411,10 @@ li {
 	left: 241px;
 	right: 0;
 	bottom: 0;
+	overflow: hidden;
 }
 .m-html-mod.m-html-mod0 {
-	background-color: #F7F7F7;
+	/*background-color: #F7F7F7;*/
 }
 .m-html-mod.m-html-mod0 .mn-header {
 	background-color: #FFFFFF;

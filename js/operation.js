@@ -22,28 +22,28 @@ if(surroundings === "test" || surroundings === "prod"){
 $(document).ready(function() {
     context.init({preventDoubleContext: false,fadeSpeed:100});
    
-    context.attach('html', [
-        {header: '菜单设置'},
-        {text: '返回', href: '#'},
-        {text: '重新加载', href: '#'},
-        {divider: true},
-        {text: '保存至', href: '#'},
-        {text: '粘贴', href: '#'},
-        {text: '上一页', href: '#'},
-        {text: '下一页', href: '#'},
-        {divider: true},
-        {text: 'Inspect Element', href: '#'},
-        {divider: true},
-        {text: 'Disable This Menu', action: function(e){
-            e.preventDefault();
-            context.destroy('html');
-            alert('html contextual menu destroyed!');
-        }},
-        {text: 'Donate?', action: function(e){
-            e.preventDefault();
-            $('#donate').submit();
-        }}
-    ]);
+    // context.attach('html', [
+    //     {header: '菜单设置'},
+    //     {text: '返回', href: '#'},
+    //     {text: '重新加载', href: '#'},
+    //     {divider: true},
+    //     {text: '保存至', href: '#'},
+    //     {text: '粘贴', href: '#'},
+    //     {text: '上一页', href: '#'},
+    //     {text: '下一页', href: '#'},
+    //     {divider: true},
+    //     {text: 'Inspect Element', href: '#'},
+    //     {divider: true},
+    //     {text: 'Disable This Menu', action: function(e){
+    //         e.preventDefault();
+    //         context.destroy('html');
+    //         alert('html contextual menu destroyed!');
+    //     }},
+    //     {text: 'Donate?', action: function(e){
+    //         e.preventDefault();
+    //         $('#donate').submit();
+    //     }}
+    // ]);
     // 编辑器右键
     context.attach('.resize-item', [
         {header: '菜单设置'},
