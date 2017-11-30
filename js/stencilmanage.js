@@ -34,7 +34,7 @@ function stencilSeek() {
 				console.log(rs.data)
 				$("#demand_list").find('.new_demand').remove();
 				$.each(rs.data, function (index, item) {
-					arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id=' + item.isTemplate + '> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+					arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
 				})
 				$("#demand_list").html(arr);
 			}
@@ -59,7 +59,7 @@ $.ajax({
 			var arr = new Array;
 			console.log(data.data)
 			$.each(data.data, function (index, item) {
-				arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" > <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandBtn(this)" data-id=' + item.isTemplate + '> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+				arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + ' > <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
 			})
 			$("#demand_list").html(arr);
 		}
@@ -75,6 +75,7 @@ function outBtn(_this) {
 }
 //删除当前工作流
 function deleteBtn(_this) {
+	event.cancelBubble = true; // 当前点击不影响父级点击事件
 	var parans = {
 		ids: [$(_this).parents(".new_demand").attr("id")],
 		id: $(_this).attr("class"),
@@ -100,11 +101,13 @@ function deleteBtn(_this) {
 			}
 		})
 	});
+	// e.stopPropagation();//终止事件冒泡
 }
 //查看工作流
 function demandBtn(_this) {
+	// $(_this).find('#demand_delete').hide();
 	console.log(_this)
-	localStorage.setItem('directoryId', $(_this).parents(".new_demand").attr("id"));
+	localStorage.setItem('directoryId', $(_this).attr("id"));
 	localStorage.setItem("isTemplate", $(_this).attr('data-id'));
 	window.location.href = 'etlChart.html';
 }
