@@ -30,7 +30,7 @@ function getTemplateList(name, type) {
 				itemId = data.data;
 				$.each(data.data, function (index, item) {
 					//graphDiagram.push(item.actionId+','+item.dag);
-					arr.push('<dl class="new_demand" id=' + item.actionId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)"> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd onclick="demandsBtn(this)" class=' + item.actionId + ' id=' + item.versionId + '> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+					arr.push('<dl class="new_demand" onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandsBtn(this)" data-id=' + item.actionId + ' id=' + item.versionId + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
 				})
 				$("#demand_list").html(arr);
 			}
@@ -53,6 +53,7 @@ function outBtn(_this) {
 }
 //删除ETL列表模板
 function deletesBtn(_this) {
+	event.cancelBubble = true; // 当前点击不影响父级点击事件
 	var parans = {
 		actionId: $(_this).parents(".new_demand").attr("id"),
 		versionId: this_versionId
@@ -80,7 +81,7 @@ function deletesBtn(_this) {
 }
 //查看ETL模板
 function demandsBtn(_this) {
-	var currentActionId = $(_this).attr('class');
+	var currentActionId = $(_this).attr('data-id');
 	var currentVersionId = $(_this).attr('id');
 	localStorage.setItem('directoryId', currentActionId);
 	localStorage.setItem('templateVersionId', currentVersionId);
