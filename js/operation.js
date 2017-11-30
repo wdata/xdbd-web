@@ -16,104 +16,6 @@ if(surroundings === "test" || surroundings === "prod"){
     $('.generateEditBi').show().siblings("");
 }
 
-
-
-// 右键功能
-$(document).ready(function() {
-    context.init({preventDoubleContext: false,fadeSpeed:100});
-   
-    // context.attach('html', [
-    //     {header: '菜单设置'},
-    //     {text: '返回', href: '#'},
-    //     {text: '重新加载', href: '#'},
-    //     {divider: true},
-    //     {text: '保存至', href: '#'},
-    //     {text: '粘贴', href: '#'},
-    //     {text: '上一页', href: '#'},
-    //     {text: '下一页', href: '#'},
-    //     {divider: true},
-    //     {text: 'Inspect Element', href: '#'},
-    //     {divider: true},
-    //     {text: 'Disable This Menu', action: function(e){
-    //         e.preventDefault();
-    //         context.destroy('html');
-    //         alert('html contextual menu destroyed!');
-    //     }},
-    //     {text: 'Donate?', action: function(e){
-    //         e.preventDefault();
-    //         $('#donate').submit();
-    //     }}
-    // ]);
-    // 编辑器右键
-    context.attach('.resize-item', [
-        {header: '菜单设置'},
-        {text: '复制',action: function(e){
-            const  ele = context.getClickEle();
-            e.preventDefault();
-            const id = ele.attr("id");
-            operating.copy(id); // 复制
-        }},
-        {text: '粘贴',action: function(e){
-            e.preventDefault();
-            operating.paste();   // 粘贴函数；
-        }},
-        {text: '删除', action: function(e){
-            e.preventDefault();
-            const id = context.getClickEle().attr("id");
-            operating.clickDelete(id);      // 删除功能
-
-            let level = new Level();
-            level.rearrange();
-        }},
-        {text: '排列', subMenu: [
-            {header: '默认值'},
-            {
-                text: '置于顶层',
-                action: function () {
-                    context.getClickEle().css("z-index",( save_arr.length + 1));
-                    let level = new Level();
-                    level.arrangement(context.getClickEle());
-                }
-            },
-            {
-                text: '置于底层',
-                action: function () {
-                    /* 设置为0后会重新排序，变成1；所以不用担心排列问题 */
-                    context.getClickEle().css("z-index",0);
-                    let level = new Level();
-                    level.arrangement(context.getClickEle());
-                }
-            },
-            {
-                text: '上移一层',
-                action: function () {
-                    const zIndex = parseInt(context.getClickEle().css("z-index"));
-                    context.getClickEle().css("z-index",zIndex + 1);
-                    /* 上移和下移都不在重新排序，只保存 */
-                    let level = new Level();
-                    level.arrang(context.getClickEle());
-                }
-            },{
-                text: '下移一层',
-                action: function () {
-                    const zIndex = parseInt(context.getClickEle().css("z-index"));
-                    context.getClickEle().css("z-index",zIndex-1);
-                    /* 上移和下移都不在重新排序，只保存 */
-                    let level = new Level();
-                    level.arrang(context.getClickEle());
-                }
-            }
-        ]}
-    ]);
-
-    context.attach('.edit-libs-box', [
-        {text: '粘贴',action: function(e){
-            e.preventDefault();
-            operating.paste();   // 粘贴函数；
-        }}
-    ]);
-});
-
 // 保存数据，保存数据索引
 let refresh = {
     // 刷新按钮
@@ -626,6 +528,18 @@ let operating = {
             }
         })
     },
+    // 删除询问
+    deteteask:function(id){
+        layer.confirm('是否删除控件？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.closeAll();
+            operating.clickDelete(id);      // 删除功能
+
+            let level = new Level();
+            level.rearrange();
+        });
+    },
     // 删除
     clickDelete:function(id){
         let deleted = true;
@@ -640,9 +554,9 @@ let operating = {
                 deleted = false;
             }
         });
-
         // 删除该ID的元素
         $("#" + id).remove();
+
     },
     // 复制
     copy:function(id){
