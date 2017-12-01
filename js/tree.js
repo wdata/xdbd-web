@@ -275,7 +275,319 @@ $(function(){
 	var curNodeId = sessionStorage.getItem("curNodeId")||"";
 	var curNodeObj;
 	var $tree;
+	var fnCreatePage;//new function
+	var editFile = {
+        getNewEtlFileInfo:function(versionId,directoryId){
+            $.ajax({
+                type:'POST',
+                url:$url2+'/api/action/v1/getAction',
+                headers:{
+                    username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+                },
+                dataType:'json',
+                contentType: "application/json",
+                data:JSON.stringify({
+                    "versionId":versionId,
+                    "actionId":directoryId
+                }),
+                success:function(res){
+                    console.log(res);
+                    if(res.code===0){
+						var data = res.data;
+						var $etlbox = $(".newEtlFile");
+						$etlbox.find(".new_type").html(industryType());
+						$etlbox.find(".new_name").val(data.name);
+                        // $etlbox.find(".new_ds option:selected").val(data.name);
+                        $etlbox.find(".new_type").val(data.businessType);
+                        $etlbox.find(".new_describe").val(data.remark);
 
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+		},
+        getEtlDataSource:function(projectId,versionId){
+            $.ajax({
+                type: "POST",
+                url: $url2 + "/api/datasource/v1/getDataSourceList",  ///xdbd-etl
+                dataType: "json",
+                contentType: "application/json",
+                data:JSON.stringify({
+                    projectId:projectId,
+                    versionId:versionId
+                }),
+                success: function (res) {
+                    console.log(res);
+                    if (res.code === 0) {
+                        var data = res.data;
+                        var html = '';
+                        $.each(data, function (i,v) {
+                            html += `<option value="${i.dsId}">${v.name}</option>`
+                        })
+                        $(".newEtlFile .new_ds").html(html);
+                    }
+                }, error:function (res) {
+                    console.log(res);
+                }
+            })
+        },
+        modifyEtlFileInfo:function (projectId,versionId,directoryId,companyId,name,businessType,remark) {
+            $.ajax({
+                type:'POST',
+                url:$url2+'/api/action/v1/saveAction',
+                headers:{
+                    username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+                },
+                dataType:'json',
+                contentType: "application/json",
+                data:JSON.stringify({
+                    "isTemplate":false,					//是否为模板
+                    "dsId":"",
+                    "companyId":companyId,
+                    "projectId":projectId,
+                    "templateVersionId":"",							//模板版本ID
+                    "versionId":versionId,
+                    "directoryId":directoryId,
+                    "actionId": directoryId,	//任务ID
+                    "name":name,									//任务名称
+                    "businessType":businessType,							//行业类型
+                    "remark":remark
+                }),
+                success:function(res){
+                    console.log(res);
+                    if(res.code===0){
+                        layer.msg(res.message, {icon: 6});
+                        getProjName(0);//刷新项目树
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        },
+        getNewZylFileInfo:function(versionId,directoryId){
+            $.ajax({
+                type:'POST',
+                url:'/api/job/v1/getById',
+                headers:{
+                    username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+                },
+                dataType:'json',
+                contentType: "application/json",
+                data:JSON.stringify({
+                    "versionId":versionId,
+                    "id":directoryId
+                }),
+                success:function(res){
+                    console.log(res);
+                    if(res.code===0){
+                        var data = res.data;
+                        var $zylbox = $(".newZylFile");
+                        $zylbox.find(".new_type").html(industryType());
+                        $zylbox.find(".new_name").val(data.name);
+                        $zylbox.find(".new_type").val(data.businessType);
+                        $zylbox.find(".new_describe").val(data.remark);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+		},
+        modifyZylFileInfo:function(directoryId,name,remark,businessType){
+            $.ajax({
+                type:'POST',
+                url:'/api/job/v1/save',
+                headers:{
+                    username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+                },
+                dataType:'json',
+                contentType: "application/json",
+                data:JSON.stringify({
+                    "jobId":directoryId,
+                    "name":name,
+                    "updateUser":sessionStorage.getItem("userId"),
+                    "remark":remark,
+                    "businessType":businessType
+                }),
+                success:function(res){
+                    console.log(res);
+                    if(res.code===0){
+                        layer.msg(res.message, {icon: 6});
+                        getProjName(0);//刷新项目树
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+		},
+        getNewBiFileInfo:function(projectId,versionId,directoryId){
+            $.ajax({
+                type:'GET',
+                url:$url1+'/bi/report/v1/page/info.json',
+                headers:{
+                    username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+                },
+                dataType:'json',
+                data:{
+                    "projectId":projectId,
+                    "versionId":versionId,
+                    "pageId":directoryId
+                },
+                success:function(res){
+                    // console.log(res);
+                    if(res.code===0){
+                        var data = res.data;
+                        var $bibox = $(".newBiFile");
+                        $bibox.find(".new_name").val(data.name);
+                        $bibox.find(".new_type").val(data.industry);
+                        $bibox.find(".new_describe").val(data.comment);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        },
+        modifyBiFileInfo:function(projectId,versionId,directoryId,name,industry,comment) {
+            $.ajax({
+                type:'PUT',
+                url:$url1+'/bi/report/v1/page/info.json',
+                headers:{
+                    username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
+                },
+                dataType:'json',
+                data:{
+                    "projectId":projectId,
+                    "versionId":versionId,
+                    "pageId":directoryId,
+                    "name":name,
+                    "industry":industry,
+                    "comment":comment
+                },
+                success:function(res){
+                	// console.log(res);
+                    if(res.code===0){
+                        layer.msg(res.message, {icon: 6});
+                        getProjName(0);//刷新项目树
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+	}
+
+	function newEtlFile(){
+		//getEtlFileInfo
+        editFile.getEtlDataSource(projectId,versionId);
+        editFile.getNewEtlFileInfo(versionId,directoryId);
+        var index = layer.open({
+            type: 1,
+            btn: ['确定', '取消'],
+            area: ['660px', '560px'],
+            title:'编辑',
+            shadeClose: true, //点击遮罩关闭
+            content:$(".newEtlFile"),
+            yes: function(index, layero){
+                var $etlbox = $(".newEtlFile");
+                var name = $etlbox.find(".new_name").val();
+                var dataSource = $etlbox.find(".new_ds").val();
+                var businessType = $etlbox.find(".new_type").val();
+                var remark = $etlbox.find(".new_describe").val();
+                if(!$.trim(name)){//不能为空
+                    layer.msg("ETL名称不能为空", {icon: 0});
+                }else if(!$.trim(dataSource)){
+                    layer.msg("数据源不能为空", {icon: 0});
+                }else if(!$.trim(businessType)){
+                    layer.msg("行业类型不能为空", {icon: 0});
+                }else if(!$.trim(remark)){
+                    layer.msg("ETL描述不能为空", {icon: 0});
+                }else{
+                    editFile.modifyEtlFileInfo(projectId,versionId,directoryId,companyId,name,businessType,remark);
+                    layer.close(index);
+                }
+            },
+            btn2:function(){
+                layer.close(index);
+            },
+            cancel:function(){
+                layer.close(index);
+            }
+        });
+	}
+	function newZylFile(){
+        //getZylFileInfo
+        editFile.getNewZylFileInfo(versionId,directoryId);
+        var index = layer.open({
+            type: 1,
+            btn: ['确定', '取消'],
+            area: ['490px', '450px'],
+            title:'编辑',
+            shadeClose: true, //点击遮罩关闭
+            content:$(".newZylFile"),
+            yes: function(index, layero){
+                var $zylbox = $(".newZylFile");
+                var name = $zylbox.find(".new_name").val();
+                var businessType = $zylbox.find(".new_type option:selected").val();console.log( businessType);
+                var remark = $zylbox.find(".new_describe").val();
+                if(!$.trim(name)){//不能为空
+                    layer.msg("作业流名称不能为空", {icon: 0});
+                }else if(!businessType){
+                    layer.msg("行业类型不能为空", {icon: 0});
+                }else if(!$.trim(remark)){
+                    layer.msg("作业流描述不能为空", {icon: 0});
+                }else{
+                    editFile.modifyZylFileInfo(directoryId,name,remark,businessType);
+                    layer.close(index);
+                }
+            },
+            btn2:function(){
+                layer.close(index);
+            },
+            cancel:function(){
+                layer.close(index);
+            }
+        });
+	}
+    function newBiFile(){
+        //getBiFileInfo
+        editFile.getNewBiFileInfo(projectId,versionId,directoryId);
+        var index = layer.open({
+            type: 1,
+            btn: ['确定', '取消'],
+            area: ['490px', '450px'],
+            title:'编辑',
+            shadeClose: true, //点击遮罩关闭
+            content:$(".newBiFile"),
+            yes: function(index, layero){
+                var $bibox = $(".newBiFile");
+                var name =  $bibox.find(".new_name").val();
+                var industry = $bibox.find(".new_type option:selected").val();console.log( industry);
+                var comment = $bibox.find(".new_describe").val();
+                if(!$.trim(name)){//不能为空
+                    layer.msg("作业流名称不能为空", {icon: 0});
+                }else if(!industry){
+                    layer.msg("行业类型不能为空", {icon: 0});
+                }else if(!$.trim(comment)){
+                    layer.msg("作业流描述不能为空", {icon: 0});
+                }else{
+                    editFile.modifyBiFileInfo(projectId,versionId,directoryId,name,industry,comment);
+                    layer.close(index);
+                }
+            },
+            btn2:function(){
+                layer.close(index);
+            },
+            cancel:function(){
+                layer.close(index);
+            }
+        });
+    }
 	function showTree(treeviewData){
         $tree = $('#treeview5').treeview({
             color: "#578fe6",
@@ -322,6 +634,19 @@ $(function(){
                 }
 
                 console.log("1="+dirType);
+                //new
+				switch(dirType){
+					case "14":
+                    case "15"://bi
+                        fnCreatePage = newBiFile;
+					break;
+					case "12"://etl
+                        fnCreatePage = newEtlFile;
+					break;
+                    case "13"://zuoyeliu
+                        fnCreatePage = newZylFile;
+					break;
+				}
 //		 console.log("2="+directoryId);
                 if(onCurEnv==="dev"){
                     var items0 = [
@@ -359,7 +684,7 @@ $(function(){
                         { title: '创建页面', fn: createFpage}
                     ];
                     var items6 = [
-                        { title: '重命名',fn:fnRenameFile},
+                        { title: '新建',fn:fnCreatePage},
                         { title: '删除',fn:fnDeleteFile}
                     ];
                     var items7 = [
@@ -1035,6 +1360,8 @@ $(function(){
 			getProjInfo();
 			$(".proj-attr").show();
 		};
+
+
 		var newFile = function(){
 	    	findCurTree("fileTrees",directoryId);
 			var index = layer.open({

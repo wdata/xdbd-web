@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="plugin/basicContext/default.min.css" />
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/form.css" />
+	  <link rel="stylesheet" href="css/stencilmanage.css">
     <style type="text/css">
 			.badge {
 			    display: inline-block;
@@ -44,10 +45,13 @@
 			.node-treeview5:not(.node-disabled):hover {
 			    background-color: #FFFFFF;
 			}
+			.node-treeview5 {
+				color: #878D99!important;
+			}
 			.treeview-head {
 				text-indent: 20px;
 				font-size: 16px;
-				color: #578fe6;
+				color: #878D99;
 				line-height: 34px;
 				font-weight: 600;
 			}
@@ -66,8 +70,8 @@
 				margin-right: 4px;
 			}
 			.col-sm-12 {
-				padding-right:0 ;
-				width: auto;
+				padding-right:15px ;
+				width: 100%;
 			}
 	</style>
     <!--[if lt IE 9]>
@@ -265,7 +269,67 @@
 		<div class="submit-test" style="display:none">
 			<input type="text" placeholder="请输入版本号" />
 		</div>
-		
+
+		<!--newBiFile-->
+		<div class="newBiFile" style="display:none;">
+			<div class="demand_name">
+				<label>页面名称：<span>*</span></label>
+				<input class="new_name" type="text" >
+			</div>
+			<div class="demand_name">
+				<label>行业类型：<span>*</span></label>
+				<select class="new_type">
+					<option value="0">全部</option>
+					<option value="1">房地产</option>
+					<option value="2">酒店</option>
+					<option value="3">互联网</option>
+					<option value="4">自定义</option>
+				</select>
+			</div>
+			<div class="demand_name">
+				<label>页面描述：<span>*</span></label>
+				<textarea maxlength="100" class="new_describe"></textarea>
+			</div>
+			<p class="hint">100个字以内</p>
+		</div>
+
+		<!--newEtlFile-->
+		<div class="newEtlFile" style="display:none;">
+			<div class="demand_name">
+				<label>ETL名称：<span>*</span></label>
+				<input class="new_name" type="text" >
+			</div>
+			<div class="demand_name">
+				<label>数据源:<span>*</span></label>
+				<select class="new_ds"></select>
+			</div>
+			<div class="demand_name">
+				<label>行业类型：<span>*</span></label>
+				<select class="new_type"></select>
+			</div>
+			<div class="demand_name">
+				<label>ETL描述：<span>*</span></label>
+				<textarea maxlength="85" class="new_describe"></textarea>
+			</div>
+			<p class="hint">85个字以内</p>
+		</div>
+
+		<!--newZylFile-->
+		<div class="newZylFile" style="display:none;">
+			<div class="demand_name">
+				<label>作业流名称：<span>*</span></label>
+				<input class="new_name" type="text" ></div>
+			<div class="demand_name">
+				<label>行业类型：<span>*</span></label>
+				<select class="new_type"></select>
+			</div>
+			<div class="demand_name">
+				<label>作业流描述：<span>*</span></label>
+				<textarea maxlength="85" class="new_describe"></textarea>
+			</div>
+			<p class="hint">85个字以内</p>
+		</div>
+
 		<!--数据源配置-->
 		<div class="data-source-config modal">
 			<h3>数据源配置<img src="images/icon_guanbi.png" alt="" class="fr"/></h3>

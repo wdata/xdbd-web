@@ -197,9 +197,9 @@ $(function(){
 		    elem: 'opagination',
 		    count: totalCount,
 		    limit: pageSize,
-		    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取  
-	            var page = location.search.match(/page=(\d+)/);  
-	            return page ? page[1] : 1;  
+            curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+	            var page = location.search.match(/page=(\d+)/);
+	            return page ? page[1] : 1;
 	        }(),
 		    first: '首页',
 		    last: '末页',
@@ -210,7 +210,7 @@ $(function(){
 	            if(!first){//是否首次进入页面  
 	                pageNum = obj.curr;//获取点击的页码      
 	                findLogLists(pageNum,pageSize);
-	            }  
+	            }
 	        }  
 		  });
 		})

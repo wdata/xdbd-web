@@ -593,7 +593,7 @@ div.tree-nav {
 .g-folders {
 	height: 100%;
 	overflow: scroll;
-	/*overflow-x: hidden;*/
+	overflow-x: hidden;
 }
 .g-folders li>a {
 	display: block;
@@ -1574,6 +1574,17 @@ div.f-addbtn-box-auto li{
 }
 /*提交测试*/
 .submit-test>input {
+	display: block;
+	width: 350px;
+	/*height: 20px;*/
+	padding: 3px 9px;
+	border:1px solid #CCCCCC;
+	margin: 50px auto 0;
+	font-size: 12px;
+	border-radius: 2px;
+}
+/*newbi*/
+.newBifile,newZylFile,newEtlFile {
 	display: block;
 	width: 350px;
 	/*height: 20px;*/
