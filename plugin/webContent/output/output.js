@@ -46,7 +46,7 @@ $(function(){
     var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
     if(actionComp!=null){
       var attValue = eval("("+actionComp.attValue+")");
-      fn_set_stepName(actionComp.name);
+      fn_set_stepName(etlName);
       fn_set_extractFields(attValue.extractFields);
       fn_set_sqlOut(actionComp.sqlOut);
     }
