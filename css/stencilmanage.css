@@ -7,12 +7,13 @@
     height: 188px;
     float: left;
     position: relative;
-}
-.new_demand:hover{
     border-radius: 2px;
     border: 1px solid #b8d6fb;
-    margin-top: 49px;
+}
+.new_demand:hover{
+    /* margin-top: -1px; */
     background: #ebf3fd;
+    /* border-size: border-box; */
 }
 .new_demand dt{
     height: 120px;
@@ -35,6 +36,9 @@
     font-size: 14px;
     color: #3d5275;
     text-align: center;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 .new_demand dd span{
     margin-top: 10px;
@@ -42,6 +46,9 @@
     color: #627595;
     text-align: center;
     display: block;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 .demand_name{
     width: 450px;
