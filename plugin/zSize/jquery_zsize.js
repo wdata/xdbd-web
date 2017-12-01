@@ -408,7 +408,7 @@
                     refresh.storage(type,id); // 判断不同的TYPE执行不同的采取函数
 
                     // 当recordingBur为ture时，已经放大缩小，所以重新获取图形显示；
-                    if(recordingBur && type === "chart" || type === "text"){
+                    if(recordingBur && type === "chart" || type === "table"){
                         refresh.save_config(recordingId);
                     }
 
