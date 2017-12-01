@@ -370,7 +370,7 @@ $(function(){
         getNewZylFileInfo:function(versionId,directoryId){
             $.ajax({
                 type:'POST',
-                url:'/api/job/v1/getById',
+                url:$url4+'/api/job/v1/getById',
                 headers:{
                     username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
                 },
@@ -399,7 +399,7 @@ $(function(){
         modifyZylFileInfo:function(directoryId,name,remark,businessType){
             $.ajax({
                 type:'POST',
-                url:'/api/job/v1/save',
+                url:$url4+'/api/job/v1/save',
                 headers:{
                     username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
                 },
