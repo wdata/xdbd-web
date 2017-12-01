@@ -9,7 +9,7 @@ var this_companyId = localStorage.getItem("companyId");
 var this_createUser = localStorage.getItem("createUser");
 var this_updateUser = localStorage.getItem("updataeUser");
 var this_rootPath = localStorage.getItem("rootPath");
-var $url = '../xdbd-wf';  //../xdbd-wf
+var $url = '';  //../xdbd-wf
 
 $('.trade_type').html(industryType());
 
@@ -150,7 +150,7 @@ function newBtn(popups) {
 			createUser: this_createUser,
 			rotPath: this_rootPath,
 			remark: newDescribe,
-			business_type: newType,
+			businessType: newType,
 			versionId: this_versionId
 		};
 		$.ajax({
@@ -163,7 +163,7 @@ function newBtn(popups) {
 				if (data.code == 0) {
 					localStorage.setItem('directoryId', data.data);
 					window.location.href = 'etlChart.html';
-					parent.location.reload();
+					// parent.location.reload();
 				} else {
 					layer.msg(data.message, { time: 1000 })
 				}

@@ -46,7 +46,7 @@ $(function(){
     // alert(actionComp)
     if(actionComp!=null){
       var attValue = eval("("+actionComp.attValue+")");
-      fn_set_stepName(actionComp.name);
+      fn_set_stepName(etlName);
       fn_set_fromTable(actionComp.fromTable);
       fn_set_tableOut(actionComp.tableOut);
       set_sortFields(attValue.sorts);

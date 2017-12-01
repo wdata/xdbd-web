@@ -8,6 +8,7 @@
     float: left;
     position: relative;
     border-radius: 2px;
+    background: #fff;
     border: 1px solid #b8d6fb;
 }
 .new_demand:hover{
@@ -58,7 +59,7 @@
 }
 .demand_name label{
     font-size: 16px;
-    coor: #3d5275;
+    color: #3d5275;
     display: block;
     float: left;
     width: 104px;
