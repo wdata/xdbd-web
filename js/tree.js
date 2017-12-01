@@ -590,7 +590,7 @@ $(function(){
     }
 	function showTree(treeviewData){
         $tree = $('#treeview5').treeview({
-            color: "#578fe6",
+            color: "#878D99",
             expandIcon: 'glyphicon glyphicon-chevron-right',
             collapseIcon: 'glyphicon glyphicon-chevron-down',
             nodeIcon: 'glyphicon glyphicon-bookmark',
