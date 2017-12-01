@@ -244,9 +244,10 @@ $(function(){
         }
     });
 
-	//修改字段别名
-	function setBiFieldName(id,name){
-		$.ajax({
+
+//修改字段别名
+    function setBiFieldName(id,name){
+        $.ajax({
             type:'PUT',
             url:$url1 + '/bi/report/v1/dataModel/fieldAlias.json',
             headers:{   username:username, userId:userId    },
@@ -258,34 +259,130 @@ $(function(){
                 "fieldAlias":name,
             },
             success:function(res){
-              if(res.code===0){
-				layer.msg('修改成功!');
-                getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
-              }
+                if(res.code===0){
+                    layer.msg('修改成功!');
+                    getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
+                }
             },
             error:function(res){
                 console.log(res);
             }
         });
-	}
+    }
+
+    context.init({preventDoubleContext: false,fadeSpeed:100});
+
+
+
+    context.attach('.placeholder li', [
+        {text: '修改名称', action: function(){
+            console.log("222222222222222");
+            let fieldAlias = '';
+            const id = context.getClickEle().attr("fieldId");
+            console.log(context.getClickEle());
+            layer.confirm('<input class="none" type="text" style="display:block;margin:0 auto;width:160px;height:14px;padding:6px;border:1px solid #ccc;font-size:12px;" value="' + $.trim(context.getClickEle().text()) + '"/>', {
+                btn: ['确定', '取消'], //按钮
+                yes: function (index) {
+                    $(context.getClickEle()).text($(".none").val());
+                    fieldAlias=$(".none").val();
+//									save_config("x",id_,field,$(".none").val(),order,dataType,dim_mea,dis_con,aggregation);
+                    layer.close(index);
+                    setBiFieldName(id,fieldAlias);//修改字段名称
+                }
+            });
+        }},
+    ]);
+
+
+    // 编辑器右键
+    context.attach('.resize-item', [
+        {header: '菜单设置'},
+        {text: '复制',action: function(e){
+            const  ele = context.getClickEle();
+            e.preventDefault();
+            const id = ele.attr("id");
+            operating.copy(id); // 复制
+        }},
+        {text: '粘贴',action: function(e){
+            e.preventDefault();
+            operating.paste();   // 粘贴函数；
+        }},
+        {text: '删除', action: function(e){
+            e.preventDefault();
+            const id = context.getClickEle().attr("id");
+            layer.confirm('是否删除控件？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                layer.closeAll();
+                operating.clickDelete(id);      // 删除功能
+
+                let level = new Level();
+                level.rearrange();
+
+            });
+        }},
+        {text: '排列', subMenu: [
+            {header: '默认值'},
+            {
+                text: '置于顶层',
+                action: function () {
+                    context.getClickEle().css("z-index",( save_arr.length + 1));
+                    let level = new Level();
+                    level.arrangement(context.getClickEle());
+                }
+            },
+            {
+                text: '置于底层',
+                action: function () {
+                    /* 设置为0后会重新排序，变成1；所以不用担心排列问题 */
+                    context.getClickEle().css("z-index",0);
+                    let level = new Level();
+                    level.arrangement(context.getClickEle());
+                }
+            },
+            {
+                text: '上移一层',
+                action: function () {
+                    const zIndex = parseInt(context.getClickEle().css("z-index"));
+                    context.getClickEle().css("z-index",zIndex + 1);
+                    /* 上移和下移都不在重新排序，只保存 */
+                    let level = new Level();
+                    level.arrang(context.getClickEle());
+                }
+            },{
+                text: '下移一层',
+                action: function () {
+                    const zIndex = parseInt(context.getClickEle().css("z-index"));
+                    context.getClickEle().css("z-index",zIndex-1);
+                    /* 上移和下移都不在重新排序，只保存 */
+                    let level = new Level();
+                    level.arrang(context.getClickEle());
+                }
+            }
+        ]}
+    ]);
+
+    context.attach('.edit-libs-box', [
+        {text: '粘贴',action: function(e){
+            e.preventDefault();
+            operating.paste();   // 粘贴函数；
+        }}
+    ]);
+
     let cgt = {
 	    "name":{
                 text: '修改显示名称',
                 action: function (e) {
                     let fieldAlias = '';
                     const id = context.getClickEle().attr("fieldId");
-                    console.log(context.getClickEle());
                     layer.confirm('<input class="none" type="text" style="display:block;margin:0 auto;width:160px;height:14px;padding:6px;border:1px solid #ccc;font-size:12px;" value="' + $.trim(context.getClickEle().text()) + '"/>', {
                         btn: ['确定', '取消'], //按钮
                         yes: function (index) {
                             $(context.getClickEle()).text($(".none").val());
                             fieldAlias=$(".none").val();
-//									save_config("x",id_,field,$(".none").val(),order,dataType,dim_mea,dis_con,aggregation);
                             layer.close(index);
-                            setBiFieldName(id,fieldAlias);//修改字段名称
                         }
                     });
-
                 }
             },
         "agm":{
@@ -416,6 +513,8 @@ $(function(){
 
 
 });//jquery end 
+
+
 
 // 调换X轴和Y轴
 function xyChange(){

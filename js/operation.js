@@ -16,104 +16,6 @@ if(surroundings === "test" || surroundings === "prod"){
     $('.generateEditBi').show().siblings("");
 }
 
-
-
-// 右键功能
-$(document).ready(function() {
-    context.init({preventDoubleContext: false,fadeSpeed:100});
-   
-    // context.attach('html', [
-    //     {header: '菜单设置'},
-    //     {text: '返回', href: '#'},
-    //     {text: '重新加载', href: '#'},
-    //     {divider: true},
-    //     {text: '保存至', href: '#'},
-    //     {text: '粘贴', href: '#'},
-    //     {text: '上一页', href: '#'},
-    //     {text: '下一页', href: '#'},
-    //     {divider: true},
-    //     {text: 'Inspect Element', href: '#'},
-    //     {divider: true},
-    //     {text: 'Disable This Menu', action: function(e){
-    //         e.preventDefault();
-    //         context.destroy('html');
-    //         alert('html contextual menu destroyed!');
-    //     }},
-    //     {text: 'Donate?', action: function(e){
-    //         e.preventDefault();
-    //         $('#donate').submit();
-    //     }}
-    // ]);
-    // 编辑器右键
-    context.attach('.resize-item', [
-        {header: '菜单设置'},
-        {text: '复制',action: function(e){
-            const  ele = context.getClickEle();
-            e.preventDefault();
-            const id = ele.attr("id");
-            operating.copy(id); // 复制
-        }},
-        {text: '粘贴',action: function(e){
-            e.preventDefault();
-            operating.paste();   // 粘贴函数；
-        }},
-        {text: '删除', action: function(e){
-            e.preventDefault();
-            const id = context.getClickEle().attr("id");
-            operating.clickDelete(id);      // 删除功能
-
-            let level = new Level();
-            level.rearrange();
-        }},
-        {text: '排列', subMenu: [
-            {header: '默认值'},
-            {
-                text: '置于顶层',
-                action: function () {
-                    context.getClickEle().css("z-index",( save_arr.length + 1));
-                    let level = new Level();
-                    level.arrangement(context.getClickEle());
-                }
-            },
-            {
-                text: '置于底层',
-                action: function () {
-                    /* 设置为0后会重新排序，变成1；所以不用担心排列问题 */
-                    context.getClickEle().css("z-index",0);
-                    let level = new Level();
-                    level.arrangement(context.getClickEle());
-                }
-            },
-            {
-                text: '上移一层',
-                action: function () {
-                    const zIndex = parseInt(context.getClickEle().css("z-index"));
-                    context.getClickEle().css("z-index",zIndex + 1);
-                    /* 上移和下移都不在重新排序，只保存 */
-                    let level = new Level();
-                    level.arrang(context.getClickEle());
-                }
-            },{
-                text: '下移一层',
-                action: function () {
-                    const zIndex = parseInt(context.getClickEle().css("z-index"));
-                    context.getClickEle().css("z-index",zIndex-1);
-                    /* 上移和下移都不在重新排序，只保存 */
-                    let level = new Level();
-                    level.arrang(context.getClickEle());
-                }
-            }
-        ]}
-    ]);
-
-    context.attach('.edit-libs-box', [
-        {text: '粘贴',action: function(e){
-            e.preventDefault();
-            operating.paste();   // 粘贴函数；
-        }}
-    ]);
-});
-
 // 保存数据，保存数据索引
 let refresh = {
     // 刷新按钮
@@ -626,6 +528,18 @@ let operating = {
             }
         })
     },
+    // 删除询问
+    deteteask:function(id){
+        layer.confirm('是否删除控件？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.closeAll();
+            operating.clickDelete(id);      // 删除功能
+
+            let level = new Level();
+            level.rearrange();
+        });
+    },
     // 删除
     clickDelete:function(id){
         let deleted = true;
@@ -640,9 +554,9 @@ let operating = {
                 deleted = false;
             }
         });
-
         // 删除该ID的元素
         $("#" + id).remove();
+
     },
     // 复制
     copy:function(id){
@@ -1244,7 +1158,7 @@ let project = {
     horizontalLine:function(bur){
         let textDecoration = bur?"line-through":"none";
         if(bur){
-            $(".f-select-cont li input:checked").siblings("span").css("text-decoration",textDecoration);
+            $(".f-select-cont li input[checked=checked]").siblings("span").css("text-decoration",textDecoration);
             $(".f-addbtn-box-auto li p").css("text-decoration",textDecoration);
         }else{
             $(".f-select-cont li input").siblings("span").css("text-decoration",textDecoration);
@@ -1296,47 +1210,32 @@ let swRag = {
     "cid":null,
     // 根据传递的元素赋值
     ass:function(field,fieldId,number,cid){
+        const self = this;
         this.fieldId = fieldId;
         this.number = number;
         this.cid = cid;
 
         // 先重置，在按照数据添加进去
-        swRag.min.val("");
-        swRag.max.val("");
-        swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
+        self.min.val("");
+        self.max.val("");
+        self.selec(($(".s-data-val ul>li").eq(0).find("input")));
 
         $.each(screen_data,function(index,val){
             if(val.fieldId === fieldId && val.number === number && val.cid === cid){
-                swRag.min.val(val.numericFilter.range.min);
-                swRag.max.val(val.numericFilter.range.max);
-                swRag.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
+                self.min.val(val.numericFilter.range.min);
+                self.max.val(val.numericFilter.range.max);
+                self.selec(($(".s-data-val ul>li").eq(val.select).find("input")));
             }
         });
-        const min = swRag.min.val();
-        const max = swRag.max.val();
-
-        if(min && !max){
-            swRag.selec(($(".s-data-val ul>li").eq(1).find("input")));
-            swRag.min.val(min);
-        }
-        if(!min && max){
-            swRag.selec(($(".s-data-val ul>li").eq(2).find("input")));
-            swRag.max.val(max);
-        }
-        if(min && max){
-            swRag.selec(($(".s-data-val ul>li").eq(0).find("input")));
-            swRag.min.val(min);
-            swRag.max.val(max);
-        }
 
         // 初始化
         $(".data-filter-mod").show();       // 显示数字筛选框
         $(".s-more-btn").show();
         $(".s-slider-box").hide();
 
-        swRag.rangeAjax(field);
-        swRag.ele();
-        swRag.switchRange();
+        self.rangeAjax(field);
+        self.ele();
+        self.switchRange();
     },
     // 取得范围
     rangeAjax:function(field){
@@ -1375,6 +1274,7 @@ let swRag = {
     },
     // 事件
     ele:function(){
+        const self = this;
         $(".s-data-val ul>li").on("click",function(){
             const $s = $(this).find("input");
             swRag.selec(($s));
@@ -1383,11 +1283,12 @@ let swRag = {
             $(".s-slider-box").hide();
             $(".s-more-btn").show();
             // 清除数据
-            swRag.min.val("");swRag.max.val("");
+            self.hideData($(this).index());
         });
         //点击加载更多,显示范围
         $(".s-more-btn").click(function(){
-            const index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
+            const index = $(".s-data-val ul>li").find("input[checked=checked]").parent().index();
+
             switch(index){
                 case 0 :
                     swRag.range(index);
@@ -1403,18 +1304,32 @@ let swRag = {
             $(this).hide();
         });
     },
+    hideData:function(type){
+        if(swRag.maxData && swRag.minData){
+            switch(type){
+                case 0 :swRag.min.val(swRag.minData);swRag.max.val(swRag.maxData);break;
+                case 1 :swRag.max.val("");swRag.min.val(swRag.minData);break;
+                case 2 :swRag.min.val("");swRag.max.val(swRag.maxData);break;
+            }
+        }else{
+            swRag.max.val("");
+            swRag.min.val("");
+        }
+    },
     // 根据不同的index变化
     selec:function($s){
-        $s.attr("checked","checked");
         const $idx = $s.parent().index();
-        $s.prev("img").attr("src","images/icon_circle_on.png");
-        $s.parent("li").siblings().find("img").attr("src","images/icon_circle.png");
+        $s.attr("checked","checked")
+            .prev("img").attr("src","images/icon_circle_on.png")
+            .parent("li").siblings()
+            .find("img").attr("src","images/icon_circle.png")
+            .siblings("input").removeAttr("checked");
         swRag.switchRange($idx);
     },
     // 保存
     save:function(){
         const self = this;
-        const index = $(".s-data-val ul>li").find("input[name]:checked").parent().index();
+        const index = $(".s-data-val ul>li").find("input[checked=checked]").parent().index();
         if(!swRag.judgment(index)){	return	}
 
         // 根据记录的ID，作为判断
@@ -1422,7 +1337,7 @@ let swRag = {
             "fieldId":timeSng.reJson(this.fieldId),
             "number":timeSng.reJson(this.number),
             "cid":timeSng.reJson(this.cid),
-            "select":$(".s-data-val ul>li input:checked").parent().index(),
+            "select":$(".s-data-val ul>li input[checked=checked]").parent().index(),
             "numericFilter":{
                 "aggregation": "SUM",
                 "range":{
