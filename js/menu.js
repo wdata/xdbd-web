@@ -164,11 +164,11 @@ $(function(){
               			html2 += `
               				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
               			`;
-              			
-              			
+
               	});
               		$(".top-menu-15").empty().append(html);
               		$(".mn-menu").empty().append(html2);
+
               		
 	            }else{
                     layer.msg("fail", {icon: 0});
