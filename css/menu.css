@@ -380,6 +380,23 @@ li {
 	left: 275px;
 	bottom: 0;
 	height: 34px;
+	right: 35px;
+	overflow: hidden;
+	z-index: 5;
+}
+.zuo1 {
+	position: absolute;
+	left:245px;
+	bottom: 6px;
+}
+.you1 {
+	position: absolute;
+	bottom: 6px;
+	right: 10px;
+}
+.zuo1>span,.you1>span {
+	font-size:20px;
+	color:rgb(3,75,117);
 }
 .m-html-mod .mn-menu li {
 	float: left;
