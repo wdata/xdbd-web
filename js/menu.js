@@ -164,11 +164,11 @@ $(function(){
               			html2 += `
               				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
               			`;
-              			
-              			
+
               	});
               		$(".top-menu-15").empty().append(html);
               		$(".mn-menu").empty().append(html2);
+
               		
 	            }else{
                     layer.msg("fail", {icon: 0});
@@ -1299,7 +1299,46 @@ $(function(){
 	$("#page-fresh").click(function(){
 		todo.refresh();
 	})
-	
+
+	//add topMenu scroll[length:6]
+    var ull = document.getElementById("setAllTop");
+    var lii = ull.getElementsByTagName("li");
+    var oZuo = document.querySelector(".zuo1");
+    var oYou = document.querySelector(".you1");
+    oZuo.onclick = function () {
+        zuo1();
+    }
+    oYou.onclick = function () {
+        you1();
+    }
+    function you1() {
+        var ull =document.getElementById("setAllTop");
+        var lii = ull.getElementsByTagName("li");
+        document.getElementById("jishu").value = parseInt(document.getElementById("jishu").value) + 1;
+        var jishu = parseInt(document.getElementById("jishu").value);
+        if (jishu <= lii.length - 6) {
+            lii[jishu - 1].style.display = "none";
+            for (var i = jishu; i <= jishu + 5; i++) {
+                lii[i].style.display = "inline";
+            }
+        } else {
+            document.getElementById("jishu").value = lii.length - 6;
+        }
+    }
+    function zuo1() {
+        var ull = document.getElementById("setAllTop");
+        var lii = ull.getElementsByTagName("li");
+        document.getElementById("jishu").value = parseInt(document.getElementById("jishu").value) - 1;
+        var jishu = parseInt(document.getElementById("jishu").value);
+        if (jishu >= 0) {
+            lii[jishu + 6].style.display = "none";
+            for (var i = jishu; i <= jishu + 5; i++) {
+                lii[i].style.display = "inline";
+            }
+        } else {
+            document.getElementById("jishu").value = "0";
+        }
+    }
 });//jq end
 
 

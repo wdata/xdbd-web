@@ -323,10 +323,14 @@ $(function(){
                     if (res.code === 0) {
                         var data = res.data;
                         var html = '';
-                        $.each(data, function (i,v) {
-                            html += `<option value="${i.dsId}">${v.name}</option>`
-                        })
-                        $(".newEtlFile .new_ds").html(html);
+                        if(data.length){
+                            $.each(data, function (i,v) {
+                                html += `<option value="${i.dsId}">${v.name}</option>`
+                            })
+                            $(".newEtlFile .new_ds").html(html);
+                        }else{
+                            layer.msg("请先添加数据源!", {icon: 0});
+                        }
                     }
                 }, error:function (res) {
                     console.log(res);
@@ -496,14 +500,14 @@ $(function(){
             yes: function(index, layero){
                 var $etlbox = $(".newEtlFile");
                 var name = $etlbox.find(".new_name").val();
-                var dataSource = $etlbox.find(".new_ds").val();
-                var businessType = $etlbox.find(".new_type").val();
+                var dataSource = $etlbox.find(".new_ds option:selected").val();
+                var businessType = $etlbox.find(".new_type option:selected").val();
                 var remark = $etlbox.find(".new_describe").val();
                 if(!$.trim(name)){//不能为空
                     layer.msg("ETL名称不能为空", {icon: 0});
-                }else if(!$.trim(dataSource)){
+                }else if(!dataSource){
                     layer.msg("数据源不能为空", {icon: 0});
-                }else if(!$.trim(businessType)){
+                }else if(!businessType){
                     layer.msg("行业类型不能为空", {icon: 0});
                 }else if(!$.trim(remark)){
                     layer.msg("ETL描述不能为空", {icon: 0});
@@ -533,7 +537,7 @@ $(function(){
             yes: function(index, layero){
                 var $zylbox = $(".newZylFile");
                 var name = $zylbox.find(".new_name").val();
-                var businessType = $zylbox.find(".new_type option:selected").val();console.log( businessType);
+                var businessType = $zylbox.find(".new_type option:selected").val();
                 var remark = $zylbox.find(".new_describe").val();
                 if(!$.trim(name)){//不能为空
                     layer.msg("作业流名称不能为空", {icon: 0});
@@ -684,7 +688,7 @@ $(function(){
                         { title: '创建页面', fn: createFpage}
                     ];
                     var items6 = [
-                        { title: '新建',fn:fnCreatePage},
+                        { title: '编辑',fn:fnCreatePage},
                         { title: '删除',fn:fnDeleteFile}
                     ];
                     var items7 = [

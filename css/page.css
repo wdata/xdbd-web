@@ -67,6 +67,10 @@
 	height: 14px;
 	margin: 12px 0;
 }
+.p-setlink-box li.active>a {
+	color: green;
+	font-weight: bold;
+}
 .p-setlink-box li>span,.p-setlink-box li>a{
 	display: inline-block;
 	width: 50%;
