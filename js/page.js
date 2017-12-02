@@ -135,9 +135,9 @@ $(function(){
 						$.each(cid,function(i,item){
 							console.log(item.linkPageId);
 							html += `
-								<li cid="${item.cid}" linkPageId="${item.linkPageId}">
+								<li cid="${item.cid}" linkPageId="${item.linkPageId}" class="${item.linkPageId===null||item.linkPageId===''?'':'active'}">
 									<a href="javascript:;">${item.cid}</a>
-									<span class="set-flow-btn">${item.linkPageId===null?'设置链接':'已设置链接'}</span>
+									<span class="set-flow-btn">${item.linkPageId===null||item.linkPageId===''?'设置链接':'已设置链接'}</span>
 								</li>
 							`;
 						});
