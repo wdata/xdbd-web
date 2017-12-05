@@ -4,14 +4,14 @@
 var DataIndexes = {
     // 根据数据索引，请求数据
     inAjax:function(d,id){
-        const self = this;
+        const ele = "#"+ id +" .resize-chart",
+            self = this,
+            queryJson = d.queryJson;
         // 筛选数据，当数据不为空的时候再执行
-        const queryJson = d.queryJson;
         if((!(queryJson.x) && !(queryJson.y)) || (queryJson.x.length <= 0 && queryJson.y <= 0)){
             return
         }
-
-        $("#"+id).find(".resize-panel").siblings().remove();  // 删除之前的图形
+        $(ele).html("");  // 删除之前的图形
 
         $.ajax({
             type:"post",
@@ -23,11 +23,13 @@ var DataIndexes = {
             success:function(data){
                 if(data.code === 0){
                     if(data.data){
+                        $(ele).siblings(".prompt").hide();
                         // console.log(JSON.stringify(data.data));
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
                         layer.msg("数据为空！");
+                        $(ele).siblings(".prompt").show();
                     }
                 }else{
                     // 后期可删除，只是防止没有数据时，显示之前几个图形
@@ -44,13 +46,15 @@ var DataIndexes = {
     // 刷新，判断类型，选择图形绘制
     // 参数：id：元素ID
     draw:function(id,type,data){
+        const ele = "#"+ id +" .resize-chart";
+
         // 判断类型
         switch($("#"+id).attr("data-type")){
             case "chart":
                 switch(type){
                     case 0:
                         // 表格
-                        chart_table(id,data);
+                        chart_table(ele,data);
                         break;
                     case 101:
                         // 绘制柱状图
@@ -61,23 +65,22 @@ var DataIndexes = {
                                 var c = {"letter":val, "frequency": data.charts.meaList[0].meaValues[0][0][index]};
                                 d.push(c);
                             });
-                            console.log(JSON.stringify(d));
-                            bar("#" +id,d);
+                            bar(ele,d);
                             return;
                         }
                         // 一维度 多度量
                         if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length >= 2 && data.charts.dimValues.length <= 1){
-                            manyGroup("#" +id,data);
+                            manyGroup(ele,data);
                             return;
                         }
 
-                        manyChart("#" +id,data);
+                        manyChart(ele,data);
 
                         // bar("#"+id,dataTsv);
                         break;
                     case 102:
                         // 折线图
-                        lineChart("#" + id,data);
+                        lineChart(ele,data);
                         break;
                     case 103:
                         // 饼图
@@ -87,42 +90,41 @@ var DataIndexes = {
                             var z = [data.key[index],val];
                             pieData.push(z);
                         });
-                        console.log(JSON.stringify(pieData));
-                        pieChart("#" + id,pieData,r);
+                        pieChart(ele,pieData,r);
                         break;
                     case 104:
                         // 堆叠柱状图
-                        stacking("#" + id);
+                        stacking(ele);
                         break;
                     case 105:
                         // 区域图
-                        areaChart("#" + id);
+                        areaChart(ele);
                         break;
                     case 106:
                         // 散点图
-                        scatterPlot("#" + id);
+                        scatterPlot(ele);
                         break;
                     case 107:
                         // 甘特图
-                        ganttChart("#" + id);
+                        ganttChart(ele);
                         break;
                     case 108:
                         // 仪表盘
-                        meterChart("#" + id);
+                        meterChart(ele);
                         break;
                     case 109:
                         // 漏斗图
-                        funnelChart("#" + id);
+                        funnelChart(ele);
                         break;
                     case 110:
                         // 矩阵图
-                        rectangle("#" + id);
+                        rectangle(ele);
                         break;
                 }
                 break;
             case "table":
                 // 绘制表格
-                chart_table(id,data);
+                chart_table(ele,data);
                 // chart_table(id,table_date);
                 break;
         }
@@ -637,8 +639,8 @@ function line(id, tit, sub, data, mark, lin) {
 // 封装一维柱状图  一个维度 一个度量
 function bar(id,num){
     var margin = {top: 40, right: 20, bottom: 30, left: 80};
-    var hei=$(id).height() - margin.top - margin.bottom;
-    var wid=$(id).width()- margin.left - margin.right;
+    var hei = $(id).height() - margin.top - margin.bottom;
+    var wid = $(id).width()- margin.left - margin.right;
     //宽度，高度，数据
     var yData = [];
     for(var i=0;i<num.length;i++) {
@@ -725,9 +727,9 @@ function chart_table(id,date){
         }
         tds+='<tr>'+td+'</tr>';
     });
-    $("#"+id).find("table").remove();
+    $(id).find("table").remove();
     var table_text='<table><thead>'+th+'</thead><tbody>'+tds+'</tbody></table>';
-    $("#"+id).append(table_text);
+    $(id).append(table_text);
 }
 
 // 多维柱状图 多个维度 多个度量 维度需要交叉

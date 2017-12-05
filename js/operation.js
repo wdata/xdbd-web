@@ -82,7 +82,7 @@ let refresh = {
         chart_date.customData = {
             "dataType":$("#"+ id +"").attr("data-type"),             // 控件类型
             "controls":{
-                "html":idEle.children(".content-text").prop("outerHTML"),                    // 对齐方式
+                "html":idEle.find(".content-text").prop("outerHTML"),                    // 对齐方式
                 "text":$(text).html(),                    // 对齐方式
                 "color":text.css("color"),                             // 颜色
             }
@@ -753,25 +753,66 @@ let obtain = {
                 const style =  val.style;
                 const controls = val.customData.controls;
                 const dataType = val.customData.dataType;
+                let textCon = "";
 
                 id_ = val.cid; // 拖拽必须修改id_
-                if(dataType === "text" || dataType === "button" || dataType === "image"){
-                    if(controls){
-                        text = controls.html;
-                    }else if(dataType === "text"){
-                        text = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
-                    }else if(dataType === "button"){
-                        text = '<div class="content-button"><button></button></div>';
-                    }
-                }else if(dataType === "table" || dataType === "chart" && val.queryJson){
-                    // 将数据存入检索数据中
-                    const chart_date = {
-                        'cid':val.cid,
-                        "type":val.type,
-                        "queryJson":val.queryJson,
-                    };
-                    DataIndexes.inAjax(chart_date,val.cid);
-                    index_arr.push(chart_date);
+
+
+                switch(dataType){
+                    case "chart":
+                        text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <h2 class="chartTitle">未命名报表</h2>
+                                    <div class="resize-content">
+                                        <div class="legend"></div>
+                                        <div class="resize-chart"></div>
+                                        <div class="prompt"></div>
+                                    </div>
+                                </div>
+                            </div>
+						     <div class="mask-layer"></div>
+                          `;
+
+                        // 将数据存入检索数据中
+                        const chart_date = {
+                            'cid':val.cid,
+                            "type":val.type,
+                            "queryJson":val.queryJson,
+                        };
+                        DataIndexes.inAjax(chart_date,val.cid);
+                        index_arr.push(chart_date);
+
+                        break;
+                    case "table":
+                        break;
+                    case "text":
+                        const contenteditable = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true">${ content }</div></div>'
+                        textCon = controls?controls.html?controls.html:contenteditable:contenteditable;
+                        text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                   ${ textCon }
+                                </div>
+                            </div>
+						     <div class="mask-layer"></div>
+                          `;
+                        break;
+                    case "button":
+                        const button = '<div class="content-button"><button></button>${ content }</div>'
+                        textCon = controls?controls.html?controls.html:button:button;
+                        text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    ${ textCon }
+                                </div>
+                            </div>
+						     <div class="mask-layer"></div>
+                          `;
+                        break;
                 }
                 number++; // ID不重复！
                 eleLevel++;
@@ -1969,28 +2010,59 @@ $(function(){
             const left = event.pageX - parseFloat($(".clearY").width()) - parseFloat($(".clearY").css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat($(".edit-libs-box").css("margin-top"));
             const cahrt_type = $(ui.draggable).attr("data-type");
-            let type = null;
+            let type = cahrt_type;
             let html = '';  // 当是文本框时
 
             // 根据拖拽区的data-type来显示type
             switch(cahrt_type){
                 case "chart":
-                    type="bar";
+                    html = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <h2 class="chartTitle">未命名报表</h2>
+                                    <div class="resize-content">
+                                        <div class="legend"></div>
+                                        <div class="resize-chart"></div>
+                                        <div class="prompt"></div>
+                                    </div>
+                                </div>
+                            </div>
+						     <div class="mask-layer"></div>
+                          `;
                     break;
                 case "table":
-                    type="table";
                     break;
                 case "button":
-                    type="button";
-                    html = '<div class="content-button"><button></button></div>';
+                    html = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <div class="content-button"><button></button></div>
+                                </div>
+                            </div>
+						     <div class="mask-layer"></div>
+                          `;
                     break;
                 case "text":
-                    html = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
+                    html = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>
+                                </div>
+                            </div>
+						     <div class="mask-layer"></div>
+                          `;
                     break;
             }
             const editID = cahrt_type + uuid(8,16);
 
-            $(this).append('<div data-type="'+ cahrt_type +'" type="'+type+'" style="z-index:'+ number +'; left:'+left+'px;top:'+top+'px;" id="'+ editID +'" class="resize-item">'+ html +'</div>');
+            let div = `<div data-type="${ cahrt_type }" type="${ type }" style="z-index:${ number }; left:${ left }px;top:${ top }px;" id = "${ editID }" class="resize-item">
+                            ${ html }
+                        </div>`;
+
+            $(this).append(div);
 
             refresh.storage(cahrt_type,editID); // 保存
             id_ = editID;
