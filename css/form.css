@@ -2186,11 +2186,64 @@ div.f-addbtn-box-auto li{
 }
 /*index style*/
 .resize-item{
-	width: 150px;
-	height:150px;
+	width: 360px;
+	height: 270px;
 	border: 1px solid rgba(57,155,252,0.6);
 	position: absolute;
 	background-color:#fff;
+}
+.resize-item .positioning{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+.resize-item .positioning .inform{
+	border: 0 solid rgb(204, 204, 204);
+	background-color: rgb(255, 255, 255);
+	border-radius: 0;
+	opacity: 1;
+	height: 100%;
+}
+.resize-item .positioning .inform .chartTitle{
+	line-height: 1em;
+	background: rgba(255, 255, 255, 0);
+	font-family: "Microsoft YaHei", sans-serif;
+	font-size: 16px;
+	color: rgb(0, 0, 0);
+	text-align: left;
+	padding: 20px 20px 10px;
+	position: relative;
+}
+.resize-item .positioning .inform .resize-content{
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	right: 20px;
+	top: 46px;
+}
+.resize-item .positioning .inform .resize-content .resize-chart{
+	width: 100%;
+	height: 100%;
+}
+.resize-item .positioning .inform .prompt{
+	position: absolute;  top: 0;  left: 0;  right: 0;  bottom: 0;
+	background-image: url("../images/chart.svg");
+	content: "";
+	margin: auto;
+	width: 100%;
+	height: 100%;
+	max-width: 400px;
+	display: block;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+.resize-item .mask-layer{
+	position: absolute;  top: 0;  left: 0;  right: 0;  bottom: 0;
+	z-index: 100;
+
 }
 /*.resize-item:hover{*/
 	/*box-shadow: 0 0 6px #58bee9;*/

@@ -457,9 +457,10 @@
 
             el.on('dblclick', function(e) {
                 e.stopPropagation();
+
                 // 文本区双击事件；
                 if(el.attr("data-type") === "text"){
-                    $(this).children(".content-text.edit").addClass("active")   // 显示编辑区
+                    $(this).find(".content-text.edit").addClass("active")   // 显示编辑区
                         .children("div").attr("contenteditable",true)   // 开启编辑区
                         .focus();   // 获取焦点
                 }
