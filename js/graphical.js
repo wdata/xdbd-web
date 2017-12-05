@@ -24,7 +24,7 @@ var DataIndexes = {
                 if(data.code === 0){
                     if(data.data){
                         $(ele).siblings(".prompt").hide();
-                        // console.log(JSON.stringify(data.data));
+                        console.log(JSON.stringify(data.data));
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
@@ -60,12 +60,7 @@ var DataIndexes = {
                         // 绘制柱状图
                         // 一维度 一度量
                         if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length <= 1 && data.charts.dimValues.length <= 1){
-                            var d = [];
-                            $.each(data.charts.dimValues[0],function(index,val){
-                                var c = {"letter":val, "frequency": data.charts.meaList[0].meaValues[0][0][index]};
-                                d.push(c);
-                            });
-                            bar(ele,d);
+                            bar(ele,data);
                             return;
                         }
                         // 一维度 多度量
@@ -637,20 +632,27 @@ function line(id, tit, sub, data, mark, lin) {
 }
 
 // 封装一维柱状图  一个维度 一个度量
-function bar(id,num){
-    var margin = {top: 40, right: 20, bottom: 30, left: 80};
-    var hei = $(id).height() - margin.top - margin.bottom;
-    var wid = $(id).width()- margin.left - margin.right;
+function bar(id,original){
+    // 处理数据，将多维数据转化为一维多度量数据；
+    var data = original.charts.dimValues[0].map(function(d,i){
+        return {"letter":d, "frequency": original.charts.meaList[0].meaValues[0][0][i]}
+    });
+    // 设置图形距离上下左右宽度
+    var margin = {top: 10, right: 10, bottom: 30, left: 30};
+    // 设置高度和宽度
+    var height = $(id).height() - margin.top - margin.bottom;
+    var width = $(id).width()- margin.left - margin.right;
+
     //宽度，高度，数据
     var yData = [];
-    for(var i=0;i<num.length;i++) {
-        yData.push(num[i].frequency);
+    for(var i=0;i<data.length;i++) {
+        yData.push(data[i].frequency);
     }
     var x = d3.scale.ordinal()
-        .rangeRoundBands([0, wid], .1);
+        .rangeRoundBands([0, width], .1);
     var y = d3.scale.linear()
         .domain([0,d3.max(yData)])
-        .range([hei, 0]);
+        .range([height, 0]);
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom");
@@ -666,17 +668,17 @@ function bar(id,num){
             return "<strong>数量:</strong> <span style='color:#ddd'>" + d.frequency + "</span>";
         });
     var svg = d3.select(id).append("svg")
-        .attr("width", wid + margin.left + margin.right)
-        .attr("height", hei + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     svg.call(tip);
-    x.domain(num.map(function(d) { return d.letter; }));
-    y.domain([0, d3.max(num, function(d) { return d.frequency; })]);
+    x.domain(data.map(function(d) { return d.letter; }));
+    y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + hei + ")")
+        .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
     svg.append("g")
@@ -690,7 +692,7 @@ function bar(id,num){
         .text("Frequency");
 
     svg.selectAll(".bar")
-        .data(num)
+        .data(data)
         .enter().append("rect")
         .attr("class", "bar")
         .attr("width", x.rangeBand())
@@ -711,7 +713,7 @@ function bar(id,num){
             return y(d.frequency)
             50 + 500 - yScale(d) ;
         })
-        .attr("height",function(d) { return hei - y(d.frequency); })
+        .attr("height",function(d) { return height - y(d.frequency); })
         .attr("fill","steelblue");
 
 }
