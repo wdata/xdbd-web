@@ -772,7 +772,6 @@ let obtain = {
                                     </div>
                                 </div>
                             </div>
-						     <div class="mask-layer"></div>
                           `;
 
                         // 将数据存入检索数据中
@@ -797,7 +796,6 @@ let obtain = {
                                    ${ textCon }
                                 </div>
                             </div>
-						     <div class="mask-layer"></div>
                           `;
                         break;
                     case "button":
@@ -810,7 +808,6 @@ let obtain = {
                                     ${ textCon }
                                 </div>
                             </div>
-						     <div class="mask-layer"></div>
                           `;
                         break;
                 }
@@ -2028,7 +2025,6 @@ $(function(){
                                     </div>
                                 </div>
                             </div>
-						     <div class="mask-layer"></div>
                           `;
                     break;
                 case "table":
@@ -2041,7 +2037,6 @@ $(function(){
                                     <div class="content-button"><button></button></div>
                                 </div>
                             </div>
-						     <div class="mask-layer"></div>
                           `;
                     break;
                 case "text":
@@ -2052,7 +2047,6 @@ $(function(){
                                     <div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>
                                 </div>
                             </div>
-						     <div class="mask-layer"></div>
                           `;
                     break;
             }
