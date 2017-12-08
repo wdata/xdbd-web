@@ -1892,9 +1892,9 @@ $(function(){
     /*
      *   zoom ：绑定缩放函数；传入参数字符串；
      * */
-    $(".dimension-title p").on("click",function(){
+    $(".set-param-box").on("click",'.dimension-title p',function(){console.log(this);
         $(this).toggleClass("bi-edit-zoom")         // 修改背景图标
-            .parent().siblings().toggleClass("hide");  // 列表显示隐藏
+            .parent().next('ul').toggleClass("hide");  // 列表显示隐藏
     });
     $(".set-x>p").on("click",function(){
         $(this).toggleClass("bi-edit-zoom")         // 修改背景图标
@@ -1922,16 +1922,14 @@ $(function(){
                 if(res.code===0){
                     if(res.message && res.data.length >0){
                         let data = res.data,
-                            html = '+',
-                            biSetId = '';
+                            html = '+';
                         $.each(data,function(i,item){
                             html += `
 						<option value="${item.biSetName}" biSetId="${item.biSetId}">${item.biSetName}</option>
               			`;
                         });
                         $(".data-source-box select").empty().append(html);
-                        biSetId = $(".data-source-box select option:selected").attr("biSetId");
-                        getBiDataModel(biSetId);
+                        getBiDataModel();
                     }
                 }
             },
@@ -1941,13 +1939,13 @@ $(function(){
         });
     }
     $(".data-source-box select").change(function(){
-        const $biSetId = $(this).find("option:selected").attr("biSetId");
-        getBiDataModel($biSetId);
+        getBiDataModel();
     });
 
     //获取数据模型接口
-    //getBiDataModel(biSetId);
-    function getBiDataModel(biSetId){
+    //getBiDataModel();
+    function getBiDataModel(){
+        var biSetId = $(".data-source-box select option:selected").attr("biSetId");
         $.ajax({
             type:'get',
             url:$url1 + '/bi/report/v1/datamodel.json',
@@ -1967,27 +1965,88 @@ $(function(){
                             mhtml = '';
 
                         modelId = data.modelId;
+
+                        var dimensions = res.data.dimensions;//维度
+                        var measures = res.data.measures;//度量
                         //维度
-                        $.each(data.dimensions,function(i,item){
+                        if(dimensions.length>0){
+                            $.each(dimensions,function(index,value) {
+                                var li='';
+                                $.each(value.fields,function(i,item){
+                                    li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
+                                     baseDataType="${item.baseDataType}" dataType="${item.dataType}"
+                                     baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}">${item.fieldAlias}</li>
+                                `;
+                                });
+
+                                if(value.type==1){//原始字段
+                                    dhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                }else if(value.type==2){//自定义字段
+                                    dhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                }else if(value.type==3){//自定义层
+                                    dhtml += `<div hierarchyId="${value.id}" class="hierarchy"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                }
+                            });
+                        }else{
+                            dhtml='';
+                        }
+                        $(".dimension-box").empty().append(dhtml);
+
+                        //度量
+                        if(measures.length>0){
+                            $.each(measures,function(index,value) {
+                                var li='';
+                                $.each(value.fields,function(i,item){
+                                    li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
+                                     baseDataType="${item.baseDataType}" dataType="${item.dataType}"
+                                     baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${item.fieldAlias}</li>
+                                `;
+                                });
+
+                                if(value.type==1){//原始字段
+                                    mhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                }else if(value.type==2){//自定义字段
+                                    mhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                }
+                            });
+                        }else{
+                            mhtml='';
+                        }
+                        $(".metric-box").empty().append(mhtml);
+
+
+
+
+                        //维度
+                        /*$.each(data.dimensions,function(i,item){
                             dhtml += `
              				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="0">${item.fieldAlias}</li>
              			`;
                         });
-                        $(".dimension-box .placeholder").empty().append(dhtml);
+                        $(".dimension-box .original .placeholder").empty().append(dhtml);*/
                         //度量
+                        /*
                         $.each(data.measures, function(i,item) {
                             mhtml += `
              				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="1">${item.fieldAlias}</li>
              			`;
                         });
                         $(".metric-box .placeholder").empty().append(mhtml);
+                        */
+
+
+
                         //设置度量维度可拖拽
-                        $( ".placeholder li").draggable({
+                        $( ".set-param-box ul li").draggable({
                             // same-resource ul li
                             appendTo: "body",
                             helper: "clone"
                         });
                     }
+                }else {
+                    $(".dimension-box").empty();$(".metric-box").empty()
                 }
             },
             error:function(res){
@@ -2176,7 +2235,7 @@ $(function(){
             success:function(res){
                 if(res.code===0){
                     layer.msg('修改成功!');
-                    getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
+                    getBiDataModel();
                 }
             },
             error:function(res){
@@ -2185,7 +2244,8 @@ $(function(){
         });
     }
     context.init({preventDoubleContext: false,fadeSpeed:100});
-    context.attach('.placeholder li', [
+    //--------详见editbi.js---------//
+    /*context.attach('.placeholder li', [
         {text: '修改名称', action: function(){
             console.log("222222222222222");
             let fieldAlias = '';
@@ -2202,7 +2262,7 @@ $(function(){
                 }
             });
         }},
-    ]);
+    ]);*/
     // 编辑器右键
     context.attach('.resize-item', [
         {header: '菜单设置'},
