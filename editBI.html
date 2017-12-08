@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/default.min.css" />
     <link rel="stylesheet" href="css/form.css" />
+	  <link rel="stylesheet" href="css/hyf_test.css">
 	  <!--D3绘图时需要用到的样式文件-->
 	  <link rel="stylesheet" href="css/BI_d3.css" />
 
@@ -420,27 +421,57 @@
 				</div>
 				<div class="set-param-box">
 					<!--维度-->
+					<div class="set-param-head"><span>维度</span></div>
 					<div class="dimension-box same-resource">
-						<div class="dimension-title">
-							<p>维度</p>
+						<!--原始字段-->
+						<div class="original">
+							<div class="dimension-title">
+								<p></p>
+							</div>
+							<ul class="placeholder">
+								<!--<li>城市</li>
+								<li>省份</li>
+								<li>度量名称</li>
+								<li>年-月-日</li>-->
+							</ul>
 						</div>
-						<ul class="placeholder">
-							<!--<li>城市</li>
-							<li>省份</li>
-							<li>度量名称</li>
-							<li>年-月-日</li>-->
-						</ul>
+						<!--自定义字段-->
+						<div class="user-defined">
+							<div class="dimension-title">
+								<p class="bi-edit-zoom"></p>
+							</div>
+							<ul class="dimensionality">
+
+							</ul>
+						</div>
+						<!--层级-->
+						<div class="hierarchy">
+
+						</div>
 					</div>
 					<!--度量-->
+					<div class="set-param-head"><span>度量</span></div>
 					<div class="metric-box same-resource">
-						<div class="dimension-title">
-							<p>度量</p>
+						<!--原始字段-->
+						<div class="original">
+							<div class="dimension-title">
+								<p></p>
+							</div>
+							<ul class="placeholder">
+								<!--<li>城市</li>
+                                <li>省份</li>
+                                <li>度量名称</li>-->
+							</ul>
 						</div>
-						<ul class="placeholder">
-							<!--<li>城市</li>
-							<li>省份</li>
-							<li>度量名称</li>-->
-						</ul>
+						<!--自定义字段-->
+						<div class="user-defined">
+							<div class="dimension-title">
+								<p class="bi-edit-zoom"></p>
+							</div>
+							<ul class="measurement">
+
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
