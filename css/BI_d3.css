@@ -59,6 +59,7 @@
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
+    stroke-dasharray:5,5;
 }
 .line,.x_line{
     fill: none;
@@ -282,6 +283,7 @@ table th,table td{
 
 .legends{
     margin: 0 0.8rem 0.5rem 0;
+    cursor: pointer;
 }
 .legends.row{
     float: left;
@@ -290,6 +292,15 @@ table th,table td{
     display:inline-block;
     margin-right: .5rem;
     float: left;
+}
+.legendp.focus{
+    border:1px solid #000;
+}
+.legendp.opacity{
+    opacity: 0.5;
+}
+.legendp.focusClick{
+    border:1px solid #000;
 }
 .SingleOmitted{
     display: inline-block;
