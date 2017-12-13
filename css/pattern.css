@@ -1,0 +1,161 @@
+/* 颜色选择器的背景 */
+.awesome{
+    background: #000;
+}
+.inputs{
+    background: #fff;
+}
+.set-text-scroll div{
+    float: right;
+}
+.set-text-scroll .radio_btn{
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    border: 1px solid #eee;
+    margin-right: 10px;
+    margin-top: 4px;
+}
+.set-text-scroll div label{
+    display: inline-block;
+    line-height: 25px;
+    float: left;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.set-text-img{
+    margin: 12px 12px 0;
+    padding-left: 10px;
+    border: 1px solid #cccccc;
+}
+.set-text-img span{
+   height: 32px;
+   display: inline-block;
+   line-height: 32px;
+}
+.set-text-img div{
+    float: right;
+}
+.set-text-border span{
+    display: inline-block;
+    line-height: 21px;
+    height: 27px;
+    padding-left: 12px;
+}
+.set-text-border .border-img{
+    display: inline-block;
+}
+.set-text-border .border-wire{
+    width: 50px;
+}
+.set-text-border .border-wire select{
+    width: 50px;
+    line-height: initial;
+    top: 6px;
+    height: 33px;
+}
+.set-text-border .border-size{
+    width: 43px;
+}
+.set-text-border .border-size select{
+    width: 44px;
+    line-height: initial;
+    margin-top: 6px;
+    height: 33px;
+}
+.set-text-radius{
+    margin-top: 12px;
+}
+.set-text-radius .radius-size{
+    display: inline-block;
+    float: right;
+}
+.set-text-radius .radius-size input{
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+.set-text-radius .radius-size span{
+    margin: 0;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    background: #eee;
+    overflow: hidden;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    float: right;
+    margin-top: 2px;
+}
+.set-text-radius .radius-size span:hover{
+    background: #ccc;
+}
+.tab_menu{
+    height: 40px;
+}
+.tab_menu li{
+    float:left;
+    width: 100px;
+    text-align: center;
+}
+.tab_menu li:hover{
+    cursor: pointer;
+}
+.tab_menu li.on{
+    border-bottom: 1px solid #17a1ca;
+}
+.tab_box div.tab_list{
+    display: none;
+    width: 200px;
+}
+.tab_box div.tab_list:first-child{
+    display: block;
+}
+.tab_list .tab_title{
+    padding: 6px;
+}
+.tab_list .tab_title label{
+    display: inline-block;
+    padding: 6px 0 0 10px;
+}
+.tab_list .tab_title .tab_show{
+    float:right;
+}
+.tab_list .tab_title .tab_show span{
+    line-height: 30px;
+}
+.tab_list .tab_title .tab_show input{
+    margin: 0;
+}
+.tab_list .tab_bar{
+    margin-bottom: 12px;
+}
+.tab_list .tab_bar input{
+    display: inline-block;
+    height: 18px;
+    width: 168px;
+    margin: 0 10px;
+}
+.tab_head{
+    margin-top: 10px;
+}
+.tab_head h4{
+    border-top: 1px solid #ccc;
+    padding: 10px;
+}
+.tab_page{
+    margin: 0 10px;
+}
+.tab_page label{
+    display: inline-block;
+    line-height: 30px;
+    text-indent: 2px;
+}
+.tab_page .tab_pages{
+    display: inline-block;
+    width: 70px;
+    float: right;
+}
