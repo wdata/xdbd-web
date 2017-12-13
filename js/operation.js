@@ -2561,6 +2561,13 @@ function typeHideShow(id,type){
             break;
         case "text":
             $(".text-attr-box").show().siblings().hide();
+            // $('.op-box1').html(textHtml());
+            // colorFinder('#backColor');
+            // colorFinder('#borderImg');
+            // $(document).on("click",".chart",function(){
+            //     colorFinder(this);
+            // })
+            
             // 更新数据
             refresh.textData(id);
             // 清空或者还原

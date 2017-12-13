@@ -2062,12 +2062,14 @@ div.f-addbtn-box-auto li{
 }
 .set-text-size select {
 	width: 50px;
+	line-height: 22px;
 }
 .set-text-family {
 	width: 82px;
 }
 .set-text-family select {
 	width: 82px;
+	line-height: 22px;
 }
 .wa-text {
 	border: 1px solid #CCCCCC;
