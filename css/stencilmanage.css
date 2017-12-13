@@ -157,3 +157,14 @@
     display: none;
     z-index: 9999;
 }
+.demand_remark{
+    position: absolute;
+    bottom: -18px;
+    right: -33px;
+    background:#fff;
+    display: none;
+    z-index: 999;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 6px;
+}

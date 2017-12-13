@@ -21,7 +21,9 @@ $(function(){
     $(document.body)
       .off('change','.fromTable')
       .on('change','.fromTable',function(){
-        var fields = fn_get_fields_by_fromTable($(this).val());
+        console.log($(this).val())
+        console.log(fn_get_actionComp_by_webComponentId(this.from).webComponentId)
+        var fields = fn_get_fields_by_fromTable(fn_get_actionComp_by_webComponentId(this.from).webComponentId,$(this).val());
         console.log(fields)
         var optionsHtml = "";
         $.each(fields,function(){
@@ -77,13 +79,17 @@ $(function(){
     var ary = [];
     $.each(demo.exportData().lines,function(){
       if(this.to==this_webComponentId){
+        var sortList = {};
         var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-        ary.push(actionComp.tableOut);
+        alert(JSON.stringify(actionComp))
+        sortList['name'] = actionComp.name;
+        sortList['tableOut'] = actionComp.tableOut;
+        ary.push(sortList);
       }
     });
     var optionsHtml = "";
     $.each(ary,function(){
-      optionsHtml += "<option>"+this+"</option>";
+      optionsHtml += "<option value="+this.tableOut+">"+this.name+"</option>";
     });
     $('.fromTable').html(optionsHtml);
   }
@@ -154,7 +160,7 @@ $(function(){
     var fromTable = fn_get_fromTable();
     s.from("("+fn_get_sqlOut_by_fromTable(fromTable)+")",fromTable);
     //提取字段
-    $.each(fn_get_fields_by_fromTable(fromTable),function(){
+    $.each(fn_get_fields_by_fromTable(fn_get_actionComp_by_webComponentId(this.from).webComponentId,fromTable),function(){
       var field = this;
       if(fromTable!=null &&fromTable!=''){
         field = fromTable+"."+field;
