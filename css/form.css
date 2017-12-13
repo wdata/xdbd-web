@@ -1959,10 +1959,12 @@ div.f-addbtn-box-auto li{
 	border-top: 1px solid #D9D9D9;
 	overflow-y: auto;
 }
-.same-resource ul {
+/*.same-resource ul {
 	min-height: 32px;
-}
+}*/
 .same-resource ul li {
+	cursor: move;
+	cursor: -webkit-grab;
 	height: 32px;
 	line-height: 32px;
 	font-size: 14px;
@@ -1978,10 +1980,11 @@ div.f-addbtn-box-auto li{
 	background-color: #038DFF;
 }
 .dimension-title p {
+	cursor:pointer;
 	text-indent: 28px;
 	background: url(../images/icon01_xiala_01.png) no-repeat 14px center;
-	margin-top: 14px;
-	margin-bottom: 20px;
+	margin-top: 4px;
+	/*margin-bottom: 6px;*/
 }
 /*	zoom缩放函数，修改指向图标	*/
 .bi-edit-zoom{
