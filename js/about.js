@@ -16,6 +16,13 @@ $(document).ready(function() {
             initMap();//创建和初始化地图
         }
     });
+    //联系我们
+	$('.support-btn').click(function() {
+		$('.contact-block').animate({bottom: '10px'},500,'swing');
+	});
+	$('.contact-btn').click(function() {
+		$('.contact-block').animate({bottom: '-545px'},500,'swing');
+	});
     //创建和初始化地图函数：
     function initMap(){
         createMap();//创建地图
