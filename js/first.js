@@ -43,5 +43,13 @@ $(document).ready(function() {
 	$('.about-main>li').click(function() {
 		$('.about-main>li').eq($(this).index()).addClass('active').siblings().removeClass('active');
 		$('.about-list>div').hide().eq($(this).index()).show();
+	});
+
+	//联系我们
+	$('.support-btn').click(function() {
+		$('.contact-block').animate({bottom: '10px'},500,'swing');
+	});
+	$('.contact-btn').click(function() {
+		$('.contact-block').animate({bottom: '-545px'},500,'swing');
 	})
 });

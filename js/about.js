@@ -11,7 +11,8 @@ $(document).ready(function() {
     $('.about-main>li').click(function() {
         $('.about-main>li').eq($(this).index()).addClass('active').siblings().removeClass('active');
         $('.about-list>div').hide().eq($(this).index()).show();
-        if(this.textContent === "企业地址") {  //先进入页面再初始化地图,否则中心点显示有误
+        $('#about>h5>span').text(this.textContent);
+        if(this.textContent === "公司地址") {  //先进入页面再初始化地图,否则中心点显示有误
             initMap();//创建和初始化地图
         }
     });
@@ -53,7 +54,7 @@ $(document).ready(function() {
     }
     
     //标注点数组
-    var markerArr = [{title:"深圳深脑大树据有限公司",content:"深圳市南山区科技园东方科技大厦816室",point:"113.952547|22.553372",isOpen:1,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+    var markerArr = [{title:"深圳深脑大数据有限公司",content:"深圳市南山区科技园东方科技大厦816室",point:"113.952547|22.553372",isOpen:1,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
         ];
     //创建marker
     function addMarker(){
