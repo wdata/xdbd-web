@@ -6,7 +6,7 @@ var this_versionId = localStorage.getItem("versionId");
 var this_projectId = localStorage.getItem("projectId");
 var this_directoryId = localStorage.getItem("directoryId");
 var this_companyId = localStorage.getItem("companyId");
-var $url = ''; //../xdbd-etl
+var $url = '../xdbd-etl'; //../xdbd-etl
 
 $('.trade_type').html(industryType());
 getTemplateList('', '');

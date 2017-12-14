@@ -448,4 +448,34 @@
 	line-height: 1.75;
 	text-align: center;
 }
+/* 联系我们 */
+.contact{
+	position: relative;
+	z-index: 999999;
+	/* display: none; */
+}
+.contact .contact-block{
+	position: fixed;
+	height: 540px;
+	width: 360px;
+	background: #fff;
+	overflow: hidden;
+	z-index: 2;
+	border-radius: 2px;
+	-webkit-transform-origin: center bottom;
+	transform-origin: center bottom;
+	bottom: -545px;
+	right: 60px;
+}
+.contact .contact-block .contact-btn{
+	position: absolute;
+	text-indent: -9999px;
+	background: url('../images/left_menuForOutLook.png') no-repeat 7px -13px;
+	opacity: .6;
+	height: 30px;
+	width: 30px;
+	right: 10px;
+	top: 3px;
+	overflow: visible;
+}
 
