@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>深脑大数据</title>
+	<meta name="author" content="Alvaro Trigo Lopez" />
+	<meta name="description" content="fullPage fixed header and footer." />
+	<meta name="keywords"  content="fullpage,jquery,demo,screen,fixed, header,footer, absolute, positioned,css" />
+    <meta name="Resource-type" content="Document" />
+    <link rel="stylesheet" href="../../css/reset.css" />
+	<link rel="stylesheet" href="../../css/first.css" />
+</head>
+<body style="background: #f2f3f4">
+    <div id="header" style="background: #000">
+        <div class="head-bar main">
+            <a href="#">
+                <!--<img src="images/logo.png" alt="" />-->
+            </a>
+            <ul class="main-parent">
+                <li>
+                    <a href="../../index.html">首页</a>
+                </li>
+                <li>
+                    <a href="product.html">产品</a>
+                </li>
+                <li>
+                    <a href="scheme.html">方案</a>
+                </li>
+                <li>
+                    <a href="caseShow.html">案例</a>
+                </li>
+                <li>
+                    <a class="support-btn" href="#">咨询</a>
+                </li>
+                <li>
+                    <a href="#">关于我们</a>
+                    <ul class="main-list">
+                        <li><a href="#">公司介绍</a></li>
+                        <li><a href="../about/culture.html">企业文化</a></li>
+                        <li><a href="../about/honey.html">公司资质</a></li>
+                        <li><a href="../about/address.html">公司地址</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="product-head"></div>
+    <div id="product">
+        <dl class="product-list">
+            <dt><img src="../../images/product1.jpg"></dt>
+            <dd>
+                <p>丰富的机器学习/深度学习算法库</p>
+                <span>从数据导入、预处理，到模型的训练、评估、管理，覆盖数据挖掘端到端业务。拥有10大类、50多个基础机器学习算法，拥有300多个其他常用算法。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/product2.jpg"></dt>
+            <dd>
+                <p>直观易用的机器学习方案</p>
+                <span>面向熟悉业务，但不熟悉相关建模语言的数据分析师通过可视化界面的，拖拽式的数据建模方式——Workflow，提供所见即所得的建模开发界面。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/product3.jpg"></dt>
+            <dd>
+                <p>交互式建模分析</p>
+                <span>面向数据科学家提供基于交互编程方式的数据建模能力——Notebook，支持多种建模语言(Python/R等)。涵盖数据探索、特征工程、数据建模等数据分析过程。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/product4.jpg"></dt>
+            <dd>
+                <p>模型生命周期管理能力</p>
+                <span>支持模型的生成、预测、部署、调度等完备的模型生命周期管理能力。支持业界标准的模型PMML的导入导出，与其他机器学习软件进行无缝集成。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/product5.png"></dt>
+            <dd>
+                <p>可视化</p>
+                <span>支持数据可视化和模型可视化功能。内置丰富的图表类型，数据处理过程中可根据需要选择不同的图表进行展示，所见即所得，提升数据探索效率。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/product6.jpg"></dt>
+            <dd>
+                <p>分布式可扩展的大数据计算引擎</p>
+                <span>使用增强开发的HDFS、Spark、Hive等组件，支持大数据分析。</span>
+                <span>公司将通过“深脑云平台+大数据+人工智能决策”，向金融银行业和企业等客户提供一站式的大数据智能营销CRM的风险管控、智能预测和智能决策服务。</span>
+            </dd>
+        </dl>
+    </div>
+    <div class="about-footer">
+        <p>深圳市南山区科技园东方科技大厦816室</p>
+        <p>Copyright ©2017 深圳深脑大数据有限公司 版权所有 粤ICP备 11298888号-6</p>
+    </div>
+
+    <!-- 联系我们弹窗 -->
+    <div class="contact">
+        <div class="contact-block">
+            <a class="contact-btn" href="javascript:;"></a> 
+            <iframe id="contact-iframe" frameborder="0" scrolling="no" style="height: 100%;width: 100%" src="https://mop.kf5.com/kchat/#/message?back=0"></iframe>
+        </div>
+    </div>
+
+    <script src="../../plugin/jQuery/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            //导航栏二级菜单
+            $(".main-parent>li").hover(
+                function() {
+                $(this).find("ul").css('display','block');
+                },
+                function() {
+                $(this).find("ul").css('display','none');
+                }
+            );
+            //联系我们
+            $('.support-btn').click(function() {
+                $('.contact-block').animate({bottom: '10px'},500,'swing');
+            });
+            $('.contact-btn').click(function() {
+                $('.contact-block').animate({bottom: '-545px'},500,'swing');
+            })
+        })
+    </script>
+</body>
+</html>
