@@ -7,7 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BI报表编辑模式</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	 <!-- 颜色插件css -->
+	 <link rel="stylesheet" href="plugin/spectrum/bootstrap.css" />  
+	 <link rel="stylesheet" href="plugin/spectrum/spectrum.css?a=1" />
+
     <link rel="stylesheet" href="plugin/font-awesome-4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="plugin/jquery-ui/jquery-ui.min.css">
     <!--<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">-->
@@ -17,9 +21,9 @@
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
     <link rel="stylesheet" href="css/default.min.css" />
     <link rel="stylesheet" href="css/form.css" />
-	  <link rel="stylesheet" href="css/hyf_test.css">
-	  <!--D3绘图时需要用到的样式文件-->
-	  <link rel="stylesheet" href="css/BI_d3.css" />
+	<link rel="stylesheet" href="css/hyf_test.css">
+	<!--D3绘图时需要用到的样式文件-->
+	<link rel="stylesheet" href="css/BI_d3.css" />
 
     <!--[if lt IE 9]>
       <script src="common/html5shiv.min.js"></script>
@@ -207,56 +211,270 @@
 				<div class="table-attr-box">
 					<div class="title-box">
 						<h3>表格</h3>
+						<ul class="tab_menu">
+							<li class="on">数据</li>
+							<li>样式</li>
+						</ul>
 					</div>
-					<div class="set-axis-box">
-						<div class="set-x set-axis">
-							<p>X轴</p>
-							<div class="x-pills pills">
-								<ul>
-									<!--<li>
-										<span>年-月-日（发货日期）</span>
-									</li>
-									<li>
-										<span>国家</span>
-									</li>-->
-								</ul>
+					<div class="clear"></div>
+					<div class="tab_box">
+						<div class="tab_list">
+							<div class="set-axis-box">
+								<div class="set-x set-axis">
+									<p>X轴</p>
+									<div class="x-pills pills">
+										<ul>
+											<!--<li>
+												<span>年-月-日（发货日期）</span>
+											</li>
+											<li>
+												<span>国家</span>
+											</li>-->
+										</ul>
+									</div>
+									<div class="axis-empty empty">拖入字段</div>
+								</div>
+								<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
+								<div class="set-y set-axis">
+									<p>Y轴</p>
+									<div class="y-pills pills">
+										<ul>
+											<!--<li>
+												<span>度量值</span>
+											</li>
+											<li>
+												<span>邮寄方式</span>
+											</li>-->
+										</ul>
+									</div>
+									<div class="axis-empty empty">拖入字段</div>
+								</div>
 							</div>
-							<div class="axis-empty empty">拖入字段</div>
+							<!--数据筛选-->
+							<div class="data-screening">
+								<p>数据筛选</p>
+								<div class="datas-pills pills">
+										<ul>
+											<!--<li>
+												<span>度量值</span>
+											</li>
+											<li>
+												<span>邮寄方式</span>
+											</li>-->
+										</ul>
+									</div>
+									<div class="data-empty empty">拖入字段</div>
+							</div>
+							<!--保存刷新-->
+							<div class="data-refresh">
+								<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
+							</div>
 						</div>
-						<img src="images/icon_change.png" alt="" title="交换坐标数据" class="change-axis" onclick="xyChange()" />
-						<div class="set-y set-axis">
-							<p>Y轴</p>
-							<div class="y-pills pills">
-								<ul>
-									<!--<li>
-										<span>度量值</span>
-									</li>
-									<li>
-										<span>邮寄方式</span>
-									</li>-->
-								</ul>
+						<div class="tab_list">
+							<div class="tab_title">
+								<label>标题</label>
+								<div class="tab_show">
+									<span>显示</span>
+									<input type="checkbox" checked="checked" class="tab_pitch"/>
+								</div>
 							</div>
-							<div class="axis-empty empty">拖入字段</div>
+							<div class="tab_tit">
+								<div class="tab_bar">
+									<input type="text"/>
+								</div>
+								<div class="set-text-color">
+									<div class="color-row">
+										<input type="hidden" name="unique-name-1" data-palette='["#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#00B8D4">
+									</div>
+								</div>
+								<div class="set-text-size sc-color">
+									<select>
+										<option value="1">9</option>
+										<option value="2">10</option>
+										<option selected value="3">12</option>
+										<option value="4">14</option>
+										<option value="5">16</option>
+										<option value="6">20</option>
+										<option value="7">24</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-family sc-color">
+									<select name="">
+										<option value="微软雅黑">微软雅黑</option>
+										<option value="中易宋体">中易宋体</option>
+										<option value="Helvetica">Helvetica</option>
+										<option value="Arial">Arial</option>
+										<option value="Lucida Family">Lucida Family</option>
+										<option value="Verdana">Verdana</option>
+										<option value="Tahoma">Tahoma</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-align wa-text">
+									<span>对齐</span>
+									<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
+									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
+									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
+								</div>
+								<div class="set-text-img">
+									<span>标题背景</span>
+									<div>
+										<input class="backColor"/>
+									</div>
+								</div>
+							</div>
+							<div class="tab_head">
+								<h4>表头</h4>
+								<div class="set-text-color">
+									<div class="color-row">
+										<input type="hidden" name="unique-name-1" data-palette='["#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#00B8D4">
+									</div>
+								</div>
+								<div class="set-text-size sc-color">
+									<select>
+										<option value="1">9</option>
+										<option value="2">10</option>
+										<option selected value="3">12</option>
+										<option value="4">14</option>
+										<option value="5">16</option>
+										<option value="6">20</option>
+										<option value="7">24</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-family sc-color">
+									<select name="">
+										<option value="微软雅黑">微软雅黑</option>
+										<option value="中易宋体">中易宋体</option>
+										<option value="Helvetica">Helvetica</option>
+										<option value="Arial">Arial</option>
+										<option value="Lucida Family">Lucida Family</option>
+										<option value="Verdana">Verdana</option>
+										<option value="Tahoma">Tahoma</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-align wa-text">
+									<span>对齐</span>
+									<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
+									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
+									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
+								</div>
+								<div class="set-text-img">
+									<span>表头颜色</span>
+									<div>
+										<input class="backColor"/>
+									</div>
+								</div>
+							</div>
+							<div class="tab_head">
+								<h4>表格</h4>
+								<div class="set-text-color">
+									<div class="color-row">
+										<input type="hidden" name="unique-name-1" data-palette='["#D50000","#304FFE","#00B8D4","#69F0AE","#FFFF00"]' value="#00B8D4">
+									</div>
+								</div>
+								<div class="set-text-size sc-color">
+									<select>
+										<option value="1">9</option>
+										<option value="2">10</option>
+										<option selected value="3">12</option>
+										<option value="4">14</option>
+										<option value="5">16</option>
+										<option value="6">20</option>
+										<option value="7">24</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-family sc-color">
+									<select name="">
+										<option value="微软雅黑">微软雅黑</option>
+										<option value="中易宋体">中易宋体</option>
+										<option value="Helvetica">Helvetica</option>
+										<option value="Arial">Arial</option>
+										<option value="Lucida Family">Lucida Family</option>
+										<option value="Verdana">Verdana</option>
+										<option value="Tahoma">Tahoma</option>
+									</select>
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<div class="set-text-align wa-text">
+									<span>对齐</span>
+									<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
+									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
+									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
+								</div>
+								<div class="set-text-img">
+									<span>奇行</span>
+									<div>
+										<input class="backColor"/>
+									</div>
+								</div>
+								<div class="set-text-img">
+									<span>偶行</span>
+									<div>
+										<input class="backColor"/>
+									</div>
+								</div>
+							</div>
+							<div class="tab_title">
+								<label>翻页器</label>
+								<div class="tab_show">
+									<span>显示</span>
+									<input type="checkbox" checked="checked" class="tab_size"/>
+								</div>
+							</div>
+							<div class="tab_page">
+								<label>每页显示条数</label>
+								<select class="tab_pages">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+								</select>
+							</div>
+							<div class="set-text-img">
+								<span>背景</span>
+								<div>
+									<input class="backColor"/>
+								</div>
+							</div>
+							<div class="set-text-border">
+								<span>边框</span>
+								<div class="border-img">
+									<input class="borderImg"/>
+								</div>
+								<div class="border-wire sc-color">
+									<select>
+										<option value="solid">实线</option>
+										<option value="dashed">虚线</option>
+										<option value="dotted">点线</option>
+										<option value="double">双线</option>
+									</select>
+									<i class="fa fa-caret-down" style="top: 15px;"></i>
+								</div>
+								<div class="border-size sc-color">
+									<select>
+										<option value="0">0</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+									</select>
+									<i class="fa fa-caret-down" style="top: 15px;"></i>
+								</div>
+							</div>
+							<div class="set-text-radius wa-text">
+								<span>圆角</span>
+								<div class="radius-size">
+									<input type="number" value="0" class="text-radius"/>
+									<span class="radius-add" onclick="radiusAdd()">+</span>
+									<span class="radius-lessen" onclick="radiusLessen()">-</span>
+								</div>
+							</div>
 						</div>
-					</div>
-					<!--数据筛选-->
-					<div class="data-screening">
-						<p>数据筛选</p>
-						<div class="datas-pills pills">
-								<ul>
-									<!--<li>
-										<span>度量值</span>
-									</li>
-									<li>
-										<span>邮寄方式</span>
-									</li>-->
-								</ul>
-							</div>
-							<div class="data-empty empty">拖入字段</div>
-					</div>
-					<!--保存刷新-->
-					<div class="data-refresh">
-						<a onclick="refresh.save_config(id_)"><i class="fa fa-refresh"></i>刷新</a>
 					</div>
 				</div>
 				<!--表格 end-->
@@ -307,6 +525,53 @@
 									<img src="images/t_left.png" alt="" title="left" class="active justifyLeft"/>
 									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
 									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
+								</div>
+								<div class="set-text-scroll wa-text">
+									<span>滚动条</span>
+									<div>
+										<label>显示</label>
+										<span class="radio_btn" onclick="radioBtn()"></span>
+									</div>
+								</div>
+								<div class="set-text-img">
+									<span>背景</span>
+									<div>
+										<input class="backColor"/>
+									</div>
+								</div>
+								<div class="set-text-border">
+									<span>边框</span>
+									<div class="border-img">
+										<input class="borderImg"/>
+									</div>
+									<div class="border-wire sc-color">
+										<select>
+											<option value="solid">实线</option>
+											<option value="dashed">虚线</option>
+											<option value="dotted">点线</option>
+											<option value="double">双线</option>
+										</select>
+										<i class="fa fa-caret-down" style="top: 15px;"></i>
+									</div>
+									<div class="border-size sc-color">
+										<select>
+											<option value="0">0</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+										</select>
+										<i class="fa fa-caret-down" style="top: 15px;"></i>
+									</div>
+								</div>
+								<div class="set-text-radius wa-text">
+									<span>圆角</span>
+									<div class="radius-size">
+										<input type="number" value="0" class="text-radius"/>
+										<span class="radius-add" onclick="radiusAdd()">+</span>
+										<span class="radius-lessen" onclick="radiusLessen()">-</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -833,8 +1098,7 @@
 	</div>
 
 	<div class="hint"></div>
-	
-    <script src="plugin/jQuery/jquery.min.js"></script>
+	<script src="plugin/jQuery/jquery.min.js"></script>
     <script src="plugin/jQuery/jQuery_ui.js"></script>
 	<script src="plugin/d3/d3.v3.min.js"></script>
 	<script src="plugin/d3/d3.tip.js"></script>
@@ -843,11 +1107,20 @@
     <script src="plugin/colorpicker/src/palette-color-picker.min.js"></script>
 	<script src="js/login.js"></script>
 	<script src="plugin/zSize/jquery_zsize.js"></script>
+	<!-- 颜色插件 -->
+	<script src="plugin/spectrum/spectrum.js"></script>
+	<script src="plugin/spectrum/docs.js"></script>
+	<script src="plugin/spectrum/toc.js"></script>
+	<script src="plugin/spectrum/prettify.js"></script>
+	<!-- 公共样式页面 -->
+	<script src="js/commonStyle.js"></script>
 	<!--存放3D转化封装的函数-->
 	<script src="js/graphical.js"></script>
 	<!--编辑器内的操作-->
 	<script src="js/operation.js"></script>
     <script src="js/editbi.js"></script>
-    <script src="js/todo.js"></script>
+	<script src="js/todo.js"></script>
+	<script src="js/pattern.js"></script>
+
   </body>
 </html>

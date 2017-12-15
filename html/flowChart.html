@@ -420,10 +420,11 @@
 		}
 
 		//根据fromTable获取fields
-		function fn_get_fields_by_fromTable(fromTable) {
+		function fn_get_fields_by_fromTable(webCompId,fromTable) {
 			var fieldOut;
 			$.each(actionComps, function () {
-				if (this.tableOut == fromTable) {
+				if (this.tableOut == fromTable || this.webComponentId == webCompId) {
+					console.log(this)
 					fieldOut = this.fieldOut;
 					return true;
 				}
@@ -461,7 +462,7 @@
 				success: function (data) {
 					var data = data.data;
 					//console.log(data);
-					//            alert(JSON.stringify(data))
+					            alert(JSON.stringify(data))
 					$.each(data, function () {
 						tables[this.tableName] = this;
 					});
