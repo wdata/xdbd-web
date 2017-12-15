@@ -159,12 +159,13 @@
 }
 .demand_remark{
     position: absolute;
-    bottom: -18px;
-    right: -33px;
+    bottom: -28px;
+    left: 0px;
     background:#fff;
     display: none;
     z-index: 999;
     border: 1px solid #ccc;
     border-radius: 3px;
     padding: 6px;
+    box-shadow: 0 0 13px 2px rgba(101,28,77,.2);
 }
