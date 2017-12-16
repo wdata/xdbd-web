@@ -89,7 +89,7 @@ $(function(){
 
 	function initFromTable(){
 		var optionsHtml = "";
-		alert(JSON.stringify(tables))
+		// alert(JSON.stringify(tables))
 		$.each(tables,function(){
 		optionsHtml += "<option value="+this.tableName+">"+this.remark+"</option>";
 		});
