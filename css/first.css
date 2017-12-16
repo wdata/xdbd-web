@@ -290,6 +290,7 @@
 	position: absolute;
 	right: 0;
 	height: 50px;
+	width: 772px;
 	top: 16px;
 }
 .head-bar>.main-parent>li {
@@ -301,9 +302,9 @@
 }
 .head-bar>.main-parent>li>a {
     padding: 0;
-    width: 92px;
+    width: 112px;
     text-align: center;
-    padding: 0 10px;
+    /* padding: 0 10px; */
     height: 50px;
     line-height: 50px;
     text-indent: 0;
@@ -512,6 +513,10 @@
 	background: url(../../images/product-bg.jpg) no-repeat;
 	background-size: 100% 100%;
 	margin-top: 84px;
+	color: #fff;
+    line-height: 350px;
+    text-align: center;
+    font-size: 40px;
 }
 .product-list{
 	height: 230px;
@@ -554,6 +559,10 @@
 	margin-top: 84px;
 	background: url(../../images/scheme-bg.jpg) no-repeat;
 	background-size: 100% 110%;
+	color: #fff;
+    line-height: 350px;
+    text-align: center;
+    font-size: 40px;
 }
 /* 案例页 */
 .case-show-head{
@@ -562,6 +571,10 @@
 	margin-top: 82px;
 	background: url(../../images/caseShow-bg.jpg) no-repeat;
 	background-size: 100% 112%;
+	color: #fff;
+    line-height: 350px;
+    text-align: center;
+    font-size: 40px;
 }
 .case-show-list{
 	width: 600px;
