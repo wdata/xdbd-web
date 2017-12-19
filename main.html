@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="plugin/basicContext/basicContext.min.css" />
     <link rel="stylesheet" href="plugin/basicContext/default.min.css" />
     <link rel="stylesheet" href="plugin/layer/skin/default/layer.css" />
+
     <link rel="stylesheet" href="css/form.css" />
+	  <link rel="stylesheet" href="plugin/mCustomScrollbar/jquery.mCustomScrollbar.css">
 	  <link rel="stylesheet" href="css/stencilmanage.css">
     <style type="text/css">
 			.badge {
@@ -70,6 +72,12 @@
 				padding-right:15px ;
 				width: 100%;
 			}
+		.g-folders{overflow: auto;position: relative;}
+		.mCSB_scrollTools{width: 6px;}
+		.mCSB_inside > .mCSB_container{margin-right:8px;}
+		.mCS-dark.mCSB_scrollTools .mCSB_draggerRail{background-color: rgba(150,150,150,0.15);}
+		.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{background-color: rgba(0,0,0,0.75);}
+
 	</style>
     <!--[if lt IE 9]>
       <script src="common/html5shiv.min.js"></script>
@@ -147,10 +155,7 @@
 									<li>
 										<a href="javascript:;">系统管理</a>
 										<ul class="sys-menus">
-											<!--<li><a href="#">账号管理</a></li>
-											<li><a href="#">角色管理</a></li>
-											<li><a href="#">日志管理</a></li>
-											<li><a href="#">企业中心</a></li>-->
+
 										</ul>
 									</li>
 								</ul>
@@ -159,6 +164,25 @@
 						<div class="content-col">
 							<div class="content-wrapper">
 								<iframe id="iframepage2" src="html/loglist.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+							</div>
+						</div>
+					</div>
+					<div class="bd-body bd-body-3">
+						<div class="sider">
+							<div class="sider-nav">
+								<ul>
+									<li>
+										<a href="javascript:;">监控中心</a>
+										<ul class="htmlMonitoring-menus">
+
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="content-col">
+							<div class="content-wrapper">
+								<iframe id="iframepage3" src="" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
 							</div>
 						</div>
 					</div>
@@ -392,7 +416,14 @@
     <script src="plugin/layer/layer.js"></script>
     <script src="plugin/basicContext/basicContext.min.js"></script>
     <script src="plugin/treeview/bootstrap-treeview.js"></script>
+	<script src="plugin/mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/todo.js"></script>
     <script src="js/tree.js"></script>
+		<script>
+			$(function(){
+				$(".g-folders").mCustomScrollbar({theme:"dark"});
+			});
+
+		</script>
   </body>
 </html>
