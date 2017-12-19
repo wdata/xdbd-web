@@ -92,6 +92,39 @@ var context = context || (function () {
 		return $menu;
 	}
 
+		function rightClick(e,data){
+			var d = new Date(),
+				id = d.getTime(),
+				$menu = buildMenu(data, id);
+
+			$('body').append($menu);
+			e.preventDefault();
+			e.stopPropagation();
+			clickEle = $(this);//记录当前点击的element
+			$('.dropdown-context:not(.dropdown-context-sub)').hide();
+
+			$dd = $('#dropdown-' + id);
+			if (typeof options.above == 'boolean' && options.above) {
+				$dd.addClass('dropdown-context-up').css({
+					top: e.pageY - 20 - $('#dropdown-' + id).height(),
+					left: e.pageX - 13
+				}).fadeIn(options.fadeSpeed);
+			} else if (typeof options.above == 'string' && options.above == 'auto') {
+				$dd.removeClass('dropdown-context-up');
+				var autoH = $dd.height() + 12;
+				if ((e.pageY + autoH) > $('html').height()) {
+					$dd.addClass('dropdown-context-up').css({
+						top: e.pageY - 20 - autoH,
+						left: e.pageX - 13
+					}).fadeIn(options.fadeSpeed);
+				} else {
+					$dd.css({
+						top: e.pageY + 10,
+						left: e.pageX - 13
+					}).fadeIn(options.fadeSpeed);
+				}
+			}
+		}
 	function addContext(selector, data) {
 		
 		var d = new Date(),
@@ -106,7 +139,7 @@ var context = context || (function () {
 			e.stopPropagation();
 			clickEle = $(this);//记录当前点击的element
 			$('.dropdown-context:not(.dropdown-context-sub)').hide();
-			
+
 			$dd = $('#dropdown-' + id);
 			if (typeof options.above == 'boolean' && options.above) {
 				$dd.addClass('dropdown-context-up').css({
@@ -140,6 +173,7 @@ var context = context || (function () {
 		settings: updateOptions,
 		attach: addContext,
 		destroy: destroyContext,
-		getClickEle: getClickEle // 新添加的方法
+		getClickEle: getClickEle, // 新添加的方法
+		rightClick:rightClick  //自定义右键
 	};
 })();
