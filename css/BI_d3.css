@@ -48,19 +48,18 @@
     display:none;
 }
 
-
-
-
-
-
-/*图标部分样式*/
+/*  堆叠柱状图   */
 .axis path,
 .axis line{
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
-    stroke-dasharray:5,5;
 }
+
+/*图标部分样式*/
+
+
+
 .line,.x_line{
     fill: none;
     stroke: rgb(0, 0, 0);
@@ -170,11 +169,11 @@ table th,table td{
 .title{font-family:Arial,微软雅黑;font-size:18px;text-anchor:middle;}
 .subTitle{font-family:Arial,宋体;font-size:12px;text-anchor:middle;fill:#666}
 
-.axis text {
-    font-family: sans-serif;
-    font-size: 11px;
-    fill:#999;
-}
+/*.axis text {*/
+    /*font-family: sans-serif;*/
+    /*font-size: 11px;*/
+    /*fill:#999;*/
+/*}*/
 
 .inner_line path,
 .inner_line line {
@@ -307,6 +306,56 @@ table th,table td{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.fill-opacity{
+    fill-opacity:.5
+}
+.message text{
+    display: block;
+}
+/*图例滚动*/
+.range{
+    position: relative;
+}
+.legend.top .range,.legend.bottom .range{
+    float: left;
+    display: flex;
+    margin-right: 20px;
+    padding-bottom: 15px;
+}
+.legend.left .range,.legend.right .range{
+    margin-right: 30px;
+    padding-bottom: 10px;
+}
+.range>text{
+    margin-right: 10px;
+}
+.rangeData{
+    position: absolute;
+}
+.slider{
+    padding:3px 8px;
+    position:relative;
+}
+.legend.right .slider,.legend.left .slider{
+    margin-top: 10px;
+}
+.legend.bottom .rangeData.rangeMin,.legend.top .rangeData.rangeMin{
+    left: 2px;
+    bottom: -13px;
+}
+.legend.bottom .rangeData.rangeMax,.legend.top .rangeData.rangeMax{
+    right: 2px;
+    bottom: -13px;
+}
+.legend.right .rangeData.rangeMin,.legend.left .rangeData.rangeMin{
+    bottom: 2px;
+    right: -20px;
+}
+.legend.right .rangeData.rangeMax,.legend.left .rangeData.rangeMax{
+    top: 2px;
+    right: -20px;
 }
 
 /*  图例 -- 结束   */
