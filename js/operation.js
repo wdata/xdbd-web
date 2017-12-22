@@ -706,7 +706,7 @@ let obtain = {
                         }
                     }else if(surroundings === "test" || surroundings === "prod"){
                         if(data.data.htmlJson){
-                            obtain.generate(data.data);
+                            DataIndexes.generate(data.data,$(".generateEditBi"));
                         }
                     }
 
@@ -717,35 +717,7 @@ let obtain = {
             }
         })
     },
-    // 为测试环境
-    generate:function(data){
-        let html = '';
-        $.each(data.htmlJson.controls,function(index,val){
-            let text = '';            // html
-            const dataType = val.customData.dataType  // 类型
-                  ,style =  val.style; // 宽、高
-            let chart_date = null;
-            // 判断图形、表格、文本、图片、按钮
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                text = val.customData.controls.html;
-            }else if(dataType === "table" || dataType === "chart"){
-                // 将数据存入检索数据中
-                chart_date = {
-                    'cid':val.cid,
-                    "type":val.type,
-                    "queryJson":val.queryJson,
-                };
-                DataIndexes.inAjax(chart_date,val.cid);
-            }
-            html += '<div linkPageId = "'+ val.linkPageId +'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
-            if(chart_date){
-                DataIndexes.inAjax(chart_date,id);
-            }
-        });
-        $(".generateEditBi").empty().append(html);
-    },
     // 为开发环境
     reduction:function(data){
         if(data.htmlJson.controls){
@@ -818,6 +790,7 @@ let obtain = {
                           `;
                         break;
                 }
+
                 number++; // ID不重复！
                 eleLevel++;
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
