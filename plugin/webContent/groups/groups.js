@@ -107,39 +107,6 @@ $(function(){
     return data;
   }
 
-  // function initFromTable(){
-  //   var ary = [];
-  //   $.each(demo.exportData().lines,function(){
-  //     if(this.to==this_webComponentId){
-  //       var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-  //       ary.push(actionComp.tableOut);
-  //     }
-  //   });
-  //   var optionsHtml = "";
-  //   $.each(ary,function(){
-  //     optionsHtml += "<option>"+this+"</option>";
-  //   });
-  //   $('.fromTable').html(optionsHtml);
-  //   //$('.selectTable').html(optionsHtml);
-  //   // $('.extractField .table').html(optionsHtml);
-  // }
-
-  // function bind_change_extractTable(){
-  //   $(document.body)
-  //     .off('change','.fromTable')
-  //     .on('change','.fromTable',function(){
-  //       //alert($(this).val())
-  //       var fields = fn_get_fields_by_fromTable($(this).val());
-  //       var optionsHtml = "";
-  //
-  //       $.each(fields,function(){
-  //         optionsHtml += "<option>"+this+"</option>";
-  //       });
-  //       $('.group').find('.field').html(optionsHtml);
-  //       $('.extractField').find('.field').html(optionsHtml);
-  //     });
-  // }
-
   function setVal(){
     var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
     if(actionComp!=null){

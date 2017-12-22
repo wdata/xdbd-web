@@ -20,6 +20,7 @@ $(function(){
 	function bind_click_saveActionComp(){
 		$('.saveActionComp').click(function(){
 		fn_saveActionComp(getVal());
+		console.log(getVal())
 		});
 	}
 
@@ -67,43 +68,43 @@ $(function(){
 
 	function bind_change_fromTable(){
 		$('.fromTable').change(function(){
-		var tbName = $(this).val();
-		var extractFieldHtml = $('.extractField').prop('outerHTML');
-		$('.extractField').remove();
-		var fieldList = tables[tbName].fieldList;
-		$.each(fieldList,function(){
-			var checkField = this+"";
-			$('.extractFields').append(extractFieldHtml);
-			var extractField = $('.extractField:last');
-			var optionHtml='';
+			var tbName = $(this).val();
+			var extractFieldHtml = $('.extractField').prop('outerHTML');
+			$('.extractField').remove();
+			var fieldList = tables[tbName].fieldList;
+			console.log(fieldList)
 			$.each(fieldList,function(){
-			optionHtml += "<option value="+this+">"+this+"</option>";
+				var checkField = this+"";
+				$('.extractFields').append(extractFieldHtml);
+				var extractField = $('.extractField:last');
+				var optionHtml='';
+				// console.log(fieldList)
+				$.each(fieldList,function(){
+					optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
+				});
+				extractField.find('.fields').html(optionHtml);
+				extractField.find('.fields').val(checkField);
 			});
-			extractField.find('.fields').html(optionHtml);
-			extractField.find('.fields').val(checkField);
-		});
 		});
 	}
 
 	function initFromTable(){
 		var optionsHtml = "";
-		// alert(JSON.stringify(tables))
+		alert(JSON.stringify(tables))
 		$.each(tables,function(){
-		optionsHtml += "<option>"+this.tableName+"</option>";
+		optionsHtml += "<option value="+this.tableName+" selected>"+this.remark+"</option>";
 		});
 		$('.fromTable').html(optionsHtml);
 	}
 
 	function bind_click_add() {
-	$(document.body)
-		.off('click', '.add')
-		.on('click', '.add', function () {
+		$(document.body)
+			.off('click', '.add')
+			.on('click', '.add', function () {
 
-		var inputHtml = $('.extractField').prop('outerHTML');
-		//$('.extractField').remove();
-		$('.extractFields').append(inputHtml);
-
-
+				var inputHtml = $('.extractField').prop('outerHTML');
+				//$('.extractField').remove();
+				$('.extractFields').append(inputHtml);
 		})
 	}
 
@@ -126,28 +127,38 @@ $(function(){
 		if(obj.length<1){
 		return;
 		}
-
+		console.log(obj)
 		$.each(obj,function(){
-		var checkField = this+"";
-		$('.extractFields').append(extractFieldHtml);
-		var extractField = $('.extractField:last');
-		var optionHtml='';
-		$.each(tables[fn_get_fromTable()].fieldList,function(){
-			optionHtml += "<option value="+this+">"+this+"</option>";
-		});
-		extractField.find('.fields').html(optionHtml);
-		extractField.find('.fields').val(checkField);
+			var checkField = this+"";
+			$('.extractFields').append(extractFieldHtml);
+			var extractField = $('.extractField:last');
+			var optionHtml='';
+			$.each(tables[fn_get_fromTable()].fieldList,function(){
+				optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
+			});
+			extractField.find('.fields').html(optionHtml);
+			extractField.find('.fields').val(checkField);
 		});
 
 	}
 
 	function get_extractFields(){
-		var ary = [];
+		var list = [];
+		console.log($('.extractField').length)
 		$('.extractField').each(function(){
-		var field = $(this).find('.fields').val();
-		ary.push(field);
+			// var field = $(this).find('.fields').val();
+			// ary.push(field);
+			var ary = {};
+			var field = $(this).find('.fields').val();
+			var remark = $(this).find('.fields option:checked').text();
+			ary['field'] = field;
+			ary['remark'] = remark;
+			ary['alias'] = '';
+			ary['fn'] = '';
+			list.push(ary);
 		});
-		return ary;
+		console.log(list)
+		return list;
 	}
 
 	function generate_sql(){
@@ -155,7 +166,7 @@ $(function(){
 		var fromTable = fn_get_fromTable();
 		s.from(fromTable);
 		$.each(get_extractFields(),function(){
-		var field = this;
+		var field = this.field;
 		if(fromTable!=null &&fromTable!=''){
 			field = fromTable+"."+field;
 		}
