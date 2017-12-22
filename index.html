@@ -27,30 +27,39 @@
 </head>
 <body>
 
-<div id="header">
-	<div class="head-bar main">
-		<a href="#">
-			<!--<img src="images/logo.png" alt="" />-->
-		</a>
-		<ul>
-			<li>
-				<a href="#">产品</a>
-			</li>
-			<li>
-				<a href="#">解决方案</a>
-			</li>
-			<li>
-				<a href="#">案例</a>
-			</li>
-			<li>
-				<a href="#">下载</a>
-			</li>
-			<li>
-				<a href="#">联系我们</a>
-			</li>
-		</ul>
+	<div id="header">
+		<div class="head-bar main">
+			<a href="#">
+				<!--<img src="images/logo.png" alt="" />-->
+			</a>
+			<ul class="main-parent">
+				<li>
+					<a href="index.html">首页</a>
+				</li>
+				<li>
+					<a href="html/navigation/product.html">产品</a>
+				</li>
+				<li>
+					<a href="html/navigation/scheme.html">方案</a>
+				</li>
+				<li>
+					<a href="html/navigation/caseShow.html">案例</a>
+				</li>
+				<li>
+					<a class="support-btn" href="#">咨询</a>
+				</li>
+				<li>
+					<a href="#">关于我们</a>
+					<ul class="main-list">
+						<li><a href="html/about/aboutUs.html">公司介绍</a></li>
+						<li><a href="html/about/culture.html">企业文化</a></li>
+						<li><a href="html/about/honey.html">公司资质</a></li>
+						<li><a href="html/about/address.html">公司地址</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
 	</div>
-</div>
 <div id="footer" class="hidden">
 	<div class="foot-bar main">
 		<p>深圳市南山区科技园东方科技大厦816室</p>
@@ -150,6 +159,14 @@
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
     </div>
+</div>
+
+<!-- 联系我们弹窗 -->
+<div class="contact">
+	<div class="contact-block">
+		<a class="contact-btn" href="javascript:;"></a> 
+		<iframe id="contact-iframe" frameborder="0" scrolling="no" style="height: 100%;width: 100%" src="https://mop.kf5.com/kchat/#/message?back=0"></iframe>
+	</div>
 </div>
 
 </body>
