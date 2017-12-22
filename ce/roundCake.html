@@ -111,6 +111,7 @@
         arcs.append("path")
             .style("fill",function(d){ if(colourAll){ return o(d.data[colourAll.field]); }else{return defaultColor;}})
             .attr("d", function (d) {
+                console.log(arc(d));
                 return arc(d); //使用弧生成器获取路径
             });
         //添加弧内的文字
