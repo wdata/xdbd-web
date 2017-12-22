@@ -68,38 +68,13 @@
             labelAll = queryJson.label[0];                           // 全部属性 - 标签
 
         const maxData = total.meaMaxMin[measure.fieldId].max*11/10;   // 最大值，加10%以保留
+        const legendData = chartLegendData(el,total,CStyle);                // 获取图例创建后的数据
 
-        let color = CStyle.discreteColor;   // 如何颜色是维度则是离散颜色，如果是度量则是连续颜色；
-        let colorDomain = dimValues[colourAll.fieldId];
-        if(colourAll.dimMea && colourAll.dimMea === 1){
-            color = CStyle.continuousColor;
-            colorDomain = [total.meaMaxMin[colourAll.fieldId].min,total.meaMaxMin[colourAll.fieldId].max];
-        }
-
-        let positionBur = true,   // 判断是0、3或者1、2，如果是1、2则svg不移动
-            elHeight = 0,        // 图例的高度
-            elWidth  = 0;        // 图例的宽度
-
-        // 根据图例维度，修改定位；
-        switch(parseInt(CStyle.legend.position)){
-            case 0:
-                elHeight = parseInt($(el).css("height"));
-                positionBur = true;break;
-            case 1:
-                elWidth  = parseInt($(el).css("width")) + margin.right;
-                positionBur = false;break;
-            case 2:
-                elHeight = parseInt($(el).css("height"));
-                positionBur = false;break;
-            case 3:
-                elWidth  = parseInt($(el).css("width"));
-                positionBur = true;break;
-        }
         /*
         *  根据图例的宽度or高度以及位置，计算剩余图形的图形宽度和高度
         * */
-        const widthO = parseInt($(id).css("width")) - margin.left - margin.right - elWidth;
-        const height0 = parseInt($(id).css("height")) - margin.top - margin.bottom - elHeight;
+        const widthO = parseInt($(id).css("width")) - margin.left - margin.right - legendData.elWidth;
+        const height0 = parseInt($(id).css("height")) - margin.top - margin.bottom - legendData.elHeight;
         /*
         *  根据度量在x轴or y轴不同，数据和参数不同
         * */
@@ -143,8 +118,8 @@
 
         // 根据颜色编译成循环色
         const o = d3.scale.ordinal()
-            .domain(colorDomain)
-            .range(color);
+            .domain(legendData.colorDomain)
+            .range(legendData.color);
 
         /* 根据维度轴不同，显示不同的宽度 */
         const x = d3.scale.ordinal()
@@ -177,7 +152,7 @@
         const svg = d3.select(id).append("svg")
             .attr("width", widthO + margin.left + margin.right)
             .attr("height", height0 + margin.top + margin.bottom)
-            .attr("transform", "translate(" + ( positionBur?elWidth:"0" ) + "," + ( positionBur?elHeight:"0" ) + ")")
+            .attr("transform", "translate(" + ( legendData.positionBur?legendData.elWidth:"0" ) + "," + ( legendData.positionBur?legendData.elHeight:"0" ) + ")")
             .append("svg:g")
             .attr("width", widthO )
             .attr("height", height0 )
@@ -435,7 +410,23 @@
                     }
                     return ret;
                 })
-                .text(function(d){ return d[labelAll.field] })
+                .text(function(d){
+                    if(CStyle.label.overlapping){
+                        const result = calculate(d[labelAll.field],$(this).css("font-size"),$(this).css("font-family"));
+                        let reservedH = null,
+                            reservedW = null;
+                        if(axisAorY){
+                            reservedH = height0 - y(d[measure.field])
+                        }else{
+                            reservedW = y(d[measure.field]);
+                        }
+                        if(reservedH >= result.height || reservedW >= result.width){
+                            return d[labelAll.field];
+                        }
+                    }else{
+                        return d[labelAll.field];
+                    }
+                })
                 .filter(function(d,i){
                     /*
                     *  防止标签重叠，有bug，不使用；

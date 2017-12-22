@@ -36,13 +36,13 @@
         var cs = new chartStyle("#chartDFAB2A73",CStyle);
         cs.title();
         cs.background();
-        chartLegend("#chartDFAB2A73",dataA3,CStyle);
-        stacking("#chartDFAB2A73",dataA3,CStyle);
+        chartLegend("#chartDFAB2A73",stackDataA1,CStyle);
+        stacking("#chartDFAB2A73",stackDataA1,CStyle);
 //        cs.reset();
     });
 
     function stacking(elemt,data,CStyle){
-            const margin = {top: 20, right: 30, bottom: 40, left: 55, titleLeft: -45,titleBottom:39 },   // 外部留空
+        const margin = {top: 20, right: 30, bottom: 40, left: 55, titleLeft: -45,titleBottom:39 },   // 外部留空
             defaultColor = "#1496D4",    // 默认图表颜色
             id = elemt + " .resize-chart",   // 存放图形的位置
             el =  elemt + " .legend";   // 存放图例的样式，可用以确定图例宽高
@@ -70,38 +70,13 @@
             labelAll = queryJson.label[0];                           // 全部属性 - 标签
 
         const maxData = d3.max(xTitle.map(function(d){ let db = 0;total.reoords.filter(function(d1){ if( d1[dimension.field] === d){ db += d1[measure.field]; }});return db;}))*11/10;  // 最大值重新修改
+        const legendData = chartLegendData(el,total,CStyle);                // 获取图例创建后的数据
 
-        let color = CStyle.discreteColor;   // 如何颜色是维度则是离散颜色，如果是度量则是连续颜色；
-        let colorDomain = dimValues[colourAll.fieldId];
-        if(colourAll.dimMea && colourAll.dimMea === 1){
-            color = CStyle.continuousColor;
-            colorDomain = [total.meaMaxMin[colourAll.fieldId].min,total.meaMaxMin[colourAll.fieldId].max];
-        }
-
-        let positionBur = true,   // 判断是0、3或者1、2，如果是1、2则svg不移动
-            elHeight = 0,        // 图例的高度
-            elWidth  = 0;        // 图例的宽度
-
-        // 根据图例维度，修改定位；
-        switch(parseInt(CStyle.legend.position)){
-            case 0:
-                elHeight = parseInt($(el).css("height"));
-                positionBur = true;break;
-            case 1:
-                elWidth  = parseInt($(el).css("width")) + margin.right;
-                positionBur = false;break;
-            case 2:
-                elHeight = parseInt($(el).css("height"));
-                positionBur = false;break;
-            case 3:
-                elWidth  = parseInt($(el).css("width"));
-                positionBur = true;break;
-        }
         /*
         *  根据图例的宽度or高度以及位置，计算剩余图形的图形宽度和高度
         * */
-        const widthO = parseInt($(id).css("width")) - margin.left - margin.right - elWidth;
-        const height0 = parseInt($(id).css("height")) - margin.top - margin.bottom - elHeight;
+        const widthO = parseInt($(id).css("width")) - margin.left - margin.right - legendData.elWidth;
+        const height0 = parseInt($(id).css("height")) - margin.top - margin.bottom - legendData.elHeight;
         /*
         *  根据度量在x轴or y轴不同，数据和参数不同
         * */
@@ -122,31 +97,10 @@
             measurex = "translate(0," + height0 + ")";
         }
 
-        /*
-        *  全部属性，颜色-尺寸-细分-标签，根据从上到下划分第二、三、、级
-        * */
-        let x1Domain = null;
-        let allTwo = null;
-        if(colourAll && colourAll.dimMea === 0){
-            x1Domain = dimValues[colourAll.fieldId];
-            allTwo = colourAll.field
-        }else if(sizeAll && sizeAll.dimMea === 0){
-            x1Domain = dimValues[sizeAll.fieldId];
-            allTwo = sizeAll.field;
-        }else if(detailAll){
-            x1Domain = dimValues[detailAll.fieldId];
-            allTwo = detailAll.field
-        }else if(labelAll){
-            x1Domain = dimValues[labelAll.fieldId];
-            allTwo = labelAll.field
-        }else{
-            x1Domain = d3.range(1);
-        }
-
         // 根据颜色编译成循环色
         const o = d3.scale.ordinal()
-            .domain(colorDomain)
-            .range(color);
+            .domain(legendData.colorDomain)
+            .range(legendData.color);
 
         /* 根据维度轴不同，显示不同的宽度 */
         const x = d3.scale.ordinal()
@@ -167,29 +121,12 @@
                     .range([wSize/10,wSize]);
             }
         }
-
-        
-        // 重新修改数据格式，用以适应堆叠柱状图，第一种数据结构；
-        let finalData = null;
-        if(colourAll && colourAll.dimMea === 0){
-//            finalData = d3.layout.stack()(dimValues[colourAll.fieldId].map(function(x){
-//                return total.reoords.filter(function(d){
-//                    let db = d;
-//                    db["y"] = d[measure.field];
-//                    if(d[colourAll.field] === x){
-//                        return db;
-//                    }
-//                })
-//            }));
-        }else{
-            finalData = [total.reoords];
-        }
         // 第二种数据结构，并写方法将之前的数据叠加显示在y0中；
         /*
         *  先将数据根据维度轴数组分割成多个数组；
         *  
         * */
-        let finalDataTwo = dimValues[dimension.fieldId].map(function(x){
+        let finalData = dimValues[dimension.fieldId].map(function(x){
             let db = total.reoords.filter(function(d){
                 if(d[dimension.field] === x){
                     return d;
@@ -203,11 +140,6 @@
             });
             return db;
         });
-        console.log(finalDataTwo);
-
-
-
-
 
         /*
         *  svg最外层，确定宽高度，确定位置
@@ -215,7 +147,7 @@
         const svg = d3.select(id).append("svg")
             .attr("width", widthO + margin.left + margin.right)
             .attr("height", height0 + margin.top + margin.bottom)
-            .attr("transform", "translate(" + ( positionBur?elWidth:"0" ) + "," + ( positionBur?elHeight:"0" ) + ")")
+            .attr("transform", "translate(" + ( legendData.positionBur?legendData.elWidth:"0" ) + "," + ( legendData.positionBur?legendData.elHeight:"0" ) + ")")
             .append("svg:g")
             .attr("width", widthO )
             .attr("height", height0 )
@@ -267,13 +199,6 @@
             .attr("y",function(){ if(axisAorY){ return margin.titleBottom }else{  return  margin.titleLeft } })
             .attr("transform",function(){ if(axisAorY){ return null; }else{  return 'rotate(270,0,0)' } });
 
-//        const g = svg.append("g")
-//            .selectAll("g")
-//            .data(finalData)
-//            .enter()
-//            .append("g")
-//            .attr("transform", function(d) { if(axisAorY){ return "translate(" + xc(d[allTwo]) + ",0)" }else{ return "translate(0," + xc(d[allTwo]) + ")" } })
-//            .attr("class","rect-g");
         /*
         *   颜色块，
         *   事件绑定
@@ -285,32 +210,23 @@
             .attr("class","colorBlock");
 
 
-        const floor = g.selectAll(".floor")
-            .data(finalDataTwo)
+        const floor = g.selectAll(".rect-g")
+            .data(finalData)
             .enter().append("g")
-            .attr("class", "floor");
-
-        // 第一种数据格式；
-//        floor.selectAll("rect")
-//            .data(function(d) { return d; })
-//            .enter().append("rect")
-//            .style("fill",function(d){ if(colourAll){ return o(d[colourAll.field]); }else{return defaultColor;}})
-//            .attr("x", function(d) { if(axisAorY){ if(sizeAll){return  x(d[dimension.field]) + (x.rangeBand() -w(d[sizeAll.field]))/2}else{return  x(d[dimension.field])}}else{return y(d.y0) }  })
-//            .attr("y", function(d) { if(axisAorY){ if(colourAll.dimMea === 0){ return y(d[measure.field] + d.y0); }else{ return y(d[measure.field]); }  }else{if(sizeAll){return  x(d[dimension.field]) + (x.rangeBand() -w(d[sizeAll.field]))/2}else{return  x(d[dimension.field])}}})
-//            .attr("height", function(d) {if(axisAorY){return  height0 - y(d[measure.field])}else{if(sizeAll){return w(d[sizeAll.field]);}else{ return x.rangeBand() ;}}})
-//            .attr("width", function(d) {if(axisAorY){if(sizeAll){return w(d[sizeAll.field]);}else{return x.rangeBand() ;}}else{return y(d[measure.field]) - 1;}})
-
-
-
+            .attr("class", "rect-g");
+        
         // 第二种数据格式
+        let attrClick = null;
         floor.selectAll("rect")
             .data(function(d) { return d; })
             .enter().append("rect")
+            .attr("class","areaBlock")
+            .attr("data-id",function (d){ if(colourAll){ return d[colourAll.field] } })
             .style("fill",function(d){ if(colourAll){ return o(d[colourAll.field]); }else{return defaultColor;}})
             .attr("x", function(d) { if(axisAorY){ if(sizeAll){ return  x(d[dimension.field]) + (x.rangeBand() -w(d[sizeAll.field]))/2}else{return  x(d[dimension.field])}}else{return y(d.y0) }  })
-            .attr("y", function(d) { if(axisAorY){ if(colourAll.dimMea === 0){ return y(d[measure.field] + d.y0) ; }else{ return y(d[measure.field]); }  }else{if(sizeAll){return  x(d[dimension.field]) + (x.rangeBand() -w(d[sizeAll.field]))/2}else{return  x(d[dimension.field])}}})
+            .attr("y", function(d) { if(axisAorY){ if(colourAll.dimMea === 0){ return y(d[measure.field] + d.y0) ; }else{ return y(d[measure.field]); }  }else{ if(sizeAll){ console.log(); return  x(d[dimension.field]) + (x.rangeBand() - w(d[sizeAll.field]))/2 }else{ return  x(d[dimension.field]) }}})
             .attr("height", function(d) {if(axisAorY){return  height0 - y(d[measure.field])}else{if(sizeAll){return w(d[sizeAll.field]);}else{ return x.rangeBand() ;}}})
-            .attr("width", function(d) {if(axisAorY){if(sizeAll){return w(d[sizeAll.field]);}else{return x.rangeBand() ;}}else{return y(d[measure.field]) - 1;}})
+            .attr("width", function(d) {if(axisAorY){if(sizeAll){return w(d[sizeAll.field]);}else{return x.rangeBand() ;}}else{return y(d[measure.field]);}})
             .on({
                 "mouseover":function(d){
                     d3.select(this).attr("stroke",'#000');
@@ -358,12 +274,12 @@
             });
 
         /*
-                *  标签
-                *  horizontal：横轴：0-2,3-5，6-8，
-                *  vertical：纵轴：0-3-6,1-4-7,2-5-8
-                *  标签根据x轴和y，以及样式变化修改位置
-                *  label.align：表示是内部or外部
-                * */
+        *  标签
+        *  horizontal：横轴：0-2,3-5，6-8，
+        *  vertical：纵轴：0-3-6,1-4-7,2-5-8
+        *  标签根据x轴和y，以及样式变化修改位置
+        *  label.align：表示是内部or外部
+        * */
         const label = CStyle.label;        // 标签
         if(labelAll && CStyle.label.custom !== 3){
             const horizontal = {
@@ -376,7 +292,7 @@
             };
             svg.append("g")
                 .selectAll("g")
-                .data(finalDataTwo)
+                .data(finalData)
                 .enter()
                 .append("g")
 //                .attr("transform", function(d) { console.log(x(d[allTwo])); if(axisAorY){ return "translate(" + x(d[allTwo]) + ",0)" }else{ return "translate(0," + x(d[allTwo]) + ")" } })
@@ -405,11 +321,11 @@
                         }
                     }else{
                         if(horizontal.in){
-                            ret = y(d[measure.field])/2;
+                            ret = y(d[measure.field]/2 + d.y0 );
                         }else if(horizontal.under){
-                            ret = 0;
+                            ret = y(d.y0 );
                         }else{
-                            ret = y(d[measure.field]);
+                            ret = y(d[measure.field] + d.y0 );
                         }
                     }
                     return  ret;
@@ -418,10 +334,9 @@
                     let ret = null;
                     if(axisAorY){
                         if(horizontal.in){
-                            ret = (y( d[measure.field]/2 + d.y0 ));
-                            console.log(ret,y(d[measure.field]),height0,y(150))
+                            ret = y(d[measure.field]/2 + d.y0 );
                         }else if(horizontal.under){
-                            ret = height0;
+                            ret = y(d.y0 );
                         }else{
                             ret = y(d[measure.field]);
                         }
@@ -436,7 +351,7 @@
                             }
                         }else{
                             if(sizeAll){
-                                ret = x(d[dimension.field]) + (x.rangeBand() -w(d[sizeAll.field]))/2
+                                ret = x(d[dimension.field]) + (x.rangeBand() - w(d[sizeAll.field]))/2
                             }else{
                                 ret = x(d[dimension.field])
                             }
@@ -495,7 +410,23 @@
                     }
                     return ret;
                 })
-                .text(function(d){ return d[labelAll.field] })
+                .text(function(d){
+                    if(CStyle.label.overlapping){
+                        const result = calculate(d[labelAll.field],$(this).css("font-size"),$(this).css("font-family"));
+                        let reservedH = null,
+                            reservedW = null;
+                        if(axisAorY){
+                            reservedH = height0 - y(d[measure.field])
+                        }else{
+                            reservedW = y(d[measure.field]);
+                        }
+                        if(reservedH >= result.height || reservedW >= result.width){
+                            return d[labelAll.field];
+                        }
+                    }else{
+                        return d[labelAll.field];
+                    }
+                })
                 .filter(function(d,i){
                     /*
                     *  防止标签重叠，有bug，不使用；

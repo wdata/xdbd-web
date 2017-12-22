@@ -323,14 +323,14 @@ function chartLegend(elemt,data,CStyle){
                 "click":function(){
                     const thisSpan = $(this).find("span");    // 自己的颜色块
                     const thisPSpan = $(this).parent().siblings().find("span");   // 兄弟元素颜色块;
-                    const block = $(this).parents(".legend").siblings(".resize-chart").find(".rect-g");
+                    const block = $(this).parents(".legend").siblings(".resize-chart").find(".areaBlock");
                     const text = $(this).find("text").text();
 
                     thisSpan.removeClass("opacity").addClass("focusClick");
                     if(this === pClick){
                         thisPSpan.removeClass("opacity");
                         thisSpan.removeClass("focusClick");
-                        block.find("rect").removeAttr("class","fill-opacity");
+                        block.attr("class","areaBlock");
 
                         pClick = null;
                     }else{
@@ -338,10 +338,10 @@ function chartLegend(elemt,data,CStyle){
                         thisPSpan.removeClass("focusClick");
 
                         block.each(function(){
-                            if(!($(this).find("rect").attr('data-id') == text)){
-                                $(this).find("rect").attr("class","fill-opacity");
+                            if(!($(this).attr('data-id') === text)){
+                                $(this).attr("class","fill-opacity areaBlock");
                             }else{
-                                $(this).find("rect").removeAttr("class","fill-opacity");
+                                $(this).attr("class","areaBlock");
                             }
                         });
                         pClick = this;
@@ -460,3 +460,55 @@ function chartLegend(elemt,data,CStyle){
     }
 }
 
+// 返回图例的宽高度和颜色
+function chartLegendData(el,total,CStyle){
+    const colourAll = total.queryJson.colour[0];                       // 全部属性 - 颜色
+    let color = CStyle.discreteColor;   // 如何颜色是维度则是离散颜色，如果是度量则是连续颜色；
+    let colorDomain = total.dimValues[colourAll.fieldId];
+    if(colourAll.dimMea && colourAll.dimMea === 1){
+        color = CStyle.continuousColor;
+        colorDomain = [total.meaMaxMin[colourAll.fieldId].min,total.meaMaxMin[colourAll.fieldId].max];
+    }
+
+    let positionBur = true,   // 判断是0、3或者1、2，如果是1、2则svg不移动
+        elHeight = 0,        // 图例的高度
+        elWidth  = 0;        // 图例的宽度
+
+    // 根据图例维度，修改定位；
+    switch(parseInt(CStyle.legend.position)){
+        case 0:
+            elHeight = parseInt($(el).css("height"));
+            positionBur = true;break;
+        case 1:
+            elWidth  = parseInt($(el).css("width")) + margin.right;
+            positionBur = false;break;
+        case 2:
+            elHeight = parseInt($(el).css("height"));
+            positionBur = false;break;
+        case 3:
+            elWidth  = parseInt($(el).css("width"));
+            positionBur = true;break;
+    }
+    return { "elHeight":elHeight, "elWidth":elWidth, "color":color, "colorDomain":colorDomain, "positionBur":positionBur }
+}
+
+// calculate("人生大事","12px","微软雅黑");
+function calculate(text,fontSize,fontFamily){
+    const span = document.createElement("span");
+    let result = {};
+    result.width = span.offsetWidth;
+    result.height = span.offsetHeight;
+    span.style.visibility = "hidden";
+    span.style.fontSize = fontSize;
+    span.style.fontFamily = fontFamily;
+    span.style.display = "inline-block";
+    document.body.appendChild(span);
+    if(typeof span.textContent !== "undefined"){
+        span.textContent = text;
+    }else{
+        span.innerText = text;
+    }
+    result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
+    result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
+    return result;
+}

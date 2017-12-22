@@ -2876,3 +2876,163 @@ var stackDataA1 = {
         }
     }
 }
+/*
+ * 圆饼图 - 颜色：market（维度），角度：ship_cost（度量）,细分：category（度量）
+ * */
+var roundCake1 = {
+    "code": 0,
+    "success": true,
+    "message": "操作成功！",
+    "timestamp": 1513845351190,
+    "data": {
+        "dimValues": {
+            "d65cb6070e7c4b08a895e20a224cd7c7": [
+                "办公用品",
+                "家具",
+                "技术"
+            ],
+            "57f63982ee1f4f26bb0c518a1c580469": [
+                "亚太地区",
+                "拉丁美洲",
+                "欧洲",
+                "美国",
+                "非洲"
+            ]
+        },
+        "meaMaxMin": {
+            "5d4e0324434246fb8fa0f300bcb9cb22": {
+                "max": 1422.24,
+                "min": 13.08
+            }
+        },
+        "reoords": [
+            {
+                "market": "亚太地区",
+                "sales_amount": 197.28,
+                "category": "办公用品"
+            },
+            {
+                "market": "亚太地区",
+                "sales_amount": 307.23,
+                "category": "家具"
+            },
+            {
+                "market": "亚太地区",
+                "sales_amount": 1422.24,
+                "category": "技术"
+            },
+            {
+                "market": "拉丁美洲",
+                "sales_amount": 13.08,
+                "category": "办公用品"
+            },
+            {
+                "market": "拉丁美洲",
+                "sales_amount": 252.16,
+                "category": "家具"
+            },
+            {
+                "market": "拉丁美洲",
+                "sales_amount": 344.64,
+                "category": "技术"
+            },
+            {
+                "market": "欧洲",
+                "sales_amount": 79.2,
+                "category": "办公用品"
+            },
+            {
+                "market": "欧洲",
+                "sales_amount": 268.164,
+                "category": "家具"
+            },
+            {
+                "market": "欧洲",
+                "sales_amount": 388.92,
+                "category": "技术"
+            },
+            {
+                "market": "美国",
+                "sales_amount": 14.62,
+                "category": "办公用品"
+            },
+            {
+                "market": "美国",
+                "sales_amount": 261.96,
+                "category": "家具"
+            },
+            {
+                "market": "美国",
+                "sales_amount": 907.152,
+                "category": "技术"
+            },
+            {
+                "market": "非洲",
+                "sales_amount": 62.61,
+                "category": "办公用品"
+            },
+            {
+                "market": "非洲",
+                "sales_amount": 111.12,
+                "category": "家具"
+            },
+            {
+                "market": "非洲",
+                "sales_amount": 143.1,
+                "category": "技术"
+            }
+        ],
+        "queryJson": {
+            "biSetId": "2fd9366eb8644dee871a7d5964e42ca6",
+            "dataModelId": "d39bbee2d74d4c62925d55fa1f588dbc",
+            "limit": null,
+            "x": [],
+            "y": [],
+            "colour": [
+                {
+                    "fieldId": "57f63982ee1f4f26bb0c518a1c580469",
+                    "field": "market",
+                    "fieldAlias": "市场",
+                    "order": "ASC",
+                    "baseDataType": 1,
+                    "dataType": 1,
+                    "dimMea": 0,
+                    "disCon": 0,
+                    "aggregation": null
+                }
+            ],
+            "size": [],
+            "angle": [
+                {
+                    "fieldId": "5d4e0324434246fb8fa0f300bcb9cb22",
+                    "field": "sales_amount",
+                    "fieldAlias": "销售额",
+                    "order": "ASC",
+                    "baseDataType": 4,
+                    "dataType": 4,
+                    "dimMea": 1,
+                    "disCon": 1,
+                    "aggregation": null
+                }
+            ],
+            "detail": [
+                {
+                    "fieldId": "d65cb6070e7c4b08a895e20a224cd7c7",
+                    "field": "category",
+                    "fieldAlias": "类别",
+                    "order": "ASC",
+                    "baseDataType": 1,
+                    "dataType": 1,
+                    "dimMea": 0,
+                    "disCon": 0,
+                    "aggregation": null
+                }
+            ],
+            "label": [],
+            "filter": []
+        },
+        "drawHelper": {
+            "meaAxis": null
+        }
+    }
+}

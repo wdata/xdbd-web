@@ -309,8 +309,9 @@ table th,table td{
 }
 
 .fill-opacity{
-    fill-opacity:.5
+    fill-opacity:.5;
 }
+
 .message text{
     display: block;
 }
