@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>圆饼图</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../plugin/jquery-ui/jquery-ui.min.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="../css/BI_d3.css">
+</head>
+<body>
+
+
+<div data-type="chart" type="bar" id="chartDFAB2A73" class="resize-item">
+    <!--定位层-->
+    <div class="positioning">
+        <!--背景样式、边框线、透明度、圆角-->
+        <div class="inform">
+            <h2 class="chartTitle">未命名报表</h2>
+            <div class="resize-content">
+                <div class="legend"></div>
+                <div id="resize-chart" class="resize-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../plugin/jQuery/jquery.min.js"></script>
+<script src="../plugin/jQuery/jQuery_ui.js"></script>
+<script src="../plugin/d3/d3.v3.min.js"></script>
+<script  src="../plugin/d3/d3.tip.js"></script>
+<script  src="js/data.js"></script>
+<script src="./js/common.js"></script>
+<script>
+    $(function(){
+        var cs = new chartStyle("#chartDFAB2A73",CStyle);
+        cs.title();
+        cs.background();
+        chartLegend("#chartDFAB2A73",roundCake1,CStyle);
+        pieChart("#chartDFAB2A73",roundCake1,CStyle);
+//        cs.reset();
+    });
+
+    function pieChart(elemt,data,CStyle){
+        const margin = {top: 20, right: 30, bottom: 40, left: 55, titleLeft: -45,titleBottom:39 },   // 外部留空
+            defaultColor = "#1496D4",    // 默认图表颜色
+            id = elemt + " .resize-chart",   // 存放图形的位置
+            el =  elemt + " .legend";   // 存放图例的样式，可用以确定图例宽高
+
+        // 数据
+        const total = data.data;                                      // 数据
+
+        const queryJson = total.queryJson,                             // 索引数据
+            dimValues = total.dimValues;                             // 维度数组
+
+        let colourAll = queryJson.colour[0],                       // 全部属性 - 颜色
+            sizeAll = queryJson.size[0],                             // 全部属性 - 尺寸
+            angleAll = queryJson.angle[0],                           // 全部属性 - 角度
+            detailAll = queryJson.detail[0],                         // 全部属性 - 细分
+            labelAll = queryJson.label[0];                           // 全部属性 - 标签
+
+        const legendData = chartLegendData(el,total,CStyle);                // 获取图例创建后的数据
+
+        /*
+        *  根据图例的宽度or高度以及位置，计算剩余图形的图形宽度和高度
+        * */
+        const widthO = parseInt($(id).css("width")) - margin.left - margin.right - legendData.elWidth;
+        const height0 = parseInt($(id).css("height")) - margin.top - margin.bottom - legendData.elHeight;
+
+        // 根据颜色编译成循环色
+        const o = d3.scale.ordinal()
+            .domain(legendData.colorDomain)
+            .range(legendData.color);
+
+        /*
+        *  svg最外层，确定宽高度，确定位置
+        * */
+        const svg = d3.select(id).append("svg")
+            .attr("width", widthO + margin.left + margin.right)
+            .attr("height", height0 + margin.top + margin.bottom)
+            .attr("transform", "translate(" + ( legendData.positionBur?legendData.elWidth:"0" ) + "," + ( legendData.positionBur?legendData.elHeight:"0" ) + ")")
+            .append("svg:g")
+            .attr("width", widthO )
+            .attr("height", height0 )
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        //转换数据
+        var pieData = d3.layout.pie() //创建饼状图
+            .value(function (d) {
+                return d[angleAll.field];
+            })(total.reoords); //值访问器
+
+        console.log(pieData);
+
+        //绘制
+        var outerRadius = d3.min([widthO,height0])/2;
+        var innerRadius = 0; //内半径和外半径
+        //创建弧生成器
+        var arc = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(outerRadius);
+
+        console.log();
+        //添加对应数目的弧组
+        var arcs = svg.selectAll("g")
+            .data(pieData)
+            .enter()
+            .append("g")
+            .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")");
+        //添加弧的路径元素
+        arcs.append("path")
+            .style("fill",function(d){ if(colourAll){ return o(d.data[colourAll.field]); }else{return defaultColor;}})
+            .attr("d", function (d) {
+                return arc(d); //使用弧生成器获取路径
+            });
+        //添加弧内的文字
+        arcs.append("text")
+            .attr("transform", function (d) {
+                var x = arc.centroid(d)[0] * 1.4; //文字的x坐标
+                var y = arc.centroid(d)[1] * 1.4;
+                return "translate(" + x + "," + y + ")";
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+//                //计算市场份额的百分比
+//                var percent = Number(d.value) / d3.sum(total.reoords, function (d) {
+//                    return d[angleAll.field];
+//                }) * 100;
+//                //保留一位小数点 末尾加一个百分号返回
+//                return percent.toFixed(1) + "%";
+                return d.data[colourAll.field];
+            });
+    }
+
+</script>
+</body>
+</html>

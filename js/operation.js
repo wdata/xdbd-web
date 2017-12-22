@@ -1946,6 +1946,8 @@ $(function(){
     //getBiDataModel();
     function getBiDataModel(){
         var biSetId = $(".data-source-box select option:selected").attr("biSetId");
+        $("#dimensionBox").mCustomScrollbar("destroy");
+        $(".metric-box").mCustomScrollbar("destroy");
         $.ajax({
             type:'get',
             url:$url1 + '/bi/report/v1/datamodel.json',
@@ -2016,6 +2018,10 @@ $(function(){
                         }
                         $(".metric-box").empty().append(mhtml);
 
+                        //滚动条
+                        $("#dimensionBox").mCustomScrollbar({theme:"dark"});
+                        $(".metric-box").mCustomScrollbar({theme:"dark"});
+                        console.log(111);
 
 
 

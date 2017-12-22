@@ -1,0 +1,70 @@
+.resize-item{
+    width: 95%;
+    height: 500px;
+    margin: 20px 2.5% 0;
+    border: 1px solid rgba(57,155,252,0.6);
+    position: absolute;
+    /*top: 200px;*/
+    /*left: 100px;*/
+    background-color:#fff;
+}
+.resize-item .positioning{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.resize-item .positioning .inform{
+    border: 0 solid rgb(204, 204, 204);
+    background-color: rgb(255, 255, 255);
+    border-radius: 0;
+    opacity: 1;
+    height: 100%;
+}
+.resize-item .positioning .inform .chartTitle{
+    line-height: 1em;
+    background: rgba(255, 255, 255, 0);
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    text-align: left;
+    padding: 20px 20px 10px;
+    position: relative;
+}
+.resize-item .positioning .inform .resize-content{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    top: 66px;
+}
+.resize-item .positioning .inform .resize-content .resize-chart{
+    width: 100%;
+    height: 100%;
+}
+.resize-item .mask-layer{
+    position: absolute;  top: 0;  left: 0;  right: 0;  bottom: 0;
+    z-index: 100;
+
+}
+/*  信息显示框 */
+.message{
+    border: 1px solid #8b8b8b;
+    padding: 5px 10px;
+    line-height: 22px;
+    font-size: 12px;
+    color: #a6a6a6;
+    background: #fff;
+    height: fit-content;
+    position: absolute;
+    display: none;
+    bottom: 200px;
+    left: 200px;
+}
+
+/*需要添加的样式*/
+/*并列柱形图样式  开始*/
+
+
+/*并列柱形图样式  结束*/
