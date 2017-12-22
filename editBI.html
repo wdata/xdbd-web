@@ -276,7 +276,7 @@
 								<label>标题</label>
 								<div class="tab_show">
 									<span>显示</span>
-									<input type="checkbox" checked="checked" class="tab_pitch"/>
+									<input type="checkbox" checked="checked" class="tab_pitch" style="margin: 0;"/>
 								</div>
 							</div>
 							<div class="tab_tit">
@@ -318,7 +318,7 @@
 									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
 									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
 								</div>
-								<div class="set-text-img">
+								<div class="set-text-img wa-text">
 									<span>标题背景</span>
 									<div>
 										<input class="backColor"/>
@@ -362,7 +362,7 @@
 									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
 									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
 								</div>
-								<div class="set-text-img">
+								<div class="set-text-img wa-text">
 									<span>表头颜色</span>
 									<div>
 										<input class="backColor"/>
@@ -406,13 +406,13 @@
 									<img src="images/t_center.png" alt="" title="center" class="justifyCenter" />
 									<img src="images/t_right.png" alt="" title="right" class="justifyRight" />
 								</div>
-								<div class="set-text-img">
+								<div class="set-text-img wa-text">
 									<span>奇行</span>
 									<div>
 										<input class="backColor"/>
 									</div>
 								</div>
-								<div class="set-text-img">
+								<div class="set-text-img wa-text">
 									<span>偶行</span>
 									<div>
 										<input class="backColor"/>
@@ -435,7 +435,7 @@
 									<option value="100">100</option>
 								</select>
 							</div>
-							<div class="set-text-img">
+							<div class="set-text-img wa-text">
 								<span>背景</span>
 								<div>
 									<input class="backColor"/>
@@ -443,7 +443,7 @@
 							</div>
 							<div class="set-text-border">
 								<span>边框</span>
-								<div class="border-img">
+								<div class="border-img wa-text">
 									<input class="borderImg"/>
 								</div>
 								<div class="border-wire sc-color">
@@ -534,17 +534,19 @@
 										<span class="radio_btn" onclick="radioBtn()"></span>
 									</div>
 								</div>
-								<div class="set-text-img">
+								<div class="set-text-img wa-text">
 									<span>背景</span>
 									<div>
 										<input class="backColor"/>
 									</div>
 								</div>
-								<div class="set-text-border">
+								<div class="set-text-border wa-text" style="height: 32px">
 									<span>边框</span>
 									<div class="border-img">
 										<input class="borderImg"/>
 									</div>
+								</div>
+								<div class="set-text-border wa-text">
 									<div class="border-wire sc-color">
 										<select>
 											<option value="solid">实线</option>
@@ -552,8 +554,10 @@
 											<option value="dotted">点线</option>
 											<option value="double">双线</option>
 										</select>
-										<i class="fa fa-caret-down" style="top: 15px;"></i>
+										<i class="fa fa-caret-down" style="top: 8px;"></i>
 									</div>
+								</div>
+								<div class="set-text-border wa-text">
 									<div class="border-size sc-color">
 										<select>
 											<option value="0">0</option>
@@ -563,15 +567,16 @@
 											<option value="4">4</option>
 											<option value="5">5</option>
 										</select>
-										<i class="fa fa-caret-down" style="top: 15px;"></i>
+										<i class="fa fa-caret-down" style="top: 8px;"></i>
 									</div>
 								</div>
 								<div class="set-text-radius wa-text">
 									<span>圆角</span>
 									<div class="radius-size">
-										<input type="number" value="0" class="text-radius"/>
+										<!-- <input type="number" value="0" class="text-radius"/>
 										<span class="radius-add" onclick="radiusAdd()">+</span>
-										<span class="radius-lessen" onclick="radiusLessen()">-</span>
+										<span class="radius-lessen" onclick="radiusLessen()">-</span> -->
+										<input type="number" value="0" placeholder="0" maxlength="2" />
 									</div>
 								</div>
 							</div>

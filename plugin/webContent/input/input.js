@@ -19,7 +19,7 @@ $(function(){
 
 	function bind_click_saveActionComp(){
 		$('.saveActionComp').click(function(){
-		fn_saveActionComp(getVal());
+			fn_saveActionComp(getVal());
 		// alert(JSON.stringify(getVal()))
 		});
 	}
@@ -79,7 +79,7 @@ $(function(){
 				var extractField = $('.extractField:last');
 				var optionHtml='';
 				$.each(fieldList,function(){
-				optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
+				optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
 				});
 				extractField.find('.fields').html(optionHtml);
 				extractField.find('.fields').val(checkField);
@@ -91,7 +91,7 @@ $(function(){
 		var optionsHtml = "";
 		// alert(JSON.stringify(tables))
 		$.each(tables,function(){
-		optionsHtml += "<option value="+this.tableName+">"+this.remark+"</option>";
+		optionsHtml += "<option value="+this.tableName+" selected>"+this.remark+"</option>";
 		});
 		$('.fromTable').html(optionsHtml);
 	}
@@ -121,17 +121,19 @@ $(function(){
 	}
 
 	function set_extractFields(obj){
-		// var extractFieldHtml = $('.extractField').prop('outerHTML');
-		// $('.extractField').remove();
+		var extractFieldHtml = $('.extractField').prop('outerHTML');
+		$('.extractField').remove();
 		if(obj.length<1){
 		return;
 		}
-		console.log(obj)
+		// alert(JSON.stringify(obj))
+		// console.log(obj)
 		$.each(obj,function(){
 		var checkField = this.field+"";
-		// $('.extractFields').append(extractFieldHtml);
+		$('.extractFields').append(extractFieldHtml);
 		var extractField = $('.extractField:last');
 		var optionHtml='';
+		//alert(JSON.stringify(extractField))
 		// alert(JSON.stringify(tables[fn_get_fromTable()].fieldList))
 			$.each(tables[fn_get_fromTable()].fieldList,function(){
 				optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
@@ -143,6 +145,7 @@ $(function(){
 
 	function get_extractFields(){
 		var list = [];
+		console.log($('.extractField').length)
 		$('.extractField').each(function(){
 			var ary = {};
 			var field = $(this).find('.fields').val();
