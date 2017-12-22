@@ -618,6 +618,16 @@ $(function(){
             }
         });
     }
+
+	function getRootNode(_this,node){//获取根节点的directoryId
+		var n = _this.treeview('getParent',node);
+		if(n.directoryId){
+			getRootNode(_this,n);
+		}else {
+			localStorage.setItem("lv1DirId",node.directoryId);
+		}
+	}
+
 	function showTree(treeviewData){
         $tree = $('#treeview5').treeview({
             color: "#878D99",
@@ -629,6 +639,9 @@ $(function(){
             data: treeviewData,
             selectedBackColor: "#578fe6",
             onNodeSelected:function(event,node){
+				getRootNode($(this),node);//寻找根节点
+				console.log(localStorage.getItem("lv1DirId"));
+
                 curNodeId = node.nodeId;
                 sessionStorage.setItem("curNodeId",curNodeId);
 

@@ -1,13 +1,22 @@
+/*数据模型*/
 .set-param-box .same-resource{min-height: 40%;max-height: 40%;border-top:none;}
 .set-param-box .set-param-head{padding:6px 10px 0 16px;border-top: 1px solid #D9D9D9;}
 .same-resource ul{min-height: 0;}
 .data-source-box>select{height:auto;line-height:1;font-size: 14px;}
-
 .dimension-box,.metric-box{overflow: auto;position: relative;height: 200px;}
+.placeholder_line{background-color:#efefef;height: 14px;width:100%;}
+.set-param-box .placeholder li{}
+.set-param-box .placeholder li i.fa{text-indent:0;margin-right: 4px;}
+.set-param-box .level_con{position:relative;padding-right:16px;}
+.set-param-box .level_con i.fa{display:none;position:absolute;right:0;top:3px;cursor:pointer;}
+.set-param-box .level_con:hover i.fa{display:inline-block;}
+
+.droppable_con{border: 1px solid #00ccff;}
+
 
 
 /*滚动条*/
 .mCSB_scrollTools{width: 6px;}
 .mCSB_inside > .mCSB_container{margin-right:8px;}
 .mCS-dark.mCSB_scrollTools .mCSB_draggerRail{background-color: rgba(150,150,150,0.15);}
-.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{background-color: rgba(0,0,0,0.75);}
+.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{background-color: #9F9F9F;}

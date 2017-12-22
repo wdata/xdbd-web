@@ -1889,6 +1889,25 @@ function uuid(len, radix) {
 
 
 $(function(){
+    String.prototype.getIcon = function(type){
+        if(type==1){//1-文本（字符串）
+            return '<i class="fa fa-sort-alpha-asc"></i>';
+        }else if(type==2){//2-日期
+            return '<i class="fa fa-calendar"></i>';
+        }else if(type==3){//3-日期和时间
+            return '<i class="fa fa-clock-o"></i>';
+        }else if(type==4){//4-数字
+            return '<i class="fa fa-sort-numeric-asc"></i>';
+        }else if(type==5){//5-布尔
+            return '<i class="fa fa-bold"></i>';
+        }else if(type==6){//6-地理
+            return '<i class="fa fa-globe"></i>';
+        }else {
+            return '';
+        }
+    };
+
+
     /*
      *   zoom ：绑定缩放函数；传入参数字符串；
      * */
@@ -1942,6 +1961,63 @@ $(function(){
         getBiDataModel();
     });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function joinLevel2(fieldId,levelId,preFieldId){
+        $.ajax({
+            type:'PUT',
+            url:$url1 + '/bi/report/v1/dataModel/levelField.json',
+            headers:{   username:username, userId:userId    },
+            dataType:'json',
+            data:{
+                "projectId":projectId,
+                "versionId":versionId,
+                "fieldId":fieldId,
+                "levelId":levelId,
+                "preFieldId":preFieldId
+            },
+            success:function(res){
+                if(res.code===0){
+                    layer.msg('拖拽成功!');
+                    getBiDataModel();
+                }
+            },
+            error:function(res){
+                console.log(res);
+            }
+        });
+    }
+    //不同层级之间的拖拽
+    function popLevelAddLevel(fieldId,startMoveLevelId,stopMoveLevelId,preFieldId){
+        $.ajax({
+            type:'DELETE',
+            url:$url1 + '/bi/report/v1/dataModel/levelField.json'+'?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId+'&levelId='+startMoveLevelId,
+            headers:{   username:username, userId:userId    },
+            dataType:'json',
+            success:function(res){
+                if(res.code===0){
+                    layer.msg('移出成功!');
+                    joinLevel2(fieldId,stopMoveLevelId,preFieldId);
+                }
+            },
+            error:function(res){
+                console.log(res);
+            }
+        });
+    }
+    var startMoveLevelId = '',stopMoveLevelId = '';
     //获取数据模型接口
     //getBiDataModel();
     function getBiDataModel(){
@@ -1975,19 +2051,20 @@ $(function(){
                             $.each(dimensions,function(index,value) {
                                 var li='';
                                 $.each(value.fields,function(i,item){
+                                    var icon = (item.dataType+'').getIcon(item.dataType);
                                     li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
                                      baseDataType="${item.baseDataType}" dataType="${item.dataType}"
                                      baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
-                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}">${item.fieldAlias}</li>
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}">${icon} ${item.fieldAlias}</li>
                                 `;
                                 });
 
                                 if(value.type==1){//原始字段
-                                    dhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    dhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
                                 }else if(value.type==2){//自定义字段
-                                    dhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    dhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
                                 }else if(value.type==3){//自定义层
-                                    dhtml += `<div hierarchyId="${value.id}" class="hierarchy"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    dhtml += `<div class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
                                 }
                             });
                         }else{
@@ -2000,10 +2077,11 @@ $(function(){
                             $.each(measures,function(index,value) {
                                 var li='';
                                 $.each(value.fields,function(i,item){
+                                    var icon = (item.dataType+'').getIcon(item.dataType);
                                     li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
                                      baseDataType="${item.baseDataType}" dataType="${item.dataType}"
                                      baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
-                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${item.fieldAlias}</li>
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
                                 `;
                                 });
 
@@ -2021,35 +2099,87 @@ $(function(){
                         //滚动条
                         $("#dimensionBox").mCustomScrollbar({theme:"dark"});
                         $(".metric-box").mCustomScrollbar({theme:"dark"});
-                        console.log(111);
 
 
 
-                        //维度
-                        /*$.each(data.dimensions,function(i,item){
-                            dhtml += `
-             				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="0">${item.fieldAlias}</li>
-             			`;
-                        });
-                        $(".dimension-box .original .placeholder").empty().append(dhtml);*/
-                        //度量
-                        /*
-                        $.each(data.measures, function(i,item) {
-                            mhtml += `
-             				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="1">${item.fieldAlias}</li>
-             			`;
-                        });
-                        $(".metric-box .placeholder").empty().append(mhtml);
-                        */
 
-
-
-                        //设置度量维度可拖拽
-                        $( ".set-param-box ul li").draggable({
-                            // same-resource ul li
+                        /*$("#dimensionBox .placeholder li").draggable({
                             appendTo: "body",
-                            helper: "clone"
-                        });
+                            helper: "clone",
+                            scope:'level',
+                            //connectToSortable:'.level_ul',//关联可排序的容器
+                            cursor: "move",
+                            opacity: 0.5
+                        }).disableSelection();*/
+
+
+
+
+                        //维度拖拽：
+                        $("#dimensionBox .original_ul li").draggable({
+                            appendTo: "body",
+                            helper: "clone",
+                            connectToSortable:'.level_ul',//关联可排序的容器s
+                            cursor: "move",
+                            opacity: 0.5
+                        }).disableSelection();
+                        $("#dimensionBox .userdefined_ul li").draggable({
+                            appendTo: "body",
+                            helper: "clone",
+                            connectToSortable:'.level_ul',//关联可排序的容器
+                            cursor: "move",
+                            opacity: 0.5
+                        }).disableSelection();
+
+                        $(".level_ul").sortable({
+                            connectWith: ".level_ul",
+                            helper: "clone",
+                            cursor: "move",//移动时候鼠标样式
+                            opacity: 0.5, //拖拽过程中透明度
+                            placeholder: "placeholder_line",//占位符className，设置一个样式
+                            start:function(e,ui){
+                                startMoveLevelId=$(ui.item[0]).parent().prev().find('p').attr('levelid');
+                                //console.log('start-levelid: '+startMoveLevelId);
+                            },
+                            stop:function(e,ui) {
+                                stopMoveLevelId=$(ui.item[0]).parent().prev().find('p').attr('levelid');
+                                var levelId = $(this).prev().find('p').attr('levelid');
+                                var fieldid = $(ui.item[0]).attr('fieldid');
+                                var prevLi = $(ui.item[0]).prev();
+                                var preFieldId = '';
+                                if(prevLi.length>0){
+                                    preFieldId = prevLi.attr('fieldid');
+                                }
+
+                                //console.log('stop-levelid: '+stopMoveLevelId);
+                                //console.log('是否为同层级内部移动：' + (stopMoveLevelId == startMoveLevelId) );
+                                //console.log(fieldid,'\n',levelId,'\n',prevfieldid);
+
+
+                                if(startMoveLevelId!==undefined&&levelId!==undefined){
+                                    if(stopMoveLevelId == startMoveLevelId){//非同一个层级
+                                        console.log('内');
+                                        joinLevel2(fieldid,levelId,preFieldId);
+                                    }else {//同个层级内部
+                                        console.log('外');
+                                        popLevelAddLevel(fieldid,startMoveLevelId,stopMoveLevelId,preFieldId);
+                                    }
+                                }
+                            },
+                            drop:function (){
+                                console.log('drop');
+                            }
+                        }).disableSelection();
+
+                        //度量拖拽：
+                        $("#metricBox .placeholder li").draggable({
+                            appendTo: "body",
+                            helper: "clone",
+                            cursor: "move",
+                            opacity: 0.5
+                        }).disableSelection();
+                        console.log(1);
+
                     }
                 }else {
                     $(".dimension-box").empty();$(".metric-box").empty()
@@ -2060,6 +2190,37 @@ $(function(){
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //点击图标类型按钮--生成可拖拽缩放的div
     $(".u-btn-class").draggable({
