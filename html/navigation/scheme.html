@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>深脑大数据</title>
+	<meta name="author" content="Alvaro Trigo Lopez" />
+	<meta name="description" content="fullPage fixed header and footer." />
+	<meta name="keywords"  content="fullpage,jquery,demo,screen,fixed, header,footer, absolute, positioned,css" />
+    <meta name="Resource-type" content="Document" />
+    <link rel="stylesheet" href="../../css/reset.css" />
+	<link rel="stylesheet" href="../../css/first.css" />
+	
+</head>
+<body style="background: #f2f3f4">
+    <div id="header" style="background: #000">
+        <div class="head-bar main">
+            <a href="#">
+                <!--<img src="images/logo.png" alt="" />-->
+            </a>
+            <ul class="main-parent">
+                <li>
+                    <a href="../../index.html">首页</a>
+                </li>
+                <li>
+                    <a href="product.html">产品</a>
+                </li>
+                <li>
+                    <a href="scheme.html">方案</a>
+                </li>
+                <li>
+                    <a href="caseShow.html">案例</a>
+                </li>
+                <li>
+                    <a class="support-btn" href="#">咨询</a>
+                </li>
+                <li>
+                    <a href="#">关于我们</a>
+                    <ul class="main-list">
+                        <li><a href="../about/aboutUs.html">公司介绍</a></li>
+                        <li><a href="../about/culture.html">企业文化</a></li>
+                        <li><a href="../about/honey.html">公司资质</a></li>
+                        <li><a href="../about/address.html">公司地址</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="scheme-head">为客户提供优质的解决方案</div>
+    <div id="scheme">
+        <dl class="product-list">
+            <dt><img src="../../images/scheme1.png"></dt>
+            <dd>
+                <p>基于深脑大数据的数据交换平台解决方案</p>
+                <span>集成外部的商业价值数据接口，为企业提供数据查询服务；生成企业内部的商业价值数据，提供对外服务接口；深脑智能营销CRM助手产生的行业数据资产或爬虫数据，用于商业价值挖掘；与第三方合作数据；深脑企业ETL/BI工具交易数据；以区块链技术实现分布式数据交换和管理。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/scheme2.png"></dt>
+            <dd>
+                <p>金融领域大数据解决方案</p>
+                <span>在营销方面，信息不对称，广撒网的营销成本太高；营销方式与产品也不是以客户为中心；营销决策依赖于经验，而不是数据；对市场商机反应不敏锐。在云计算、大数据、互联网金融快速发展的环境下，商业银行传统营销与风险管控能力不足日益凸显。</span>
+            </dd>
+        </dl>
+        <dl class="product-list">
+            <dt><img src="../../images/scheme3.jpg"></dt>
+            <dd>
+                <p>金融领域大数据风险防范方案</p>
+                <span>在风险防范方面，随着客户范围的不断扩大，传统以人工干预、现场检查为核心的风险防范和应对模式，无论是成本还是反应速度，无法适应现在新的变化和需求。</span>
+            </dd>
+        </dl>
+    </div>
+    <div class="about-footer">
+        <p>深圳市南山区科技园东方科技大厦816室</p>
+        <p>Copyright ©2017 深圳市深脑科技有限公司 版权所有 粤ICP备 11298888号-6</p>
+    </div>
+
+    <!-- 联系我们弹窗 -->
+    <div class="contact">
+        <div class="contact-block">
+            <a class="contact-btn" href="javascript:;"></a> 
+            <iframe id="contact-iframe" frameborder="0" scrolling="no" style="height: 100%;width: 100%" src="https://mop.kf5.com/kchat/#/message?back=0"></iframe>
+        </div>
+    </div>
+
+    <script src="../../plugin/jQuery/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            //导航栏二级菜单
+            $(".main-parent>li").hover(
+                function() {
+                $(this).find("ul").css('display','block');
+                },
+                function() {
+                $(this).find("ul").css('display','none');
+                }
+            );
+            //联系我们
+            $('.support-btn').click(function() {
+                $('.contact-block').animate({bottom: '10px'},500,'swing');
+            });
+            $('.contact-btn').click(function() {
+                $('.contact-block').animate({bottom: '-545px'},500,'swing');
+            })
+        })
+    </script>
+</body>
+</html>
