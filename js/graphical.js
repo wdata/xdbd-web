@@ -12,6 +12,7 @@ var DataIndexes = {
             return
         }
         $(ele).html("");  // 删除之前的图形
+        $(ele).siblings(".prompt").hide();
 
         $.ajax({
             type:"post",
@@ -23,13 +24,11 @@ var DataIndexes = {
             success:function(data){
                 if(data.code === 0){
                     if(data.data){
-                        $(ele).siblings(".prompt").hide();
-                        console.log(JSON.stringify(data.data));
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
-                        layer.msg("数据为空！");
                         $(ele).siblings(".prompt").show();
+                        layer.msg("数据为空！");
                     }
                 }else{
                     // 后期可删除，只是防止没有数据时，显示之前几个图形
