@@ -43,8 +43,14 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	
-	userRight();
+	//延迟调用：
+	var winTimer = window.setInterval(function(){
+		if(sessionStorage.getItem("userId")){
+			userRight();
+			window.clearInterval(winTimer);
+			winTimer = null;
+		}
+	},20);
 	let onCurEnv = sessionStorage.setItem("onEnv","");
 	function userRight(){
 		$.ajax({
