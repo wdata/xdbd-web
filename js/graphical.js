@@ -2,7 +2,84 @@
 // 调用函数
 // 根据数据索引请求数据，并调用图形函数
 var DataIndexes = {
-    // 根据数据索引，请求数据
+
+    // 为测试环境
+    generate:function(data,storage){
+        let html = '';
+        $.each(data.htmlJson.controls,function(index,val){
+            // 判断图形、表格、文本、图片、按钮
+            let text = '';
+            // 如果是文本和图片，则复制内容不同
+            const style =  val.style;
+            const controls = val.customData.controls;
+            const dataType = val.customData.dataType;
+            let textCon = "";
+            let chart_date = null;
+
+            switch(dataType){
+                case "chart":
+                    text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <h2 class="chartTitle">未命名报表</h2>
+                                    <div class="resize-content">
+                                        <div class="legend"></div>
+                                        <div class="resize-chart"></div>
+                                        <div class="prompt"></div>
+                                    </div>
+                                </div>
+                            </div>
+                          `;
+
+                    // 将数据存入检索数据中
+                    chart_date = {
+                        'cid':val.cid,
+                        "type":val.type,
+                        "queryJson":val.queryJson,
+                    };
+
+                    break;
+                case "table":
+                    break;
+                case "text":
+                    const contenteditable = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true">${ content }</div></div>'
+                    textCon = controls?controls.html?controls.html:contenteditable:contenteditable;
+                    text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                   ${ textCon }
+                                </div>
+                            </div>
+                          `;
+                    break;
+                case "button":
+                    const button = '<div class="content-button"><button></button>${ content }</div>'
+                    textCon = controls?controls.html?controls.html:button:button;
+                    text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    ${ textCon }
+                                </div>
+                            </div>
+                          `;
+                    break;
+            }
+
+            html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
+
+            storage.empty().append(html);
+
+            if(chart_date){
+                DataIndexes.inAjax(chart_date,val.cid);
+            }
+        });
+    },
+
+
+
     inAjax:function(d,id){
         const ele = "#"+ id +" .resize-chart",
             self = this,
@@ -11,7 +88,7 @@ var DataIndexes = {
         if((!(queryJson.x) && !(queryJson.y)) || (queryJson.x.length <= 0 && queryJson.y <= 0)){
             return
         }
-        $(ele).html("");  // 删除之前的图形
+        $(ele).html("");
         $(ele).siblings(".prompt").hide();
 
         $.ajax({
@@ -42,12 +119,8 @@ var DataIndexes = {
             }
         })
     },
-    // 刷新，判断类型，选择图形绘制
-    // 参数：id：元素ID
     draw:function(id,type,data){
         const ele = "#"+ id +" .resize-chart";
-
-        // 判断类型
         switch($("#"+id).attr("data-type")){
             case "chart":
                 switch(type){
