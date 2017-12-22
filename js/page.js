@@ -35,7 +35,7 @@ $(function(){
 	var isIndex = "";//参数4
 	var customData = {};//参数5
 	var lv1DirId = localStorage.getItem("lv1DirId");
-	
+
 	//页面数配置
 	var setting = {
 		view: {
@@ -104,6 +104,7 @@ $(function(){
 	//获取首页面
 	getFirstPages(projectId,versionId,pageFlowDirId);
 	function getFirstPages(projectId,versionId,pageFlowDirId){
+		console.log('getFirstPages()');
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/page.json",
@@ -161,6 +162,7 @@ $(function(){
 	//getOtherPages(projectId,versionId,pageId);
 	//获取页面流具体页面
 	function getOtherPages(projectId,versionId,pageId){
+		console.log('getOtherPages()');
 		$.ajax({
 			type:"GET",
 			url:$url1+"/bi/report/v1/page.json",
@@ -413,6 +415,7 @@ $(function(){
 	 
 	
 	function savePage(pageId){
+		console.log('savePage()');
 		$.ajax({
 			type:'PUT',
             url:$url1+"/bi/report/v1/page.json?projectId="+projectId+"&pageId="+pageId+"&isIndex="+isIndex+"&versionId="+versionId,

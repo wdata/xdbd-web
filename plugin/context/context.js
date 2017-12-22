@@ -100,7 +100,6 @@ var context = context || (function () {
 			$('body').append($menu);
 			e.preventDefault();
 			e.stopPropagation();
-			clickEle = $(this);//记录当前点击的element
 			$('.dropdown-context:not(.dropdown-context-sub)').hide();
 
 			$dd = $('#dropdown-' + id);
