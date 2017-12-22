@@ -134,7 +134,7 @@ $(function(){
 				"menuType":menuType
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		var data;
               		var html = "";
@@ -303,7 +303,7 @@ $(function(){
 				"updateUser":updateUser
             },
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
@@ -340,7 +340,7 @@ $(function(){
 				"updateUser":updateUser
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
@@ -461,14 +461,14 @@ $(function(){
 	//添加
 	$(".le-add").click(function(){
 		layer.closeAll();
-		console.log(topMenuId);
+		// console.log(topMenuId);
 		var pId = "";
 		if(topMenuId){
 			pId = topMenuId;
 		}else{
 			pId = reportMenuId;
 		}
-		console.log(pId);
+		// console.log(pId);
 		var index = layer.open({
 	      type: 1,
 	      btn: ['确定', '取消'],
@@ -537,7 +537,7 @@ $(function(){
 				"parentId":pId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
                 	findLeftMenu(projectId,versionId,sessionStorage.getItem("tId"));//topMenuId
               		layer.msg(res.message, {icon: 6});
@@ -564,15 +564,24 @@ $(function(){
 				"reportMenuId":reportMenuId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		zNodes = res.data===null?[]:res.data;
-          			$.fn.zTree.init($("#match-tree"), setting, zNodes);
-          			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
-          			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
-          			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
-          			$.fn.zTree.getZTreeObj("match-tree").expandAll(true);
-          			$.fn.zTree.getZTreeObj("link-tree").expandAll(true);
+              		const matchZtree = $("#match-tree");
+                    const linkZtree = $("#link-tree");
+                    const sidebarZtree = $("#sidebar-tree");
+              		if(matchZtree.length >= 1){
+                        $.fn.zTree.init(matchZtree, setting, zNodes);
+                        $.fn.zTree.getZTreeObj("match-tree").expandAll(true);
+					}
+					if(linkZtree.length >= 1){
+                        $.fn.zTree.init(linkZtree, setting1, zNodes);
+                        $.fn.zTree.getZTreeObj("link-tree").expandAll(true);
+					}
+					if(sidebarZtree.length >= 1){
+                        $.fn.zTree.init(sidebarZtree, setting2, zNodes);
+                        $.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+					}
 	            }
 			},
 			error:function(err){
@@ -706,8 +715,8 @@ $(function(){
 		var pageId = curDom[0].pageId;
 			reportMenuId = curDom[0].reportMenuId;
 			topMenuId = "";//设置为空,则添加子菜单
-			console.log('1'+reportMenuId);
-			console.log('2'+topMenuId);
+			// console.log('1'+reportMenuId);
+			// console.log('2'+topMenuId);
 /*		var menuName = '';
 			layer.closeAll();
 		var index = layer.open({
@@ -774,7 +783,7 @@ $(function(){
 		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
 		var curDom = zTree.getSelectedNodes();
 		pageId = curDom[0].pageId;
-		console.log(pageId);
+		// console.log(pageId);
 		if(pageId != null){//执行画图
 			adce(pageId)
 		}else{//提醒未设置链接
@@ -798,7 +807,7 @@ $(function(){
 		
 		var aObj = $("#" + treeNode.tId + IDMark_A);
 		if(treeId==="link-tree"){
-			console.log(treeNode.pageId);
+			// console.log(treeNode.pageId);
 			var editStr = `<a id="${treeNode.reportMenuId}" pageId="${treeNode.pageId}"  class="page-link-btn">${treeNode.pageId===null||treeNode.pageId===""?"创建链接":"已创建链接"}</a>`;
 			aObj.append(editStr);
 		}
@@ -895,7 +904,7 @@ $(function(){
 		var file = $(this)[0].files[0];
 		let	filterType=/(?:jpeg|jpg|png|bmp)$/i, /*图片上传类型*/
 			maxSize=1*1024*1024;   /*图片上传的大小最大值*/
-		console.log(file);
+		// console.log(file);
 		if(!filterType.test(file.type)){
 			layer.msg("请上传图片文件!",{icon:0});
 			return false;
@@ -920,7 +929,7 @@ $(function(){
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			success:function(res){
-				console.log(res);
+				// console.log(res);
 				if(res.code===0){
 					$(".m-uploadimg>img").attr("src",$url1+res.data);
 					$(".mn-logobox>img").attr("src",$url1+res.data);
@@ -1026,7 +1035,7 @@ $(function(){
 				"versionId":versionId
 			}),
 			success:function(res){
-				console.log(res.data);
+				// console.log(res.data);
               	if(res.code===0){
               		zNodes = res.data;
               		if(zNodes!==null){
@@ -1129,7 +1138,7 @@ $(function(){
 				"versionId":versionId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		var data = res.data;
 	            }
@@ -1154,7 +1163,7 @@ $(function(){
 				"versionId":versionId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
 				if(res.code===0){
 					var data = res.data;
 						zNodes = data;
@@ -1211,7 +1220,7 @@ $(function(){
                             $(".mn-logobox>img").attr("src","../images/c_img.png");
 							// sessionStorage.setItem("tempLogo","");
 						}
-						console.log(data);
+						// console.log(data);
 						if(navigationText!==undefined&&navigationText!==null){
 							$(".mn-headtxt").text(navigationText);
 							sessionStorage.setItem("tempTxt",navigationText);
@@ -1301,8 +1310,8 @@ $(function(){
 	})
 
 	//add topMenu scroll[length:6]
-    var ull = document.getElementById("setAllTop");
-    var lii = ull.getElementsByTagName("li");
+    // var ull = document.getElementById("setAllTop");
+    // var lii = ull.getElementsByTagName("li");
     var oZuo = document.querySelector(".zuo1");
     var oYou = document.querySelector(".you1");
     oZuo.onclick = function () {
@@ -1369,7 +1378,7 @@ $(function(){
 	            }
 	        },
 	        error:function(res){
-	            // console.log(res);
+	            console.log(res);
 	        }
 	    });
 	}
