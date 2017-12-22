@@ -88,6 +88,7 @@ var DataIndexes = {
             return
         }
         $(ele).html("");  // 删除之前的图形
+        $(ele).siblings(".prompt").hide();
         $.ajax({
             type:"post",
             url:$url1 + "/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",
@@ -98,7 +99,6 @@ var DataIndexes = {
             success:function(data){
                 if(data.code === 0){
                     if(data.data){
-                        console.log(JSON.stringify(data.data));
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
                     }else{
@@ -197,8 +197,6 @@ var DataIndexes = {
                 // chart_table(id,table_date);
                 break;
         }
-
-        $(ele).siblings(".prompt").hide();
     }
 };
 
