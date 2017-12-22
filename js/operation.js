@@ -703,7 +703,7 @@ let obtain = {
                         }
                     }else if(surroundings === "test" || surroundings === "prod"){
                         if(data.data.htmlJson){
-                            obtain.generate(data.data);
+                            DataIndexes.generate(data.data,$(".generateEditBi"));
                         }
                     }
 
@@ -713,30 +713,6 @@ let obtain = {
                 // console.log(res);
             }
         })
-    },
-    // 为测试环境
-    generate:function(data){
-        let html = '';
-        $.each(data.htmlJson.controls,function(index,val){
-            let text = '';            // html
-            const dataType = val.customData.dataType  // 类型
-                  ,style =  val.style; // 宽、高
-            // 判断图形、表格、文本、图片、按钮
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                text = val.customData.controls.html;
-            }else if(dataType === "table" || dataType === "chart"){
-                // 将数据存入检索数据中
-                const chart_date = {
-                    'cid':val.cid,
-                    "type":val.type,
-                    "queryJson":val.queryJson,
-                };
-                DataIndexes.inAjax(chart_date,val.cid);
-            }
-            html += '<div linkPageId = "'+ val.linkPageId +'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
-        });
-        $(".generateEditBi").empty().append(html);
     },
     // 为开发环境
     reduction:function(data){
@@ -754,6 +730,7 @@ let obtain = {
                 const controls = val.customData.controls;
                 const dataType = val.customData.dataType;
                 let textCon = "";
+                let chart_date = null;
 
                 id_ = val.cid; // 拖拽必须修改id_
 
@@ -775,13 +752,11 @@ let obtain = {
                           `;
 
                         // 将数据存入检索数据中
-                        const chart_date = {
+                        chart_date = {
                             'cid':val.cid,
                             "type":val.type,
                             "queryJson":val.queryJson,
                         };
-                        DataIndexes.inAjax(chart_date,val.cid);
-                        index_arr.push(chart_date);
 
                         break;
                     case "table":
@@ -811,11 +786,16 @@ let obtain = {
                           `;
                         break;
                 }
+
                 number++; // ID不重复！
                 eleLevel++;
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
+                if(chart_date){
+                    DataIndexes.inAjax(chart_date,val.cid);
+                    index_arr.push(chart_date);
+                }
             });
             // 拖拽初始化！
             new ZResize({
