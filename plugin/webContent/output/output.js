@@ -12,8 +12,6 @@ $(function(){
   bind_click_extractLessen();
   setVal();
 
-  $(".stepName").val(etlName);
-
   function initFromTable(){
     $.each(demo.exportData().lines,function(){
         if(this.to==this_webComponentId){
@@ -24,6 +22,7 @@ $(function(){
     if(fromTable!=null && fromTable!=''){
       var fields = fn_get_fields_by_fromTable(fromTable);
       var optionsHtml = "";
+      aleat(JSON.stringify(fields))
       $.each(fields,function(){
         optionsHtml += "<option>"+this+"</option>";
       });
@@ -49,6 +48,8 @@ $(function(){
       fn_set_stepName(etlName);
       fn_set_extractFields(attValue.extractFields);
       fn_set_sqlOut(actionComp.sqlOut);
+    } else {
+      $(".stepName").val(etlName);
     }
   }
 

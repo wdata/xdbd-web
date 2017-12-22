@@ -1804,7 +1804,7 @@ div.f-addbtn-box-auto li{
 	border-top: none;
 }
 .op-box .title-box {
-	height: 36px;
+	height: 70px;
 	line-height: 36px;
 	border-bottom: 1px solid #CCCCCC;
 	text-align: center;
@@ -2406,4 +2406,86 @@ div.ztree {
 body .biTips.layui-layer .layui-layer-content{
 	color: #6B6B6B;
 	padding: 0 20px;
+}
+/* 新增加的文本 */
+.set-text-scroll>span{
+	display: inline-block;
+	float: left;
+}
+.set-text-scroll>div>label{
+	float:left;
+	line-height: 26px;
+}
+.set-text-scroll>div>span.radio_btn{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border: 1px solid #ccc;
+	margin: 4px 0 0 16px;
+}
+.set-text-img{
+	clear: both;
+	height: 32px;
+}
+.set-text-img>div{
+	display: inline-block;
+}
+.set-text-border>div{
+	display: inline-block;
+}
+.set-text-border>div.border-wire,.set-text-border>div.border-size{
+	width: 70px;
+	margin-left: 63px;
+}
+.set-text-border>div.border-wire>select,.set-text-border>div.border-size>select{
+	width: 100%;
+	line-height: 14px;
+}
+.set-text-radius>div.radius-size{
+	display: inline-block;
+	width: 82px;
+}
+.set-text-radius>div.radius-size>input{
+	height: 28px;
+	box-sizing: border-box;
+	padding: 5px;
+	width: 100%;
+	font-size: 12px;
+	border: 1px solid #ccc;
+}
+/* 新增表格 */
+.tab_title{
+	border: 1px solid #ccc;
+	background: #eee;
+}
+.tab_title>label{
+	display: inline-block;
+	margin-left: 11px;
+}
+.tab_title>.tab_show{
+	display: inline-block;
+	float: right;
+	margin-right: 17px;
+}
+.tab_tit>.tab_bar>input{
+	display: inline-block;
+	width: 159px;
+	margin: 7px 11px; 
+}
+.tab_head>h4{
+	border: 1px solid #ccc;
+	padding: 3px;
+	margin: 7px 0;
+	background: #eee;
+}
+/* 新增图表 */
+.tab_menu>li{
+	float: left;
+	width: 50%;
+	height: 30px;
+	display: inline-block;
+	line-height: 30px;
+}
+.tab_menu>li.on{
+	background: #578fe6;
 }

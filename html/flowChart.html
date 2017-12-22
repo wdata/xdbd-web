@@ -159,6 +159,7 @@
 		var this_new = true;
 		var this_webComponentId;
 		var this_actionCompType;
+		var this_filed = {};
 		var $url = '../xdbd-etl'; ///xdbd-etl
 
 		if (this_onenv == 'dev') {
@@ -411,7 +412,7 @@
 		function fn_get_actionComp_by_webComponentId(webComponentId) {
 			var actionComp;
 			$.each(actionComps, function () {
-				if (this.webComponentId == webComponentId) {
+				if (this.webComponentId === webComponentId) {
 					actionComp = this;
 					return true;
 				}
@@ -425,7 +426,8 @@
 			$.each(actionComps, function () {
 				if (this.tableOut == fromTable || this.webComponentId == webCompId) {
 					console.log(this)
-					fieldOut = this.fieldOut;
+					// fieldOut = this.fieldOut;
+					fieldOut = this.attValue;
 					return true;
 				}
 			});
@@ -461,8 +463,8 @@
 				data: JSON.stringify(parameter),
 				success: function (data) {
 					var data = data.data;
-					//console.log(data);
-					            //alert(JSON.stringify(data))
+					console.log(data);
+					alert(JSON.stringify(data))
 					$.each(data, function () {
 						tables[this.tableName] = this;
 					});
@@ -612,6 +614,7 @@
 				data: JSON.stringify(parameter),
 				success: function (data) {
 					actionComps = data.data;
+					console.log(actionComps)
 				}
 			});
 		}
