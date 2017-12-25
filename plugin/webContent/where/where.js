@@ -6,11 +6,11 @@
 $(function(){
   var whereTable;
   initFromTable();
+  setVal();
   bind_click_generateSql();
   bind_click_saveActionComp();
   bind_click_onAdd();
   bind_click_onLessen();
-  setVal();
   $(".stepName").val(etlName);
 
   function bind_click_saveActionComp(){
@@ -24,14 +24,20 @@ $(function(){
 
   function initFromTable(){
     $.each(demo.exportData().lines,function(){
+      console.log(this)
+      console.log(this.to)
+      console.log(this_webComponentId)
       if(this.to==this_webComponentId){
         var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-        whereTable = actionComp.tableOut;
+        console.log(actionComp)
+        whereTable = actionComp.attValue;
       }
     });
+    console.log(whereTable)
     if(whereTable!=null && whereTable!=''){
       var fields = fn_get_fields_by_fromTable(whereTable);
       var optionsHtml = "";
+      console.log(fields)
       $.each(fields,function(){
         optionsHtml += "<option>"+this+"</option>";
       });
