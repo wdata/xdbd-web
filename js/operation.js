@@ -583,25 +583,21 @@ let operating = {
             const id = dataType + uuid(8,16);
             const left = event.pageX - parseFloat(clearY.width()) - parseFloat(clearY.css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat(editBox.css("margin-top"));
-            let chart_date = null;
 
-            let z = '';
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                z = customData.html;
-            }else if(dataType === "table" || dataType === "chart"){
-                // 绘制图形
-                chart_date = {
+            let text = DataIndexes.text(customData.controls,customData.dataType);
+            id_ = copy_data.cid; // 拖拽必须修改id_
+
+            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ text +'</div>';
+            editBox.append(html);
+            if(customData.dataType === "chart"){
+                // 将数据存入检索数据中
+                let chart_date = {
                     'cid':copy_data.cid,
                     "type":copy_data.type,
                     "queryJson":copy_data.queryJson,
                 };
-            }
-
-            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
-            editBox.append(html);
-            if(chart_date){
-                DataIndexes.inAjax(chart_date,id);
+                DataIndexes.inAjax(chart_date,copy_data.cid);
+                index_arr.push(chart_date);
             }
 
 
@@ -727,76 +723,22 @@ let obtain = {
             // 遍历数据,生成图形
             let html = '';
             $.each(data.htmlJson.controls,function(index,val){
-                // 判断图形、表格、文本、图片、按钮
-                let text = '';
-                // 如果是文本和图片，则复制内容不同
+                let text = DataIndexes.text(val.customData.controls,val.customData.dataType);
                 const style =  val.style;
-                const controls = val.customData.controls;
-                const dataType = val.customData.dataType;
-                let textCon = "";
-                let chart_date = null;
-
                 id_ = val.cid; // 拖拽必须修改id_
-
-
-                switch(dataType){
-                    case "chart":
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                    <h2 class="chartTitle">未命名报表</h2>
-                                    <div class="resize-content">
-                                        <div class="legend"></div>
-                                        <div class="resize-chart"></div>
-                                        <div class="prompt"></div>
-                                    </div>
-                                </div>
-                            </div>
-                          `;
-
-                        // 将数据存入检索数据中
-                        chart_date = {
-                            'cid':val.cid,
-                            "type":val.type,
-                            "queryJson":val.queryJson,
-                        };
-
-                        break;
-                    case "table":
-                        break;
-                    case "text":
-                        const contenteditable = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true">${ content }</div></div>'
-                        textCon = controls?controls.html?controls.html:contenteditable:contenteditable;
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                   ${ textCon }
-                                </div>
-                            </div>
-                          `;
-                        break;
-                    case "button":
-                        const button = '<div class="content-button"><button></button>${ content }</div>'
-                        textCon = controls?controls.html?controls.html:button:button;
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                    ${ textCon }
-                                </div>
-                            </div>
-                          `;
-                        break;
-                }
 
                 number++; // ID不重复！
                 eleLevel++;
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
-                if(chart_date){
+                if(val.customData.dataType === "chart"){
+                    // 将数据存入检索数据中
+                    let chart_date = {
+                        'cid':val.cid,
+                        "type":val.type,
+                        "queryJson":val.queryJson,
+                    };
                     DataIndexes.inAjax(chart_date,val.cid);
                     index_arr.push(chart_date);
                 }
@@ -2012,6 +1954,19 @@ $(function(){
                           `;
                     break;
                 case "table":
+                    html = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <h2 class="chartTitle">未命名报表</h2>
+                                    <div class="resize-content">
+                                        <div class="legend"></div>
+                                        <div class="resize-chart"></div>
+                                        <div class="prompt"></div>
+                                    </div>
+                                </div>
+                            </div>
+                          `;
                     break;
                 case "button":
                     html = `<!--定位层-->
@@ -2038,7 +1993,7 @@ $(function(){
 
             let div = `<div data-type="${ cahrt_type }" type="${ type }" style="z-index:${ number }; left:${ left }px;top:${ top }px;" id = "${ editID }" class="resize-item">
                             ${ html }
-                        </div>`;
+                       </div>`;
 
             $(this).append(div);
 
@@ -2254,12 +2209,7 @@ $(function(){
             }
         ]}
     ]);
-    context.attach('.edit-libs-box', [
-        {text: '粘贴',action: function(e){
-            e.preventDefault();
-            operating.paste();   // 粘贴函数；
-        }}
-    ]);
+
     let cgt = {
         "name":{
             text: '修改显示名称',
@@ -2369,6 +2319,12 @@ $(function(){
             context.attach('.pills ul li[discon=1]', [{header: '属性'},cgt.name,cgt.agm,cgt.filter,cgt.nullVal,cgt.remove]);
             context.attach('.datas-pills ul li[discon=0]', [{header: '属性'},cgt.name,cgt.filter,cgt.remove]);
             context.attach('.datas-pills ul li[discon=1]', [{header: '属性'},cgt.name,cgt.filter,cgt.remove]);
+            context.attach('.chart-main-box .edit-libs-box', [
+                {text: '粘贴',action: function(e){
+                    e.preventDefault();
+                    operating.paste();   // 粘贴函数；
+                }}
+            ]);
         },
         agmClick:function(){
             $(document).on("mouseover",".dropdown-menu .agm-default",function(){

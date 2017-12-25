@@ -13,5 +13,6 @@ username = urlParams("username")
 userId = urlParams("userId")
 
 $(function(){
-		adce(dirId);
-})
+    previewBur = false;
+    pageData(dirId);
+});

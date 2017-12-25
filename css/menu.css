@@ -621,7 +621,7 @@ ul.ztree {
 	overflow-x: hidden;
 }
 .ztree li {line-height:30px;}
-.ztree li a {display:block;height:30px;padding-top: 0px;}
+.ztree li a {display:block;height:30px;padding-top: 0px; padding-left: 10%;}
 .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
 .ztree li a span.button.switch {visibility:hidden}
 .ztree.showIcon li a span.button.switch {visibility:visible}
