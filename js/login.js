@@ -1,4 +1,4 @@
-var appkey = 'xddb';//应用的appkey
+var appkey = 'xdbd';//应用的appkey
 var cas_sever = 'http://192.168.1.15:8445';
 sessionStorage.setItem("ByuserName","admin");
 sessionStorage.setItem("userId","2060");
@@ -40,7 +40,8 @@ function logOut(){//登出
 	var versionId = localStorage.getItem("versionId");
 	var dirId = localStorage.getItem("directoryId");
 	var createUser = localStorage.getItem("createUser");
-	var updateUser = localStorage.getItem("updateUser");
+	//var updateUser = localStorage.getItem("updateUser");
+	var updateUser = sessionStorage.getItem("userId");
 	var username = sessionStorage.getItem("ByuserName"),
 		userId = sessionStorage.getItem("userId");
 
