@@ -87,6 +87,18 @@ var DataIndexes = {
                             </div>
                           `;
                 break;
+            case "image":
+                const image = '';
+                textCon = controls?controls.html?controls.html:image:image;
+                text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    ${ textCon }
+                                </div>
+                            </div>
+                          `;
+                break;
         }
         return text;
     },

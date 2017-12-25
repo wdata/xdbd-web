@@ -2215,6 +2215,7 @@ div.f-addbtn-box-auto li{
 	text-align: left;
 	padding: 20px 20px 10px;
 	position: relative;
+	display: none;
 }
 .resize-item .positioning .inform .resize-content{
 	position: absolute;
