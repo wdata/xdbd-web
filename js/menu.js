@@ -1359,7 +1359,6 @@ $(function(){
      * */
     
 	function pageData(pageId){
-        console.log(pageId);
 	    $.ajax({
 	        type:"get",
 	        url:"/xdbd-bi/bi/report/v1/page.json",
