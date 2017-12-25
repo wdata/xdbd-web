@@ -45,6 +45,15 @@ $(function(){
 	 */
 	
 	userRight();
+	/*//延迟调用：
+	var winTimer = window.setInterval(function(){
+		if(sessionStorage.getItem("userId")){
+			userRight();
+			window.clearInterval(winTimer);
+			winTimer = null;
+		}
+	},20);*/
+
 	let onCurEnv = sessionStorage.setItem("onEnv","");
 	function userRight(){
 		$.ajax({
@@ -610,7 +619,7 @@ $(function(){
             selectedColor:"#fff",
             data: treeviewData,
             selectedBackColor: "#578fe6",
-            onNodeSelected:function(event,node){
+            onNodeSelected:function(event,node){console.log(node);
 				getRootNode($(this),node);//寻找根节点
                 curNodeId = node.nodeId;
                 sessionStorage.setItem("curNodeId",curNodeId);

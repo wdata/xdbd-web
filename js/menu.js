@@ -1201,6 +1201,7 @@ $(function(){
 			success:function(res){
 				if(res.code===0&&res.data.length){
 					var data = res.data[0];
+					//console.log(data);
 					var logo,
 						leftHeight = data.leftHeight,
 						leftWidth = data.leftWidth,
