@@ -4,7 +4,7 @@
 //增加字段
 $(function(){
 	initFromTable();
-	// init_autosave();
+	setVal();
 	bind_change_fromTable();
 	bind_click_add();
 	bind_click_loadParguet();
@@ -12,10 +12,7 @@ $(function(){
 	bind_click_saveActionComp();
 	bind_click_lessen();
 	$('.fromTable').trigger('change');
-	// console.log(etlName)
-	// $('.stepName').val(etlName);
-	// console.log($('.stepName').val())
-	setVal();
+	
 
 	function bind_click_saveActionComp(){
 		$('.saveActionComp').click(function(){
@@ -69,28 +66,30 @@ $(function(){
 	function bind_change_fromTable(){
 		$('.fromTable').change(function(){
 			var tbName = $(this).val();
-			var extractFieldHtml = $('.extractField').prop('outerHTML');
-			$('.extractField').remove();
+			// var extractFieldHtml = $('.extractField').prop('outerHTML');
+			// $('.extractField').remove();
 			var fieldList = tables[tbName].fieldList;
 			console.log(fieldList)
+			var extractField = $('.extractField:last');
+			//var checkField = this+"";
+			// $('.extractFields').append(extractFieldHtml);
+			var optionHtml='';
 			$.each(fieldList,function(){
-				var checkField = this+"";
-				$('.extractFields').append(extractFieldHtml);
-				var extractField = $('.extractField:last');
-				var optionHtml='';
+				
 				// console.log(fieldList)
 				$.each(fieldList,function(){
 					optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
 				});
-				extractField.find('.fields').html(optionHtml);
-				extractField.find('.fields').val(checkField);
 			});
+			//alert(optionHtml);
+			extractField.find('.fields').html(optionHtml);
+			//extractField.find('.fields').val(checkField);
 		});
 	}
 
 	function initFromTable(){
 		var optionsHtml = "";
-		alert(JSON.stringify(tables))
+		// alert(JSON.stringify(tables))
 		$.each(tables,function(){
 		optionsHtml += "<option value="+this.tableName+" selected>"+this.remark+"</option>";
 		});
@@ -127,9 +126,9 @@ $(function(){
 		if(obj.length<1){
 		return;
 		}
-		console.log(obj)
+		console.log(obj);//alert(JSON.stringify(obj))
 		$.each(obj,function(){
-			var checkField = this+"";
+			var checkField = this.field;
 			$('.extractFields').append(extractFieldHtml);
 			var extractField = $('.extractField:last');
 			var optionHtml='';
@@ -138,6 +137,7 @@ $(function(){
 			});
 			extractField.find('.fields').html(optionHtml);
 			extractField.find('.fields').val(checkField);
+
 		});
 
 	}
