@@ -83,8 +83,8 @@ $(function(){
 
                         //滚动条
                         console.log('+++++');
-                        $("#dimensionBox").mCustomScrollbar({theme:"dark"});
-                        $(".metric-box").mCustomScrollbar({theme:"dark"});
+                        $("#dimensionBox").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
+                        $(".metric-box").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
 
 
 
