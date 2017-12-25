@@ -581,6 +581,10 @@ $(function(){
 					if(sidebarZtree.length >= 1){
                         $.fn.zTree.init(sidebarZtree, setting2, zNodes);
                         $.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+                        if(zNodes[0].pageId && previewBur){
+                            pageData(zNodes[0].pageId);
+                            dirId = zNodes[0].pageId;
+                        }
 					}
 	            }
 			},
@@ -785,7 +789,8 @@ $(function(){
 		pageId = curDom[0].pageId;
 		// console.log(pageId);
 		if(pageId != null){//执行画图
-			adce(pageId)
+            dirId = curDom[0].pageId;
+			pageData(pageId)
 		}else{//提醒未设置链接
 			$(".mn-htmlmain").empty();
 		}
@@ -1355,8 +1360,7 @@ $(function(){
      * 根据传递的参数，获取页面数据
      * */
     
-	function adce(pageId){
-//		console.log(pageId + "22222222222222222222222")
+	function pageData(pageId){
 	    $.ajax({
 	        type:"get",
 	        url:"/xdbd-bi/bi/report/v1/page.json",
