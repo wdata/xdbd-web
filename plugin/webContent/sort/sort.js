@@ -24,8 +24,8 @@ $(function(){
         var fields = fn_get_fields_by_fromTable($(this).val());
         console.log(fields)
         var optionsHtml = "";
-        $.each(fields,function(){
-          optionsHtml += "<option>"+this+"</option>";
+        $.each(fields.extractFields,function(){
+          optionsHtml += "<option value="+this.field+">"+this.remark+"</option>";
         });
         $('.sortField').find('.field').html(optionsHtml);
       });

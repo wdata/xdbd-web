@@ -503,15 +503,15 @@
 		}
 
 		function fn_set_extractFields(extractFields) {
-			// var extractFieldHtml = $('.extractField').prop('outerHTML');
-			// $('.extractField').remove();
+			var extractFieldHtml = $('.extractField').prop('outerHTML');
+			$('.extractField').remove();
 			$.each(extractFields, function () {
 				var table = this.table;
 				var field = this.field;
 				var alias = this.alias;
 				var fn = this.fn;
 				//alert(extractFieldHtml)
-				// $('.extractFields').append(extractFieldHtml);
+				$('.extractFields').append(extractFieldHtml);
 
 				var extractField = $('.extractField:last');
 				extractField.find('.table').val(table);
