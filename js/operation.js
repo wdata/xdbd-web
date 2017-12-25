@@ -584,29 +584,18 @@ let operating = {
             const left = event.pageX - parseFloat(clearY.width()) - parseFloat(clearY.css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat(editBox.css("margin-top"));
 
-            let z = '';
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                z = customData.html;
-            }else if(dataType === "table" || dataType === "chart"){
-                // 绘制图形
-                const chart_date = {
-                    'cid':copy_data.cid,
-                    "type":copy_data.type,
-                    "queryJson":copy_data.queryJson,
-                };
-                DataIndexes.inAjax(chart_date,id);
-            }
+            let text = DataIndexes.text(customData.controls,customData.dataType);
+            id_ = copy_data.cid; // 拖拽必须修改id_
 
-            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
+            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ text +'</div>';
             editBox.append(html);
 
-
             // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
-            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
+            if(copy_data.queryJson && (dataType === "chart" || dataType === "table" )){
                 const z = JSON.parse(JSON.stringify(copy_data));
                 z.cid = id;
                 save_arr.push(z);
+                DataIndexes.inAjax(z,copy_data.cid);
             }
             refresh.storage(dataType,id); // 判断不同的TYPE执行不同的采取函数
             // 拖拽初始化！
@@ -723,76 +712,22 @@ let obtain = {
             // 遍历数据,生成图形
             let html = '';
             $.each(data.htmlJson.controls,function(index,val){
-                // 判断图形、表格、文本、图片、按钮
-                let text = '';
-                // 如果是文本和图片，则复制内容不同
+                let text = DataIndexes.text(val.customData.controls,val.customData.dataType);
                 const style =  val.style;
-                const controls = val.customData.controls;
-                const dataType = val.customData.dataType;
-                let textCon = "";
-                let chart_date = null;
-
                 id_ = val.cid; // 拖拽必须修改id_
-
-
-                switch(dataType){
-                    case "chart":
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                    <h2 class="chartTitle">未命名报表</h2>
-                                    <div class="resize-content">
-                                        <div class="legend"></div>
-                                        <div class="resize-chart"></div>
-                                        <div class="prompt"></div>
-                                    </div>
-                                </div>
-                            </div>
-                          `;
-
-                        // 将数据存入检索数据中
-                        chart_date = {
-                            'cid':val.cid,
-                            "type":val.type,
-                            "queryJson":val.queryJson,
-                        };
-
-                        break;
-                    case "table":
-                        break;
-                    case "text":
-                        const contenteditable = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true">${ content }</div></div>'
-                        textCon = controls?controls.html?controls.html:contenteditable:contenteditable;
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                   ${ textCon }
-                                </div>
-                            </div>
-                          `;
-                        break;
-                    case "button":
-                        const button = '<div class="content-button"><button></button>${ content }</div>'
-                        textCon = controls?controls.html?controls.html:button:button;
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                    ${ textCon }
-                                </div>
-                            </div>
-                          `;
-                        break;
-                }
 
                 number++; // ID不重复！
                 eleLevel++;
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
-                if(chart_date){
+                if(val.customData.dataType === "chart"){
+                    // 将数据存入检索数据中
+                    let chart_date = {
+                        'cid':val.cid,
+                        "type":val.type,
+                        "queryJson":val.queryJson,
+                    };
                     DataIndexes.inAjax(chart_date,val.cid);
                     index_arr.push(chart_date);
                 }

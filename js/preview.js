@@ -13,5 +13,5 @@ username = urlParams("username")
 userId = urlParams("userId")
 
 $(function(){
-		adce(dirId);
+		pageData(dirId);
 })
