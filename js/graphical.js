@@ -5,14 +5,14 @@ var DataIndexes = {
 
     // 为测试环境
     generate:function(data,storage){
+        storage.empty();
         let html = '';
         $.each(data.htmlJson.controls,function(index,val){
             let text = DataIndexes.text(val.customData.controls,val.customData.dataType);
             const style =  val.style;
-
             html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
-            storage.empty().append(html);
+            storage.append(html);
 
             if(val.customData.dataType === "chart"){
                 // 将数据存入检索数据中
@@ -78,6 +78,18 @@ var DataIndexes = {
             case "button":
                 const button = '<div class="content-button"><button></button>${ content }</div>';
                 textCon = controls?controls.html?controls.html:button:button;
+                text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    ${ textCon }
+                                </div>
+                            </div>
+                          `;
+                break;
+            case "image":
+                const image = '';
+                textCon = controls?controls.html?controls.html:image:image;
                 text = `<!--定位层-->
                             <div class="positioning">
                                 <!--背景样式、边框线、透明度、圆角-->

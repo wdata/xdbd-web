@@ -1833,94 +1833,11 @@ $(function(){
 
     //获取BI Set列表接口
     getBiSet(projectId);
-    function getBiSet(projectId){
-        $.ajax({
-            type:'get',
-            url:$url1 + '/bi/report/v1/biset/list.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "dbType":"0",
-            },
-            success:function(res){
-                if(res.code===0){
-                    if(res.message && res.data.length >0){
-                        let data = res.data,
-                            html = '+',
-                            biSetId = '';
-                        $.each(data,function(i,item){
-                            html += `
-						<option value="${item.biSetName}" biSetId="${item.biSetId}">${item.biSetName}</option>
-              			`;
-                        });
-                        $(".data-source-box select").empty().append(html);
-                        biSetId = $(".data-source-box select option:selected").attr("biSetId");
-                        getBiDataModel(biSetId);
-                    }
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
+
     $(".data-source-box select").change(function(){
         const $biSetId = $(this).find("option:selected").attr("biSetId");
         getBiDataModel($biSetId);
     });
-
-    //获取数据模型接口
-    //getBiDataModel(biSetId);
-    function getBiDataModel(biSetId){
-        $.ajax({
-            type:'get',
-            url:$url1 + '/bi/report/v1/datamodel.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "pageId":dirId,
-                "biSetId":biSetId
-            },
-            success:function(res){
-                if(res.code === 0){
-                    if(res.message){
-                        let data = res.data,
-                            dhtml = '',
-                            mhtml = '';
-
-                        modelId = data.modelId;
-                        //维度
-                        $.each(data.dimensions,function(i,item){
-                            dhtml += `
-             				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="0">${item.fieldAlias}</li>
-             			`;
-                        });
-                        $(".dimension-box .placeholder").empty().append(dhtml);
-                        //度量
-                        $.each(data.measures, function(i,item) {
-                            mhtml += `
-             				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="1">${item.fieldAlias}</li>
-             			`;
-                        });
-                        $(".metric-box .placeholder").empty().append(mhtml);
-                        //设置度量维度可拖拽
-                        $( ".placeholder li").draggable({
-                            // same-resource ul li
-                            appendTo: "body",
-                            helper: "clone"
-                        });
-                    }
-                }
-            },
-            error:function(res){
-                // console.log(1);
-            }
-        });
-    }
 
     //点击图标类型按钮--生成可拖拽缩放的div
     $(".u-btn-class").draggable({
@@ -2398,6 +2315,8 @@ function clear(id){
                     filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
+            const biSetId = item.queryJson.biSetId;
+            getBiSet(projectId,biSetId);
 
             if(item.customData.dataType === "chart"){
                 $(".chart-attr-box .x-pills ul").html(x_param);
@@ -2468,6 +2387,94 @@ function clear(id){
     });
 
 }
+
+function getBiSet(projectId,orgBiSetId){
+    $.ajax({
+        type:'get',
+        url:$url1 + '/bi/report/v1/biset/list.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "dbType":"0",
+        },
+        success:function(res){
+            if(res.code===0){
+                if(res.message && res.data.length >0){
+                    let data = res.data,
+                        html = '+',
+                        biSetId = '';
+                    $.each(data,function(i,item){
+                        html += `<option value="${item.biSetName}" ${ (orgBiSetId && item.biSetId === orgBiSetId)?"selected":"" } biSetId="${item.biSetId}">${item.biSetName}</option>`;
+                    });
+                    $(".data-source-box select").empty().append(html);
+                    biSetId = $(".data-source-box select option:selected").attr("biSetId");
+                    getBiDataModel(biSetId);
+                }
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+
+
+//获取数据模型接口
+//getBiDataModel(biSetId);
+function getBiDataModel(biSetId){
+    $.ajax({
+        type:'get',
+        url:$url1 + '/bi/report/v1/datamodel.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "pageId":dirId,
+            "biSetId":biSetId
+        },
+        success:function(res){
+            if(res.code === 0){
+                if(res.message){
+                    let data = res.data,
+                        dhtml = '',
+                        mhtml = '';
+
+                    modelId = data.modelId;
+                    //维度
+                    $.each(data.dimensions,function(i,item){
+                        dhtml += `
+             				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="0">${item.fieldAlias}</li>
+             			`;
+                    });
+                    $(".dimension-box .placeholder").empty().append(dhtml);
+                    //度量
+                    $.each(data.measures, function(i,item) {
+                        mhtml += `
+             				<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" dataType="${item.dataType}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}" dim_mea="1">${item.fieldAlias}</li>
+             			`;
+                    });
+                    $(".metric-box .placeholder").empty().append(mhtml);
+                    //设置度量维度可拖拽
+                    $( ".placeholder li").draggable({
+                        // same-resource ul li
+                        appendTo: "body",
+                        helper: "clone"
+                    });
+                }
+            }else{
+                $(".dimension-box .placeholder").empty();
+                $(".metric-box .placeholder").empty();
+            }
+        },
+        error:function(res){
+            // console.log(1);
+        }
+    });
+}
+
 
 // 根据现在选中类型，变化
 function eleFocus(){
