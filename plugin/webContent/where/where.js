@@ -24,22 +24,17 @@ $(function(){
 
   function initFromTable(){
     $.each(demo.exportData().lines,function(){
-      console.log(this)
-      console.log(this.to)
-      console.log(this_webComponentId)
       if(this.to==this_webComponentId){
         var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-        console.log(actionComp)
-        whereTable = actionComp.attValue;
+        whereTable = actionComp.fromTable;
       }
     });
     console.log(whereTable)
     if(whereTable!=null && whereTable!=''){
       var fields = fn_get_fields_by_fromTable(whereTable);
       var optionsHtml = "";
-      console.log(fields)
-      $.each(fields,function(){
-        optionsHtml += "<option>"+this+"</option>";
+      $.each(fields.extractFields,function(){
+        optionsHtml += "<option value="+this.field+">"+this.remark+"</option>";
       });
       $('.where').find('.field').html(optionsHtml);
     }

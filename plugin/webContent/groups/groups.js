@@ -23,6 +23,7 @@ $(function(){
     if(grtoupTable!=null && grtoupTable!=''){
       var fields = fn_get_fields_by_fromTable(grtoupTable);
       var optionsHtml = "";
+      console.log(fields)
       $.each(fields,function(){
         optionsHtml += "<option>"+this+"</option>";
       });

@@ -6,12 +6,10 @@ $(function(){
   var fromTable;
   initFromTable();
   bind_click_generateSql();
-
   bind_click_saveActionComp();
   bind_click_extractAdd();
   bind_click_extractLessen();
   setVal();
-
   $(".stepName").val(etlName);
 
   function initFromTable(){
@@ -25,8 +23,8 @@ $(function(){
       var fields = fn_get_fields_by_fromTable(fromTable);
       var optionsHtml = "";
       console.log(fields)
-      $.each(fields,function(){
-        optionsHtml += "<option>"+this+"</option>";
+      $.each(fields.extractFields,function(){
+        optionsHtml += "<option value="+this.field+">"+this.remark+"</option>";
       });
       $('.extractField').find('.field').html(optionsHtml);
     }
@@ -40,6 +38,7 @@ $(function(){
     // }
     $('.saveActionComp').click(function(){
       fn_saveActionComp(getVal());
+      console.log(getVal())
     });
   }
 
@@ -86,10 +85,10 @@ $(function(){
     $(document.body)
       .off('click', '.outputAdd')
       .on('click', '.outputAdd', function () {
-        var outputHtml = $('.outputField').prop('outerHTML');
-        //$('.outputField').remove();
+        var outputHtml = $('.extractField').prop('outerHTML');
+        //$('.extractField').remove();
         // console.log(outputsFieldHtml)
-        $('.outputFields').append(outputHtml);
+        $('.extractFields').append(outputHtml);
       })
   }
 
@@ -97,10 +96,10 @@ $(function(){
     $(document.body)
       .off('click', '.outputLessen')
       .on('click', '.outputLessen', function () {
-        if($('.outputField').length <2) {
+        if($('.extractField').length <2) {
             layer.msg('最后一个提取条件不能删除')
         } else {
-            $(this).parents('.outputField').remove();
+            $(this).parents('.extractField').remove();
         }
       })
   }
