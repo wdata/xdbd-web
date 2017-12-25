@@ -170,6 +170,7 @@ $(function(){
                     if(previewReportMenuId && previewReportMenuId !== "null" && previewReportMenuId !== "undefined"){
                         findLeftMenu(projectId,versionId,previewReportMenuId);
                     }else{
+                        previewReportMenuId = data[0].reportMenuId;
                         findLeftMenu(projectId,versionId,data[0].reportMenuId);
                         $(".mn-menu li:first").addClass("active");
                     }
@@ -598,6 +599,7 @@ $(function(){
 						});
 						if(!previewPageId || previewPageId === "null" || previewPageId === "undefined" || bur){
                             sidebarZtree.find("li a:first").addClass("curSelectedNode positioning");
+                            previewPageId = zNodes[0].pageId;
                             if(zNodes[0].pageId){
                                 pageData(zNodes[0].pageId);
                                 dirId = zNodes[0].pageId;

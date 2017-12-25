@@ -15,7 +15,6 @@ previewReportMenuId =  urlParams("previewReportMenuId");
 previewPageId =  urlParams("previewPageId");
 
 $(function(){
-    previewBur = false;
     if((previewReportMenuId === "null" ||  previewReportMenuId === "undefined" || !previewReportMenuId) || (previewPageId === "null" ||  previewPageId === "undefined" || !previewPageId)){
         $(".mn-sider").hide();
         $(".mn-header").hide();
@@ -24,5 +23,6 @@ $(function(){
             "left":0
         });
         pageData(dirId);
+        previewBur = false;
     }
 });
