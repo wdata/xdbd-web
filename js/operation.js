@@ -1851,9 +1851,7 @@ $(function(){
                             html = '+',
                             biSetId = '';
                         $.each(data,function(i,item){
-                            html += `
-						<option value="${item.biSetName}" biSetId="${item.biSetId}">${item.biSetName}</option>
-              			`;
+                            html += `<option value="${item.biSetName}" biSetId="${item.biSetId}">${item.biSetName}</option>`;
                         });
                         $(".data-source-box select").empty().append(html);
                         biSetId = $(".data-source-box select option:selected").attr("biSetId");
@@ -1914,6 +1912,9 @@ $(function(){
                             helper: "clone"
                         });
                     }
+                }else{
+                    $(".dimension-box .placeholder").empty();
+                    $(".metric-box .placeholder").empty();
                 }
             },
             error:function(res){
