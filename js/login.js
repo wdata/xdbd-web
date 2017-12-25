@@ -46,6 +46,8 @@ function logOut(){//登出
 		userId = sessionStorage.getItem("userId");
 
 	var previewBur = true;
+	var previewReportMenuId = null;
+	var previewPageId = null;
 
 
 function sysidByusernameAndAppkey(ByuserName){//获取sysid(userId)

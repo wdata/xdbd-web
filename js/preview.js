@@ -6,13 +6,23 @@ var urlParams = function (key) {
 };
 
 
-projectId = urlParams("projectId")
-dirId = urlParams("pageId")
-versionId = urlParams("versionId")
-username = urlParams("username")
-userId = urlParams("userId")
+projectId = urlParams("projectId");
+dirId = urlParams("pageId");
+versionId = urlParams("versionId");
+username = urlParams("username");
+userId = urlParams("userId");
+previewReportMenuId =  urlParams("previewReportMenuId");
+previewPageId =  urlParams("previewPageId");
 
 $(function(){
     previewBur = false;
-    pageData(dirId);
+    if((previewReportMenuId === "null" ||  previewReportMenuId === "undefined" || !previewReportMenuId) || (previewPageId === "null" ||  previewPageId === "undefined" || !previewPageId)){
+        $(".mn-sider").hide();
+        $(".mn-header").hide();
+        $(".mn-htmlmain").css({
+            "top":0,
+            "left":0
+        });
+        pageData(dirId);
+    }
 });
