@@ -7,10 +7,10 @@ $(function(){
 	setVal();
 	bind_change_fromTable();
 	bind_click_add();
+	bind_click_lessen();
 	bind_click_loadParguet();
 	bind_click_generateSql();
 	bind_click_saveActionComp();
-	bind_click_lessen();
 	$('.fromTable').trigger('change');
 	
 
