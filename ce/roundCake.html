@@ -85,57 +85,147 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         //转换数据
-        var pieData = d3.layout.pie() //创建饼状图
-            .value(function (d) {
-                return d[angleAll.field];
-            })
-//            .sort(function(d){
-//                return 0;
-//            })
-            .startAngle([0])
-            (total.reoords); //值访问器
-        console.log(total.reoords)
+        const pieData = d3.layout.pie() //创建饼状图
+            .value(function (d) {   return d[angleAll.field];   })
+            .sort(null)
+            .startAngle([0]); //值访问器
 
         //绘制
-        var outerRadius = d3.min([widthO,height0])/2;
-        var innerRadius = 0; //内半径和外半径
+        const outerRadius = d3.min([widthO,height0])/2;
+        const innerRadius = 0; //内半径和外半径
+
         //创建弧生成器
-        var arc = d3.svg.arc()
+        const arc = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(outerRadius - 3);
+
+        // 突出显示弧线生成器
+        const arcHig = d3.svg.arc()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
 
-        console.log();
+
+
+        const div = d3.select(id).append("div")
+            .attr("class","message");
+
         //添加对应数目的弧组
-        var arcs = svg.selectAll("g")
-            .data(pieData)
+        const arcs = svg.selectAll("g")
+            .data(pieData(total.reoords))
             .enter()
             .append("g")
             .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")");
         //添加弧的路径元素
         arcs.append("path")
+            .attr("class","areaBlock")
+            .attr("status",0)
+            .attr("data-id",function (d){ if(colourAll){ return d.data[colourAll.field] } })
             .style("fill",function(d){ if(colourAll){ return o(d.data[colourAll.field]); }else{return defaultColor;}})
-            .attr("d", function (d) {
-//                console.log(arc(d));
-                return arc(d); //使用弧生成器获取路径
+            .attr("d", function (d) {   return arc(d);  })
+            .on({
+                "mouseover":function(d){
+
+                    /*
+                    *   给每一个areaBlock元素添加一个状态；
+                    *   状态0：有移入，移出效果；
+                    *   状态1：没有移入和移出效果；
+                    * */
+
+
+                    const tx = parseFloat(d3.event.pageX - parseInt($(elemt).css("left")));
+                    const ty = parseFloat(d3.event.pageY - parseInt($(elemt).css("top")));
+                    div.style("display","block")
+                        .style("top",(ty - margin.top - margin.bottom) + "px")
+                        .style("left",(tx - margin.left - margin.right + 40) + "px")
+                        .text("");
+
+                    if(colourAll){  div.append("text").text( colourAll.fieldAlias + "：" + d.data[colourAll.field]);  }
+                    if(sizeAll){    div.append("text").text( sizeAll.fieldAlias + "：" + d.data[sizeAll.field]);  }
+                    if(detailAll){  div.append("text").text( detailAll.fieldAlias + "：" + d.data[detailAll.field]);  }
+                    if(angleAll){   div.append("text").text( angleAll.fieldAlias + "：" + d.data[angleAll.field]);    }
+                    if(labelAll){   div.append("text").text( labelAll.fieldAlias + "：" + d.data[labelAll.field]);    }
+
+                    if(d3.select(this).attr("status") === "0"){
+                        clickEffect(this,true,d);
+                    }
+                },
+                "mousemove":function(){
+                    const tx = parseFloat(d3.event.pageX - parseInt($(elemt).css("left")));
+                    const ty = parseFloat(d3.event.pageY - parseInt($(elemt).css("top")));
+                    div.style("top",(ty - margin.top - margin.bottom) + "px")
+                        .style("left",(tx - margin.left - margin.right + 40) + "px")
+                },
+                "mouseout":function(d){
+                    if(d3.select(this).attr("status") === "0"){
+                        clickEffect(this,false,d);
+                    }
+                    div.style("display","none");
+                },
+                "click":function(d){
+                    const le = $(".areaBlock[status=1]").length > 1;
+
+                    if(d3.select(this).attr("status") === "0"){
+                        clickEffect(this,true,d);
+                        d3.select(this).attr("status",1);
+
+                        $(this).attr("class","areaBlock");
+                        $(".areaBlock[status=0]").attr("class","areaBlock fill-opacity");
+                        console.log(le);
+                        if(le){
+                            $(this).attr("class","areaBlock fill-opacity");
+                        }else{
+                            $(this).attr("class","areaBlock");
+                        }
+                    }else{
+                        clickEffect(this,false,d);
+                        d3.select(this).attr("status",0);
+                        if(le){
+                            clickEffect(this,false,d);
+                        }else{
+
+                        }
+                    }
+                }
             });
+
+        // 添加点击效果
+        function clickEffect(self,bur,d){
+            // 如果不是JQ对象，则转化为JQ对象！
+            if(!(self instanceof jQuery)){
+                self = $(self);
+            }
+            if(bur || bur === "true"){
+                self.attr({
+                    "d":arcHig(d),
+                    "transform": "translate(" + arcHig.centroid(d)[0]/20 + "," + arcHig.centroid(d)[1]/20 + ")",
+                    "stroke":"#000"
+                })
+            }else{
+                self.attr({
+                    "d":arc(d),
+                    "transform": "translate(0,0)",
+                    "stroke":"none"
+                });
+            }
+        }
+
         //添加弧内的文字
-        arcs.append("text")
-            .attr("transform", function (d) {
-                var x = arc.centroid(d)[0] * 1.4; //文字的x坐标
-                var y = arc.centroid(d)[1] * 1.4;
-                return "translate(" + x + "," + y + ")";
-            })
-            .attr("text-anchor", "middle")
-            .text(function (d) {
-//                //计算市场份额的百分比
-//                var percent = Number(d.value) / d3.sum(total.reoords, function (d) {
-//                    return d[angleAll.field];
-//                }) * 100;
-//                //保留一位小数点 末尾加一个百分号返回
-//                return percent.toFixed(1) + "%";
+//        arcs.append("text")
+//            .attr("transform", function (d) {
+//                var x = arc.centroid(d)[0] * 1.4; //文字的x坐标
+//                var y = arc.centroid(d)[1] * 1.4;
+//                return "translate(" + x + "," + y + ")";
+//            })
+//            .attr("text-anchor", "middle")
+//            .text(function (d) {
+////                //计算市场份额的百分比
+////                var percent = Number(d.value) / d3.sum(total.reoords, function (d) {
+////                    return d[angleAll.field];
+////                }) * 100;
+////                //保留一位小数点 末尾加一个百分号返回
+////                return percent.toFixed(1) + "%";
 //                return d.data[colourAll.field];
-                return d.data[angleAll.field];
-            });
+//            });
     }
 
 </script>
