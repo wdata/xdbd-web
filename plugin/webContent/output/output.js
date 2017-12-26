@@ -5,11 +5,11 @@
 $(function(){
   var fromTable;
   initFromTable();
+  setVal();
   bind_click_generateSql();
   bind_click_saveActionComp();
   bind_click_extractAdd();
   bind_click_extractLessen();
-  setVal();
   $(".stepName").val(etlName);
 
   function initFromTable(){
@@ -22,7 +22,7 @@ $(function(){
     if(fromTable!=null && fromTable!=''){
       var fields = fn_get_fields_by_fromTable(fromTable);
       var optionsHtml = "";
-      console.log(fields)
+      console.log(fields.extractFields)
       $.each(fields.extractFields,function(){
         optionsHtml += "<option value="+this.field+">"+this.remark+"</option>";
       });

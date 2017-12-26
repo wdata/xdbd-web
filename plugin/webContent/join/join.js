@@ -3,8 +3,8 @@
  */
 //增加字段
 $(function () {
-	initFromTable();
 	setVal();
+	initFromTable();
 	bind_change_fromTable();
 	bind_change_selectTable();
 	bind_change_extractTable();
@@ -40,13 +40,19 @@ $(function () {
 		$(document.body)
 			.off('change', '.selectTable')
 			.on('change', '.selectTable', function () {
-				var fields = fn_get_fields_by_fromTable($(this).val());
+				// var fields = fn_get_fields_by_fromTable($(this).val());
 				var optionsHtml = "";
-				// console.log(fields)
-				$.each(fields.extractFields, function () {
-					optionsHtml += "<option value="+this.field+">" + this.remark + "</option>";
+				var self = $(this);
+				console.log(tables)
+				$.each(tables, function (i,item) {
+					if(self.val() == this.tableName) {
+						$.each(item.fieldList,function() {
+							optionsHtml += "<option value="+this.fieldName+">" + this.remark + "</option>";
+						})
+					}
 				});
 				$(this).parents('.joinTable').find('.field1').html(optionsHtml);
+				$('.extractField .table').append('<option>'+$(this).val()+'</option>');
 			});
 	}
 
@@ -154,12 +160,16 @@ $(function () {
 			}
 		});
 		var optionsHtml = "";
-		// console.log(ary)
+		var selectHtml = "";
+		console.log(ary)
 		$.each(ary, function () {
 			optionsHtml += "<option>" + this + "</option>";
 		});
+		$.each(tables,function() {
+			selectHtml +="<option value="+this.tableName+">"+this.remark+"</option>";
+		})
 		$('.fromTable').html(optionsHtml);
-		$('.selectTable').html(optionsHtml);
+		$('.selectTable').html(selectHtml);
 		$('.extractField .table').html(optionsHtml);
 	}
 
