@@ -13,7 +13,7 @@ $(function() {
       var reg = /\S/;
       if(reg.test(algparam)) {
         fn_save(getVal());
-        this_data[this_actionCompId] = getVal();
+        this_data["this_actionCompId"] = getVal();
       } else {
         layer.msg('不能为空')
       }
