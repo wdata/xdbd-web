@@ -120,8 +120,11 @@ $(function(){
 	}
 	
 	//获取 顶部导航菜单
-	getTopMenu(projectId,versionId,0);
+	if(previewBur){
+        getTopMenu(projectId,versionId,0);
+	}
 	function getTopMenu(projectId,versionId,menuType){
+		console.log("右侧菜单！");
 		$.ajax({
 			type:'GET',
             url:$url1+'/bi/report/v1/menu/findReportMenu',
@@ -147,9 +150,6 @@ $(function(){
               		}
               		
           			$.each(data, function(i,item) {
-              			if(i===0){
-							findLeftMenu(projectId,versionId,item.reportMenuId);
-              			}
               			html += `
               				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
 								<span class="m-menu-tag">${item.menuName}</span>
@@ -162,14 +162,18 @@ $(function(){
 							</li>
               			`;
               			html2 += `
-              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
-              			`;
-
-              	});
+								<li class="${item.reportMenuId==previewReportMenuId?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
+							`;
+					});
               		$(".top-menu-15").empty().append(html);
               		$(".mn-menu").empty().append(html2);
-
-              		
+                    if(previewReportMenuId && previewReportMenuId !== "null" && previewReportMenuId !== "undefined"){
+                        findLeftMenu(projectId,versionId,previewReportMenuId);
+                    }else{
+                        previewReportMenuId = data[0].reportMenuId;
+                        findLeftMenu(projectId,versionId,data[0].reportMenuId);
+                        $(".mn-menu li:first").addClass("active");
+                    }
 	            }else{
                     layer.msg("fail", {icon: 0});
 				}
@@ -516,9 +520,10 @@ $(function(){
 		topMenuId = $(this).attr("reportmenuid");
 		sessionStorage.setItem("tId",topMenuId);
 		parentId = $(this).attr("reportmenuid");
+        previewReportMenuId = $(this).attr("reportmenuid");
 		$("#sidebar-tree").html("");
 		findLeftMenu(projectId,versionId,parentId);
-	})
+	});
 	
 	//添加左侧菜单
 	function addLeftMenu(projectId,versionId,createUser,menuName,menuType,pId){
@@ -552,6 +557,7 @@ $(function(){
 //	findLeftMenu(projectId,versionId,0);
 	//查询左侧菜单
 	function findLeftMenu(projectId,versionId,reportMenuId){
+		console.log("左侧菜单");
 		$.ajax({
 			type:'GET',
             url:$url1+'/bi/report/v1/menu/findReportMenu',
@@ -581,6 +587,24 @@ $(function(){
 					if(sidebarZtree.length >= 1){
                         $.fn.zTree.init(sidebarZtree, setting2, zNodes);
                         $.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+						// 如果执行完成，则遍历元素，并给符合元素标识!
+						var bur = true;
+						$.each(zNodes,function(i){
+							if(this.pageId == previewPageId){
+								sidebarZtree.find("li").eq(i).find("a").addClass("curSelectedNode positioning");
+                                bur = false;
+                                pageData(this.pageId);
+                                dirId = this.pageId;
+                            }
+						});
+						if(!previewPageId || previewPageId === "null" || previewPageId === "undefined" || bur){
+                            sidebarZtree.find("li a:first").addClass("curSelectedNode positioning");
+                            previewPageId = zNodes[0].pageId;
+                            if(zNodes[0].pageId){
+                                pageData(zNodes[0].pageId);
+                                dirId = zNodes[0].pageId;
+							}
+						}
 					}
 	            }
 			},
@@ -778,14 +802,17 @@ $(function(){
 			layer.msg("请选择BI页面", {icon: 0});
 		}
 	}
-	
 	function redirectPage(){
+		$("#sidebar-tree li .positioning").removeClass("curSelectedNode");
 		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
 		var curDom = zTree.getSelectedNodes();
 		pageId = curDom[0].pageId;
-		// console.log(pageId);
+		if(previewBur){
+            previewPageId = curDom[0].pageId;
+		}
 		if(pageId != null){//执行画图
-			adce(pageId)
+            dirId = curDom[0].pageId;
+			pageData(pageId);
 		}else{//提醒未设置链接
 			$(".mn-htmlmain").empty();
 		}
@@ -1005,7 +1032,7 @@ $(function(){
 		sessionStorage.setItem("tId",topMenuId);
 		$("#link-tree").html("");
 		findLeftMenu(projectId,versionId,topMenuId);
-	})
+	});
 		
 	$("#link-tree").delegate(".page-link-btn","click",function(){
 		getProjPages(lv1DirId);
@@ -1198,6 +1225,7 @@ $(function(){
 			success:function(res){
 				if(res.code===0&&res.data.length){
 					var data = res.data[0];
+					//console.log(data);
 					var logo,
 						leftHeight = data.leftHeight,
 						leftWidth = data.leftWidth,
@@ -1268,7 +1296,7 @@ $(function(){
 	
 	//预览
 	$("#preview").click(function(e){
-		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId ;
     	window.open("../html/preview.html" + url);
     	e.preventDefault();
 	})
@@ -1277,10 +1305,10 @@ $(function(){
 	$(".mn-htmlmain").delegate(".resize-item","click",function(e){
 		var linkPageId = $(this).attr("linkpageid");
 		if(linkPageId){
-			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId );
 		}
 		e.preventDefault();
-	})
+	});
 	
 	//提示
 	var todo = {
@@ -1355,8 +1383,7 @@ $(function(){
      * 根据传递的参数，获取页面数据
      * */
     
-	function adce(pageId){
-//		console.log(pageId + "22222222222222222222222")
+	function pageData(pageId){
 	    $.ajax({
 	        type:"get",
 	        url:"/xdbd-bi/bi/report/v1/page.json",
@@ -1372,7 +1399,7 @@ $(function(){
 	        dataType:"json",
 	        success:function(data){
 	            if(data.code === 0){
-	                if(data.data.htmlJson){
+	                if(data.data && data.data.htmlJson){
                         DataIndexes.generate(data.data,$(".mn-htmlmain"));
 	                }
 	            }
