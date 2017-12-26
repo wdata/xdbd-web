@@ -88,9 +88,13 @@
         var pieData = d3.layout.pie() //创建饼状图
             .value(function (d) {
                 return d[angleAll.field];
-            })(total.reoords); //值访问器
-
-        console.log(pieData);
+            })
+//            .sort(function(d){
+//                return 0;
+//            })
+            .startAngle([0])
+            (total.reoords); //值访问器
+        console.log(total.reoords)
 
         //绘制
         var outerRadius = d3.min([widthO,height0])/2;
@@ -111,7 +115,7 @@
         arcs.append("path")
             .style("fill",function(d){ if(colourAll){ return o(d.data[colourAll.field]); }else{return defaultColor;}})
             .attr("d", function (d) {
-                console.log(arc(d));
+//                console.log(arc(d));
                 return arc(d); //使用弧生成器获取路径
             });
         //添加弧内的文字
@@ -129,7 +133,8 @@
 //                }) * 100;
 //                //保留一位小数点 末尾加一个百分号返回
 //                return percent.toFixed(1) + "%";
-                return d.data[colourAll.field];
+//                return d.data[colourAll.field];
+                return d.data[angleAll.field];
             });
     }
 
