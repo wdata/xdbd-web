@@ -812,6 +812,20 @@ $(function(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+    $( ".filter-attr" ).draggable({cursor: "move", handle: "h3"});
+
+
+
 /*
 
 
