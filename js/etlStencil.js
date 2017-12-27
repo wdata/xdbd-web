@@ -30,7 +30,7 @@ function getTemplateList(name, type) {
 				itemId = data.data;
 				$.each(data.data, function (index, item) {
 					//graphDiagram.push(item.actionId+','+item.dag);
-					arr.push('<dl class="new_demand" onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandsBtn(this)" data-id=' + item.actionId + ' id=' + item.versionId + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+					arr.push('<dl class="new_demand" onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandsBtn(this)" data-id=' + item.actionId + ' id=' + item.versionId + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span><div class="demand_remark">'+item.remark+'</div></dd> </dl>')
 				})
 				$("#demand_list").html(arr);
 			}
@@ -46,10 +46,12 @@ function templateBtn() {
 	getTemplateList(tepName, tepType);
 }
 function overBtn(_this) {
-	$(_this).find("#demand_delete").css("display", "block")
+	$(_this).find("#demand_delete").css("display", "block");
+	$(_this).find(".demand_remark").css("display","block");
 }
 function outBtn(_this) {
-	$(_this).find("#demand_delete").css("display", "none")
+	$(_this).find("#demand_delete").css("display", "none");
+	$(_this).find(".demand_remark").css("display","none");
 }
 //删除ETL列表模板
 function deletesBtn(_this) {
