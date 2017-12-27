@@ -36,7 +36,7 @@
                     <td class="dbport">${item.conPort}</td>
                     <td class="dbdatabase">${item.dbName}</td>
                     <td class="dbuser">${item.username}</td>
-                    <td class="dbpassword"><input type="password" class="code" value="${item.password}"/></td>
+                    <td class="dbpassword"><input type="password" class="code" value="${item.password}" readonly/></td>
                     <td>
                         <botton class="compile" onclick="compileBtn(this)">编辑</botton>
                         <botton class="cancel" onclick="cancelBtn(this)">删除</botton>
@@ -121,7 +121,7 @@
                         <td class="dbport">${item.dbport}</td>
                         <td class="dbdatabase">${item.dbdatabase}</td>
                         <td class="dbuser">${item.dbuser}</td>
-                        <td class="dbpassword"><input type="password" class="code" value="${item.dbpassword}"/></td>
+                        <td class="dbpassword"><input type="password" class="code" value="${item.dbpassword}" readonly/></td>
                         <td>
                             <botton class="compile" onclick="compileBtn(this)">编辑</botton>
                             <botton class="cancel" onclick="cancelBtn(this)">删除</botton>

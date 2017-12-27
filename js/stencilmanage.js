@@ -34,7 +34,7 @@ function stencilSeek() {
 				console.log(rs.data)
 				$("#demand_list").find('.new_demand').remove();
 				$.each(rs.data, function (index, item) {
-					arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+					arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span><div class="demand_remark">'+item.remark+'</div> </dd> </dl>')
 				})
 				$("#demand_list").html(arr);
 			}
@@ -59,7 +59,7 @@ $.ajax({
 			var arr = new Array;
 			console.log(data.data)
 			$.each(data.data, function (index, item) {
-				arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + ' > <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> </dd> </dl>')
+				arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + ' > <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span><div class="demand_remark">'+item.remark+'</div> </dd> </dl>')
 			})
 			$("#demand_list").html(arr);
 		}
@@ -68,10 +68,12 @@ $.ajax({
 	}
 })
 function overBtn(_this) {
-	$(_this).find("#demand_delete").css("display", "block")
+	$(_this).find("#demand_delete").css("display", "block");
+	$(_this).find(".demand_remark").css("display","block");
 }
 function outBtn(_this) {
-	$(_this).find("#demand_delete").css("display", "none")
+	$(_this).find("#demand_delete").css("display", "none");
+	$(_this).find(".demand_remark").css("display","none");
 }
 //删除当前工作流
 function deleteBtn(_this) {
