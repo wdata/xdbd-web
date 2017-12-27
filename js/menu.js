@@ -807,9 +807,9 @@ $(function(){
 		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
 		var curDom = zTree.getSelectedNodes();
 		pageId = curDom[0].pageId;
-		if(previewBur){
+		// if(previewBur){
             previewPageId = curDom[0].pageId;
-		}
+		// }
 		if(pageId != null){//执行画图
             dirId = curDom[0].pageId;
 			pageData(pageId);
@@ -1303,9 +1303,11 @@ $(function(){
 	
 	//页面跳转
 	$(".mn-htmlmain").delegate(".resize-item","click",function(e){
-		var linkPageId = $(this).attr("linkpageid");
-		if(linkPageId){
-			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId );
+		const linkPageId = $(this).attr("linkpageid");
+		console.log(linkPageId);
+		if(linkPageId && linkPageId !== "null" && linkPageId !== "undefined"){
+			// window.location.href = "../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId  +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId;
+            pageData(linkPageId);
 		}
 		e.preventDefault();
 	});
