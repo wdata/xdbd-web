@@ -624,6 +624,10 @@ $(function(){
                 curNodeId = node.nodeId;
                 sessionStorage.setItem("curNodeId",curNodeId);
 
+				//父级ID
+				pageFlowId = $(this).treeview('getParent',node).directoryId;
+				localStorage.setItem("pageFlowId",pageFlowId);
+
                 dirType = node.directoryType;//目录类型
                 directoryId = node.directoryId;//目录id
                 directoryName = node.name;//目录名称
