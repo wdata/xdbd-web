@@ -8,7 +8,7 @@ $(function() {
   function bind_saveJobStream() {
     $('.saveJobStream').click(function(){
       fn_save(getVal());
-      this_data["this_actionCompId"] = getVal();
+      this_data.push(getVal());
     });
   }
 
