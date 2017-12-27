@@ -486,7 +486,9 @@ $(function(){
                     if(res.code===0){
                         layer.msg(res.message, {icon: 6});
                         getProjName(0);//刷新项目树
-                    }
+                    }else if(res.code===403){
+						layer.msg('该名称已存在！', {icon: 5});
+					}
                 },
                 error:function(err){
                     console.log(err);
