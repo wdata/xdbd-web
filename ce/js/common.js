@@ -372,7 +372,7 @@ function chartLegend(elemt,data,CStyle){
             "min":total.meaMaxMin[colourAll.fieldId].min,
             "max":total.meaMaxMin[colourAll.fieldId].max,
             "name":colourAll.fieldAlias,
-            "field":colourAll.field,
+            "fieldId":colourAll.fieldId,
             "colourAll":1
         })
     }
@@ -382,7 +382,7 @@ function chartLegend(elemt,data,CStyle){
             "min":total.meaMaxMin[sizeAll.fieldId].min,
             "max":total.meaMaxMin[sizeAll.fieldId].max,
             "name":sizeAll.fieldAlias,
-            "field":sizeAll.field
+            "fieldId":sizeAll.fieldId
         })
     }
     // 判断颜色or尺寸中是否有度量
@@ -431,15 +431,15 @@ function chartLegend(elemt,data,CStyle){
                     slide: function( event, ui ) {
                         // 修改区域块透明度
                         $.each(total.reoords,function(i){
-                            if(this[d.field] <= ui.values[1] && this[d.field] >= ui.values[0]){
-                                $(".areaBlock").eq(i).attr("class","areaBlock")
+                            if(this[d.fieldId] <= ui.values[1] && this[d.fieldId] >= ui.values[0]){
+                                $(".areaBlock").eq(i).attr("class","areaBlock");
                             }else{
                                 $(".areaBlock").eq(i).attr("class","areaBlock fill-opacity");
                             }
                         });
                         // 修改最大值和最小值
-                        $(this).siblings(".rangeMin").text(ui.values[0])
-                            .siblings(".rangeMax").text(ui.values[1])
+                        $(this).siblings(".rangeMin").text(ui.values[0].toFixed(2))
+                            .siblings(".rangeMax").text(ui.values[1].toFixed(2))
                     }
                 });
             });
@@ -447,11 +447,11 @@ function chartLegend(elemt,data,CStyle){
         slider.append("text")
             .attr("class",'rangeMin rangeData')
             .style("right",function(d){if(positionSize === 1 || positionSize === 3){return -d.min*12/2 + "px";}})
-            .text(function(d){ return d.min });
+            .text(function(d){ return d.min.toFixed(2) });
         slider.append("text")
             .attr("class",'rangeMax rangeData')
             .style("right",function(d){if(positionSize === 1 || positionSize === 3){return -d.min*12/2 + "px";}})
-            .text(function(d){ return d.max });
+            .text(function(d){ return d.max.toFixed(2) });
         // 如果颜色是度量，则添加gradient样式，并修改样式下滚动横条的背景色
         if(colourAll.dimMea === 1){
             $(".gradient .ui-slider-range").css("background","linear-gradient(to "+ linear +","+ CStyle.continuousColor[0] +","+ CStyle.continuousColor[1] +")");
