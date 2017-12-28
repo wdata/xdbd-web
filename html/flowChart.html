@@ -461,8 +461,7 @@
 				data: JSON.stringify(parameter),
 				success: function (data) {
 					var data = data.data;
-					//console.log(data);
-					//            alert(JSON.stringify(data))
+					console.log(data);
 					$.each(data, function () {
 						tables[this.tableName] = this;
 					});
@@ -503,15 +502,15 @@
 		}
 
 		function fn_set_extractFields(extractFields) {
-			// var extractFieldHtml = $('.extractField').prop('outerHTML');
-			// $('.extractField').remove();
+			var extractFieldHtml = $('.extractField').prop('outerHTML');
+			$('.extractField').remove();
 			$.each(extractFields, function () {
 				var table = this.table;
 				var field = this.field;
 				var alias = this.alias;
 				var fn = this.fn;
 				//alert(extractFieldHtml)
-				// $('.extractFields').append(extractFieldHtml);
+				$('.extractFields').append(extractFieldHtml);
 
 				var extractField = $('.extractField:last');
 				extractField.find('.table').val(table);
@@ -540,17 +539,6 @@
 			});
 			return ary;
 		}
-
-		// function fn_get_joinFields() {
-		// 	var arys = [];
-		// 	$('joinField').each(function () {
-		// 		var datas = {};
-		// 		var tables = $(this).find('.table').val();
-		// 		var fields = $(this).find('.field').val();
-		// 		var aliass = $(this).find('.alias').val();
-		// 		var 
-		// 	})
-		// }
 
 		function fn_saveActionComp_exec(val) {
 			val['actionId'] = this_actionId;
