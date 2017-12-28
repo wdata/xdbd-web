@@ -18,9 +18,9 @@ $(function () {
 
 	$(".stepName").val(etlName);
 
-	$('.extractField .table').trigger('change');
-	$('.fromTable').trigger('change');
-	$('.selectTable').trigger('change');
+	// $('.extractField .table').trigger('change');
+	// $('.fromTable').trigger('change');
+	// $('.selectTable').trigger('change');
 
 	function bind_change_fromTable() {
 		$(document.body)
@@ -60,12 +60,25 @@ $(function () {
 		$(document.body)
 			.off('change', '.extractField .table')
 			.on('change', '.extractField .table', function () {
-				var fields = fn_get_fields_by_fromTable($(this).val());
+				var self = $(this);
 				var optionsHtml = "";
-				// console.log(fields);
-				$.each(fields.extractFields, function () {
-					optionsHtml += "<option value="+this.field+">" + this.remark + "</option>";
-				});
+				$('.fromTable').each(function(i,item) {
+					if($(this).val() == self.val()) {
+						var fields = fn_get_fields_by_fromTable($(this).val());
+						$.each(fields.extractFields, function () {
+							optionsHtml += "<option value="+this.field+">" + this.remark + "</option>";
+						});
+					} else {
+						$.each(tables, function (i,item) {
+							if(self.val() == this.tableName) {
+								var fieldsTable = item.fieldList;
+								$.each(fieldsTable,function () {
+									optionsHtml += "<option value="+this.fieldName+">" + this.remark + "</option>";
+								})
+							}
+						});
+					}
+				})
 				$(this).parents('tr').find('.field').html(optionsHtml);
 			});
 	}
@@ -159,7 +172,7 @@ $(function () {
 				ary.push(actionComp.tableOut);
 			}
 		});
-		var optionsHtml = "";
+		var optionsHtml = "<option>请选择</option>";
 		var selectHtml = "";
 		console.log(ary)
 		$.each(ary, function () {

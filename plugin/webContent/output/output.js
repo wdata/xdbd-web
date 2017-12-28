@@ -86,8 +86,7 @@ $(function(){
       .off('click', '.outputAdd')
       .on('click', '.outputAdd', function () {
         var outputHtml = $('.extractField').prop('outerHTML');
-        //$('.extractField').remove();
-        // console.log(outputsFieldHtml)
+        console.log(outputHtml)
         $('.extractFields').append(outputHtml);
       })
   }

@@ -11,7 +11,7 @@ $(function(){
 	bind_click_loadParguet();
 	bind_click_generateSql();
 	bind_click_saveActionComp();
-	$('.fromTable').trigger('change');
+	// $('.fromTable').trigger('change');
 	
 
 	function bind_click_saveActionComp(){
