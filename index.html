@@ -16,14 +16,6 @@
 			 var console = { log: function() {} };
 		</script>
 	<![endif]-->
-
-	<script src="plugin/jQuery/jquery.min.js"></script>
-	<script src="plugin/jQuery/jQuery_ui.js"></script>
-	<script src="plugin/swiper/swiper.min.js"></script>
-	<script type="text/javascript" src="plugin/fullpage/vendors/scrolloverflow.js"></script>
-	<script type="text/javascript" src="plugin/fullpage/jquery.fullPage.js"></script>
-	<script type="text/javascript" src="plugin/fullpage/examples.js"></script>
-	<script src="js/first.js"></script>
 </head>
 <body>
 
@@ -71,18 +63,23 @@
 	<!-- Swiper -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-            	<div class="section0 section">
-            		<div class="video-box">
-            			<video  poster="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" autoplay="autoplay" id="video1" loop="loop">
-				          <source src="plugin/website_main_bg.mp4" type="video/mp4">
-				        </video>
+			<div class="swiper-slide"style="z-index: 10;">
+				<div class="section3 section">
+					<iframe id="iframepage" src="html/3d/index.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
+				</div>
+			</div>
+			<div class="swiper-slide" >
+				<div class="section0 section">
+					<div class="video-box">
+						<video  poster="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" autoplay="autoplay" id="video1" loop="loop">
+							<source src="plugin/website_main_bg.mp4" type="video/mp4">
+						</video>
 						<img src="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" style="opacity: 0; z-index: -1;">
-            		</div>
-            		<h1 class="title">大数据平台精准服务</h1>
-    				<a href="main.html" class="xdbd-btn">点击进入</a>
-            	</div>
-            </div>
+					</div>
+					<h1 class="title">大数据平台精准服务</h1>
+					<a href="main.html" class="xdbd-btn">点击进入</a>
+				</div>
+			</div>
             <div class="swiper-slide">
             	<div class="section1 section">
             		<div class="business main">
@@ -150,11 +147,6 @@
             		</div>
             	</div>
             </div>
-            <div class="swiper-slide">
-            	<div class="section3 section">
-            		<iframe id="iframepage" src="html/3d/index.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
-            	</div>
-            </div>
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
@@ -169,5 +161,13 @@
 	</div>
 </div>
 
+
+	<script src="plugin/jQuery/jquery.min.js"></script>
+	<script src="plugin/jQuery/jQuery_ui.js"></script>
+	<script src="plugin/swiper/swiper.min.js"></script>
+	<script type="text/javascript" src="plugin/fullpage/vendors/scrolloverflow.js"></script>
+	<script type="text/javascript" src="plugin/fullpage/jquery.fullPage.js"></script>
+	<script type="text/javascript" src="plugin/fullpage/examples.js"></script>
+	<script src="js/first.js"></script>
 </body>
 </html>
