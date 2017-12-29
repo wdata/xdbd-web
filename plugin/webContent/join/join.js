@@ -3,8 +3,8 @@
  */
 //增加字段
 $(function () {
-	setVal();
 	initFromTable();
+	setVal();
 	bind_change_fromTable();
 	bind_change_selectTable();
 	bind_change_extractTable();
@@ -18,9 +18,9 @@ $(function () {
 
 	$(".stepName").val(etlName);
 
-	// $('.extractField .table').trigger('change');
-	// $('.fromTable').trigger('change');
-	// $('.selectTable').trigger('change');
+	$('.extractField .table').trigger('change');
+	$('.fromTable').trigger('change');
+	$('.selectTable').trigger('change');
 
 	function bind_change_fromTable() {
 		$(document.body)
@@ -100,8 +100,10 @@ $(function () {
 				$('.joinTables').append(joinTableHtml);
 
 				var joinTable = $('.joinTable:last');
+				console.log(table)
 				joinTable.find('.joinType').val(type);
-				joinTable.find('.selectTable').val(table);
+				// joinTable.find('.selectTable').val(table);
+				joinTable.find('.selectTable option[value="'+table+'"]').attr("selected", 'selected');
 				var onFilterHtml = joinTable.find('.onFilter').prop('outerHTML');
 				if (this.onFilters != null) {
 					joinTable.find('.onFilter').remove();
@@ -113,9 +115,12 @@ $(function () {
 					var field2 = this.field2;
 					joinTable.find('.onFilters').append(onFilterHtml);
 					var onFilter = joinTable.find('.onFilter:last');
-					onFilter.find('.field1').val(field1);
-					onFilter.find('.expr').val(expr);
-					onFilter.find('.field2').val(field2);
+					// onFilter.find('.field1').val(field1);
+					// onFilter.find('.expr').val(expr);
+					// onFilter.find('.field2').val(field2);
+					onFilter.find('.field1 option[value="'+field1+'"]').attr("selected","selected");
+					onFilter.find('.expr option[value="'+expr+'"]').attr("selected","selected");
+					onFilter.find('.field2 option[value="'+field2+'"]').attr("selected","selected");
 				});
 			});
 		}
@@ -172,7 +177,7 @@ $(function () {
 				ary.push(actionComp.tableOut);
 			}
 		});
-		var optionsHtml = "<option>请选择</option>";
+		var optionsHtml = "";
 		var selectHtml = "";
 		console.log(ary)
 		$.each(ary, function () {

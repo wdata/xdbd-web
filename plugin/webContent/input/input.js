@@ -88,7 +88,7 @@ $(function(){
 	}
 
 	function initFromTable(){
-		var optionsHtml = "";
+		var optionsHtml = "<option>请选择</option>";
 		// alert(JSON.stringify(tables))
 		$.each(tables,function(){
 		optionsHtml += "<option value="+this.tableName+" selected>"+this.remark+"</option>";
