@@ -2012,8 +2012,8 @@ $(function(){
                         $(".metric-box").empty().append(mhtml);
 
                         //滚动条
-                        $("#dimensionBox").mCustomScrollbar({theme:"dark"});
-                        $(".metric-box").mCustomScrollbar({theme:"dark"});
+                        $("#dimensionBox").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
+                        $(".metric-box").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
 
 
 
