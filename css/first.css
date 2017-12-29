@@ -35,9 +35,9 @@
 		/*background: transparent;*/
 	}
 	
-	#header.header{
-		background:#282830;
-	}
+	/*#header.header{*/
+		/*background:#282830;*/
+	/*}*/
 	#footer{
 		height: 60px;
 		bottom:0px;
@@ -63,12 +63,13 @@
     height: 100%;
     margin-left: auto;
     margin-right: auto;
+	 background: url("../images/index/background.png") no-repeat;
+	 background-size: cover;
 }
 .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #fff;
-
+    /*background: #fff;*/
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -93,6 +94,7 @@
 	opacity: 1;
 	background-color: #5786E6;
 }
+
 /*section0*/
 .section0:after {
 	content: "";
@@ -166,11 +168,16 @@
     color: #838383;
 }
 .business h2 {
-    font-size: 24px;
-    color: #666;
-    text-align: center;
-    padding: 175px 0 70px;
-    font-weight: 500;
+	font-size: 28px;
+	color: #fff;
+	text-align: center;
+	padding: 150px 0 0;
+	font-weight: 500;
+}
+.business>div>p{
+	color: #92bccf;
+	font-size: 14px;
+	padding:10px 0 70px;
 }
 .business>ul {
     zoom: 1;
@@ -211,12 +218,16 @@
     position: relative;
     text-align: center;
     height: 100%;
-    opacity: 1;
     filter:Alpha(Opacity=100);
     transition: all .3s ease 0s;
     -ms-box-shadow: 0 2px 30px 4px rgba(14,5,10,.15);
     -o-box-shadow: 0 2px 30px 4px rgba(14,5,10,.15);
     box-shadow: 0 2px 30px 4px rgba(14,5,10,.15);
+	border-radius: 5px;
+	overflow: hidden;
+	background-color: rgba(1,137,202,.68);
+	color: #fff;
+	/*opacity: .68;*/
 }
 .business>ul>li .intro img {
     width: 100%;
@@ -226,51 +237,91 @@
 	height: 197px;
 	overflow: hidden;
 }
-.business>ul>li .intro img:hover{
+.business>ul>li .img-inner img:hover{
 	transform: scale(1.2);
     transition: transform 0.3s ease-out 0s;
 }
 .business>ul>li .intro h3 {
-    font-size: 18px;
-    color: #2d2d2d;
-    line-height: 44px;
-    padding-top: 10px;
+	font-size: 26px;
+	line-height: 44px;
+	margin: 35px 0 30px 0;
+	color: #fff;
 }
 .business>ul>li .intro p {
-    font-size: 14px;
-    color: #838383;
+    font-size: 16px;
     line-height: 26px;
     width: 88%;
+	text-indent: 2em;
+	text-align: left;
 }
 .business .intro .icon-s {
-	width: 22%;
-	margin-top: 20px;
+	width: 31.25%;
+	position: absolute;
+	top: 98px;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+.business-end{
+	color: #92bccf;
+	font-size: 16px;
+	position: absolute;
+	bottom: 7%;
+	left: 0;
+	width: 100%;
+}
+.business-end a{
+	color: #fff;
+	padding-bottom: 2px;
+	border-bottom: 1px solid #fff;
+	margin-left: 20px;
 }
 /*section2*/
 
 
 /*section3*/
-
-.chart h2 {
-	font-size: 24px;
-    color: #666;
-    text-align: center;
-    padding: 90px 0 10px;
-    font-weight: 500;
-}
-.chart>p {
-	width: 900px;
+.chart-background{
+	width: 1182px;
+	height: 643px;
 	margin: 0 auto;
+	background: url("../images/index/frame.png") no-repeat;
+	position: relative;
+}
+.chart h2 {
+    text-align: center;
+    padding: 110px 0 10px;
+    font-weight: 500;
+	font-size: 28px;
+	color: #fff;
+}
+.chart>.tit {
+	width: 900px;
+	margin: 0 auto -20px;
 	font-size: 16px;
 	color: #5f6a72;
 	line-height: 2;
-	margin-bottom: 10px;
 }
 .chart-video {
-	border: 1px solid #f0f0f0;
+	width: 1025px;
+	height: 500px;
+	position: absolute;
+	left: 50%;
+	top: 47.5%;
+	transform: translate(-50%,-50%);
+	transition-duration: .6s;
 }
 .chart-video>video {
 	width: 100%;
+	height: 100%;
+}
+.enlarge{
+	background: url("../images/index/enlarge.png") no-repeat;
+	width: 44px;
+	height: 44px;
+	left: 50%;
+	bottom: 0;
+	transform: translateY(-50%);
+	position: absolute;
+	cursor: pointer;
 }
 
 /*section4*/
@@ -279,19 +330,50 @@
 .head-bar {
 	position: relative;
 }
-.head-bar>a {
+.logo{
+	overflow: hidden;
 	position: absolute;
-	width: 164px;
-	height: 40px;
-	left: 0;
+	width: 249px;
+	height: 60px;
+	left: 80px;
 	top: 22px;
+	cursor: pointer;
+	z-index: 10;
+}
+.logo img{
+	float: left;
+}
+.logo img:last-child{
+	margin-left: 40px;
+}
+.try-out{
+	position: absolute;
+	height: 60px;
+	right: 5%;
+	top: 11px;
+	min-width: 240px;
+}
+.try-out a{
+	color: #fff;
+	font-size: 18px;
+}
+.try-out .try-btn{
+	width: 180px;
+	height: 60px;
+	line-height: 60px;
+	border-radius: 60px;
+	background-color: #0189ca;
+	text-align: center;
+	display: inline-block;
+	margin-left: 40px;
 }
 .head-bar>.main-parent {
 	position: absolute;
-	right: 0;
+	left: 50%;
 	height: 50px;
-	width: 772px;
+	width: 722px;
 	top: 16px;
+	transform: translateX(-50%);
 }
 .head-bar>.main-parent>li {
 	float: left;
