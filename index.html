@@ -20,10 +20,11 @@
 <body>
 
 	<div id="header">
+		<a class="logo" href="index.html">
+			<img src="images/index/logo.png" alt="" />
+			<img src="images/index/logo%20name.png" alt="" />
+		</a>
 		<div class="head-bar main">
-			<a href="#">
-				<!--<img src="images/logo.png" alt="" />-->
-			</a>
 			<ul class="main-parent">
 				<li>
 					<a href="index.html">首页</a>
@@ -51,6 +52,10 @@
 				</li>
 			</ul>
 		</div>
+		<div class="try-out">
+			<a href="javascript:" class="login">登录</a>
+			<a href="main.html" class="try-btn">平台试用</a>
+		</div>
 	</div>
 <div id="footer" class="hidden">
 	<div class="foot-bar main">
@@ -68,22 +73,43 @@
 					<iframe id="iframepage" src="html/3d/index.html" scrolling="no" style="width:100%;height: 100%;" frameborder=0></iframe>
 				</div>
 			</div>
-			<div class="swiper-slide" >
-				<div class="section0 section">
-					<div class="video-box">
-						<video  poster="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" autoplay="autoplay" id="video1" loop="loop">
-							<source src="plugin/website_main_bg.mp4" type="video/mp4">
-						</video>
-						<img src="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" style="opacity: 0; z-index: -1;">
+			<!--<div class="swiper-slide" >-->
+				<!--<div class="section0 section">-->
+					<!--<div class="video-box">-->
+						<!--<video  poster="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" autoplay="autoplay" id="video1" loop="loop">-->
+							<!--<source src="plugin/website_main_bg.mp4" type="video/mp4">-->
+						<!--</video>-->
+						<!--<img src="https://assets.megvii.com/static%2Fimages/home/megvii_video-7a23aa4a33.jpg" style="opacity: 0; z-index: -1;">-->
+					<!--</div>-->
+					<!--<h1 class="title">大数据平台精准服务</h1>-->
+					<!--<a href="main.html" class="xdbd-btn">点击进入</a>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="swiper-slide">
+				<div class="section2 section">
+					<div class="chart main">
+						<h2>自助式探索分析</h2>
+						<p class="tit">Customized analytics exploraion</p>
+						<!--<p>PPT模式的界面和交互方式，易学易用，业务人员只需简单拖拽，就能轻松制作出兼具敏捷分析与精美展示的报告。支持实时预警、定时邮件，支持参考线、下钻、联动、表计算等强大分析功能。</p>-->
+						<div class="chart-background">
+							<div class="chart-video">
+								<video width="1025" height="500"  poster="images/yemian.png" autoplay="autoplay" id="video2" loop="loop">
+									<source src="plugin/xdbd.mp4" type="video/mp4">
+								</video>
+							</div>
+							<div class="enlarge"></div>
+						</div>
+						<div class="business-end">PPT模式的界面和交互方式，易学易用，轻易制作敏捷分析、展示报告。<a href="main.html">立即试用</a></div>
 					</div>
-					<h1 class="title">大数据平台精准服务</h1>
-					<a href="main.html" class="xdbd-btn">点击进入</a>
 				</div>
 			</div>
             <div class="swiper-slide">
             	<div class="section1 section">
             		<div class="business main">
-				        <h2>核心服务</h2>
+						<div>
+							<h2>核心服务</h2>
+							<p>Core services</p>
+						</div>
 				        <ul>
 				        	<!--1-->
 				          <li>
@@ -91,7 +117,7 @@
 				            	<div class="img-inner">
 				            		<img src="images/p1.png" alt="快速搭建数据门户">
 				            	</div>
-				            	<img src="images/ps1.png" alt="" class="icon-s" />
+				            	<img src="images/index/rocket.png" alt="" class="icon-s" />
 				                <h3>快速搭建数据门户</h3>
 				                <p>拖拽式操作、强大的数据建模、丰富的可视化图表、快速搭建数据门户。</p>
 				            </div>
@@ -102,7 +128,7 @@
 				            	<div class="img-inner">
 				            		<img src="images/p2.png" alt="私有化部署">
 				            	</div>
-				            	<img src="images/ps2.png" alt="" class="icon-s"  />
+				            	<img src="images/index/custom.png" alt="" class="icon-s"  />
 				                <h3>私有化部署</h3>
 				                <p>企业内网部署，巨额岁安全保障，适合规模较大的企业级团队。</p>
 				            </div>
@@ -113,7 +139,7 @@
 				            	<div class="img-inner">
 				            		<img src="images/p3.png" alt="数据服务">
 				            	</div>
-				            	<img src="images/ps3.png" alt="" class="icon-s"  />
+				            	<img src="images/index/data.png" alt="" class="icon-s"  />
 				                <h3>数据服务</h3>
 				                <p>适用于各种复杂场景数据服务的需求，海量数据众包用户定制化线下采集，涵盖图片、文本、语音、视频等全维度数据。</p>
 				            </div>
@@ -124,26 +150,14 @@
 				            	<div class="img-inner">
 				            		<img src="images/p4.png" alt="安全管控数据权限">
 				            	</div>
-				            	<img src="images/ps4.png" alt="" class="icon-s"  />
+				            	<img src="images/index/safety.png" alt="" class="icon-s"  />
 				                <h3>安全管控数据权限</h3>
 				                <p>内置组织成员管理，支持行级数据权限，满足同一份报表，不同人看不同的数据。</p>
 				            </div>
 				          </li>
 				        </ul>
 				        <!--1 end-->
-            		</div>
-            	</div>
-            </div>
-            <div class="swiper-slide">
-            	<div class="section2 section">
-        			<div class="chart main">
-            			<h2>自助式探索分析</h2>
-            			<p>PPT模式的界面和交互方式，易学易用，业务人员只需简单拖拽，就能轻松制作出兼具敏捷分析与精美展示的报告。支持实时预警、定时邮件，支持参考线、下钻、联动、表计算等强大分析功能。</p>
-            			<div class="chart-video">
-            				<video  poster="images/yemian.png" autoplay="autoplay" id="video2" loop="loop">
-					          <source src="plugin/xdbd.mp4" type="video/mp4">
-					        </video>
-            			</div>
+						<div class="business-end">速度、安全、专属定制的数据服务，协助您的企业在数据深空一帆风顺。<a href="main.html">立即试用</a></div>
             		</div>
             	</div>
             </div>
