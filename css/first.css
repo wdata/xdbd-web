@@ -120,8 +120,25 @@
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			margin: -142px 0 0 -70px;
+			margin: -123px 0 0 -83px;
+			animation: brain 3s ease-out infinite;
 		}
+		/*	大脑上下动画  */
+		@-webkit-keyframes brain{
+			0%{
+				top: 50%;
+			}
+			50%{
+				top: 40%;
+			}
+			100%{
+				top: 50%;
+			}
+		}
+
+
+
+
 	.dynamic .dny_1 .dny_1_outermost .dny_1_outermost_middle{
 		width: 280px;
 		height: 152px;
@@ -141,6 +158,8 @@
 			top: 50%;
 			margin: -30px 0 0 -49px;
 		}
+
+
 
 	.dynamic .dny_2 .dny_2_back{
 		width: 1174px;
