@@ -54,15 +54,25 @@ const vertical = new Swiper('.swiper-container-vertical', {
     // initialSlide:1,
     direction: 'vertical',
     slidesPerView: 1,
-    paginationClickable: true,
-    spaceBetween: 0,
-    mousewheelControl: true,
-    autoplay: 15000
+    // paginationClickable: true,
+    // spaceBetween: 0,
+    // mousewheelControl: true,
+    // autoplay: 15000
 });
 const horizontal = new Swiper(".swiper-container-horizontal",{
     prevButton:'.swiper-button-prev',
     nextButton:'.swiper-button-next',
-    // initialSlide:1,
+    onSlideChangeStart(s){
+        if(s.activeIndex === 1){
+            $(".wave,.trajectory").addClass("active");
+        }
+    },
+    onSlideChangeEnd(s){
+        if(s.activeIndex === 0 || s.activeIndex === 2){
+            $(".wave,.trajectory").removeClass("active");
+        }
+    },
+    initialSlide:1,
     slidesPerView: 1,
     paginationClickable: true,
     spaceBetween: 0,
