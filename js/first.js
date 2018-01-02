@@ -30,39 +30,53 @@ $('#fullpage').fullpage({
     anchors: ['firstPage', 'secondPage', '3rdPage'],
     // sectionsColor: ['#ffffff', '#ffffff', '#ffffff','#f8f8f8'],
     css3: true,
-    afterLoad: function(anchorLink, index){
+    afterLoad: function(){
         // document.getElementById('video1').play();
         document.getElementById('video2').play();
     }
 });
 
 
-var mySwiper = new Swiper('.swiper-container', {
+const vertical = new Swiper('.swiper-container-vertical', {
     pagination: '.swiper-pagination',
     onSlideChangeStart(swiper){
-        if(swiper.activeIndex==3){
+        if(swiper.activeIndex === 2){
             $('#footer').removeClass('hidden')
         }else{
             $('#footer').addClass('hidden')
         }
-        if(swiper.activeIndex==1||swiper.activeIndex==2){
-            $('#header').addClass('header')
+        if(swiper.activeIndex === 1 || swiper.activeIndex === 2){
+            $('#header').addClass('header');
         }else{
             $('#header').removeClass('header')
         }
     },
-    initialSlide:1,
+    // initialSlide:1,
     direction: 'vertical',
     slidesPerView: 1,
     paginationClickable: true,
     spaceBetween: 0,
-    // mousewheelControl: true
-    // ,autoplay: 15000
+    mousewheelControl: true,
+    autoplay: 15000
 });
+const horizontal = new Swiper(".swiper-container-horizontal",{
+    prevButton:'.swiper-button-prev',
+    nextButton:'.swiper-button-next',
+    // initialSlide:1,
+    slidesPerView: 1,
+    paginationClickable: true,
+    spaceBetween: 0,
+});
+
+
 
 // 滑动到下一个模块的方法调用
 function scrollSlide(){
-    mySwiper.slideTo(1);
+    vertical.slideTo(2);
+}
+// 滑动到上一个模块的方法调用
+function scrollPrevious(){
+    vertical.slideTo(0);
 }
 
 //导航栏二级菜单

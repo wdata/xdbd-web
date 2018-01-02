@@ -32,6 +32,7 @@
 	#header{
 		top:0px;
 		background:transparent;
+		min-width: 1300px;
 		/*background: transparent;*/
 	}
 	
@@ -94,6 +95,125 @@
 	opacity: 1;
 	background-color: #5786E6;
 }
+
+
+	/*dynamic*/
+.dynamic{
+	position: relative;
+}
+.dynamic .dny_1,
+.dynamic .dny_2{
+	position: relative;
+}
+	.dynamic .dny_1 .dny_1_outermost{
+		width: 469px;
+		height: 263px;
+		background-image: url("../images/index/halo_2.png");
+		position: relative;
+		margin: 5% auto 0;
+	}
+		.dynamic .dny_1 .dny_1_outermost:after{
+			content: '';
+			width: 124px;
+			height: 120px;
+			background-image: url("../images/index/brain.png");
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin: -142px 0 0 -70px;
+		}
+	.dynamic .dny_1 .dny_1_outermost .dny_1_outermost_middle{
+		width: 280px;
+		height: 152px;
+		background-image: url("../images/index/halo_1.png");
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: -76px 0 0 -140px;
+	}
+		.dynamic .dny_1 .dny_1_outermost .dny_1_outermost_middle:after{
+			content: '';
+			width: 98px;
+			height: 60px;
+			background-image: url("../images/index/shadow.png");
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin: -30px 0 0 -49px;
+		}
+
+	.dynamic .dny_2 .dny_2_back{
+		width: 1174px;
+		height: 352px;
+		background-image: url("../images/index/resources.png");
+		margin: 30px auto 0;
+	}
+	.dynamic .dny_2 .dny_2_all{
+		position: absolute;
+	}
+	.dynamic .dny_2 .dny_2_big{
+		width: 49px;
+		height: 44px;
+		background-image: url("../images/index/box_big.png");
+	}
+		.dynamic .dny_2 .dny_2_big:after{
+			width: 8px;
+			height: 180px;
+			background-image: url("../images/index/long_tail.png");
+		}
+	.dynamic .dny_2 .dny_2_in{
+		width: 41px;
+		height: 38px;
+		background-image: url("../images/index/box_in.png");
+	}
+		.dynamic .dny_2 .dny_2_in:after{
+			width: 8px;
+			height: 180px;
+			background: url("../images/index/modile_till.png") no-repeat;
+		}
+	.dynamic .dny_2 .dny_2_small{
+		width: 32px;
+		height: 28px;
+		background-image: url("../images/index/box_small.png");
+	}
+		.dynamic .dny_2 .dny_2_small:after{
+			width: 8px;
+			height: 63px;
+			background: url("../images/index/short_tail.png") no-repeat;
+		}
+		.dynamic .dny_2 .dny_2_small:after,
+		.dynamic .dny_2 .dny_2_in:after,
+		.dynamic .dny_2 .dny_2_big:after{
+			content: '';
+			position: absolute;
+			left: 42%;
+			top: 70%;
+			z-index: -1;
+		}
+	.dynamic .dny_2 .dny_2_1{
+		left: 30%;
+		top: 0;
+	}
+	.dynamic .dny_2 .dny_2_2{
+		left: 15%;
+		top: -34%;
+	}
+	.dynamic .dny_2 .dny_2_3{
+		left: 61.5%;
+		top: 4%;
+	}
+	.dynamic .dny_2 .dny_2_4{
+		left: 78.5%;
+		top: -27%;
+	}
+	.dynamic .dny_2 .dny_2_5{
+		left: 42.3%;
+		top: -18%;
+	}
+
+
+
+
 
 /*section0*/
 .section0:after {
@@ -276,8 +396,18 @@
 	margin-left: 20px;
 }
 /*section2*/
-
-
+.graphics{
+	position: relative;
+	padding-top: 20%;
+}
+.wave{
+	/*position: absolute;*/
+}
+.trajectory{
+	position: absolute;
+	top: 10%;
+	left: 11%;
+}
 /*section3*/
 .chart-background{
 	width: 1182px;
