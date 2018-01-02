@@ -83,6 +83,7 @@ $(function () {
                 ary.push(actionComp.tableOut);
             }
         });
+        console.log(ary)
         var optionsHtml = "<option>请选择</option>";
         $.each(ary, function () {
             optionsHtml += `<option>${this}</option>`;
@@ -120,7 +121,7 @@ $(function () {
             $('.sortField').remove();
             console.log(data)
             $.each(data, function () {
-                var field = '<option>'+this.field+'</option>';
+                var field = '<option value='+this.field+'>'+this.remark+'</option>';
                 var sort = this.sort;
                 $('.sortFields').append(sortHtml);
                 console.log(field)
@@ -135,9 +136,10 @@ $(function () {
         $('.sortField').each(function () {
             var data = {};
             var field = $(this).find('.field').val();
-            console.log($(this).find('td').find('.field'))
+            var remark = $(this).find('.field option:checked').text();
             var sort = $(this).find('.sort').val();
             data['field'] = field;
+            data['remark'] =remark;
             data['sort'] = sort;
             ary.push(data);
         });
