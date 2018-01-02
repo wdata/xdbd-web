@@ -503,11 +503,9 @@
 				// extractField.find('.table').val(table);
 				extractField.find('.table option[value="'+table+'"]').attr("selected","selected");
 				extractField.find('.field option[value="'+field+'"]').attr("selected","selected");
-				extractField.find('.alias option[value="'+alias+'"]').attr("selected","selected");
-				extractField.find('.fn option[value="'+fn+'"]').attr("selected","selected");
 				// extractField.find('.field').val(field);
-				// extractField.find('.alias').val(alias);
-				// extractField.find('.fn').val(fn);
+				extractField.find('.alias').val(alias);
+				extractField.find('.fn').val(fn);
 
 			});
 		}

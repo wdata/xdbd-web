@@ -41,6 +41,7 @@ $(function () {
 		// }
 		$('.saveActionComp').click(function () {
 			fn_saveActionComp(getVal());
+			console.log(getVal())
 		});
 	}
 
