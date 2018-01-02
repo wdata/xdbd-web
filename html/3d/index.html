@@ -530,7 +530,7 @@
 		})();
 
 
-        var wheel = function(event) {
+        const wheel = function(event) {
             var delta = 0;
             if (!event) /* For IE. */
                 event = window.event;
@@ -550,11 +550,12 @@
             window.addEventListener('DOMMouseScroll', wheel, false);
         }
         window.onmousewheel = document.onmousewheel = wheel;
-        var handle = function(delta) {
-            var random_num = Math.floor((Math.random() * 100) + 50);
+        const handle = function(delta) {
             if (delta < 0) {
                 window.parent.scrollSlide()
-            }
+            }else{
+                window.parent.scrollPrevious();
+			}
         };
 
 	</script>
