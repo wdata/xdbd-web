@@ -165,7 +165,7 @@ function newBtn(popups) {
 				if (data.code == 0) {
 					localStorage.setItem('directoryId', data.data);
 					window.location.href = 'etlChart.html';
-					// parent.location.reload();
+					parent.location.reload();
 				} else {
 					layer.msg(data.message, { time: 1000 })
 				}
