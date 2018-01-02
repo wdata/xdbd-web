@@ -11,6 +11,7 @@ $(function () {
 	bind_click_generateSql();
 	bind_click_saveActionComp();
 	$(".stepName").val(etlName);
+	$('.auto_save').trigger('change');
 
 	function initFromTable() {
 		$.each(demo.exportData().lines, function () {
@@ -19,8 +20,10 @@ $(function () {
 				fromTable = actionComp.tableOut;
 			}
 		});
+		console.log(fromTable)
 		if (fromTable != null && fromTable != '') {
 			var fields = fn_get_fields_by_fromTable(fromTable);
+			console.log(fields)
 			var optionsHtml = "";
 			// console.log(fields.extractFields)
 			$.each(fields.extractFields, function () {
@@ -38,7 +41,6 @@ $(function () {
 		// }
 		$('.saveActionComp').click(function () {
 			fn_saveActionComp(getVal());
-			console.log(getVal())
 		});
 	}
 
@@ -99,6 +101,8 @@ $(function () {
 					layer.msg('最后一个提取条件不能删除')
 				} else {
 					$(this).parents('.extractField').remove();
+					$('.saveActionComp').trigger('click');
+					$('.generateSql').trigger('click');
 				}
 			})
 	}

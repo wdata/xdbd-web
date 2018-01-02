@@ -116,6 +116,8 @@ $(function(){
 				layer.msg('最后一个提取条件不能删除')
 			} else {
 				$(this).parents('.extractField').remove();
+				$('.saveActionComp').trigger('click');
+				$('.generateSql').trigger('click');
 			}
 		})
 	}
