@@ -64,7 +64,7 @@
     height: 100%;
     margin-left: auto;
     margin-right: auto;
-	 background: url("../images/index/background.png") no-repeat;
+	 background: url("../images/index/background.webp") no-repeat;
 	 background-size: cover;
 }
 .swiper-slide {
@@ -211,8 +211,16 @@
 		top: -18%;
 	}
 
-
-
+.swiper-horizontal-button-prev{
+	width: 30px;
+	left: 8%;
+	background: url("../images/index/swiper_button_002.png") no-repeat 0 50%;
+}
+.swiper-horizontal-button-next{
+	right: 8%;
+	width: 30px;
+	background: url("../images/index/swiper_button_002.png") no-repeat 100% 50%;
+}
 
 
 /*section0*/
@@ -427,7 +435,7 @@
 	width: 900px;
 	margin: 0 auto -20px;
 	font-size: 16px;
-	color: #5f6a72;
+	color: #92bccf;
 	line-height: 2;
 }
 .chart-video {
