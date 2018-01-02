@@ -64,7 +64,7 @@
     height: 100%;
     margin-left: auto;
     margin-right: auto;
-	 background: url("../images/index/background.webp") no-repeat;
+	 background: url("../images/index/background.png") no-repeat;
 	 background-size: cover;
 }
 .swiper-slide {
