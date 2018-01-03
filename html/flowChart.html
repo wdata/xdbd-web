@@ -260,42 +260,55 @@
 			};
 			//预览
 			demo.onBtnPreviewClick = function () {
-				$.ajax({
-					type: "POST",
-					url: $url + "/api/action/v1/actionPreview",///xdbd-etl
-					dataType: "json",
-					contentType: "application/json",
-					data: JSON.stringify({
-						"actionId": this_actionId,
-						"versionId": this_versionId
-					}),
-					success: function (data) {
-						//console.log(data)
-						if (data.code == 0) {
-							var head = data.data.head;
-							var data = data.data.data;
-							var previewData = [];
-							var previewHead = [];
+				var etlType = [];
+				console.log(JSON.parse(Export()).nodes)
+				$.each(JSON.parse(Export()).nodes,function() {
+					etlType.push(this.type);
+					if(this.type == 'output') {
+						$.ajax({
+							type: "POST",
+							url: $url + "/api/action/v1/actionPreview",///xdbd-etl
+							dataType: "json",
+							contentType: "application/json",
+							data: JSON.stringify({
+								"actionId": this_actionId,
+								"versionId": this_versionId
+							}),
+							success: function (data) {
+								//console.log(data)
+								if (data.code == 0) {
+									var head = data.data.head;
+									var data = data.data.data;
+									var previewData = [];
+									var previewHead = [];
 
-							$.each(head, function (index, item) {
-								previewHead.push('<th>' + item + '</th>');
-							})
+									$.each(head, function (index, item) {
+										previewHead.push('<th>' + item + '</th>');
+									})
 
-							$.each(data, function (index_tr, tr) {
-								var aaa = '';
-								$.each(head, function (index_hd, th) {
-									//alert(tr[th])
-									aaa = aaa + '<td>' + tr[th] + '</td>';
-								});
-								previewData.push('<tr>' + aaa + '</tr>')
-							})
+									$.each(data, function (index_tr, tr) {
+										var aaa = '';
+										$.each(head, function (index_hd, th) {
+											//alert(tr[th])
+											aaa = aaa + '<td>' + tr[th] + '</td>';
+										});
+										previewData.push('<tr>' + aaa + '</tr>')
+									})
 
-							fn_preview(previewHead, previewData);
-						} else {
-							layer.msg(data.message, { time: 1000 })
-						}
+									fn_preview(previewHead, previewData);
+								} else {
+									layer.msg(data.message, { time: 1000 })
+								}
+							}
+						});
 					}
 				});
+				console.log(etlType)
+				$.each(etlType,function() {
+					if(this != 'output') {
+						layer.msg("请添加输出组件",{ time: 1000 })
+					}
+				})
 			};
 			//执行
 			demo.onBtnExecuteClick = function () {
@@ -656,6 +669,7 @@
 			$(document.body)
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
+					$(this).parent().siblings().find(".alias").val(this.options[this.selectedIndex].innerText);
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
 				})

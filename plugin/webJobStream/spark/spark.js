@@ -5,7 +5,7 @@ $(function () {
 	setVal();
 	bind_saveJobStream();
 
-	function bind_saveJobStream() {
+	function bind_saveJobStream() {console.log(111)
 		$('.saveJobStream').click(function () {
 			fn_save(getVal());
 			this_data[this_actionCompId] = getVal();

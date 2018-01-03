@@ -241,6 +241,7 @@ $(function () {
 			.off('click', '.joinAdd')
 			.on('click', '.joinAdd', function () {
 				var joinsHtml = $('.extractField').prop('outerHTML');
+				console.log(111)
 				$('.extractFields').append(joinsHtml)
 			})
 	}
