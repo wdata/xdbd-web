@@ -54,10 +54,10 @@ const vertical = new Swiper('.swiper-container-vertical', {
     // initialSlide:1,
     direction: 'vertical',
     slidesPerView: 1,
-    // paginationClickable: true,
-    // spaceBetween: 0,
-    // mousewheelControl: true,
-    // autoplay: 15000
+    paginationClickable: true,
+    spaceBetween: 0,
+    mousewheelControl: true,
+    autoplay: 15000
 });
 const horizontal = new Swiper(".swiper-container-horizontal",{
     prevButton:'.swiper-button-prev',
@@ -72,7 +72,7 @@ const horizontal = new Swiper(".swiper-container-horizontal",{
             $(".wave,.trajectory").removeClass("active");
         }
     },
-    initialSlide:1,
+    initialSlide:0,
     slidesPerView: 1,
     paginationClickable: true,
     spaceBetween: 0,
