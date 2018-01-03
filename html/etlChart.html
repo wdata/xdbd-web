@@ -299,7 +299,14 @@
 						} else {
 							layer.msg(data.message, { time: 1000 })
 						}
-					}, error: function (data) {
+					},
+                    beforeSend:function(){
+                        layer.load(0, {shade:[0.1,'#000']}); //0代表加载的风格，支持0-2
+                    },
+                    complete:function(){
+                        layer.closeAll('loading'); //关闭信息框
+                    },
+					error: function (data) {
 						// console.log(JSON.stringify(data))
 					}
 				});

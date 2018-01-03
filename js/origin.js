@@ -24,9 +24,9 @@
       contentType: "application/json",
       data: JSON.stringify(source),
       success: function (data) {
-        if (data.code == 0) {
+        if (data.code === 0) {
           var list = new Array;
-          console.log(data.data)
+          // console.log(data.data)
           $.each(data.data, function (index, item) {
             list.push(`
                 <tr class="list_origin" id="${item.dsId}">
@@ -60,8 +60,16 @@
     var dbDatabase = $('.db_database').val();
     var dbUser = $('.db_user').val();
     var dbPassword = $('.db_password').val();
+    var dbNameBur = false;
+    $(".list .dbname").filter(function(){
+        if(this.innerText === dbName){
+            dbNameBur = true;
+        }
+    });
     if (dbName == '') {
       layer.msg('请输入名称');
+    } else if (dbNameBur) {
+        layer.msg('数据源名称不能重名！')
     } else if (dbSite == '') {
       layer.msg('请输入数据库地址');
     } else if (dbPort == '') {
@@ -71,7 +79,7 @@
     } else if (dbUser == '') {
       layer.msg('请输入用户名')
     } else if (dbPassword == '') {
-      layer.msg('请输入密码')
+        layer.msg('请输入密码')
     } else {
       var obj = {
         dbtype:dbType,
@@ -83,6 +91,7 @@
         dbpassword:dbPassword
       };
       arr.push(obj)
+
       $.ajax({
         type: 'POST',
         url: $url+'/api/datasource/v1/saveDataSource', //$url2 +
@@ -103,40 +112,45 @@
           "versionId":versionId
         }),
         success: function (res) {
-          console.log(res);
           if (res.code === 0) {
-            var html;
             $('.data-source-config').css('display', 'none');
             if(ds.view.ds != '') {
               layer.msg('成功修改数据源');
-              get_dataSource();
+                get_dataSource();
             } else {
               layer.msg('成功添加数据源');
-              $.each(arr, function (index, item) {
-                html += `
-                    <tr class="list_origin" id="${res.data.dsId}">
-                        <td class="dbtype">${item.dbtype}</td>
-                        <td class="dbname">${item.dbname}</td>
-                        <td class="dbsite">${item.dbsite}</td>
-                        <td class="dbport">${item.dbport}</td>
-                        <td class="dbdatabase">${item.dbdatabase}</td>
-                        <td class="dbuser">${item.dbuser}</td>
-                        <td class="dbpassword"><input type="password" class="code" value="${item.dbpassword}" readonly/></td>
-                        <td>
-                            <botton class="compile" onclick="compileBtn(this)">编辑</botton>
-                            <botton class="cancel" onclick="cancelBtn(this)">删除</botton>
-                        </td>
-                    </tr>
-                  `
-              });
-              $('.list').append(html);
+                get_dataSource();
+              // $.each(arr, function (index, item) {
+              //   html += `
+              //       <tr class="list_origin" id="${res.data.dsId}">
+              //           <td class="dbtype">${item.dbtype}</td>
+              //           <td class="dbname">${item.dbname}</td>
+              //           <td class="dbsite">${item.dbsite}</td>
+              //           <td class="dbport">${item.dbport}</td>
+              //           <td class="dbdatabase">${item.dbdatabase}</td>
+              //           <td class="dbuser">${item.dbuser}</td>
+              //           <td class="dbpassword"><input type="password" class="code" value="${item.dbpassword}" readonly/></td>
+              //           <td>
+              //               <botton class="compile" onclick="compileBtn(this)">编辑</botton>
+              //               <botton class="cancel" onclick="cancelBtn(this)">删除</botton>
+              //           </td>
+              //       </tr>
+              //     `
+              // });
+              // $('.list').append(html);
             }
           } else {
             layer.msg(res.message,{time: 1000})
           }
         },
+        beforeSend:function(){
+            layer.load(0, {shade:[0.1,'#000']}); //0代表加载的风格，支持0-2
+        },
+        complete:function(){
+            layer.closeAll('loading'); //关闭信息框
+        },
         error: function (err) {
-          console.log(err);
+          // console.log(err);
         }
       });
     }
