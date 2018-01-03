@@ -66,19 +66,19 @@ $(function(){
 	function bind_change_fromTable(){
 		$('.fromTable').change(function(){
 			var tbName = $(this).val();
-			// var extractFieldHtml = $('.extractField').prop('outerHTML');
-			// $('.extractField').remove();
+			var extractFieldHtml = $('.extractField').prop('outerHTML');
+			$('.extractField').remove();
 			var fieldList = tables[tbName].fieldList;
 			console.log(fieldList)
 			var extractField = $('.extractField:last');
-			//var checkField = this+"";
-			// $('.extractFields').append(extractFieldHtml);
+			var checkField = this+"";
+			$('.extractFields').append(extractFieldHtml);
 			var optionHtml='';
 			$.each(fieldList,function(){
 				
 				// console.log(fieldList)
 				$.each(fieldList,function(){
-					optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
+					optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
 				});
 			});
 			//alert(optionHtml);
@@ -91,7 +91,7 @@ $(function(){
 		var optionsHtml = "<option>请选择</option>";
 		// alert(JSON.stringify(tables))
 		$.each(tables,function(){
-		optionsHtml += "<option value="+this.tableName+" selected>"+this.remark+"</option>";
+		optionsHtml += "<option value="+this.tableName+">"+this.remark+"</option>";
 		});
 		$('.fromTable').html(optionsHtml);
 	}
@@ -135,7 +135,7 @@ $(function(){
 			var extractField = $('.extractField:last');
 			var optionHtml='';
 			$.each(tables[fn_get_fromTable()].fieldList,function(){
-				optionHtml += "<option value="+this.fieldName+" selected>"+this.remark+"</option>";
+				optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
 			});
 			extractField.find('.fields').html(optionHtml);
 			extractField.find('.fields').val(checkField);
@@ -146,7 +146,6 @@ $(function(){
 
 	function get_extractFields(){
 		var list = [];
-		console.log($('.extractField').length)
 		$('.extractField').each(function(){
 			// var field = $(this).find('.fields').val();
 			// ary.push(field);
@@ -159,7 +158,6 @@ $(function(){
 			ary['fn'] = '';
 			list.push(ary);
 		});
-		console.log(list)
 		return list;
 	}
 
