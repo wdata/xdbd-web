@@ -131,6 +131,8 @@
               });
               $('.list').append(html);
             }
+          } else {
+            layer.msg(res.message,{time: 1000})
           }
         },
         error: function (err) {

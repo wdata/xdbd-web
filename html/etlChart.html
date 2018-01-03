@@ -185,10 +185,10 @@
 			demo.setNodeRemarks(remark);
 			demo.onItemDel = function (id, type) {
 				var self = this;
-				console.log(self)
+				// console.log(self)
 				if (confirm("确定要删除该单元吗?")) {
-					init_delec(id);
 					self.blurItem();
+					init_delec(id);
 					return true;
 				} else {
 					return false;
@@ -197,7 +197,7 @@
 			//导出图片功能 END
 			var exportName = "流程图";
 			demo.loadData(getDag);
-			//        console.log(this_remark)
+			    //    console.log(this_remark)
 			demo.onPrintClick = function () {
 				demo.exportDiagram(exportName);
 			}
@@ -247,7 +247,6 @@
 			//          };
 			//保存流程图
 			demo.onBtnSaveClick = function () {
-				console.log(Export())
 				var jsons = {};
 				jsons.jobId = jobid;
 				jsons.isTemplate = JSON.parse(template);
@@ -264,7 +263,7 @@
 					contentType: "application/json",
 					data: JSON.stringify(jsons),
 					success: function (data) {
-						console.log(data)
+						// console.log(data)
 						if (data.code == 0) {
 							this_new = false;
 							layer.msg('保存成功', { time: 1000 });
@@ -294,14 +293,14 @@
 						"id": jobid,
 						"versionId": this_versionId
 					}), success: function (data) {
-						console.log(data);
+						// console.log(data);
 						if (data.code == 0) {
 							layer.msg("执行成功", { time: 1000 })
 						} else {
 							layer.msg(data.message, { time: 1000 })
 						}
 					}, error: function (data) {
-						console.log(JSON.stringify(data))
+						// console.log(JSON.stringify(data))
 					}
 				});
 			};
@@ -341,7 +340,7 @@
 			return port;
 		}
 		function add(this_) {
-			console.log($(this_).parents(".archive"))
+			// console.log($(this_).parents(".archive"))
 			var td = '<input type="text"/>';
 			$(this_).parents(".archive").find('.son_archive').append(td)
 		}
@@ -379,10 +378,10 @@
 				contentType: "application/json",
 				data: JSON.stringify(demandId),
 				success: function (data) {
-					console.log(data)
+					// console.log(data)
 					if (data.code == 0) {
 						this_remark = data.data.remark;
-						//              console.log(this_remark)
+						            //  console.log(this_remark)
 						$('.remark_value').html(this_remark);
 						var getDag = "";
 						if (data.data != '' && data.data != null && data.data.dag != null && data.data.dag != 'null') {
@@ -411,7 +410,7 @@
 				contentType: "application/json",
 				data: JSON.stringify(version),
 				success: function (data) {
-					console.log(data)
+					// console.log(data)
 					if (data.code == 0) {
 						var arr = [];
 						$.each(data.data, function (index, item) {
@@ -474,7 +473,7 @@
 		}
 		//        保存单个组件
 		function fn_save(jsonStr) {
-			console.log(jsonStr)
+			// console.log(jsonStr)
 			$.ajax({
 				type: "POST",
 				url: $url + '/api/jobComp/v1/save',///xdbd-etl
@@ -510,7 +509,7 @@
 				contentType: "application/json"
 				, success: function (data) {
 					if (data.code == 0) {
-						console.log(data)
+						// console.log(data)
 						var alg = [];
 						$.each(data.data, function (index, item) {
 							alg.push('<option value=' + item.id + '>' + item.name + '</option>');
