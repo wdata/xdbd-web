@@ -2,7 +2,7 @@
  * Created by qiangxl on 2017/10/11.
  */
 //增加字段
-$(function () {
+// $(function () {
 	var fromTable;
 	initFromTable();
 	setVal();
@@ -80,6 +80,7 @@ $(function () {
 		//   fn_set_sqlOut(generate_sql());
 		// }
 		$('.generateSql').click(function () {
+            console.log("我执行了输出节点！ --- 6 --- groups --- 2");
 			fn_set_sqlOut(generate_sql());
 		});
 	}
@@ -124,5 +125,5 @@ $(function () {
 		});
 		return s.toString();
 	}
-});
+// });
 
