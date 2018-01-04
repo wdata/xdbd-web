@@ -17,7 +17,7 @@
 	function bind_click_saveActionComp(){
 		$('.saveActionComp').click(function(){
 		fn_saveActionComp(getVal());
-		console.log(getVal())
+		// console.log(getVal())
 		});
 	}
 
@@ -69,6 +69,7 @@
 			// var extractFieldHtml = $('.extractField').prop('outerHTML');
 			// $('.extractField').remove();
 			var fieldList = tables[tbName].fieldList;
+			// console.log(fieldList)
 			var extractField = $('.extractField:last');
 			// var checkField = this+"";
 			// $('.extractFields').append(extractFieldHtml);
@@ -76,6 +77,8 @@
 			$.each(fieldList,function(){
 				optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
 			});
+			// alert(optionHtml);
+			// console.log(optionHtml);
 			extractField.find('.fields').html(optionHtml);
 		});
 	}
@@ -104,7 +107,7 @@
 		$(document.body)
 		.off('click', '.lessen')
 		.on('click', '.lessen', function () {
-			console.log($('.extractField').length)
+			// console.log($('.extractField').length)
 			if($('.extractField').length <2) {
 				layer.msg('最后一个提取条件不能删除');
 			} else {
@@ -121,7 +124,7 @@
 		if(obj.length<1){
 		return;
 		}
-		console.log(obj);//alert(JSON.stringify(obj))
+		// console.log(obj);//alert(JSON.stringify(obj))
 		$.each(obj,function(){
 			var checkField = this.field;
 			// var checkRemark = this.field;
@@ -133,6 +136,7 @@
 				const select = checkField===this.fieldName?"selected":'';
 				optionHtml += "<option "+ select +" value="+this.fieldName+" >"+this.remark+"</option>";
 			});
+			// console.log(optionHtml)
 			extractField.find('.fields').html(optionHtml);
 		});
 	}
