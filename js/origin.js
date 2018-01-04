@@ -60,17 +60,19 @@
     var dbDatabase = $('.db_database').val();
     var dbUser = $('.db_user').val();
     var dbPassword = $('.db_password').val();
-    var dbNameBur = false;
-    $(".list .dbname").filter(function(){
-        if(this.innerText === dbName){
-            dbNameBur = true;
-        }
-    });
+    // var dbNameBur = false;
+    // $(".list .dbname").filter(function(){
+    //     if(this.innerText === dbName){
+    //         dbNameBur = true;
+    //     }
+    // });
     if (dbName == '') {
       layer.msg('请输入名称');
-    } else if (dbNameBur) {
-        layer.msg('数据源名称不能重名！')
-    } else if (dbSite == '') {
+    }
+    // else if (dbNameBur) {
+    //     layer.msg('数据源名称不能重名！')
+    // }
+    else if (dbSite == '') {
       layer.msg('请输入数据库地址');
     } else if (dbPort == '') {
       layer.msg('请输入端口');
