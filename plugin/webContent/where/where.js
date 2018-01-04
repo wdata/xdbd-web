@@ -3,7 +3,7 @@
  */
 //增加字段
 
-$(function () {
+// $(function () {
 	var whereTable;
 	initFromTable();
 	setVal();
@@ -172,4 +172,4 @@ $(function () {
 		});
 		return s.toString();
 	}
-});
+// });

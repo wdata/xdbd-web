@@ -261,10 +261,10 @@
 			//预览
 			demo.onBtnPreviewClick = function () {
 				var etlType = [];
-				console.log(JSON.parse(Export()).nodes)
-				$.each(JSON.parse(Export()).nodes,function() {
-					etlType.push(this.type);
-					if(this.type == 'output') {
+				// console.log(JSON.parse(Export()).nodes)
+				// $.each(JSON.parse(Export()).nodes,function() {
+				// 	etlType.push(this.type);
+				// 	if(this.type == 'output') {
 						$.ajax({
 							type: "POST",
 							url: $url + "/api/action/v1/actionPreview",///xdbd-etl
@@ -301,14 +301,14 @@
 								}
 							}
 						});
-					}
-				});
-				console.log(etlType)
-				$.each(etlType,function() {
-					if(this != 'output') {
-						layer.msg("请添加输出组件",{ time: 1000 })
-					}
-				})
+					// }
+				// });
+				// console.log(etlType)
+				// $.each(etlType,function() {
+				// 	if(this != 'output') {
+				// 		layer.msg("请添加输出组件",{ time: 1000 })
+				// 	}
+				// })
 			};
 			//执行
 			demo.onBtnExecuteClick = function () {
@@ -508,6 +508,7 @@
 				var table = this.table;
 				var field = this.field;
 				var alias = this.alias;
+				var remarks = this.remark;
 				var fn = this.fn;
 				//alert(extractFieldHtml)
 				$('.extractFields').append(extractFieldHtml);
@@ -516,7 +517,7 @@
 				// extractField.find('.table').val(table);
 				extractField.find('.table option[value="'+table+'"]').attr("selected","selected");
 				extractField.find('.field option[value="'+field+'"]').attr("selected","selected");
-				// extractField.find('.field').val(field);
+				extractField.find('.field').text(remarks);
 				extractField.find('.alias').val(alias);
 				extractField.find('.fn').val(fn);
 
@@ -529,6 +530,7 @@
 				var data = {};
 				var table = $(this).find('.table').val();
 				var field = $(this).find('.field').val();
+				var remarks = $(this).find('.field option:checked').text();
 				var alias = $(this).find('.alias').val();
 				var fn = $(this).find('.fn').val();
 				if (table != null) {
@@ -536,6 +538,7 @@
 				}
 				data['field'] = field;
 				data['alias'] = alias;
+				data['remark'] = remarks;
 				data['fn'] = fn;
 				ary.push(data);
 			});
@@ -669,7 +672,7 @@
 			$(document.body)
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
-					$(this).parent().siblings().find(".alias").val(this.options[this.selectedIndex].innerText);
+					$(this).parent().siblings().find(".alias").val(this.options[this.selectedIndex].value);
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
 				})

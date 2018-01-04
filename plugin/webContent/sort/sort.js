@@ -3,7 +3,7 @@
  */
 //增加字段
 
-$(function () {
+// $(function () {
     initFromTable();
     setVal();
     bind_change_fromTable();
@@ -70,7 +70,7 @@ $(function () {
         data['sqlOut'] = generate_sql();
         data['dag'] = Export();
         var attValue = {};
-        attValue['sorts'] = get_sortFields();
+        attValue['extractFields'] = get_sortFields();
         data['attValue'] = JSON.stringify(attValue);
         return data;
     }
@@ -80,7 +80,8 @@ $(function () {
         $.each(demo.exportData().lines, function () {
             if (this.to == this_webComponentId) {
                 var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-                ary.push(actionComp.tableOut);
+                console.log(actionComp)
+                ary.push(actionComp.fromTable);
             }
         });
         console.log(ary)
@@ -161,6 +162,7 @@ $(function () {
         var fromTable = fn_get_fromTable();
         s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
         //提取字段
+        console.log(fn_get_fields_by_fromTable(fromTable))
         $.each(fn_get_fields_by_fromTable(fromTable), function () {
             var field = this;
             if (fromTable != null && fromTable != '') {
@@ -169,6 +171,7 @@ $(function () {
             s.field(field);
         });
         //排序字段
+        console.log(get_sortFields())
         $.each(get_sortFields(), function () {
             var field = this.field;
             var sort = this.sort;
@@ -181,4 +184,4 @@ $(function () {
         });
         return s.toString();
     }
-});
+// });

@@ -2,7 +2,7 @@
  * Created by qiangxl on 2017/10/12.
  */
 //增加字段
-$(function () {
+// $(function () {
 	initFromTable();
 	setVal();
 	bind_change_fromTable();
@@ -269,6 +269,7 @@ $(function () {
 		s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
 
 		//提取字段
+		console.log(fn_get_extractFields())
 		$.each(fn_get_extractFields(), function () {
 			var table = this.table;
 			var field = this.field;
@@ -331,4 +332,4 @@ $(function () {
 		});
 		return s.toString();
 	}
-});
+// });

@@ -57,7 +57,7 @@ function outBtn(_this) {
 function deletesBtn(_this) {
 	event.cancelBubble = true; // 当前点击不影响父级点击事件
 	var parans = {
-		actionId: $(_this).parents(".new_demand").attr("id"),
+		actionId: $(_this).parents(".new_demand").attr("data-id"),
 		versionId: this_versionId
 	};
 	layer.confirm('是否要删除当前模板？', {
