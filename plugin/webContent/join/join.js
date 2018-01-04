@@ -138,8 +138,8 @@
 			fn_set_stepName(etlName);
 			fn_set_fromTable(actionComp.fromTable);
 			fn_set_tableOut(actionComp.tableOut);
-			$('.selectTable').trigger('change');
 			set_joinTables(attValue.joinTables);
+			$('.selectTable').trigger('change');
 			fn_set_extractFields(attValue.extractFields);
 			fn_set_sqlOut(actionComp.sqlOut);
 		} else {
