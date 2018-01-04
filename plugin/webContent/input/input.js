@@ -2,7 +2,7 @@
  * Created by qiangxl on 2017/10/11.
  */
 //增加字段
-$(function(){
+// $(function(){
 	initFromTable();
 	setVal();
 	bind_change_fromTable();
@@ -11,7 +11,7 @@ $(function(){
 	bind_click_loadParguet();
 	bind_click_generateSql();
 	bind_click_saveActionComp();
-	// $('.fromTable').trigger('change');
+	$('.fromTable').trigger('change');
 	
 
 	function bind_click_saveActionComp(){
@@ -66,29 +66,25 @@ $(function(){
 	function bind_change_fromTable(){
 		$('.fromTable').change(function(){
 			var tbName = $(this).val();
-			var extractFieldHtml = $('.extractField').prop('outerHTML');
-			$('.extractField').remove();
+			// var extractFieldHtml = $('.extractField').prop('outerHTML');
+			// $('.extractField').remove();
 			var fieldList = tables[tbName].fieldList;
 			console.log(fieldList)
 			var extractField = $('.extractField:last');
-			var checkField = this+"";
-			$('.extractFields').append(extractFieldHtml);
+			// var checkField = this+"";
+			// $('.extractFields').append(extractFieldHtml);
 			var optionHtml='';
 			$.each(fieldList,function(){
-				
-				// console.log(fieldList)
-				$.each(fieldList,function(){
-					optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
-				});
+				optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
 			});
-			//alert(optionHtml);
+			// alert(optionHtml);
 			extractField.find('.fields').html(optionHtml);
 			//extractField.find('.fields').val(checkField);
 		});
 	}
 
 	function initFromTable(){
-		var optionsHtml = "<option>请选择</option>";
+		var optionsHtml = "";
 		// alert(JSON.stringify(tables))
 		$.each(tables,function(){
 		optionsHtml += "<option value="+this.tableName+">"+this.remark+"</option>";
@@ -113,7 +109,7 @@ $(function(){
 		.on('click', '.lessen', function () {
 			console.log($('.extractField').length)
 			if($('.extractField').length <2) {
-				layer.msg('最后一个提取条件不能删除')
+				layer.msg('最后一个提取条件不能删除');
 			} else {
 				$(this).parents('.extractField').remove();
 				// $('.saveActionComp').trigger('click');
@@ -131,17 +127,17 @@ $(function(){
 		console.log(obj);//alert(JSON.stringify(obj))
 		$.each(obj,function(){
 			var checkField = this.field;
+			// var checkRemark = this.field;
 			$('.extractFields').append(extractFieldHtml);
 			var extractField = $('.extractField:last');
 			var optionHtml='';
+			console.log(tables[fn_get_fromTable()].fieldList)
 			$.each(tables[fn_get_fromTable()].fieldList,function(){
-				optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
+				optionHtml += "<option value="+this.fieldName+" >"+this.remark+"</option>";
 			});
 			extractField.find('.fields').html(optionHtml);
 			extractField.find('.fields').val(checkField);
-
 		});
-
 	}
 
 	function get_extractFields(){
@@ -174,4 +170,4 @@ $(function(){
 		});
 		return s.toString();
 	}
-});
+// });

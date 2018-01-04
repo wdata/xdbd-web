@@ -1,7 +1,7 @@
 /**
  * Created by qiangxl on 2017/10/15.
  */
-$(function () {
+// $(function () {
 	var grtoupTable;
 	initFromTable();
 	bind_click_sql();
@@ -218,4 +218,4 @@ $(function () {
 		});
 		return ary;
 	}
-})
+// })

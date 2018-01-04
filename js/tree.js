@@ -409,10 +409,10 @@ $(function(){
                 }
             });
 		},
-        modifyZylFileInfo:function(directoryId,name,remark,businessType){
+        modifyZylFileInfo:function(directoryId,versionId,name,remark,businessType){
             $.ajax({
                 type:'POST',
-                url:$url4+'/api/job/v1/save',
+                url:$url4+'/api/job/v1/modify',
                 headers:{
                     username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
                 },
@@ -423,7 +423,8 @@ $(function(){
                     "name":name,
                     "updateUser":sessionStorage.getItem("userId"),
                     "remark":remark,
-                    "businessType":businessType
+					"businessType":businessType,
+					'versionId':versionId
                 }),
                 success:function(res){
                     console.log(res);
@@ -557,7 +558,7 @@ $(function(){
                 }else if(!$.trim(remark)){
                     layer.msg("作业流描述不能为空", {icon: 0});
                 }else{
-                    editFile.modifyZylFileInfo(directoryId,name,remark,businessType);
+                    editFile.modifyZylFileInfo(directoryId,versionId,name,remark,businessType);
                     layer.close(index);
                 }
             },

@@ -9,9 +9,10 @@
 	bind_click_extractAdd();
 	bind_click_extractLessen();
 	bind_click_generateSql();
-	bind_click_saveActionComp();
+	bind_click_saveActionComp();console.log(123143)
 	$(".stepName").val(etlName);
 	$('.auto_save').trigger('change');
+	
 
 	function initFromTable() {
 		$.each(demo.exportData().lines, function () {
@@ -25,7 +26,7 @@
 			var fields = fn_get_fields_by_fromTable(fromTable);
 			console.log(fields)
 			var optionsHtml = "";
-			// console.log(fields.extractFields)
+			console.log(fields.extractFields)
 			$.each(fields.extractFields, function () {
 				optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
 			});
@@ -117,7 +118,7 @@
 		$.each(fn_get_extractFields(), function () {
 			var field = this.field;
 			var alias = this.alias;
-			//alert(fromTable)
+			// alealert(fromTable)
 			if (fromTable != null && fromTable != '') {
 				field = fromTable + "." + field;
 			}
