@@ -4,14 +4,14 @@
 //增加字段
 // $(function(){
 	initFromTable();
-	setVal();
 	bind_change_fromTable();
+	$('.fromTable').trigger('change');
+	setVal();
 	bind_click_add();
 	bind_click_lessen();
 	bind_click_loadParguet();
 	bind_click_generateSql();
 	bind_click_saveActionComp();
-	$('.fromTable').trigger('change');
 	
 
 	function bind_click_saveActionComp(){
@@ -78,6 +78,7 @@
 				optionHtml += "<option value="+this.fieldName+">"+this.remark+"</option>";
 			});
 			// alert(optionHtml);
+			console.log(optionHtml);
 			extractField.find('.fields').html(optionHtml);
 			//extractField.find('.fields').val(checkField);
 		});
@@ -131,12 +132,15 @@
 			$('.extractFields').append(extractFieldHtml);
 			var extractField = $('.extractField:last');
 			var optionHtml='';
-			console.log(tables[fn_get_fromTable()].fieldList)
+			// console.log(tables[fn_get_fromTable()].fieldList,extractFieldHtml);
 			$.each(tables[fn_get_fromTable()].fieldList,function(){
-				optionHtml += "<option value="+this.fieldName+" >"+this.remark+"</option>";
+				const select = checkField===this.fieldName?"selected":'';
+				// console.log(select,checkField,this.fieldName);
+				optionHtml += "<option "+ select +" value="+this.fieldName+" >"+this.remark+"</option>";
 			});
+			console.log(optionHtml)
 			extractField.find('.fields').html(optionHtml);
-			extractField.find('.fields').val(checkField);
+			// extractField.find('.fields').val(checkField);
 		});
 	}
 
