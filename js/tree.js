@@ -334,7 +334,7 @@ $(function(){
                         var html = '';
                         if(data.length){
                             $.each(data, function (i,v) {
-                                html += `<option value="${i.dsId}">${v.name}</option>`
+                                html += `<option value="${v.dsId}">${v.name}</option>`
                             })
                             $(".newEtlFile .new_ds").html(html);
                         }else{

@@ -4,10 +4,13 @@
 //增加字段
 // $(function () {
 	initFromTable();
-	setVal();
 	bind_change_fromTable();
 	bind_change_selectTable();
 	bind_change_extractTable();
+	$('.extractField .table').trigger('change');
+	$('.fromTable').trigger('change');
+	setVal();
+	console.log($('.selectTable').val());
 	bind_click_generateSql();
 	bind_click_onAdd();
 	bind_click_onLessen();
@@ -17,10 +20,6 @@
 	bind_click_sql();
 
 	$(".stepName").val(etlName);
-
-	$('.extractField .table').trigger('change');
-	$('.fromTable').trigger('change');
-	$('.selectTable').trigger('change');
 
 	function bind_change_fromTable() {
 		$(document.body)
@@ -33,6 +32,7 @@
 					optionsHtml += "<option value="+this.field+">" + this.remark + "</option>";
 				});
 				$('.field2').html(optionsHtml);
+
 			});
 	}
 
@@ -43,14 +43,17 @@
 				// var fields = fn_get_fields_by_fromTable($(this).val());
 				var optionsHtml = "";
 				var self = $(this);
+				console.log(this,self)
 				console.log(tables)
 				$.each(tables, function (i,item) {
+					console.log(self.val(),this.tableName)
 					if(self.val() == this.tableName) {
 						$.each(item.fieldList,function() {
 							optionsHtml += "<option value="+this.fieldName+">" + this.remark + "</option>";
 						})
 					}
 				});
+				console.log(optionsHtml)
 				$(this).parents('.joinTable').find('.field1').html(optionsHtml);
 				$('.extractField .table').append('<option>'+$(this).val()+'</option>');
 			});
@@ -94,13 +97,14 @@
 		if (joinTables != null) {
 			var joinTableHtml = $('.joinTable').prop('outerHTML');
 			$('.joinTable').remove();
+			console.log(joinTables)
 			$.each(joinTables, function () {
 				var type = this.type;
 				var table = this.table;
 				$('.joinTables').append(joinTableHtml);
 
 				var joinTable = $('.joinTable:last');
-				console.log(table)
+				// console.log(table)
 				joinTable.find('.joinType').val(type);
 				// joinTable.find('.selectTable').val(table);
 				joinTable.find('.selectTable option[value="'+table+'"]').attr("selected", 'selected');
@@ -108,7 +112,7 @@
 				if (this.onFilters != null) {
 					joinTable.find('.onFilter').remove();
 				}
-				//alert(this.onFilteris.length)
+				console.log(onFilterHtml)
 				$.each(this.onFilters, function () {
 					var field1 = this.field1;
 					var expr = this.expr;
@@ -134,6 +138,7 @@
 			fn_set_stepName(etlName);
 			fn_set_fromTable(actionComp.fromTable);
 			fn_set_tableOut(actionComp.tableOut);
+			$('.selectTable').trigger('change');
 			set_joinTables(attValue.joinTables);
 			fn_set_extractFields(attValue.extractFields);
 			fn_set_sqlOut(actionComp.sqlOut);
@@ -241,7 +246,6 @@
 			.off('click', '.joinAdd')
 			.on('click', '.joinAdd', function () {
 				var joinsHtml = $('.extractField').prop('outerHTML');
-				console.log(111)
 				$('.extractFields').append(joinsHtml)
 			})
 	}
