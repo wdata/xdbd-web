@@ -80,7 +80,6 @@
 			// alert(optionHtml);
 			// console.log(optionHtml);
 			extractField.find('.fields').html(optionHtml);
-			//extractField.find('.fields').val(checkField);
 		});
 	}
 
@@ -135,12 +134,10 @@
 			// console.log(tables[fn_get_fromTable()].fieldList,extractFieldHtml);
 			$.each(tables[fn_get_fromTable()].fieldList,function(){
 				const select = checkField===this.fieldName?"selected":'';
-				// console.log(select,checkField,this.fieldName);
 				optionHtml += "<option "+ select +" value="+this.fieldName+" >"+this.remark+"</option>";
 			});
 			// console.log(optionHtml)
 			extractField.find('.fields').html(optionHtml);
-			// extractField.find('.fields').val(checkField);
 		});
 	}
 

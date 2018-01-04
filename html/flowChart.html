@@ -461,7 +461,7 @@
 				data: JSON.stringify(parameter),
 				success: function (data) {
 					var data = data.data;
-					console.log(data);
+//					console.log(data);
 					$.each(data, function () {
 						tables[this.tableName] = this;
 					});
@@ -597,7 +597,7 @@
 						layer.msg(data.data.message, { time: 1000 })
 					}
 				}, error: function (data) {
-					console.log(JSON.stringify(data))
+//					console.log(JSON.stringify(data))
 				}
 			})
 		}
@@ -615,7 +615,7 @@
 				contentType: "application/json",
 				data: JSON.stringify(parameter),
 				success: function (data) {
-					console.log(data.data)
+//					console.log(data.data)
 					actionComps = data.data;
 				}
 			});
