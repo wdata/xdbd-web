@@ -79,14 +79,13 @@
         $.each(demo.exportData().lines, function () {
             if (this.to == this_webComponentId) {
                 var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-                console.log(actionComp)
-                ary.push(actionComp.fromTable);
+                var tableOut = tables[actionComp.fromTable];
+                ary.push({name:tableOut.remark,val:actionComp.fromTable});
             }
         });
-        console.log(ary)
         var optionsHtml = "";
         $.each(ary, function () {
-            optionsHtml += `<option>${this}</option>`;
+            optionsHtml += `<option value="${this.val}">${this.name?this.name:this.val}</option>`;
         });
         $('.fromTable').html(optionsHtml);
     }
