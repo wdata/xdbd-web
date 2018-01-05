@@ -8,6 +8,12 @@ bind_click_saveActionComp();
 $(".stepName").val(etlName);
 $('.auto_save').trigger('change');
 
+$("#output").on("change",".extractField .auto_save",function(){
+    const alias = $(this).parent().siblings().find(".alias");
+    alias.val(this.options[this.selectedIndex].innerText);
+});
+
+
 
 function initFromTable() {
     $.each(demo.exportData().lines, function () {
@@ -38,7 +44,6 @@ function setVal() {
     var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
     if (actionComp != null) {
         var attValue = eval("(" + actionComp.attValue + ")");
-        console.log(actionComp,attValue);
         fn_set_stepName(etlName);
         fn_set_extractFields(attValue.extractFields);
         fn_set_sqlOut(actionComp.sqlOut);
