@@ -42,13 +42,14 @@ function getVal() {
 					}
 				}
 			}
-	}
+	};
 	return data;
 }
 
 function setVal() {
 	$('.spark_task').val(this_actionCompName);
-    if(this_actionComp.action.spark.name){
+	console.log(this_actionComp)
+    if(this_actionComp.action){
         $(".spark_name").val(this_actionComp.action.spark.name);
 	}
 }
