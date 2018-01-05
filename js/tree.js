@@ -622,7 +622,7 @@ $(function(){
             selectedColor:"#fff",
             data: treeviewData,
             selectedBackColor: "#578fe6",
-            onNodeSelected:function(event,node){console.log(node);
+            onNodeSelected:function(event,node){
 				getRootNode($(this),node);//寻找根节点
                 curNodeId = node.nodeId;
                 sessionStorage.setItem("curNodeId",curNodeId);
@@ -662,7 +662,6 @@ $(function(){
                     currentNode.tags=['1'];
                 }
 
-                console.log("1="+dirType);
                 //new
 				switch(dirType){
 					case "14":
@@ -831,7 +830,6 @@ $(function(){
             basicContext.show(items,e);
         }
         $("#treeview5").delegate(".badge","click",function(e){
-            console.log(items);
             onLeftKey(e);
             return false;
         });
@@ -867,7 +865,6 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
-              		console.log(res);
               		treeviewData = res.data;
               		// localStorage.setItem("treeviewData",JSON.stringify(treeviewData));
                     showTree(treeviewData);
@@ -1283,7 +1280,6 @@ $(function(){
 					"oldVersionName":oldVersionName
 				},
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 	              		//切换版本成功之后,刷新项目树
 	              		getProjName(0);//刷新项目树
@@ -1322,7 +1318,6 @@ $(function(){
 			});
 		};
 			$('#import-file').on('change',function(e){
-    			//console.log(e.target.files[0])
     			confirmLeadingIn();
     			layer.closeAll()
     		})
@@ -1338,7 +1333,6 @@ $(function(){
 			    processData: false,
 			    contentType: false,
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						layer.msg("导入成功", {icon: 6});
 						getProjName(0);//刷新项目树
@@ -1473,7 +1467,6 @@ $(function(){
 			var curClickedDom = curTreeObj.getSelectedNodes();
 			directoryId = curTreeObj.getSelectedNodes()[0].directoryId;//目录id
 //			localStorage.setItem("directoryId",directoryId);
-			console.log("1=="+directoryId)
 		}
 		
 
@@ -1524,7 +1517,6 @@ $(function(){
 					"versionId":versionId
 				}),
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						var treeObj = $("#"+selectorId+"");
 						$.fn.zTree.init(treeObj, setting, res.data);
@@ -1559,7 +1551,6 @@ $(function(){
 					"directoryId":directoryId
 				},
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						//删除成功,刷新项目树
 						getProjName(0);
@@ -1589,7 +1580,6 @@ $(function(){
 					"name":name
 				},
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						//修改名称成功,刷新项目树
 						getProjName(0);
@@ -1621,7 +1611,6 @@ $(function(){
 					"versionId":versionId
 				}),
 				success:function(res){
-					console.log(res);
 					if(res.code===0){
 						var data = res.data;
 						var html = `
