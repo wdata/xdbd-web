@@ -67,8 +67,8 @@ function getVal() {
     return data;
 }
 
-function bind_click_generateSql() {
-    $('.generateSql').click(function () {
+function bind_click_generateSql() {console.log(new Date());
+    $('.generateSql').click(function () {console.log('这里为什么会重复执行？？？？？？？');
         fn_set_sqlOut(generate_sql());
     });
 }

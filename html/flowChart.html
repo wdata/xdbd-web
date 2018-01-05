@@ -660,13 +660,13 @@
 		function init_autosave() {
 			$(document.body)
 				.off('change', '.auto_save')
-				.on('change', '.auto_save', function () {
+				.on('change', '.auto_save', function () {console.log(new Date().getTime());
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
 				});
 			$(document.body)
 				.off('click', '.more_save')
-				.on('click', '.more_save', function () {
+				.on('click', '.more_save', function () {console.log('emmmmmmm....222.....?????');
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
 				})
