@@ -148,32 +148,40 @@ function GooFlow(bgDiv,property){
 	if(this.$editable){
 	  //绑定工作区事件
 	  this.$workArea.on("click",{inthis:this},function(e){
-	    //console.log(e)
-		if(!e)e=window.event;
-		var This=e.data.inthis;
-		if(!This.$editable)return;
-		var type=This.$nowType;
-		if(type=="cursor"){
-			var t=$(e.target);
-			var n=t.prop("tagName");
-			//alert(n);
-			if(n=="svg"||(n=="DIV"&&t.prop("class").indexOf("GooFlow_work")>-1)||n=="LABEL"){
-        if(This.$lineOper.data("tid")){
-          //console.log(This.$lineOper.data("tid"))
-          This.focusItem(This.$lineOper.data("tid"),false);
-          //This.$mpFrom.removeData("p");
-        }
-        else{This.blurItem();}
-			}
-			return;
-		}
-		else if(type=="direct"||type=="dashed"||type=="group")return;
-		var X,Y;
-		var ev=mousePosition(e),t=getElCoordinate(this);
-		X=ev.x-t.left+this.parentNode.scrollLeft;
-		Y=ev.y-t.top+this.parentNode.scrollTop;
-		This.addNode(new Date().getTime(),{name:"node_"+This.$max,left:X,top:Y,type:This.$nowType});
-		This.$max++;
+          // console.log("我在GooFlows.js --- 工作区");
+          if (e.toElement.tagName === "svg"){
+              // 在工作空白区
+              $("#propertyForm .propertys").empty();
+          }
+          if (!e) e = window.event;
+          var This = e.data.inthis;
+          if (!This.$editable) return;
+          var type = This.$nowType;
+          if (type == "cursor") {
+              var t = $(e.target);
+              var n = t.prop("tagName");
+              if (n == "svg" || (n == "DIV" && t.prop("class").indexOf("GooFlow_work") > -1) || n == "LABEL") {
+                  if (This.$lineOper.data("tid")) {
+                      This.focusItem(This.$lineOper.data("tid"), false);
+                      //This.$mpFrom.removeData("p");
+                  } else {
+                      This.blurItem();
+                  }
+              }
+              return;
+          } else if (type == "direct" || type == "dashed" || type == "group") return;
+          var X, Y;
+          var ev = mousePosition(e),
+              get = getElCoordinate(this);
+          X = ev.x - get.left + this.parentNode.scrollLeft;
+          Y = ev.y - get.top + this.parentNode.scrollTop;
+          This.addNode(new Date().getTime(), {
+              name: "node_" + This.$max,
+              left: X,
+              top: Y,
+              type: This.$nowType
+          });
+          This.$max++;
 	  });
 	  //划线或改线时用的绑定
 	  this.$workArea.mousemove({inthis:this},function(e){

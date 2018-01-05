@@ -119,7 +119,7 @@ function bind_click_onLessen() {
         .on('click', '.onLessen', function () {
             var whereJudge = $('.where').length < 2;
             if (whereJudge) {
-                layer.msg('最后一个提取条件不能删除')
+                layer.msg('最后一个筛选条件不能删除')
             } else {
                 $(this).parents('.where').remove();
                 $('.saveActionComp').trigger('click');
