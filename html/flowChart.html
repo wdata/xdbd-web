@@ -510,11 +510,9 @@
 				var alias = this.alias;
 				var remarks = this.remark;
 				var fn = this.fn;
-				//alert(extractFieldHtml)
 				$('.extractFields').append(extractFieldHtml);
 
 				var extractField = $('.extractField:last');
-				// extractField.find('.table').val(table);
 				extractField.find('.table option[value="'+table+'"]').attr("selected","selected");
 				extractField.find('.field option[value="'+field+'"]').attr("selected","selected");
 				extractField.find('.field').text(remarks);
@@ -672,10 +670,13 @@
 			$(document.body)
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
-					$(this).parent().siblings().find(".alias").val(this.options[this.selectedIndex].value);
+				    const alias = $(this).parent().siblings().find(".alias");
+				    if(alias.length === 1){
+                        alias.val(this.options[this.selectedIndex].innerText);
+					}
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
-				})
+				});
 			$(document.body)
 				.off('click', '.more_save')
 				.on('click', '.more_save', function () {
