@@ -77,6 +77,7 @@ function bind_click_extractAdd() {
     $(document.body)
         .off('click', '.outputAdd')
         .on('click', '.outputAdd', function () {
+            if(!( $('.extractField').length < $($('.extractField')[0]).find('option').length )){ return false;}
             var outputHtml = $('.extractField').prop('outerHTML');
             $('.extractFields').append(outputHtml);
         })
