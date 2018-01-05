@@ -658,9 +658,17 @@
 		}
 		//子页面的保存与生成sql
 		function init_autosave() {
+			var time = '';
 			$(document.body)
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
+					var newTime = new Date().getTime();
+					if(time){
+						if((newTime-time)<100){
+							return false;
+						}
+					}
+					time = newTime;
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
 				});
