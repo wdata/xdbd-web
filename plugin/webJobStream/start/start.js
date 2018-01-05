@@ -1,11 +1,14 @@
-bind_saveJobStream();
 setVal();
+bind_saveJobStream();
+
+$('.saveJobStream').click(function () {
+    bind_saveJobStream();
+});
+
 
 function bind_saveJobStream() {
-	$('.saveJobStream').click(function () {
-		fn_save(getVal());
-		this_data[this_actionCompId] = getVal();
-	});
+    fn_save(getVal());
+    this_data[this_actionCompId] = getVal();
 }
 
 function getVal() {
