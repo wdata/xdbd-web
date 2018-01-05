@@ -621,7 +621,11 @@ let operating = {
     },
     // 刷新
     refresh:function(){
-        location.reload(); // 刷新页面
+        layer.confirm('刷新前请先保存，是否确定刷新页面？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            location.reload(); // 刷新页面
+        });
     },
     // 预览
     preview:function(){
