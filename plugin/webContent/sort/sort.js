@@ -5,16 +5,15 @@
 
 // $(function () {
     initFromTable();
-    setVal();
     bind_change_fromTable();
     bind_click_sortAdd();
     bind_click_sortLessen();
     bind_click_sql();
     bind_click_saveActionComp();
-
-    // $('.fromTable').trigger('change');
+    // console.log('aaa--------------------------------bbbb')
+    $('.fromTable').trigger('change');
+    // console.log('aaa--------------------------------')
     setVal();
-
     $(".stepName").val(etlName);
 
     function bind_change_fromTable() {
@@ -45,13 +44,13 @@
 
     function setVal() {
         var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
-        console.log(actionComp)
         if (actionComp != null) {
             var attValue = eval("(" + actionComp.attValue + ")");
+            console.log(attValue)
             fn_set_stepName(etlName);
             fn_set_fromTable(actionComp.fromTable);
             fn_set_tableOut(actionComp.tableOut);
-            set_sortFields(attValue.sorts);
+            set_sortFields(attValue.extractFields);
             fn_set_sqlOut(actionComp.sqlOut);
         } else {
             $(".tableOut").val(etlName);
@@ -85,7 +84,7 @@
             }
         });
         console.log(ary)
-        var optionsHtml = "<option>请选择</option>";
+        var optionsHtml = "";
         $.each(ary, function () {
             optionsHtml += `<option>${this}</option>`;
         });
@@ -126,7 +125,8 @@
                 var sort = this.sort;
                 $('.sortFields').append(sortHtml);
                 console.log(field)
-                $('.sortField:last').find('.field').html(field);
+                // $('.sortField:last').find('.field').html(field);
+                $('.sortField:last').find('.field option[value="'+this.field+'"]').attr("selected","selected");
                 $('.sortField:last').find('.sort').val(sort);
             });
         }
