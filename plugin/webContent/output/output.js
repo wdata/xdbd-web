@@ -8,7 +8,7 @@ bind_click_saveActionComp();
 $(".stepName").val(etlName);
 $('.auto_save').trigger('change');
 
-$("#output").on("change",".extractField .auto_save",function(){
+$("#output").on("change",".extractField .field",function(){
     const alias = $(this).parent().siblings().find(".alias");
     alias.val(this.options[this.selectedIndex].innerText);
 });

@@ -221,11 +221,12 @@
 					if (this_actionCompType == 'algorithm') {
 						fn_algorithm();
 					}
-
 					//导入模板
 					$('.propertys').empty().load("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".html", function () {
 						init_type(id, obj.type, function () {
 							$.getScript("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".js");
+//                            alert("我是刚导入模板！")
+                            console.log("我是刚导入模板！ ----------------------------------");
 						});
 					});
 				} else if (model == "area") {
@@ -496,12 +497,8 @@
 					"attValue": JSON.stringify(jsonStr)
 				}), success: function (data) {
 					if (data.code === 0) {
-						layer.msg('保存成功!', { time: 1000 });
-					} else if(data.code === 400){
-                        layer.msg('请求参数错误!', { time: 1000 });
-					} else if(data.code === 405){
-                        layer.msg('ETL数据为空!', { time: 1000 });
-                    } else {
+//						layer.msg('保存成功!', { time: 1000 });
+					}else {
 						layer.msg(data.message, { time: 1000 })
 					}
 				}, error: function (data) {
