@@ -244,7 +244,6 @@
 						$.getScript("../plugin/webContent/" + this_actionCompType + "/" + this_actionCompType + ".js");
 					});
 				} else if (model == "area") {
-					// console.log(model)
 				}
 				etlName = obj.name;
 				return true;
@@ -261,7 +260,6 @@
 			//预览
 			demo.onBtnPreviewClick = function () {
 				var etlType = [];
-				// console.log(JSON.parse(Export()).nodes)
 				// $.each(JSON.parse(Export()).nodes,function() {
 				// 	etlType.push(this.type);
 				// 	if(this.type == 'output') {
@@ -275,7 +273,6 @@
 								"versionId": this_versionId
 							}),
 							success: function (data) {
-								//console.log(data)
 								if (data.code == 0) {
 									var head = data.data.head;
 									var data = data.data.data;
@@ -303,7 +300,6 @@
 						});
 					// }
 				// });
-				// console.log(etlType)
 				// $.each(etlType,function() {
 				// 	if(this != 'output') {
 				// 		layer.msg("请添加输出组件",{ time: 1000 })
@@ -461,7 +457,6 @@
 				data: JSON.stringify(parameter),
 				success: function (data) {
 					var data = data.data;
-//					console.log(data);
 					$.each(data, function () {
 						tables[this.tableName] = this;
 					});
@@ -593,7 +588,6 @@
 						layer.msg(data.data.message, { time: 1000 })
 					}
 				}, error: function (data) {
-//					console.log(JSON.stringify(data))
 				}
 			})
 		}
@@ -611,7 +605,6 @@
 				contentType: "application/json",
 				data: JSON.stringify(parameter),
 				success: function (data) {
-//					console.log(data.data)
 					actionComps = data.data;
 				}
 			});
@@ -668,10 +661,6 @@
 			$(document.body)
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
-				    const alias = $(this).parent().siblings().find(".alias");
-				    if(alias.length === 1){
-                        alias.val(this.options[this.selectedIndex].innerText);
-					}
 					$('.generateSql').trigger('click');
 					$('.saveActionComp').trigger('click');
 				});
