@@ -158,22 +158,24 @@ function bind_click_generateSql() {
 }
 
 
-function initFromTable() {
+function initFromTable() {console.log(demo.exportData().lines);
     var ary = [];
     $.each(demo.exportData().lines, function () {
         if (this.to == this_webComponentId) {
             var actionComp = fn_get_actionComp_by_webComponentId(this.from);
-            ary.push(actionComp.tableOut);
+            var tableOut = tables[actionComp.tableOut];
+            ary.push({name:tableOut.remark,val:actionComp.tableOut});
         }
     });
     var optionsHtml = "";
     var selectHtml = "";
     $.each(ary, function () {
-        optionsHtml += "<option>" + this + "</option>";
+        optionsHtml += "<option value=" + this.val + ">" + (this.name?this.name:this.val) + "</option>";
     });
     $.each(tables, function () {
-        selectHtml += "<option value=" + this.tableName + ">" + this.remark + "</option>";
-    })
+        selectHtml += "<option value=" + this.tableName + ">" + (this.remark?this.remark:this.tableName) + "</option>";
+    });
+
     $('.fromTable').html(optionsHtml);
     $('.selectTable').html(selectHtml);
     $('.extractField .table').html(optionsHtml);
