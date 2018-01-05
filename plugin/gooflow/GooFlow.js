@@ -1102,77 +1102,95 @@ GooFlow.prototype={
 	},
 	//选定某个结点/转换线 bool:TRUE决定了要触发选中事件，FALSE则不触发选中事件，多用在程序内部调用。
 	focusItem:function(id,bool){
-	  //console.log(id)
-		var jq=$("#"+id);
-		if(jq.length==0)	return;
-		if(!this.blurItem())	return;//先执行"取消选中",如果返回FLASE,则也会阻止选定事件继续进行.
-		if(jq.prop("tagName")=="DIV"){
-			if(bool&&this.onItemFocus!=null&&!this.onItemFocus(id,"node"))	return;
-			jq.addClass("item_focus");
-			if(GooFlow.prototype.color.line){
-        jq.css("border-color",GooFlow.prototype.color.line);
-			}
-			if(this.$editable)jq.children("div:eq(0)").css("display","block");
-			this.$workArea.append(jq);
-		}
-		else{//如果是连接线
-			if(this.onItemFocus!=null&&!this.onItemFocus(id,"line"))	return;
-			if(GooFlow.prototype.useSVG!=""){
-				jq[0].childNodes[1].setAttribute("stroke",GooFlow.prototype.color.mark||"#ff8800");
-				jq[0].childNodes[1].setAttribute("marker-end","url(#arrow2)");
-			}
-			else{
-                jq[0].strokeColor=GooFlow.prototype.color.mark||"#ff8800";
-			}
-			if(!this.$editable)	return;
-			var x,y,from,to,n;
-			if(GooFlow.prototype.useSVG!=""){
-			  // console.log(GooFlow.prototype.useSVG)
-				from=jq.attr("from").split(",");
-				to=jq.attr("to").split(",");
-				n=[from[0],from[1],to[0],to[1]];
-			}else{
-				n=jq[0].getAttribute("fromTo").split(",");
-				from=[n[0],n[1]];
-				to=[n[2],n[3]];
-			}
-			from[0]=parseInt(from[0],10);
-			from[1]=parseInt(from[1],10);
-			to[0]=parseInt(to[0],10);
-			to[1]=parseInt(to[1],10);
-			//var t=getElCoordinate(this.$workArea[0]);
-			if(this.$lineData[id].type=="lr"){
-				from[0]=this.$lineData[id].M*this.$scale;
-				to[0]=from[0];
-				
-				this.$lineMove.css({
-					width:"5px",height:(to[1]-from[1])*(to[1]>from[1]? 1:-1)+"px",
-					left:from[0]-3+"px",
-					top:(to[1]>from[1]? from[1]:to[1])+1+"px",
-					cursor:"e-resize",display:"block"
-				}).data({"type":"lr","tid":id});
-			}
-			else if(this.$lineData[id].type=="tb"){
-				from[1]=this.$lineData[id].M*this.$scale;
-				to[1]=from[1];
-				this.$lineMove.css({
-					width:(to[0]-from[0])*(to[0]>from[0]? 1:-1)+"px",height:"5px",
-					left:(to[0]>from[0]? from[0]:to[0])+1+"px",
-					top:from[1]-3+"px",
-					cursor:"s-resize",display:"block"
-				}).data({"type":"tb","tid":id});
-			}
-			x=(from[0]+to[0])/2-40;
-			y=(from[1]+to[1])/2+4;
-			this.$lineOper.css({display:"block",left:x+"px",top:y+"px"}).data("tid",id);
-			if(this.$editable){
-				this.$mpFrom.css({display:"block",left:n[0]-4+"px",top:n[1]-4+"px"}).data("p",n[0]+","+n[1]);
-				this.$mpTo.css({display:"block",left:n[2]-4+"px",top:n[3]-4+"px"}).data("p",n[2]+","+n[3]);
-			}
-			this.$draw.appendChild(jq[0]);
-		}
-		this.$focus=id;
-		this.switchToolBtn("cursor");
+        var jq = $("#" + id);
+        if (jq.length == 0) return;
+        if (!this.blurItem()) return; //先执行"取消选中",如果返回FLASE,则也会阻止选定事件继续进行.
+        if (jq.prop("tagName") == "DIV") {
+            if (bool && this.onItemFocus != null && !this.onItemFocus(id, "node")) return;
+            jq.addClass("item_focus");
+            if (GooFlow.prototype.color.line) {
+                jq.css("border-color", GooFlow.prototype.color.line);
+            }
+            if (this.$editable) jq.children("div:eq(0)").css("display", "block");
+            this.$workArea.append(jq);
+        } else { //如果是连接线
+            if (this.onItemFocus != null && !this.onItemFocus(id, "line")) return;
+            if (GooFlow.prototype.useSVG != "") {
+                jq[0].childNodes[1].setAttribute("stroke", GooFlow.prototype.color.mark || "#ff8800");
+                jq[0].childNodes[1].setAttribute("marker-end", "url(#arrow2)");
+            } else {
+                jq[0].strokeColor = GooFlow.prototype.color.mark || "#ff8800";
+            }
+            if (!this.$editable) return;
+            var x, y, from, to, n;
+            if (GooFlow.prototype.useSVG != "") {
+                // console.log(GooFlow.prototype.useSVG)
+                from = jq.attr("from").split(",");
+                to = jq.attr("to").split(",");
+                n = [from[0], from[1], to[0], to[1]];
+            } else {
+                n = jq[0].getAttribute("fromTo").split(",");
+                from = [n[0], n[1]];
+                to = [n[2], n[3]];
+            }
+            from[0] = parseInt(from[0], 10);
+            from[1] = parseInt(from[1], 10);
+            to[0] = parseInt(to[0], 10);
+            to[1] = parseInt(to[1], 10);
+            //var t=getElCoordinate(this.$workArea[0]);
+            if (this.$lineData[id].type == "lr") {
+                from[0] = this.$lineData[id].M * this.$scale;
+                to[0] = from[0];
+
+                this.$lineMove.css({
+                    width: "5px",
+                    height: (to[1] - from[1]) * (to[1] > from[1] ? 1 : -1) + "px",
+                    left: from[0] - 3 + "px",
+                    top: (to[1] > from[1] ? from[1] : to[1]) + 1 + "px",
+                    cursor: "e-resize",
+                    display: "block"
+                }).data({
+                    "type": "lr",
+                    "tid": id
+                });
+            } else if (this.$lineData[id].type == "tb") {
+                from[1] = this.$lineData[id].M * this.$scale;
+                to[1] = from[1];
+                this.$lineMove.css({
+                    width: (to[0] - from[0]) * (to[0] > from[0] ? 1 : -1) + "px",
+                    height: "5px",
+                    left: (to[0] > from[0] ? from[0] : to[0]) + 1 + "px",
+                    top: from[1] - 3 + "px",
+                    cursor: "s-resize",
+                    display: "block"
+                }).data({
+                    "type": "tb",
+                    "tid": id
+                });
+            }
+            x = (from[0] + to[0]) / 2 - 40;
+            y = (from[1] + to[1]) / 2 + 4;
+            this.$lineOper.css({
+                display: "block",
+                left: x + "px",
+                top: y + "px"
+            }).data("tid", id);
+            if (this.$editable) {
+                this.$mpFrom.css({
+                    display: "block",
+                    left: n[0] - 4 + "px",
+                    top: n[1] - 4 + "px"
+                }).data("p", n[0] + "," + n[1]);
+                this.$mpTo.css({
+                    display: "block",
+                    left: n[2] - 4 + "px",
+                    top: n[3] - 4 + "px"
+                }).data("p", n[2] + "," + n[3]);
+            }
+            this.$draw.appendChild(jq[0]);
+        }
+        this.$focus = id;
+        this.switchToolBtn("cursor");
 	},
 	//移动结点到一个新的位置
 	moveNode:function(id,left,top){
