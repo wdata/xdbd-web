@@ -14,7 +14,7 @@ var DataIndexes = {
 
             storage.append(html);
 
-            if(val.customData.dataType === "chart"){
+            if(val.customData.dataType === "chart" || val.customData.dataType === "table"){
                 // 将数据存入检索数据中
                 let chart_date = {
                     'cid':val.cid,
