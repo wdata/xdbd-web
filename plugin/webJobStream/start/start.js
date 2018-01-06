@@ -16,7 +16,7 @@ function getVal() {
 	data = {
 		"start": $('.start_name').val(),
 		"type": "start"
-	}
+	};
 	return data;
 }
 
