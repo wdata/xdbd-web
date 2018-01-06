@@ -48,8 +48,9 @@ function getVal() {
 
 function setVal() {
 	$('.spark_task').val(this_actionCompName);
-	console.log(this_actionComp)
+    console.log(this_actionComp);
     if(this_actionComp.action){
+        $("#ele_genre").find('option[value="'+ this_actionComp.action.actionId +'"]').attr("selected","selected");
         $(".spark_name").val(this_actionComp.action.spark.name);
 	}
 }
