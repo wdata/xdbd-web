@@ -47,6 +47,10 @@ function setVal() {
         fn_set_stepName(etlName);
         fn_set_extractFields(attValue.extractFields);
         fn_set_sqlOut(actionComp.sqlOut);
+    }else{
+        // 第一次点击，按照左边下拉框第一个为内容复制到输入框中；
+        const text = $('.extractField .field option:first').text();
+        $('.extractField .alias').val(text);
     }
 }
 
