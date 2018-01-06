@@ -502,7 +502,7 @@
 			$.each(extractFields, function () {
 				var table = this.table;
 				var field = this.field;
-				var alias = this.alias;
+				var alias = this.alias.replace(/(^\s*)|(\s*$)/g, '').length <= 0?this.remark:this.alias;  // 如果数据为空，或者是全部为空格，则显示this.remark
 				var remarks = this.remark;
 				var fn = this.fn;
 				$('.extractFields').append(extractFieldHtml);
