@@ -101,8 +101,9 @@ function generate_sql() {
     //提取字段
     $.each(fn_get_extractFields(), function () {
         var field = this.field;
+        var alias = this.alias;
         if (fromTable != null && fromTable != '') {
-            field = fromTable + "." + field;
+            field = fromTable + "." + field +" AS "+alias;
         }
         s.field(field);
     });

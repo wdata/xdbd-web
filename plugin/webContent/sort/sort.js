@@ -28,7 +28,7 @@
                     optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
                 });
                 $('.sortField').find('.field').html(optionsHtml);
-                // $('.sortField').find('.field').combobox('select',fields.extractFields[0].remark);
+                $('.sortField').find('.field').combobox('select',fields.extractFields[0].remark);
             });
     }
 
@@ -124,6 +124,9 @@
                 var sort = this.sort;
                 $('.sortFields').append(sortHtml);
                 console.log(field)
+                // console.log($(this).val())
+                // var fields = fn_get_fields_by_fromTable($(this).val());
+                // console.log(fields)
                 // $('.sortField:last').find('.field').html(field);
                 $('.sortField:last').find('.field option[value="'+this.field+'"]').attr("selected","selected");
                 $('.sortField:last').find('.sort').val(sort);
@@ -161,16 +164,14 @@
         var fromTable = fn_get_fromTable();
         s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
         //提取字段
-        console.log(fn_get_fields_by_fromTable(fromTable))
-        $.each(fn_get_fields_by_fromTable(fromTable), function () {
-            var field = this;
+        $.each(fn_get_fields_by_fromTable(fromTable).extractFields, function () {
+            var field = this.field;
             if (fromTable != null && fromTable != '') {
                 field = fromTable + "." + field;
             }
             s.field(field);
         });
         //排序字段
-        console.log(get_sortFields())
         $.each(get_sortFields(), function () {
             var field = this.field;
             var sort = this.sort;
