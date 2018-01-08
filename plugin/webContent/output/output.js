@@ -9,10 +9,40 @@ $(".stepName").val(etlName);
 $('.auto_save').trigger('change');
 
 $("#output").on("change",".extractField .field",function(){
+    const val = this.value;
+    const text = $(this).find("option:selected").text();
+    const sib = $(this).parents(".extractField").siblings().find(".field");
+    let bur = false;
+    sib.each(function(){
+        if(val === this.value && text === $(this).find("option:selected").text()){
+            bur = true;
+        }
+    });
+    if(bur){
+        layer.msg("列名不能相同！"); return false;
+    }
+
     const alias = $(this).parent().siblings().find(".alias");
     alias.val(this.options[this.selectedIndex].innerText);
 });
-
+// click 在选择select和选择option会点击2次，mousedown：只点击一次
+$("#output").on("mousedown",".extractField .field",function(){
+    const option = $(this).find("option");
+    const sib = $(this).parents(".extractField").siblings().find(".field");
+    // 先删除所有的disabled
+    option.removeAttr("disabled").each(function(){
+        const text = this.innerHTML;
+        const val = this.value;
+        const self = this;
+        sib.each(function(){
+            const SibVal = this.value;
+            const SibText = $(this).find("option:selected").text();
+            if(text === SibText && SibVal === val){
+                $(self).attr("disabled","disabled");
+            }
+        })
+    });
+});
 
 
 function initFromTable() {
@@ -26,13 +56,12 @@ function initFromTable() {
         var fields = fn_get_fields_by_fromTable(fromTable);
         var optionsHtml = "";
         var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
-
         if(!actionComp){
             $.each(fields.extractFields, function () {
                 var optionsHtml2 = "";
                 const remark = this.remark;
                 $.each(fields.extractFields,function(){
-                    const selected = remark===this.remark?'selected':'';
+                    const selected = remark === this.remark?'selected':'';
                     optionsHtml2  += "<option "+ selected  +"  value=" + this.field + ">" + this.remark + "</option>";
                 });
                 optionsHtml += `<tr class="extractField">
@@ -100,9 +129,35 @@ function bind_click_extractAdd() {
     $(document.body)
         .off('click', '.outputAdd')
         .on('click', '.outputAdd', function () {
-            if(!( $('.extractField').length < $($('.extractField')[0]).find('option').length )){ return false;}
-            var outputHtml = $('.extractField').prop('outerHTML');
+            const extractField = $('.extractField');
+            if(!( extractField.length < $(extractField[0]).find('option').length )){ layer.msg("不能增加了！"); return false;}
+
+            // 获取第一个下拉框的代码
+            const outputHtml = extractField.eq(0).prop('outerHTML'); // 因为最低是一个，所以永远都有第一个元素可以复制
             $('.extractFields').append(outputHtml);
+
+            // 先添加后修改内容，不然不好修改元素
+            const extractFieldLast = $('.extractField:last');   // 需重新获取最后一个元素，也就是最新添加的元素outputHtml
+            const option = extractFieldLast.find(".field option");   // 获取新添加的下拉框
+            const field = extractFieldLast.siblings().find(".field"); // 获取添加之前的元素
+            option.each(function(){
+                const text = this.innerHTML;
+                const val = this.value;
+                let bur = true;
+                field.each(function(){
+                    const SibVal = this.value;
+                    const SibText = $(this).find("option:selected").text();
+                    if(text === SibText && SibVal === val){
+                        bur = false;
+                    }
+                });
+                if(bur){
+                    $(this).attr("selected","selected").parents(".extractField").find(".alias").val(text);
+                    return false;   // 可以添加的可能有多个，所以只显示第一个，用以排序！
+                }
+            });
+
+            return false;           // 防止 事件冒泡 不加会有2次效果
         })
 }
 
