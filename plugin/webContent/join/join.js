@@ -265,9 +265,10 @@ function bind_click_sql() {
 
 function generate_sql() {
     var s = squel.select();
+    console.log(s);
     var fromTable = fn_get_fromTable();
     s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
-
+    console.log(fn_get_extractFields())
     //提取字段
     $.each(fn_get_extractFields(), function () {
         var table = this.table;
@@ -278,17 +279,18 @@ function generate_sql() {
             field = table + "." + field;
         }
         if (alias != null && alias != '') {
-            s.field(field, alias);
+            s.field(field);
         } else {
             s.field(field);
         }
     });
-
+    console.log(get_joinTables())
     $.each(get_joinTables(), function () {
         var type = this.type;
         var table = this.table;
         var joinTableSql = "";
         joinTableSql = "(" + fn_get_sqlOut_by_fromTable(table) + ")";
+        console.log(joinTableSql)
         var onFilterSql = '';
         $.each(this.onFilters, function (i) {
             if (i > 0) {

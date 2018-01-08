@@ -126,9 +126,13 @@ function generate_sql() {
         var field = this.field;
         var alias = this.alias;
         if (fromTable != null && fromTable != '') {
-            field = fromTable + "." + field +" AS "+alias;
+            field = fromTable + "." + field;
         }
-        s.field(field);
+        if (alias != null && alias != '') {
+            s.field(field, alias);
+        } else {
+            s.field(field);
+        }
     });
     return s.toString();
 }
