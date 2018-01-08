@@ -66,8 +66,10 @@ function bind_change_fromTable() {
         var optionHtml = '';
         $.each(fieldList, function () {
             var optionHtml2 = "";
+            const remark = this.remark;
             $.each(fieldList,function(){
-                optionHtml2 += "<option value=" + this.fieldName + ">" + this.remark + "</option>";
+                const selected = remark===this.remark?"selected":"";
+                optionHtml2 += "<option "+ selected +" value=" + this.fieldName + ">" + this.remark + "</option>";
             });
             optionHtml += `<div class="archive extractField">
                     <select class="fields auto_save" style="width:150px;height: 28px;margin-left: 12px;">${ optionHtml2 }</select>
