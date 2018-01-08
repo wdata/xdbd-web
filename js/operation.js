@@ -798,7 +798,6 @@ let project = {
                 }else{
                     project.chear($(".f-select-methods li").eq(0));
                 }
-                console.log(this.textFilter.andOr);
                 $(".f-select-box1 select").val(this.textFilter.andOr);
 
                 let html = '';
