@@ -300,7 +300,7 @@ $(function(){
                     "actionId":directoryId
                 }),
                 success:function(res){
-                    console.log(res);
+                    // console.log(res);
                     if(res.code===0){
 						var data = res.data;
 						var $etlbox = $(".newEtlFile");
@@ -310,6 +310,7 @@ $(function(){
                         $etlbox.find(".new_type").val(data.businessType);
                         $etlbox.find(".new_describe").val(data.remark);
 
+                        editFile.getEtlDataSource(projectId,versionId,data.dsId);
                     }
                 },
                 error:function(err){
@@ -317,7 +318,7 @@ $(function(){
                 }
             });
 		},
-        getEtlDataSource:function(projectId,versionId){
+        getEtlDataSource:function(projectId,versionId,dsId){
             $.ajax({
                 type: "POST",
                 url: $url2 + "/api/datasource/v1/getDataSourceList",  ///xdbd-etl
@@ -328,14 +329,15 @@ $(function(){
                     versionId:versionId
                 }),
                 success: function (res) {
-                    console.log(res);
+                    // console.log(res);
                     if (res.code === 0) {
                         var data = res.data;
                         var html = '';
                         if(data.length){
                             $.each(data, function (i,v) {
-                                html += `<option value="${v.dsId}">${v.name}</option>`
-                            })
+                                const select = dsId===this.dsId?"selected":"";
+                                html += `<option ${ select } value="${v.dsId}">${v.name}</option>`
+                            });
                             $(".newEtlFile .new_ds").html(html);
                         }else{
                             layer.msg("请先添加数据源!", {icon: 0});
@@ -357,7 +359,7 @@ $(function(){
                 contentType: "application/json",
                 data:JSON.stringify({
                     "isTemplate":false,					//是否为模板
-                    "dsId":"",
+                    "dsId":$(".newEtlFile .new_ds").val(),   // 数据源id
                     "companyId":companyId,
                     "projectId":projectId,
                     "templateVersionId":"",							//模板版本ID
@@ -500,7 +502,6 @@ $(function(){
 
 	function newEtlFile(){
 		//getEtlFileInfo
-        editFile.getEtlDataSource(projectId,versionId);
         editFile.getNewEtlFileInfo(versionId,directoryId);
         var index = layer.open({
             type: 1,
