@@ -8,6 +8,27 @@ bind_click_loadParguet();
 bind_click_generateSql();
 bind_click_saveActionComp();
 
+
+// click 在选择select和选择option会点击2次，mousedown：只点击一次
+$("#input").on("mousedown",".extractField .fields",function(){
+    const option = $(this).find("option");
+    const sib = $(this).parents(".extractField").siblings().find(".fields");
+    // 先删除所有的disabled
+    option.removeAttr("disabled").each(function(){
+        const text = this.innerHTML;
+        const val = this.value;
+        const self = this;
+        sib.each(function(){
+            const SibVal = this.value;
+            const SibText = $(this).find("option:selected").text();
+            if(text === SibText && SibVal === val){
+                $(self).attr("disabled","disabled");
+            }
+        })
+    });
+});
+
+
 function bind_click_saveActionComp() {
     $('.saveActionComp').click(function () {
         fn_saveActionComp(getVal());
@@ -118,11 +139,35 @@ function bind_click_add() {
     $(document.body)
         .off('click', '.add')
         .on('click', '.add', function () {
-            // if(fieldsSelect >= 1){
-            //     $('.extractFields').append("<option value=" + fieldsSelect[0].fieldName + ">" + fieldsSelect[0].remark + "</option>");
-            // }
-            var inputHtml = $('.extractField').prop('outerHTML');
-            $('.extractFields').append(inputHtml);
+            const extractField = $('.extractField');
+            if(!( extractField.length < $(extractField[0]).find('option').length )){ layer.msg("不能增加了！"); return false;}
+
+            // 获取第一个下拉框的代码
+            const inputHtml = extractField.eq(0).prop('outerHTML'); // 因为最低是一个，所以永远都有第一个元素可以复制
+            $("#input").find('.extractFields').append(inputHtml);
+
+            // 先添加后修改内容，不然不好修改元素
+            // 带
+            const extractFieldLast = $('.extractField:last');   // 需重新获取最后一个元素，也就是最新添加的元素outputHtml
+            const option = extractFieldLast.find(".fields option");   // 获取新添加的下拉框
+            const field = extractFieldLast.siblings().find(".fields"); // 获取添加之前的元素
+            option.each(function(){
+                const text = this.innerHTML;
+                const val = this.value;
+                let bur = true;
+                field.each(function(){
+                    const SibVal = this.value;
+                    const SibText = $(this).find("option:selected").text();
+                    if(text === SibText && SibVal === val){
+                        bur = false;
+                    }
+                });
+                if(bur){
+                    $(this).attr("selected","selected");
+                    return false;   // 可以添加的可能有多个，所以只显示第一个，用以排序！
+                }
+            });
+            return false;           // 防止 事件冒泡 不加会有2次效果
         })
 }
 
