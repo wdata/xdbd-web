@@ -124,10 +124,15 @@ function generate_sql() {
     //提取字段
     $.each(fn_get_extractFields(), function () {
         var field = this.field;
+        var alias = this.alias;
         if (fromTable != null && fromTable != '') {
             field = fromTable + "." + field;
         }
-        s.field(field);
+        if (alias != null && alias != '') {
+            s.field(field, alias);
+        } else {
+            s.field(field);
+        }
     });
     return s.toString();
 }

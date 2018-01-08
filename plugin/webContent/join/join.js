@@ -34,16 +34,22 @@ function bind_change_selectTable() {
     $(document.body)
         .off('change', '.selectTable')
         .on('change', '.selectTable', function () {
+            // var optionsHtml = "";
+            // var self = $(this);
+            // $.each(tables, function (i, item) {
+            //     if (self.val() == this.tableName) {
+            //         $.each(item.fieldList, function () {
+            //             optionsHtml += "<option value=" + this.fieldName + ">" + this.remark + "</option>";
+            //         })
+            //     }
+            // });
+            var fields = fn_get_fields_by_fromTable($(this).val());
             var optionsHtml = "";
-            var self = $(this);
-            $.each(tables, function (i, item) {
-                if (self.val() == this.tableName) {
-                    $.each(item.fieldList, function () {
-                        optionsHtml += "<option value=" + this.fieldName + ">" + this.remark + "</option>";
-                    })
-                }
+            $.each(fields.extractFields, function () {
+                optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
             });
-            $(this).parents('.joinTable').find('.field1').html(optionsHtml);
+            console.log(optionsHtml)
+            $('.field1').html(optionsHtml);
             $('.extractField .table').append('<option>' + $(this).val() + '</option>');
         });
 }
@@ -55,6 +61,7 @@ function bind_change_extractTable() {
             var self = $(this);
             var optionsHtml = "";
             $('.fromTable').each(function (i, item) {
+                console.log($(this).val(),self.val())
                 if ($(this).val() == self.val()) {
                     var fields = fn_get_fields_by_fromTable($(this).val());
                     $.each(fields.extractFields, function () {
@@ -97,6 +104,7 @@ function set_joinTables(joinTables) {
             if (this.onFilters != null) {
                 joinTable.find('.onFilter').remove();
             }
+            console.log(this.onFilters)
             $.each(this.onFilters, function () {
                 var field1 = this.field1;
                 var expr = this.expr;
@@ -106,6 +114,7 @@ function set_joinTables(joinTables) {
                 // onFilter.find('.field1').val(field1);
                 // onFilter.find('.expr').val(expr);
                 // onFilter.find('.field2').val(field2);
+                // console.log(onFilterHtml)
                 onFilter.find('.field1 option[value="' + field1 + '"]').attr("selected", "selected");
                 onFilter.find('.expr option[value="' + expr + '"]').attr("selected", "selected");
                 onFilter.find('.field2 option[value="' + field2 + '"]').attr("selected", "selected");
@@ -168,16 +177,16 @@ function initFromTable() {console.log(demo.exportData().lines);
         }
     });
     var optionsHtml = "";
-    var selectHtml = "";
+    // var selectHtml = "";
     $.each(ary, function () {
         optionsHtml += "<option value=" + this.val + ">" + (this.name?this.name:this.val) + "</option>";
     });
-    $.each(tables, function () {
-        selectHtml += "<option value=" + this.tableName + ">" + (this.remark?this.remark:this.tableName) + "</option>";
-    });
+    // $.each(tables, function () {
+    //     selectHtml += "<option value=" + this.tableName + ">" + (this.remark?this.remark:this.tableName) + "</option>";
+    // });
 
     $('.fromTable').html(optionsHtml);
-    $('.selectTable').html(selectHtml);
+    $('.selectTable').html(optionsHtml);
     $('.extractField .table').html(optionsHtml);
 }
 
@@ -256,9 +265,10 @@ function bind_click_sql() {
 
 function generate_sql() {
     var s = squel.select();
+    console.log(s);
     var fromTable = fn_get_fromTable();
     s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
-
+    console.log(fn_get_extractFields())
     //提取字段
     $.each(fn_get_extractFields(), function () {
         var table = this.table;
@@ -269,17 +279,18 @@ function generate_sql() {
             field = table + "." + field;
         }
         if (alias != null && alias != '') {
-            s.field(field, alias);
+            s.field(field);
         } else {
             s.field(field);
         }
     });
-
+    console.log(get_joinTables())
     $.each(get_joinTables(), function () {
         var type = this.type;
         var table = this.table;
         var joinTableSql = "";
         joinTableSql = "(" + fn_get_sqlOut_by_fromTable(table) + ")";
+        console.log(joinTableSql)
         var onFilterSql = '';
         $.each(this.onFilters, function (i) {
             if (i > 0) {
