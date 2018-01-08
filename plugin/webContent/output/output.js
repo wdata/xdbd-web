@@ -23,10 +23,16 @@ function initFromTable() {
         }
     });
     if (fromTable != null && fromTable != '') {
+        $.each(demo.exportData().lines, function () {
+            if (this.to == this_webComponentId) {
+                var actionComp = fn_get_actionComp_by_webComponentId(this.from);
+                fromTable = actionComp.fromTable;
+            }
+        });
         var fields = fn_get_fields_by_fromTable(fromTable);
         var optionsHtml = "";
         var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
-
+        console.log(fields)
         if(!actionComp){
             $.each(fields.extractFields, function () {
                 var optionsHtml2 = "";
@@ -87,6 +93,8 @@ function getVal() {
     var attValue = {};
     attValue['extractFields'] = fn_get_extractFields();
     data['attValue'] = JSON.stringify(attValue);
+    console.log(fn_get_extractFields())
+    console.log(fn_get_fields_by_fromTable(fromTable).extractFields)
     return data;
 }
 
@@ -124,15 +132,15 @@ function generate_sql() {
     //提取字段
     $.each(fn_get_extractFields(), function () {
         var field = this.field;
-        var alias = this.alias;
+        // var alias = this.alias;
         if (fromTable != null && fromTable != '') {
             field = fromTable + "." + field;
         }
-        if (alias != null && alias != '') {
-            s.field(field, alias);
-        } else {
-            s.field(field);
-        }
+        // if (alias != null && alias != '') {
+        //     s.field(field, alias);
+        // } else {
+        s.field(field);
+        // }
     });
     return s.toString();
 }

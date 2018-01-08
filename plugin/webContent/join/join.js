@@ -5,6 +5,7 @@ bind_change_selectTable();
 bind_change_extractTable();
 $('.extractField .table').trigger('change');
 $('.fromTable').trigger('change');
+$('.selectTable').trigger('change');
 setVal();
 bind_click_generateSql();
 bind_click_onAdd();
@@ -13,6 +14,7 @@ bind_click_extractAdd();
 bind_click_extractLessen();
 bind_click_saveActionComp();
 bind_click_sql();
+
 
 $(".stepName").val(etlName);
 
@@ -48,7 +50,6 @@ function bind_change_selectTable() {
             $.each(fields.extractFields, function () {
                 optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
             });
-            console.log(optionsHtml)
             $('.field1').html(optionsHtml);
             $('.extractField .table').append('<option>' + $(this).val() + '</option>');
         });
@@ -85,6 +86,7 @@ function bind_change_extractTable() {
 function bind_click_saveActionComp() {
     $('.saveActionComp').click(function () {
         fn_saveActionComp(getVal());
+        // console.log(getVal())
     });
 }
 
@@ -104,7 +106,7 @@ function set_joinTables(joinTables) {
             if (this.onFilters != null) {
                 joinTable.find('.onFilter').remove();
             }
-            console.log(this.onFilters)
+            // console.log(this.onFilters)
             $.each(this.onFilters, function () {
                 var field1 = this.field1;
                 var expr = this.expr;
@@ -131,12 +133,13 @@ function setVal() {
         fn_set_stepName(etlName);
         fn_set_fromTable(actionComp.fromTable);
         fn_set_tableOut(actionComp.tableOut);
-        $('.selectTable').trigger('change');
         set_joinTables(attValue.joinTables);
         fn_set_extractFields(attValue.extractFields);
         fn_set_sqlOut(actionComp.sqlOut);
     } else {
+        // console.log("我执行了这里 ---------------------------------- 1");
         $(".tableOut").val(etlName);
+
     }
 }
 
@@ -167,7 +170,8 @@ function bind_click_generateSql() {
 }
 
 
-function initFromTable() {console.log(demo.exportData().lines);
+function initFromTable() {
+    // console.log(demo.exportData().lines);
     var ary = [];
     $.each(demo.exportData().lines, function () {
         if (this.to == this_webComponentId) {
@@ -265,32 +269,32 @@ function bind_click_sql() {
 
 function generate_sql() {
     var s = squel.select();
-    console.log(s);
+    // console.log(s);
     var fromTable = fn_get_fromTable();
     s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
-    console.log(fn_get_extractFields())
+    // console.log(fn_get_extractFields())
     //提取字段
     $.each(fn_get_extractFields(), function () {
         var table = this.table;
         var field = this.field;
-        var alias = this.alias;
+        // var alias = this.alias;
 
         if (table != null) {
             field = table + "." + field;
         }
-        if (alias != null && alias != '') {
+        // if (alias != null && alias != '') {
+        //     s.field(field);
+        // } else {
             s.field(field);
-        } else {
-            s.field(field);
-        }
+        // }
     });
-    console.log(get_joinTables())
+    // console.log(get_joinTables())
     $.each(get_joinTables(), function () {
         var type = this.type;
         var table = this.table;
         var joinTableSql = "";
         joinTableSql = "(" + fn_get_sqlOut_by_fromTable(table) + ")";
-        console.log(joinTableSql)
+        // console.log(joinTableSql)
         var onFilterSql = '';
         $.each(this.onFilters, function (i) {
             if (i > 0) {

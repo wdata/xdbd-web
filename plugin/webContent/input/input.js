@@ -11,6 +11,7 @@ bind_click_saveActionComp();
 function bind_click_saveActionComp() {
     $('.saveActionComp').click(function () {
         fn_saveActionComp(getVal());
+        console.log(getVal())
     });
 }
 
@@ -42,6 +43,7 @@ function getVal() {
     var attValue = {};
     attValue['extractFields'] = get_extractFields();
     data['attValue'] = JSON.stringify(attValue);
+    // data['inputValue'] = JSON.stringify(get_inputExtractFields()); 
     return data;
 }
 
@@ -170,6 +172,21 @@ function get_extractFields() {
     });
     return list;
 }
+// function get_inputExtractFields() {
+//     console.log($('.extractField').length)
+//     $('.extractField').each(function () {
+//         var inputFields = {};
+//         var field = $(this).find('.fields').val();
+//         var remark = $(this).find('.fields option:checked').text();
+//         inputFields['field'] = field;
+//         inputFields['remark'] = remark;
+//         inputFields['alias'] = '';
+//         inputFields['fn'] = '';
+//         inputExtractFields.push(inputFields);
+//     });
+//     console.log(inputExtractFields)
+//     return inputExtractFields;
+// }
 
 function generate_sql() {
     var s = squel.select();
