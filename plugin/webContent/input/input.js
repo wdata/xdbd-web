@@ -8,7 +8,6 @@ bind_click_loadParguet();
 bind_click_generateSql();
 bind_click_saveActionComp();
 
-
 function bind_click_saveActionComp() {
     $('.saveActionComp').click(function () {
         fn_saveActionComp(getVal());
@@ -47,6 +46,7 @@ function getVal() {
 }
 
 function bind_click_generateSql() {
+    // 保存
     $('.generateSql').click(function () {
         var sql = generate_sql();
         fn_set_sqlOut(sql);
@@ -58,18 +58,50 @@ function bind_click_loadParguet() {
         fn_upload_parquet();
     })
 }
-
 function bind_change_fromTable() {
     $('.fromTable').change(function () {
         var tbName = $(this).val();
         var fieldList = tables[tbName].fieldList;
-        var extractField = $('.extractField:last');
+        var extractField = $('#input .extractFields');
         var optionHtml = '';
         $.each(fieldList, function () {
-            optionHtml += "<option value=" + this.fieldName + ">" + this.remark + "</option>";
+            var optionHtml2 = "";
+            const remark = this.remark;
+            $.each(fieldList,function(){
+                const selected = remark===this.remark?"selected":"";
+                optionHtml2 += "<option "+ selected +" value=" + this.fieldName + ">" + this.remark + "</option>";
+            });
+            optionHtml += `<div class="archive extractField">
+                    <select class="fields auto_save" style="width:150px;height: 28px;margin-left: 12px;">${ optionHtml2 }</select>
+                    <div class="regulation">
+                        <span class="add more_save"></span>
+                        <span class="lessen more_save"></span>
+                    </div>
+                </div>`
         });
-        extractField.find('.fields').html(optionHtml);
+        extractField.html(optionHtml);
+        fn_saveActionComp(getVal());
     });
+    // $(document).on("click",'#input .extractField .fields',function(){
+    //     if(tables[$('.fromTable').val()]){
+    //         const inputFields = $(this).parents(".extractFields").find("select.fields");
+    //         fieldsSelect = tables[$('.fromTable').val()].fieldList;
+    //         inputFields.each(function(x,y){
+    //             const inner = $(this).find("option:selected").text();
+    //             $.each(fieldsSelect,function(i){
+    //                 if(inner === this.remark){
+    //                     fieldsSelect.splice(i,1);
+    //                 }
+    //             })
+    //         });
+    //         var optionHtml = "<option value=" + $(this).val() + ">" + $(this).find('option:selected').text() + "</option>";
+    //         $.each(fieldsSelect,function(){
+    //             optionHtml += "<option value=" + this.fieldName + ">" + this.remark + "</option>";
+    //         });
+    //         console.log(optionHtml);
+    //         $(this).empty().append(optionHtml);
+    //     }
+    // })
 }
 
 function initFromTable() {
@@ -84,6 +116,9 @@ function bind_click_add() {
     $(document.body)
         .off('click', '.add')
         .on('click', '.add', function () {
+            // if(fieldsSelect >= 1){
+            //     $('.extractFields').append("<option value=" + fieldsSelect[0].fieldName + ">" + fieldsSelect[0].remark + "</option>");
+            // }
             var inputHtml = $('.extractField').prop('outerHTML');
             $('.extractFields').append(inputHtml);
         })
@@ -97,6 +132,7 @@ function bind_click_lessen() {
                 layer.msg('最后一个提取条件不能删除');
             } else {
                 $(this).parents('.extractField').remove();
+                fn_saveActionComp(getVal());
             }
         })
 }

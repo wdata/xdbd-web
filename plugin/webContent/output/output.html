@@ -109,30 +109,32 @@
         }
     </style>
 
-    <div class="ensure">
-        <span class="ensure_load">另存为模板</span>
-        <span class="ensure_load saveActionComp">保存</span>
-        <span class="ensure_load generateSql">生成SQL</span>
+    <div id="outputHtml">
+        <div class="ensure">
+            <span class="ensure_load">另存为模板</span>
+            <span class="ensure_load saveActionComp">保存</span>
+            <span class="ensure_load generateSql">生成SQL</span>
 
-    </div>
-    <div class="form_title">属性设置</div>
-    <div class="fromInp" style="margin-top: 12px;">
-        <label>步骤名称：</label>
-        <input type="text" class="stepName auto_save" readonly="readonly"/>
-    </div>
-    <div class="related_tit">提取字段:</div>
-    <table class="related_tab" cellspacing="0" id="output">
-        <thead>
+        </div>
+        <div class="form_title">属性设置</div>
+        <div class="fromInp" style="margin-top: 12px;">
+            <label>步骤名称：</label>
+            <input type="text" class="stepName auto_save" readonly="readonly"/>
+        </div>
+        <div class="related_tit">提取字段:</div>
+        <table class="related_tab" cellspacing="0" id="output">
+            <thead>
             <tr>
                 <th>列名</th>
                 <th>显示名称</th>
             </tr>
-        </thead>
-        <tbody class="extractFields">
+            </thead>
+            <tbody class="extractFields">
             <tr class="extractField">
                 <td style="width: 40%;"><select class="field auto_save"></select></td>
                 <td style="width: 40%;"><input class="alias auto_save" type="text" /></td>
                 <td class="regulation"><span class="add outputAdd more_save"></span><span class="lessen outputLessen more_save"></span></td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>

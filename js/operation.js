@@ -317,7 +317,6 @@ Level.prototype = {
                 }
             }
         });
-        console.log(save_arr)
     }
 };
 
@@ -736,7 +735,7 @@ let obtain = {
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
-                if(val.customData.dataType === "chart"){
+                if(val.customData.dataType === "chart"  || val.customData.dataType === "table"){
                     // 将数据存入检索数据中
                     let chart_date = {
                         'cid':val.cid,
@@ -769,12 +768,14 @@ let project = {
     "textFilter":{},
     "listFilterB":[],
     "allBur":false,
+    "filterAttr":null,
     TFilter:function(field, name,fieldId,number,cid){
         const self = this;
         var listFilter = null;
         this.fieldId = fieldId;    // 保存fieldid作为索引
         this.number = number;
         this.cid = cid;
+        this.filterAttr = $("#filter-attrttr").html();
 
         // 判断之前是否有筛选数据
         // 先清除数据;
@@ -1164,6 +1165,8 @@ let project = {
     // 关闭弹出框
     close:function(){
         $("#filter-attr").hide();
+        // 删除数据
+        $("#filter-attrttr").html(this.filterAttr)
     },
 };
 
@@ -1873,6 +1876,12 @@ $(function(){
                                 </div>
                             </div>
                           `;
+
+                    $(".x-pills ul").empty();
+                    $(".y-pills ul").empty();
+                    $(".datas-pills ul").empty();
+                    $(".chart-type-val span").text("柱状图");
+
                     break;
                 case "table":
                     html = `<!--定位层-->
@@ -1917,7 +1926,6 @@ $(function(){
                        </div>`;
 
             $(this).append(div);
-
             refresh.storage(cahrt_type,editID); // 保存
             id_ = editID;
             number++;
@@ -2047,10 +2055,8 @@ $(function(){
     context.init({preventDoubleContext: false,fadeSpeed:100});
     context.attach('.placeholder li', [
         {text: '修改名称', action: function(){
-            console.log("222222222222222");
             let fieldAlias = '';
             const id = context.getClickEle().attr("fieldId");
-            console.log(context.getClickEle());
             layer.confirm('<input class="none" type="text" style="display:block;margin:0 auto;width:160px;height:14px;padding:6px;border:1px solid #ccc;font-size:12px;" value="' + $.trim(context.getClickEle().text()) + '"/>', {
                 btn: ['确定', '取消'], //按钮
                 yes: function (index) {
@@ -2231,6 +2237,11 @@ $(function(){
         "remove": {
             text: '移除',
             action: function (e) {
+                $.each(screen_data,function(i){
+                    if(context.getClickEle().attr("fieldid") === this.fieldId && id_ === this.cid){
+                        screen_data.splice(i,1)
+                    }
+                });
                 context.getClickEle().remove();
             }
         },
@@ -2348,10 +2359,10 @@ function clear(id){
             choose = false;
         }else{
             if(choose){
-                $(".x-pills ul").html("");
-                $(".y-pills ul").html("");
-                $(".datas-pills ul").html("");
-                $(".chart-type-val span").text("饼图");
+                $(".x-pills ul").empty();
+                $(".y-pills ul").empty();
+                $(".datas-pills ul").empty();
+                $(".chart-type-val span").text("柱状图");
             }
         }
         // 图片

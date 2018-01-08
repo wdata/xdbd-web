@@ -25,12 +25,30 @@ function initFromTable() {
     if (fromTable != null && fromTable != '') {
         var fields = fn_get_fields_by_fromTable(fromTable);
         var optionsHtml = "";
-        $.each(fields.extractFields, function () {
-            optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
-        });
-        $('.extractField').find('.field').html(optionsHtml);
-    }
+        var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
 
+        if(!actionComp){
+            $.each(fields.extractFields, function () {
+                var optionsHtml2 = "";
+                const remark = this.remark;
+                $.each(fields.extractFields,function(){
+                    const selected = remark===this.remark?'selected':'';
+                    optionsHtml2  += "<option "+ selected  +"  value=" + this.field + ">" + this.remark + "</option>";
+                });
+                optionsHtml += `<tr class="extractField">
+                    <td style="width: 40%;"><select class="field auto_save">${ optionsHtml2 }</select></td>
+                <td style="width: 40%;"><input value="${ this.remark }" class="alias auto_save" type="text"></td>
+                    <td class="regulation"><span class="add outputAdd more_save"></span><span class="lessen outputLessen more_save"></span></td>
+                </tr>`
+            });
+            $("#outputHtml .extractFields").html(optionsHtml);
+        }else{
+            $.each(fields.extractFields, function () {
+                optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
+            });
+            $('.extractField').find('.field').html(optionsHtml);
+        }
+    }
 }
 
 
@@ -47,6 +65,11 @@ function setVal() {
         fn_set_stepName(etlName);
         fn_set_extractFields(attValue.extractFields);
         fn_set_sqlOut(actionComp.sqlOut);
+    }else{
+        var optionsHtml = "";
+        // 第一次点击，按照左边下拉框第一个为内容复制到输入框中；
+        // const text = $('.extractField .field option:first').text();
+        // $('.extractField .alias').val(text);
     }
 }
 
