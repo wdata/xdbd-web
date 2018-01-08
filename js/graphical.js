@@ -116,6 +116,13 @@ var DataIndexes = {
         $(ele).html("");
         $(ele).siblings(".prompt").hide();
 
+        // 数组遍历，判断是否有度量
+        const q_l = d.queryJson.x.concat(d.queryJson.y).filter(function(d){
+           if(d.dimMea === "0" || d.dimMea === 0) return d;
+        }).length;
+        if(q_l <= 0) { layer.msg("图表没有度量！"); return ; }
+
+
         $.ajax({
             type:"post",
             url:$url1 + "/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",
@@ -128,6 +135,9 @@ var DataIndexes = {
                     if(data.data){
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
+                    }else if(data.code === 500){
+                        $(ele).siblings(".prompt").show();
+                        layer.msg("数据异常，请联系管理员！");
                     }else{
                         $(ele).siblings(".prompt").show();
                         layer.msg("数据为空！");
@@ -154,10 +164,15 @@ var DataIndexes = {
                         chart_table(ele,data);
                         break;
                     case 101:
+                        if(data.charts.dimValues[0].length >= 50){
+                            layer.msg("数据过多，请使用筛选！");
+                            return
+                        }
                         // 绘制柱状图
                         // 一维度 一度量
                         if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length <= 1 && data.charts.dimValues.length <= 1){
                             bar(ele,data);
+
                             return;
                         }
                         // 一维度 多度量

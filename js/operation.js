@@ -907,6 +907,7 @@ let project = {
                                 </li>`;
                     });
                     l.append(html);
+                    project.listData();
                 }
             },
             error:function(res){
@@ -964,7 +965,7 @@ let project = {
                 $(".f-select-cont").hide();
                 $(".f-addbtn-box-1").show();
                 $(".f-addbtn-box-auto").show();
-                $(".fl-automatic").show().siblings().hide();
+                $('.f-select-methods .fl:last').hide().siblings().show();
             }
             $(".f-search-box input").val("");
         })
@@ -2237,8 +2238,9 @@ $(function(){
         "remove": {
             text: '移除',
             action: function (e) {
+                if(context.getClickEle().parent().parent().is(".datas-pills"))
                 $.each(screen_data,function(i){
-                    if(context.getClickEle().attr("fieldid") === this.fieldId && id_ === this.cid){
+                    if(context.getClickEle().attr("fieldid") === this.fieldId && id_ === this.cid  ){
                         screen_data.splice(i,1)
                     }
                 });
