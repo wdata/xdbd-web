@@ -132,6 +132,27 @@
 			height: 200px;
 			overflow-y: visible
 		}
+		.remarks {
+			overflow: hidden;
+			padding: 10px 0;
+			background: #f7f9fc;
+			border-top: 1px solid #f1f1f1;
+			border-bottom: 1px solid #f1f1f1;
+			border: 1px solid #ccc;
+			margin: 5px 5px 0 0;
+			border-radius: 3px
+		}
+
+		.remarks .remark_key {
+			display: inline-block;
+			width: 80px;
+			text-align: center;
+			font-size: 14px
+		}
+
+		.remarks .remark_value {
+			font-size: 14px;
+		}
 	</style>
 	<script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
 	<script src="../js/login.js"></script>
@@ -624,6 +645,7 @@
 				contentType: "application/json",
 				data: JSON.stringify(parameter),
 				success: function (data) {
+					$('.remark_value').html(data.data.remark);
 					var actionDag = {};
 					if (data.data != '' && data.data != null && data.data.dag != null) {
 						this_isTemplate = data.data.isTemplate;
@@ -794,6 +816,10 @@
 		<form class="myForm propertys" id="propertyForm">
 		</form>
 		<div class="showSql"></div>
+		<div class="remarks">
+			<label class="remark_key">任务备注</label>
+			<span class="remark_value"></span>
+		</div>
 	</div>
 </body>
 

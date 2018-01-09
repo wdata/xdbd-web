@@ -148,8 +148,8 @@ $(function(){
           				topMenu = data;
               		}else{
               			data = [];
+						return false;
               		}
-              		
           			$.each(data, function(i,item) {
               			html += `
               				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
@@ -1246,8 +1246,7 @@ $(function(){
 
 	function initTemp(i){
 		var data = tempData[i];
-		console.log(data);
-		var logo,
+		var logo = data.logo,
 			leftHeight = data.leftHeight,
 			leftWidth = data.leftWidth,
 			navigationText = data.navigationText,
@@ -1259,8 +1258,35 @@ $(function(){
 		sessionStorage.setItem("leftWidth",leftWidth);
 		sessionStorage.setItem("topHeight",topHeight);
 		sessionStorage.setItem("topWidth",topWidth);
-		if(logo!==null&&logo!=="undefined"){
-			logo = data.logo;
+
+		//顶部导航栏
+		if( topWidth || topHeight ){
+			if(topWidth==="1920"&&topHeight==="60"){
+				$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
+				$(".mtop-width").val("1920").attr("readonly","readonly");
+				$(".mtop-height").val("60").attr("readonly","readonly");
+			}else{
+				$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
+				$(".mtop-width").val(topWidth).removeAttr("readonly");
+				$(".mtop-height").val(topHeight).removeAttr("readonly");
+			}
+		}
+
+		//左侧导航栏
+		if( leftWidth || leftHeight){
+			if(leftWidth==='240'&&leftHeight==='600'){
+				$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
+				$(".mleft-width").val("240").attr("readonly","readonly");
+				$(".mleft-height").val("600").attr("readonly","readonly");
+			}else {
+				$(".leftsize button").eq(1).addClass("active").siblings().removeClass("active");
+				$(".mleft-width").val(leftWidth).removeAttr("readonly");
+				$(".mleft-height").val(leftHeight).removeAttr("readonly");
+			}
+		}
+
+		//Logo
+		if(logo!==null&&logo!=="undefined"&&logo!==''){
 			$(".m-uploadimg>img").attr("src",$url1+logo);
 			$(".mn-logobox>img").attr("src",$url1+logo);
 			// sessionStorage.setItem("tempLogo",logo);
@@ -1269,7 +1295,7 @@ $(function(){
 			$(".mn-logobox>img").attr("src","../images/c_img.png");
 			// sessionStorage.setItem("tempLogo","");
 		}
-		// console.log(data);
+		//导航栏添加文本
 		if(navigationText!==undefined&&navigationText!==null&&navigationText!==''){
 			$(".mn-headtxt").text(navigationText);
 			$('input.mnavigation-text').val(navigationText);
@@ -1277,34 +1303,9 @@ $(function(){
 		}else{
 			$(".mn-headtxt").text("深脑科技欢迎您!");
 			$('input.mnavigation-text').val("深脑科技欢迎您!");
-			sessionStorage.setItem("tempTxt","");
+			sessionStorage.setItem("tempTxt","深脑科技欢迎您");
 		}
-		if(logo!==undefined&&logo!==null&&logo!==""){
-			$(".mn-logobox>img").attr("src",$url1+logo);
-			$(".m-uploadimg>img").attr("src",$url1+logo);
-		}else{
-			$(".mn-logobox>img").attr("src","../images/mlogo.png");
-			$(".m-uploadimg>img").attr("src","../images/c_img.png");
-		}
-		if(topWidth===null||topHeight===null||topWidth==="1920"&&topHeight==="60"){
-			$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
-			$(".mtop-width").val("1200").attr("readonly","readonly");
-			$(".mtop-height").val("60").attr("readonly","readonly");
-		}else{
-			$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
-			$(".mtop-width").val(topWidth).removeAttr("readonly");
-			$(".mtop-height").val(topHeight).removeAttr("readonly");
-		}
-		if(leftWidth===null||leftHeight===null||leftWidth==="240"&&leftHeight==="600"){
-			$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
-			$(".mleft-width").val("240").attr("readonly","readonly");
-			$(".mleft-height").val("600").attr("readonly","readonly");
-		}else{
-			$(".leftsize button").eq(1).addClass("active").siblings().removeClass("active");
-			$(".mleft-width").val(leftWidth).removeAttr("readonly");
-			$(".mleft-height").val(leftHeight).removeAttr("readonly");
-		}
-		// console.log(typeCode);
+
 		$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+(typeCode-1));
 		$(".m-cont-box1 ul li").eq(typeCode-1).addClass("active").siblings().removeClass("active");
 
@@ -1327,7 +1328,8 @@ $(function(){
 		}
 		e.preventDefault();
 	});
-	
+
+
 	//提示
 	var todo = {
 		tip:function(){

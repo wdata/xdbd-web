@@ -20,10 +20,12 @@ function GooFlow(bgDiv,property){
 	}
 	var width=(property.width||800);
 	var height=(property.height||500);
+	var this_jobName = localStorage.getItem("jobName");
 	this.$bgDiv.css({width:width+"px",height:height+"px"});
 	this.$tool=null;//左侧工具栏对象
 	this.$head=null;//顶部标签及工具栏按钮
-	this.$title="newFlow_1";//流程图的名称
+	console.log(this_jobName)
+	this.$title=this_jobName;//流程图的名称
 	this.$nodeRemark={};//每一种结点或按钮的说明文字,JSON格式,key为类名,value为用户自定义文字说明
 	this.$nowType="cursor";//当前要绘制的对象类型
 	this.$lineData={};
@@ -50,7 +52,7 @@ function GooFlow(bgDiv,property){
 		tmp="<div class='GooFlow_head' "+(GooFlow.prototype.color.main? "style='border-bottom-color:"+GooFlow.prototype.color.main+"'" : "")
 		+">";
 		if(property.headLabel){
-      tmp+="<label title='"+(property.initLabelText||"newFlow_1")+"' "
+      tmp+="<label title='"+(property.initLabelText||this_jobName)+"' "
         +(GooFlow.prototype.color.main? "style='background:"+GooFlow.prototype.color.main+"'" : "")+">"+(property.initLabelText||"newFlow_1")+"</label>";
 		}
 		//title="+property.headBtns[x]+"

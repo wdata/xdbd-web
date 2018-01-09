@@ -786,8 +786,8 @@ $(function(){
                         $("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
                         break;
                     case "13":
-                        items = items6;
-                        $("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
+						items = items6;
+						$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
                         break;
                     case "15":
                     case "14":
@@ -847,9 +847,6 @@ $(function(){
             $tree.treeview('collapseAll', { silent: true });
         }
     }
-
-
-
 		    
 //	getProjName(0);
 	function getProjName(id){ 
@@ -1564,6 +1561,7 @@ $(function(){
 				}
 			});
 		}
+
 		
 		//修改名称
 		function renameFile(directoryId,name){
