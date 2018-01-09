@@ -1538,17 +1538,16 @@ $(function(){
 		function deleteFile(directoryId){
 			$.ajax({
 				type:'POST',
-	            url:$url4+'/api/job/v1/deleteJob',
+	            url:$url3+'/bigdata/project/deleteDirectory',
 	            headers:{
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
-				dataType:'json',
-				contentType: "application/json",
-				data:JSON.stringify({
-					// "projectId":projectId,
+	            dataType:'json',
+				data:{
+					"projectId":projectId,
 					"versionId":versionId,
-					"id":directoryId
-				}),
+					"directoryId":directoryId
+				},
 				success:function(res){
 	              	if(res.code===0){
 						//删除成功,刷新项目树
@@ -1562,6 +1561,7 @@ $(function(){
 				}
 			});
 		}
+
 		
 		//修改名称
 		function renameFile(directoryId,name){
