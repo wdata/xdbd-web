@@ -149,87 +149,89 @@
     }
     
 </style>
-<div class="ensure">
-    <span class="ensure_load saveActionComp">保存</span>
-    <span class="ensure_load generateSql">生成SQL</span>
+<div id="join">
+    <div class="ensure">
+        <span class="ensure_load saveActionComp">保存</span>
+        <span class="ensure_load generateSql">生成SQL</span>
 
-</div>
-<div class="form_title">属性设置</div>
-<div class="fromInp" style="margin-top: 12px;">
-    <label>步骤名称：</label>
-    <input type="text" class="stepName auto_save" readonly="readonly"/>
-</div>
-<div class="fromInp">
-    <label>表输出：</label>
-    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
-</div>
-<div class="fromInp">
-    <label>选择表：</label>
-    <select class="fromTable auto_save" style="width:160px;height: 28px;margin-left: 25px;">
-    </select>
-</div>
-<div class="related_tit">关联表</div>
-<div class="joinTables">
-<div class="fromInp joinTable" style="margin: 0 12px;border: 1px solid #d9d9d9;overflow: hidden;">
-    <div class="related">
-        <label style="float: left;">关联类型：</label>
-        <select class="joinType auto_save">
-            <option>inner join</option>
-            <option>left join</option>
-            <option>right join</option>
+    </div>
+    <div class="form_title">属性设置</div>
+    <div class="fromInp" style="margin-top: 12px;">
+        <label>步骤名称：</label>
+        <input type="text" class="stepName auto_save" readonly="readonly"/>
+    </div>
+    <div class="fromInp">
+        <label>表输出：</label>
+        <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
+    </div>
+    <div class="fromInp">
+        <label>选择表：</label>
+        <select class="fromTable auto_save" style="width:160px;height: 28px;margin-left: 25px;">
         </select>
     </div>
-    <div class="related">
-        <label style="float: left;">选择表：</label>
-        <select class="selectTable auto_save"></select>
-    </div>
-    <div class="clear"></div>
-    <table class="related_tab" cellspacing="0">
-        <thead>
-        <tr>
-            <th>列名</th>
-            <th>表达式</th>
-            <th>列名</th>
-        </tr>
-        </thead>
-        <tbody class="onFilters">
-        <tr class="onFilter">
-            <td style="width: 33%"><select class="field1 auto_save"></select></td>
-            <td style="width: 33%">
-                <select class="expr auto_save">
-                    <option value="=">=</option>
-                    <option value="<"><</option>
-                    <option value=">">></option>
-                    <option value="<="><=</option>
-                    <option value=">=">>=</option>
+    <div class="related_tit">关联表</div>
+    <div class="joinTables">
+        <div class="fromInp joinTable" style="margin: 0 12px;border: 1px solid #d9d9d9;overflow: hidden;">
+            <div class="related">
+                <label style="float: left;">关联类型：</label>
+                <select class="joinType auto_save">
+                    <option>inner join</option>
+                    <option>left join</option>
+                    <option>right join</option>
                 </select>
-            </td>
-            <td style="width: 33%"><select class="field2 auto_save"></select></td>
-            <td class="regulation"><span class="add joinsAdd more_save"></span><span class="lessen joinsLessen more_save"></span></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</div>
-<div class="related_tit">提取字段</div>
-<div class="extract_field">
-    <table class="related_tab" cellspacing="0">
-        <thead>
+            </div>
+            <div class="related">
+                <label style="float: left;">选择表：</label>
+                <select class="selectTable auto_save"></select>
+            </div>
+            <div class="clear"></div>
+            <table class="related_tab" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>列名</th>
+                    <th>表达式</th>
+                    <th>列名</th>
+                </tr>
+                </thead>
+                <tbody class="onFilters">
+                <tr class="onFilter">
+                    <td style="width: 33%"><select class="field1 auto_save"></select></td>
+                    <td style="width: 33%">
+                        <select class="expr auto_save">
+                            <option value="=">=</option>
+                            <option value="<"><</option>
+                            <option value=">">></option>
+                            <option value="<="><=</option>
+                            <option value=">=">>=</option>
+                        </select>
+                    </td>
+                    <td style="width: 33%"><select class="field2 auto_save"></select></td>
+                    <td class="regulation"><span class="add joinsAdd more_save"></span><span class="lessen joinsLessen more_save"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="related_tit">提取字段</div>
+    <div class="extract_field">
+        <table class="related_tab" cellspacing="0">
+            <thead>
             <tr>
                 <th>表名</th>
                 <th>列名</th>
                 <!-- <th>别名</th> -->
             </tr>
-        </thead>
-        <tbody class="extractFields">
-            <tr class="extractField">
-                <td style="width: 33%"><select class="table auto_save"></select></td>
-                <td>
-                    <select class="field auto_save"></select>
-                </td>
-                <!-- <td style="width: 32%"><input class="alias auto_save" type="text"/></td> -->
-                <td class="regulation"><span class="add joinAdd more_save"></span><span class="lessen joinLessen more_save"></span></td>
-            </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="extractFields">
+                <tr class="extractField">
+                    <td style="width: 33%"><select class="table auto_save"></select></td>
+                    <td>
+                        <select class="field auto_save"></select>
+                    </td>
+                    <!-- <td style="width: 32%"><input class="alias auto_save" type="text"/></td> -->
+                    <td class="regulation"><span class="add joinAdd more_save"></span><span class="lessen joinLessen more_save"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

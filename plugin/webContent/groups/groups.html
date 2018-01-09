@@ -147,71 +147,73 @@
     }
 
 </style>
-<div class="ensure">
-    <span class="ensure_load saveActionComp">保存</span>
-    <span class="ensure_load generateSql">生成SQL</span>
+<div id="groups">
+    <div class="ensure">
+        <span class="ensure_load saveActionComp">保存</span>
+        <span class="ensure_load generateSql">生成SQL</span>
 
-</div>
-<div class="form_title">属性设置</div>
-<div class="fromInp" style="margin-top: 12px;">
-    <label>步骤名称：</label>
-    <input type="text" class="stepName auto_save" readonly="readonly"/>
-</div>
-<div class="fromInp">
-    <label>表输出：</label>
-    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
-</div>
-<!--<div class="fromInp">-->
+    </div>
+    <div class="form_title">属性设置</div>
+    <div class="fromInp" style="margin-top: 12px;">
+        <label>步骤名称：</label>
+        <input type="text" class="stepName auto_save" readonly="readonly"/>
+    </div>
+    <div class="fromInp">
+        <label>表输出：</label>
+        <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
+    </div>
+    <!--<div class="fromInp">-->
     <!--<label>选择表：</label>-->
     <!--<select class="fromTable" style="width:160px;height: 28px;margin-left: 25px;">-->
     <!--</select>-->
-<!--</div>-->
-<div class="related_tit">分组字段</div>
-<div class="joinTables">
-    <div class="fromInp joinTable" style="margin: 0 12px;border: 1px solid #d9d9d9;overflow: hidden;">
+    <!--</div>-->
+    <div class="related_tit">分组字段</div>
+    <div class="joinTables">
+        <div class="fromInp joinTable" style="margin: 0 12px;border: 1px solid #d9d9d9;overflow: hidden;">
+            <table class="related_tab" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>列名</th>
+                </tr>
+                </thead>
+                <tbody class="groups">
+                <tr class="group">
+                    <td><select class="field auto_save"></select></td>
+                    <td class="regulation"><span class="add onAdd more_save"></span><span class="lessen onLessen more_save"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="related_tit">提取字段</div>
+    <div class="extract_field">
         <table class="related_tab" cellspacing="0">
             <thead>
             <tr>
                 <th>列名</th>
+                <th>别名</th>
+                <th>函数</th>
             </tr>
             </thead>
-            <tbody class="groups">
-            <tr class="group">
-                <td><select class="field auto_save"></select></td>
-                <td class="regulation"><span class="add onAdd more_save"></span><span class="lessen onLessen more_save"></span></td>
+            <tbody class="groupFields">
+            <tr class="groupField">
+                <td style="width: 30%;"><select class="field auto_save"></select></td>
+                <td>
+                    <input class="alias auto_save" type="text"/>
+                </td>
+                <td style="width: 32%">
+                    <select class="fn auto_save">
+                        <option value="">空</option>
+                        <option value="max">max</option>
+                        <option value="min">min</option>
+                        <option value="sum">sum</option>
+                        <option value="count">count</option>
+                        <option value="avg">avg</option>
+                    </select>
+                </td>
+                <td class="regulation"><span class="add extractAdd more_save"></span><span class="lessen extractLessen more_save"></span></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-<div class="related_tit">提取字段</div>
-<div class="extract_field">
-    <table class="related_tab" cellspacing="0">
-        <thead>
-        <tr>
-            <th>列名</th>
-            <th>别名</th>
-            <th>函数</th>
-        </tr>
-        </thead>
-        <tbody class="groupFields">
-        <tr class="groupField">
-            <td style="width: 30%;"><select class="field auto_save"></select></td>
-            <td>
-                <input class="alias auto_save" type="text"/>
-            </td>
-            <td style="width: 32%">
-                <select class="fn auto_save">
-                    <option></option>
-                    <option>max</option>
-                    <option>min</option>
-                    <option>sum</option>
-                    <option>count</option>
-                    <option>avg</option>
-                </select>
-            </td>
-            <td class="regulation"><span class="add extractAdd more_save"></span><span class="lessen extractLessen more_save"></span></td>
-        </tr>
-        </tbody>
-    </table>
-</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   

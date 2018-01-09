@@ -439,7 +439,6 @@
 		//根据fromTable获取fields
 		function fn_get_fields_by_fromTable(fromTable) {
 			var fieldOut;
-			// console.log(JSON.stringify(actionComps))
 			$.each(actionComps, function (i,item) {
 				if (item.tableOut == fromTable) {
 					// fieldOut = this.fieldOut;
@@ -686,7 +685,6 @@
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
 					var newTime = new Date().getTime();
-					console.log(newTime)
 					if(time){
 						if((newTime-time)<100){
 							return false;
@@ -751,6 +749,63 @@
 				}
 			})
 		}
+
+
+		// 用以添加的时候，添加不同的下拉选择
+        function addRestrictions(str){
+            // 先添加后修改内容，不然不好修改元素
+            const ele = $(''+ str +':last');   // 需重新获取最后一个元素，也就是最新添加的元素outputHtml
+            const option = ele.find(".field option");   // 获取新添加的下拉框
+            const field = ele.siblings().find(".field"); // 获取添加之前的元素
+            option.each(function(){
+                const text = this.innerHTML;
+                const val = this.value;
+                let bur = true;
+                field.each(function(){
+                    const SibVal = this.value;
+                    const SibText = $(this).find("option:selected").text();
+                    if(text === SibText && SibVal === val){
+                        bur = false;
+                    }
+                });
+                if(bur){
+                    const selctedStr = $(this).attr("selected","selected").parents(str);
+                    selctedStr.find(".alias").val(text);
+                    if(selctedStr.find(".fn option:first").length > 0){
+                        selctedStr.find(".fn option:first").attr("selected","selected");   // 在groups.js中fn表示函数，需要在添加时为空
+					}
+					if(selctedStr.find(".sort option:first").length > 0){
+                        selctedStr.find(".sort option:first").attr("selected","selected");   // sort.js中sort表示函数，需要在添加时为空
+					}
+
+                    return false;   // 可以添加的可能有多个，所以只显示第一个，用以排序！
+                }
+            });
+        }
+
+
+        function mousedownRestrictions(ele,str){
+            // click 在选择select和选择option会点击2次，mousedown：只点击一次
+            ele.on("mousedown",""+ str +" .field",function(){
+                const option = $(this).find("option");
+                const sib = $(this).parents(str).siblings().find(".field");
+                // 先删除所有的disabled
+                option.removeAttr("disabled").each(function(){
+                    const text = this.innerHTML;
+                    const val = this.value;
+                    const self = this;
+                    sib.each(function(){
+                        const SibVal = this.value;
+                        const SibText = $(this).find("option:selected").text();
+                        if(text === SibText && SibVal === val){
+                            $(self).attr("disabled","disabled");
+                        }
+                    })
+                });
+            });
+		}
+
+
 
 	</script>
 </head>
