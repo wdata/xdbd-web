@@ -786,8 +786,8 @@ $(function(){
                         $("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
                         break;
                     case "13":
-                        items = items6;
-                        $("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
+						items = items6;
+						$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
                         break;
                     case "15":
                     case "14":
@@ -847,9 +847,6 @@ $(function(){
             $tree.treeview('collapseAll', { silent: true });
         }
     }
-
-
-
 		    
 //	getProjName(0);
 	function getProjName(id){ 
@@ -1541,16 +1538,17 @@ $(function(){
 		function deleteFile(directoryId){
 			$.ajax({
 				type:'POST',
-	            url:$url3+'/bigdata/project/deleteDirectory',
+	            url:$url4+'/api/job/v1/deleteJob',
 	            headers:{
 	            	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
 	            },
-	            dataType:'json',
-				data:{
-					"projectId":projectId,
+				dataType:'json',
+				contentType: "application/json",
+				data:JSON.stringify({
+					// "projectId":projectId,
 					"versionId":versionId,
-					"directoryId":directoryId
-				},
+					"id":directoryId
+				}),
 				success:function(res){
 	              	if(res.code===0){
 						//删除成功,刷新项目树
