@@ -109,6 +109,7 @@ function bind_click_add() {
             input.find('.extractFields').append(inputHtml);
 
             addRestrictions(".extractField");  // 用以在添加的时候，返回下拉框没有选择的值
+            fn_saveActionComp(getVal());
             return false;           // 防止 事件冒泡 不加会有2次效果
         })
 }

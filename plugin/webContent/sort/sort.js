@@ -106,6 +106,7 @@ function bind_click_sortAdd() {
             sortFields.append(sortFieldHtml);
 
             addRestrictions(".sortField");  // 用以在添加的时候，返回下拉框没有选择的值
+            fn_saveActionComp(getVal());
             return false;           // 防止 事件冒泡 不加会有2次效果
         })
 }
@@ -114,11 +115,11 @@ function bind_click_sortLessen() {
     $(document.body)
         .off('click', '.sortLessen')
         .on('click', '.sortLessen', function () {
-            // alert($('.sortField').length)
             if ($('.sortField').length < 2) {
                 layer.msg('最后一个提取条件不能删除')
             } else {
                 $(this).parents('.sortField').remove();
+                fn_saveActionComp(getVal());
             }
         })
 }

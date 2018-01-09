@@ -52,7 +52,7 @@ function bind_change_selectTable() {
                 optionsHtml += "<option value=" + this.field + ">" + this.remark + "</option>";
             });
             $('.field1').html(optionsHtml);
-            // $('.extractField .table').append('<option>' + $(this).val() + '</option>');
+            $('.extractField .table').append('<option>' + $(this).val() + '</option>');
         });
 }
 

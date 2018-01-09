@@ -114,6 +114,7 @@ function bind_click_extractAdd() {
             $('.extractFields').append(outputHtml);
 
             addRestrictions(".extractField");  // 用以在添加的时候，返回下拉框没有选择的值
+            fn_saveActionComp(getVal());
             return false;           // 防止 事件冒泡 不加会有2次效果
         })
 }
@@ -127,6 +128,7 @@ function bind_click_extractLessen() {
             } else {
                 $(this).parents('.extractField').remove();
             }
+            fn_saveActionComp(getVal());
         })
 }
 
