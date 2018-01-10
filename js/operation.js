@@ -1970,16 +1970,16 @@ $(function(){
                                     li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
                                      baseDataType="${item.baseDataType}" dataType="${item.dataType}"
                                      baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
-                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}">${icon} ${item.fieldAlias}</li>
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
                                 `;
                                 });
 
                                 if(value.type==1){//原始字段
-                                    dhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
+                                    dhtml += `<div parentCon="dimensionBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
                                 }else if(value.type==2){//自定义字段
-                                    dhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
+                                    dhtml += `<div parentCon="dimensionBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
                                 }else if(value.type==3){//自定义层
-                                    dhtml += `<div class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
+                                    dhtml += `<div parentCon="dimensionBox" class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
                                 }
                             });
                         }else{
@@ -2001,9 +2001,9 @@ $(function(){
                                 });
 
                                 if(value.type==1){//原始字段
-                                    mhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    mhtml += `<div parentCon="metricBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
                                 }else if(value.type==2){//自定义字段
-                                    mhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    mhtml += `<div parentCon="metricBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
                                 }
                             });
                         }else{
@@ -2012,8 +2012,8 @@ $(function(){
                         $(".metric-box").empty().append(mhtml);
 
                         //滚动条
-                        $("#dimensionBox").mCustomScrollbar({theme:"dark"});
-                        $(".metric-box").mCustomScrollbar({theme:"dark"});
+                        $("#dimensionBox").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
+                        $(".metric-box").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
 
 
 
@@ -2073,16 +2073,16 @@ $(function(){
 
                                 if(startMoveLevelId!==undefined&&levelId!==undefined){
                                     if(stopMoveLevelId == startMoveLevelId){//非同一个层级
-                                        console.log('内');
+                                        //console.log('内');
                                         joinLevel2(fieldid,levelId,preFieldId);
                                     }else {//同个层级内部
-                                        console.log('外');
+                                        //console.log('外');
                                         popLevelAddLevel(fieldid,startMoveLevelId,stopMoveLevelId,preFieldId);
                                     }
                                 }
                             },
                             drop:function (){
-                                console.log('drop');
+                                //console.log('drop');
                             }
                         }).disableSelection();
 
@@ -2093,7 +2093,7 @@ $(function(){
                             cursor: "move",
                             opacity: 0.5
                         }).disableSelection();
-                        console.log(1);
+                        //console.log(1);
 
                     }
                 }else {
@@ -2101,7 +2101,7 @@ $(function(){
                 }
             },
             error:function(res){
-                // console.log(1);
+                console.log(res);
             }
         });
     }

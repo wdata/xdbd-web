@@ -34,7 +34,7 @@ $(function(){
 	var controls = [];
 	var isIndex = "";//参数4
 	var customData = {};//参数5
-	var lv1DirId = localStorage.getItem("lv1DirId");
+	var pageFlowId = localStorage.getItem("pageFlowId");
 
 	//页面数配置
 	var setting = {
@@ -95,7 +95,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".p-cont"+$idx).show().siblings().hide();
 		if($idx===1){
-			curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
+			curTreePages(pageFlowId,versionId,[1,2,5,14,6,7,10,11,15]);
 		}else if($idx===0){
 			// getFirstPages(projectId,versionId,pageFlowDirId);
 		}
@@ -231,7 +231,7 @@ $(function(){
 	
 	$(".page-tooltip").delegate("li","click",function(){
 		$idx = $(this).index();
-	})
+	});
 	
 	//设置链接
 	$(".page-tooltip1").delegate(".set-flow-btn1","click",function(){
@@ -245,14 +245,14 @@ $(function(){
 		      	layer.close(index);
 		      }
 		})
-	})
+	});
 	
 	$(".page-tooltip1").delegate("li","click",function(){
 		$idx = $(this).index();
-	})
+	});
 	
 	//根据BIdirId查询项目树.（首页2与BI报表10）
-	curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
+	curTreePages(pageFlowId,versionId,[1,2,5,14,6,7,10,11,15]);
 	function curTreePages(BIdirId,versionId,directoryTypes){
 		$.ajax({
 				type:'POST',
