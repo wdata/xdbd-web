@@ -1,4 +1,5 @@
 var fromTable;
+var fromSql;
 const output = $("#output");
 initFromTable();
 setVal();
@@ -21,13 +22,16 @@ function initFromTable() {
     $.each(demo.exportData().lines, function () {
         if (this.to == this_webComponentId) {
             var actionComp = fn_get_actionComp_by_webComponentId(this.from);
+            console.log(actionComp)
             fromTable = actionComp.tableOut;
+            fromSql = actionComp.sqlOut;
         }
     });
     if (fromTable != null && fromTable != '') {
         $.each(demo.exportData().lines, function () {
             if (this.to == this_webComponentId) {
                 var actionComp = fn_get_actionComp_by_webComponentId(this.from);
+                console.log(actionComp)
                 fromTable = actionComp.fromTable;
             }
         });
@@ -67,6 +71,7 @@ function bind_click_saveActionComp() {
 
 function setVal() {
     var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
+    console.log(actionComp)
     if (actionComp != null) {
         var attValue = eval("(" + actionComp.attValue + ")");
         fn_set_stepName(etlName);
@@ -133,8 +138,11 @@ function bind_click_extractLessen() {
 
 function generate_sql() {
     var s = squel.select();
-    s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
+    console.log(fromTable)
+    console.log(fn_get_sqlOut_by_fromTable(fromTable))
+    s.from("(" + fromSql + ")", fromTable);
     //提取字段
+    console.log(fn_get_extractFields())
     $.each(fn_get_extractFields(), function () {
         var field = this.field;
         // var alias = this.alias;
