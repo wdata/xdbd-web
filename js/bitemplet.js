@@ -3,7 +3,7 @@
 	 */
 
 	/*
-	 
+
 	 * url地址变量
 	 * BI : http://192.168.1.42:8084/xdbd-bi
 	 * ETL: http://192.168.1.42:8084/xdbd-etl
@@ -82,6 +82,7 @@
 	    '<p class="hint">100个字以内</p>' +
 	    '<div class="new_demdand_btn"><span class="new_btn" onclick="newBtn(popups)">确定</span><span class="call_btn" onclick="callBtn(popups)">取消</span></div>',
 	  });
+        $('.new_type').html(industryType());
 	});
 	function callBtn(popups) {
 	  layer.close(popups);
