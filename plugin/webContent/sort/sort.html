@@ -139,45 +139,47 @@
     }
 
 </style>
-<div class="ensure">
-    <span class="ensure_load saveActionComp">保存</span>
-    <span class="ensure_load generateSql">生成SQL</span>
+<div id="sort">
+    <div class="ensure">
+        <span class="ensure_load saveActionComp">保存</span>
+        <span class="ensure_load generateSql">生成SQL</span>
 
-</div>
-<div class="form_title">属性设置</div>
-<div class="fromInp" style="margin-top: 12px;">
-    <label>步骤名称：</label>
-    <input type="text" class="stepName auto_save" readonly="readonly"/>
-</div>
-<div class="fromInp">
-    <label>表输出：</label>
-    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
-</div>
-<div class="fromInp">
-    <label>选择表：</label>
-    <select class="fromTable auto_save" style="width:160px;height: 28px;margin-left: 25px;">
-    </select>
-</div>
-<div class="related_tit">排序字段</div>
-<div class="extract_field">
-    <table class="related_tab" cellspacing="0">
-        <thead>
-        <tr>
-            <th>列名</th>
-            <th>排序</th>
-        </tr>
-        </thead>
-        <tbody class="sortFields">
-            <tr class="sortField">
-                <td><select class="field auto_save"></select></td>
-                <td>
-                    <select class="sort auto_save">
-                        <option>asc</option>
-                        <option>desc</option>
-                    </select>
-                </td>
-                <td class="regulation"><span class="add sortAdd more_save"></span><span class="lessen sortLessen more_save"></span></td>
+    </div>
+    <div class="form_title">属性设置</div>
+    <div class="fromInp" style="margin-top: 12px;">
+        <label>步骤名称：</label>
+        <input type="text" class="stepName auto_save" readonly="readonly"/>
+    </div>
+    <div class="fromInp">
+        <label>表输出：</label>
+        <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
+    </div>
+    <div class="fromInp">
+        <label>选择表：</label>
+        <select class="fromTable auto_save" style="width:160px;height: 28px;margin-left: 25px;">
+        </select>
+    </div>
+    <div class="related_tit">排序字段</div>
+    <div class="extract_field">
+        <table class="related_tab" cellspacing="0">
+            <thead>
+            <tr>
+                <th>列名</th>
+                <th>排序</th>
             </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="sortFields">
+                <tr class="sortField">
+                    <td><select class="field auto_save"></select></td>
+                    <td>
+                        <select class="sort auto_save">
+                            <option value="asc">asc</option>
+                            <option value="desc">desc</option>
+                        </select>
+                    </td>
+                    <td class="regulation"><span class="add sortAdd more_save"></span><span class="lessen sortLessen more_save"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
