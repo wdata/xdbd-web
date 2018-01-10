@@ -15,6 +15,7 @@ bind_click_extractAdd();
 bind_click_extractLessen();
 bind_click_saveActionComp();
 bind_click_sql();
+init_autosave();  // 用以重置下拉框和输入框、加、减后的change事件，让事件在修改后执行
 
 
 $(".stepName").val(etlName);
