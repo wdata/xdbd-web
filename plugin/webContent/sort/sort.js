@@ -9,8 +9,8 @@ bind_click_sortLessen();
 bind_click_sql();
 bind_click_saveActionComp();
 $(".stepName").val(etlName);
-
 mousedownRestrictions(sort,".sortField");  // 用以在点击的时候，禁止已选择的下拉选项
+init_autosave();  // 用以重置下拉框和输入框、加、减后的change事件，让事件在修改后执行
 
 
 function bind_change_fromTable() {
@@ -106,7 +106,6 @@ function bind_click_sortAdd() {
             sortFields.append(sortFieldHtml);
 
             addRestrictions(".sortField");  // 用以在添加的时候，返回下拉框没有选择的值
-            fn_saveActionComp(getVal());
             return false;           // 防止 事件冒泡 不加会有2次效果
         })
 }
@@ -119,7 +118,6 @@ function bind_click_sortLessen() {
                 layer.msg('最后一个提取条件不能删除')
             } else {
                 $(this).parents('.sortField').remove();
-                fn_saveActionComp(getVal());
             }
         })
 }
