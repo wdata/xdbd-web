@@ -209,7 +209,6 @@ let refresh = {
         // 如果li的ID和位置相同，则将筛选的数据放入其中x:0 , y:1 , p:2
         $.each(screen_data,function(x,y){
             if($(icon).attr("fieldId") === y.fieldId && y.number === number && y.cid === id_){
-                // console.log(y);
                 if(y.listFilter || y.textFilter){
                     search_attr.listFilter = timeSng.reJson(y.listFilter);
                     search_attr.textFilter = timeSng.reJson(y.textFilter);
@@ -559,6 +558,7 @@ let operating = {
     },
     // 复制
     copy:function(id){
+        copy_data = {}; // 在使用前，清空之前保存的数据！
         $.each(save_arr,function(index,item){
             if(item.cid + "" === id){
                 // 如果cid相同，则将item数据复制给copy_data
@@ -567,6 +567,12 @@ let operating = {
                 if(dataType === "text"|| dataType === "button" || dataType === "image" ){
                     copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
                 }
+            }
+        });
+        copy_data.filter = [];   // 先定义为数组!
+        $.each(screen_data,function(){
+            if(this.cid + "" === id){
+                copy_data.filter.push(JSON.parse(JSON.stringify(this)));
             }
         });
     },
@@ -578,38 +584,40 @@ let operating = {
             const editBox = $(".edit-libs-box");
 
             const customData = copy_data.customData;
+            const filter = copy_data.filter;   // 筛选数据
             const dataType = customData.dataType;
             const id = dataType + uuid(8,16);
             const left = event.pageX - parseFloat(clearY.width()) - parseFloat(clearY.css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat(editBox.css("margin-top"));
 
             let text = DataIndexes.text(customData.controls,customData.dataType);
-            id_ = copy_data.cid; // 拖拽必须修改id_
 
             const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ text +'</div>';
             editBox.append(html);
-            if(customData.dataType === "chart"){
+            // 如果是图表数据，则显示图形！，并将数据存入数组中
+            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
                 // 将数据存入检索数据中
                 let chart_date = {
-                    'cid':copy_data.cid,
+                    'cid':id,
                     "type":copy_data.type,
                     "queryJson":copy_data.queryJson,
                 };
-                DataIndexes.inAjax(chart_date,copy_data.cid);
-                index_arr.push(chart_date);
-            }
-
-
-            // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
-            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
+                // 将数据存入筛选数据中
+                if(filter && filter.length >= 1){      // 先判断数据是否存在，并且数据大于1
+                    $.each(filter,function(){  // 使用each循环遍历数组
+                        const l = this;
+                        l.cid = id;
+                        screen_data.push(l);         // 将筛选数据加入数组中
+                    });
+                }
                 const z = JSON.parse(JSON.stringify(copy_data));
                 z.cid = id;
-                save_arr.push(z);
+                save_arr.push(z);    // 总数据
+                index_arr.push(chart_date);  // 单纯的索引数据
+                DataIndexes.inAjax(chart_date,id);    // 显示图形
             }
             refresh.storage(dataType,id); // 判断不同的TYPE执行不同的采取函数
             // 拖拽初始化！
-            id_ = id; // 拖拽必须修改id_
-            number++; // ID不重复！
             new ZResize({
                 stage: '.edit-libs-box', //舞台
                 itemClass: 'resize-item'//可缩放的类名
@@ -670,7 +678,6 @@ let operating = {
             });
         });
     },
-// #6B6B6B
 };
 operating.moveLayer(); // 移入提示
 
