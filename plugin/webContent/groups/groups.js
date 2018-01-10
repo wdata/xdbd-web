@@ -68,7 +68,7 @@ function bind_click_groupLessen() {
 	$(document.body)
 		.off('click', '.onLessen')
 		.on('click', '.onLessen', function () {
-			if ($('.group').length < 2) {
+			if ($('#groups .group').length < 2) {
 				layer.msg('最后一个提取条件不能删除')
 			} else {
 				$(this).parents('.group').remove();
@@ -94,7 +94,7 @@ function bind_click_extractLessen() {
 	$(document.body)
 		.off('click', '.extractLessen')
 		.on('click', '.extractLessen', function () {
-			if ($('.groupField').length < 2) {
+			if ($('#groups .groupField').length < 2) {
 				layer.msg('最后一个提取条件不能删除')
 			} else {
 				$(this).parents('.groupField').remove();

@@ -114,7 +114,7 @@ function bind_click_sortLessen() {
     $(document.body)
         .off('click', '.sortLessen')
         .on('click', '.sortLessen', function () {
-            if ($('.sortField').length < 2) {
+            if ($('#sort .sortField').length < 2) {
                 layer.msg('最后一个提取条件不能删除')
             } else {
                 $(this).parents('.sortField').remove();

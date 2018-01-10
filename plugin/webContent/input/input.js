@@ -116,7 +116,7 @@ function bind_click_lessen() {
     $(document.body)
         .off('click', '.lessen')
         .on('click', '.lessen', function () {
-            if ($('.extractField').length < 2) {
+            if ($('#input .extractField').length < 2) {
                 layer.msg('最后一个提取条件不能删除');
             } else {
                 $(this).parents('.extractField').remove();
