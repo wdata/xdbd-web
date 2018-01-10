@@ -329,7 +329,15 @@
 			};
 			//执行
 			demo.onBtnExecuteClick = function () {
-				fn_upload_parquet();
+				layer.confirm('执行程序会清空原来的程序,是否确定执行？', {
+					btn: ['确定','取消'] //按钮
+				}, function(){
+					fn_upload_parquet();
+				}, function(){
+					layer.msg('已保留原数据', {icon: 1});
+				});
+				// };
+				// fn_upload_parquet();
 			};
 			//另存为模板
 			demo.onBtnSaveCopyClick = function () {
@@ -427,6 +435,7 @@
 		//根据webComponentId获取actionComp
 		function fn_get_actionComp_by_webComponentId(webComponentId) {
 			var actionComp;
+			console.log(actionComps)
 			$.each(actionComps, function () {
 				if (this.webComponentId == webComponentId) {
 					actionComp = this;
@@ -453,8 +462,9 @@
 		//根据fromTable获取sqlOut
 		function fn_get_sqlOut_by_fromTable(fromTable) {
 			var sqlOut;
-			//alert(fromTable)
+			console.log(actionComps,fromTable)
 			$.each(actionComps, function () {
+				console.log(this.tableOut,fromTable)
 				if (this.tableOut == fromTable) {
 					sqlOut = this.sqlOut;
 					return true;
@@ -672,10 +682,19 @@
 				data: JSON.stringify(load),
 				success: function (data) {
 					if (data.code == 0) {
-						layer.msg('上传成功', { time: 1000 })
+						layer.msg('执行成功', {icon: 1});
 					} else {
 						layer.msg(data.message, { time: 1000 })
 					}
+				},
+				beforeSend:function(){
+					layer.load(0, {shade:[0.1,'#000']}); //0代表加载的风格，支持0-2
+				},
+				complete:function(){
+					layer.closeAll('loading'); //关闭信息框
+				},
+				error: function (err) {
+				// console.log(err);
 				}
 			});
 		}
@@ -686,7 +705,6 @@
 				.off('change', '.auto_save')
 				.on('change', '.auto_save', function () {
 					var newTime = new Date().getTime();
-					console.log(newTime)
 					if(time){
 						if((newTime-time)<100){
 							return false;
