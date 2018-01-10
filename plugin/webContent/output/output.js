@@ -128,7 +128,7 @@ function bind_click_extractLessen() {
     $(document.body)
         .off('click', '.outputLessen')
         .on('click', '.outputLessen', function () {
-            if ($('.extractField').length < 2) {
+            if ($('#outputHtml .extractField').length < 2) {
                 layer.msg('最后一个提取条件不能删除')
             } else {
                 $(this).parents('.extractField').remove();

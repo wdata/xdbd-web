@@ -226,7 +226,7 @@ function bind_click_onLessen() {
     $(document.body)
         .off('click', '.joinsLessen')
         .on('click', '.joinsLessen', function () {
-            if ($('.onFilter').length < 2) {
+            if ($('#join .onFilter').length < 2) {
                 layer.msg('最后一个提取条件不能删除')
             } else {
                 $(this).parents('.onFilter').remove();
