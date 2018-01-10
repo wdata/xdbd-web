@@ -94,9 +94,10 @@ var context = context || (function () {
 
 	function addContext(selector, data) {
 		
-		var d = new Date(),
-			id = d.getTime(),
-			$menu = buildMenu(data, id);
+		// var d = new Date(),
+			// id = d.getTime();
+		const	id = parseInt(Math.random() * Math.pow(10,16));   // 一开始使用时间戳，但是如果执行太快，则时间戳会相同，则不考虑时间戳
+		var	$menu = buildMenu(data, id);
 			
 		$('body').append($menu);
 		
@@ -106,7 +107,7 @@ var context = context || (function () {
 			e.stopPropagation();
 			clickEle = $(this);//记录当前点击的element
 			$('.dropdown-context:not(.dropdown-context-sub)').hide();
-			
+
 			$dd = $('#dropdown-' + id);
 			if (typeof options.above == 'boolean' && options.above) {
 				$dd.addClass('dropdown-context-up').css({

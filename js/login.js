@@ -161,6 +161,6 @@ function industryType() {
   $.each(arr,function(index,item) {
     var i = (index+1)<10?('0'+(index+1)):(index+1);
     type.push('<option value='+i+'>'+item+'</option>');
-  })
+  });
   return type;
 }
