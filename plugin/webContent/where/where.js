@@ -106,9 +106,9 @@ function bind_click_generateSql() {
 
 function bind_click_onAdd() {
     $(document.body)
-        .off('click', '.onAdd')
-        .on('click', '.onAdd', function () {
-            const where = $('.where');
+        .off('click', '#where .onAdd')
+        .on('click', '#where .onAdd', function () {
+            const where = $('#where .where');
             if(!( where.length < where.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
             // 获取第一个下拉框的代码

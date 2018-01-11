@@ -96,9 +96,9 @@ function initFromTable() {
 
 function bind_click_sortAdd() {
     $(document.body)
-        .off('click', '.sortAdd')
-        .on('click', '.sortAdd', function () {
-            const sortField = $('.sortField');
+        .off('click', '#sort .sortAdd')
+        .on('click', '#sort .sortAdd', function () {
+            const sortField = $('#sort .sortField');
             if(!( sortField.length < sortField.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
             // 获取第一个下拉框的代码
