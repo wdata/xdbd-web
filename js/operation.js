@@ -560,6 +560,7 @@ let operating = {
     },
     // 复制
     copy:function(id){
+        copy_data = {}; // 在使用前，清空之前保存的数据！
         $.each(save_arr,function(index,item){
             if(item.cid + "" === id){
                 // 如果cid相同，则将item数据复制给copy_data
@@ -568,6 +569,12 @@ let operating = {
                 if(dataType === "text"|| dataType === "button" || dataType === "image" ){
                     copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
                 }
+            }
+        });
+        copy_data.filter = [];   // 先定义为数组!
+        $.each(screen_data,function(){
+            if(this.cid + "" === id){
+                copy_data.filter.push(JSON.parse(JSON.stringify(this)));
             }
         });
     },
@@ -579,6 +586,7 @@ let operating = {
             const editBox = $(".edit-libs-box");
 
             const customData = copy_data.customData;
+            const filter = copy_data.filter;   // 筛选数据
             const dataType = customData.dataType;
             const id = dataType + uuid(8,16);
             const left = event.pageX - parseFloat(clearY.width()) - parseFloat(clearY.css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
@@ -589,18 +597,30 @@ let operating = {
 
             const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ text +'</div>';
             editBox.append(html);
-
-            // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
-            if(copy_data.queryJson && (dataType === "chart" || dataType === "table" )){
+            // 如果是图表数据，则显示图形！，并将数据存入数组中
+            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
+                // 将数据存入检索数据中
+                let chart_date = {
+                    'cid':id,
+                    "type":copy_data.type,
+                    "queryJson":copy_data.queryJson,
+                };
+                // 将数据存入筛选数据中
+                if(filter && filter.length >= 1){      // 先判断数据是否存在，并且数据大于1
+                    $.each(filter,function(){  // 使用each循环遍历数组
+                        const l = this;
+                        l.cid = id;
+                        screen_data.push(l);         // 将筛选数据加入数组中
+                    });
+                }
                 const z = JSON.parse(JSON.stringify(copy_data));
                 z.cid = id;
-                save_arr.push(z);
-                DataIndexes.inAjax(z,copy_data.cid);
+                save_arr.push(z);    // 总数据
+                index_arr.push(chart_date);  // 单纯的索引数据
+                DataIndexes.inAjax(chart_date,id);    // 显示图形
             }
             refresh.storage(dataType,id); // 判断不同的TYPE执行不同的采取函数
             // 拖拽初始化！
-            id_ = id; // 拖拽必须修改id_
-            number++; // ID不重复！
             new ZResize({
                 stage: '.edit-libs-box', //舞台
                 itemClass: 'resize-item'//可缩放的类名
@@ -611,7 +631,11 @@ let operating = {
     },
     // 刷新
     refresh:function(){
-        location.reload(); // 刷新页面
+        layer.confirm('刷新前请先保存，是否确定刷新页面？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            location.reload(); // 刷新页面
+        });
     },
     // 预览
     preview:function(){
@@ -721,7 +745,7 @@ let obtain = {
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
-                if(val.customData.dataType === "chart"){
+                if(val.customData.dataType === "chart"  || val.customData.dataType === "table"){
                     // 将数据存入检索数据中
                     let chart_date = {
                         'cid':val.cid,
@@ -754,12 +778,14 @@ let project = {
     "textFilter":{},
     "listFilterB":[],
     "allBur":false,
+    "filterAttr":null,
     TFilter:function(field, name,fieldId,number,cid){
         const self = this;
         var listFilter = null;
         this.fieldId = fieldId;    // 保存fieldid作为索引
         this.number = number;
         this.cid = cid;
+        this.filterAttr = $("#filter-attrttr").html();
 
         // 判断之前是否有筛选数据
         // 先清除数据;
@@ -782,6 +808,7 @@ let project = {
                 }else{
                     project.chear($(".f-select-methods li").eq(0));
                 }
+                $(".f-select-box1 select").val(this.textFilter.andOr);
 
                 let html = '';
                 $.each(val.listFilterB,function(x,y){
@@ -891,6 +918,7 @@ let project = {
                                 </li>`;
                     });
                     l.append(html);
+                    project.listData();
                 }
             },
             error:function(res){
@@ -948,7 +976,7 @@ let project = {
                 $(".f-select-cont").hide();
                 $(".f-addbtn-box-1").show();
                 $(".f-addbtn-box-auto").show();
-                $(".fl-automatic").show().siblings().hide();
+                $('.f-select-methods .fl:last').hide().siblings().show();
             }
             $(".f-search-box input").val("");
         })
@@ -1149,6 +1177,8 @@ let project = {
     // 关闭弹出框
     close:function(){
         $("#filter-attr").hide();
+        // 删除数据
+        $("#filter-attrttr").html(this.filterAttr)
     },
 };
 
@@ -2167,8 +2197,27 @@ $(function(){
                                 </div>
                             </div>
                           `;
+
+                    $(".x-pills ul").empty();
+                    $(".y-pills ul").empty();
+                    $(".datas-pills ul").empty();
+                    $(".chart-type-val span").text("柱状图");
+
                     break;
                 case "table":
+                    html = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <h2 class="chartTitle">未命名报表</h2>
+                                    <div class="resize-content">
+                                        <div class="legend"></div>
+                                        <div class="resize-chart"></div>
+                                        <div class="prompt"></div>
+                                    </div>
+                                </div>
+                            </div>
+                          `;
                     break;
                 case "button":
                     html = `<!--定位层-->
@@ -2195,10 +2244,9 @@ $(function(){
 
             let div = `<div data-type="${ cahrt_type }" type="${ type }" style="z-index:${ number }; left:${ left }px;top:${ top }px;" id = "${ editID }" class="resize-item">
                             ${ html }
-                        </div>`;
+                       </div>`;
 
             $(this).append(div);
-
             refresh.storage(cahrt_type,editID); // 保存
             id_ = editID;
             number++;
@@ -2317,7 +2365,7 @@ $(function(){
             success:function(res){
                 if(res.code===0){
                     layer.msg('修改成功!');
-                    getBiDataModel();
+                    getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
                 }
             },
             error:function(res){
@@ -2518,6 +2566,12 @@ $(function(){
         "remove": {
             text: '移除',
             action: function (e) {
+                if(context.getClickEle().parent().parent().is(".datas-pills"))
+                $.each(screen_data,function(i){
+                    if(context.getClickEle().attr("fieldid") === this.fieldId && id_ === this.cid  ){
+                        screen_data.splice(i,1)
+                    }
+                });
                 context.getClickEle().remove();
             }
         },
@@ -2600,6 +2654,8 @@ function clear(id){
                     filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
+            const biSetId = item.queryJson.biSetId;
+            getBiSet(projectId,biSetId);
 
             if(item.customData.dataType === "chart"){
                 $(".chart-attr-box .x-pills ul").html(x_param);
@@ -2627,10 +2683,10 @@ function clear(id){
             choose = false;
         }else{
             if(choose){
-                $(".x-pills ul").html("");
-                $(".y-pills ul").html("");
-                $(".datas-pills ul").html("");
-                $(".chart-type-val span").text("饼图");
+                $(".x-pills ul").empty();
+                $(".y-pills ul").empty();
+                $(".datas-pills ul").empty();
+                $(".chart-type-val span").text("柱状图");
             }
         }
         // 图片
@@ -2697,13 +2753,6 @@ function typeHideShow(id,type){
             break;
         case "text":
             $(".text-attr-box").show().siblings().hide();
-            // $('.op-box1').html(textHtml());
-            // colorFinder('#backColor');
-            // colorFinder('#borderImg');
-            // $(document).on("click",".chart",function(){
-            //     colorFinder(this);
-            // })
-            
             // 更新数据
             refresh.textData(id);
             // 清空或者还原

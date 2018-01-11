@@ -36,15 +36,15 @@
         var cs = new chartStyle("#chartDFAB2A73",CStyle);
         cs.title();
         cs.background();
-        chartLegend("#chartDFAB2A73",roundCake1,CStyle);
-        pieChart("#chartDFAB2A73",roundCake1,CStyle);
+        chartLegend("#chartDFAB2A73",roundCake3,CStyle);
+        pieChart("#chartDFAB2A73",roundCake3,CStyle);
 //        cs.reset();
     });
 
     function pieChart(elemt,data,CStyle){
         const margin = {top: 20, right: 30, bottom: 40, left: 55, titleLeft: -45,titleBottom:39 },   // 外部留空
             defaultColor = "#1496D4",    // 默认图表颜色
-            id = elemt + " .resize-chart",   // 存放图形的位置
+            id = elemt + " .resize-chart ",   // 存放图形的位置
             el =  elemt + " .legend";   // 存放图例的样式，可用以确定图例宽高
 
         // 数据
@@ -85,57 +85,231 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         //转换数据
-        var pieData = d3.layout.pie() //创建饼状图
-            .value(function (d) {
-                return d[angleAll.field];
-            })
-//            .sort(function(d){
-//                return 0;
-//            })
-            .startAngle([0])
-            (total.reoords); //值访问器
-        console.log(total.reoords)
+        const pieData = d3.layout.pie() //创建饼状图
+            .value(function (d) {   return d[angleAll.fieldId];   })
+            .sort(null)
+            .startAngle([0]); //值访问器
+
+        // 文字位置，不以数据大小作为位置
+        const pieDataText = d3.layout.pie() //创建饼状图
+            .value(function(){ return 1; });
+
 
         //绘制
-        var outerRadius = d3.min([widthO,height0])/2;
-        var innerRadius = 0; //内半径和外半径
+        const outerRadius = d3.min([widthO,height0])/2;
+        const innerRadius = 0; //内半径和外半径
+        const sizeMeaMaxMin = total.meaMaxMin[sizeAll.fieldId];
+        // 根据尺寸变化的线性比例尺
+        const sizeArc = d3.scale.linear()
+            .domain([sizeMeaMaxMin.min,sizeMeaMaxMin.max])
+            .range([6,outerRadius]);
+
         //创建弧生成器
-        var arc = d3.svg.arc()
+        const arc = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(function(d){ if(sizeAll){ return (sizeArc(d.data[sizeAll.fieldId]) - 3); }else{ return (outerRadius - 3); }});
+
+        // 突出显示弧线生成器
+        const arcHig = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(function(d){ if(sizeAll){ return sizeArc(d.data[sizeAll.fieldId]); }else{ return outerRadius; }});
+
+        // 显示文字
+        const arcText = d3.svg.arc()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
 
-        console.log();
+        // 显示文字线条
+        const line = d3.svg.line()
+            .x(function(d){ return d[0] })
+            .y(function(d){ return d[1] })
+            .interpolate('linear');
+
+
+        const div = d3.select(id).append("div")
+            .attr("class","message");
+
         //添加对应数目的弧组
-        var arcs = svg.selectAll("g")
-            .data(pieData)
+        const arcs = svg.selectAll("g")
+            .data(pieData(total.reoords))
             .enter()
             .append("g")
             .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")");
         //添加弧的路径元素
         arcs.append("path")
-            .style("fill",function(d){ if(colourAll){ return o(d.data[colourAll.field]); }else{return defaultColor;}})
-            .attr("d", function (d) {
-//                console.log(arc(d));
-                return arc(d); //使用弧生成器获取路径
+            .attr("class","areaBlock")
+            .attr("status",0)
+            .attr("data-id",function (d){ if(colourAll){ return d.data[colourAll.fieldId] } })
+            .style("fill",function(d){ if(colourAll){ return o(d.data[colourAll.fieldId]); }else{return defaultColor;}})
+            .attr("d", function (d) {   return arc(d);  })
+            .on({
+                "mouseover":function(d){
+
+                    /*
+                    *   给每一个areaBlock元素添加一个状态；
+                    *   状态0：有移入，移出效果；
+                    *   状态1：没有移入和移出效果；
+                    * */
+                    const tx = parseFloat(d3.event.pageX - parseInt($(elemt).css("left")));
+                    const ty = parseFloat(d3.event.pageY - parseInt($(elemt).css("top")));
+                    div.style("display","block")
+                        .style("top",(ty - margin.top - margin.bottom) + "px")
+                        .style("left",(tx - margin.left - margin.right + 40) + "px")
+                        .text("");
+
+                    if(colourAll){  div.append("text").text( colourAll.fieldAlias + "：" + d.data[colourAll.fieldId]);  }
+                    if(sizeAll){    div.append("text").text( sizeAll.fieldAlias + "：" + d.data[sizeAll.fieldId]);  }
+                    if(detailAll){  div.append("text").text( detailAll.fieldAlias + "：" + d.data[detailAll.fieldId]);  }
+                    if(angleAll){   div.append("text").text( angleAll.fieldAlias + "：" + d.data[angleAll.fieldId]);    }
+                    if(labelAll){   div.append("text").text( labelAll.fieldAlias + "：" + d.data[labelAll.fieldId]);    }
+
+                    if(d3.select(this).attr("status") === "0"){
+                        clickEffect(this,true,d);
+                    }
+                },
+                "mousemove":function(){
+                    const tx = parseFloat(d3.event.pageX - parseInt($(elemt).css("left")));
+                    const ty = parseFloat(d3.event.pageY - parseInt($(elemt).css("top")));
+                    div.style("top",(ty - margin.top - margin.bottom) + "px")
+                        .style("left",(tx - margin.left - margin.right + 40) + "px")
+                },
+                "mouseout":function(d){
+                    if(d3.select(this).attr("status") === "0"){
+                        clickEffect(this,false,d);
+                    }
+                    div.style("display","none");
+                },
+                "click":function(d){
+                    const le = $(id + ".areaBlock[status=1]").length > 1;    // 判断点击量是否大于1
+                    if(d3.select(this).attr("status") === "0"){               // 判断是第一次点击，还是其他点击
+                        clickEffect(this,true,d);                              // 第一步，突出显示所点击
+                        d3.select(this).attr("status",1);                     // 第二步，修改突出显示的状态status
+
+                        $(this).attr("class","areaBlock");                   // 不管是第几次点击，所点击部分都不透明
+                        $(id + ".areaBlock[status=0]").attr("class","areaBlock fill-opacity"); // 修改其他状态为0的所有元素透明
+                    }else{
+                        clickEffect(this,false,d);                            // 关闭突出显示
+                        d3.select(this).attr("status",0);                     // 将状态修改回0
+                        if(le){                                                 // 如果1个以上，则其他元素不变，所点击元素透明
+                            $(this).attr("class","areaBlock fill-opacity");
+                        }else{
+                            $(id + ".areaBlock").attr("class","areaBlock"); // 如果只有一个，点击后所有元素返回状态
+                        }
+                    }
+                }
             });
+
+        // 点击全屏，取消突出显示
+        $(id).on({
+            "click":function(d){
+                if(d.toElement.localName === "svg"){
+                    $(id + " .areaBlock").attr("class","areaBlock");
+                    $(id + " .areaBlock[status=1]").each(function(){
+                        const index = $(this).parent().index();
+                        clickEffect(this,false,pieData(total.reoords)[index]);
+                    });
+                    $(id + " .areaBlock").attr("status",0);
+                    $(el + " p span").removeClass("opacity");
+                }
+                d.preventDefault();
+            }
+        });
+
+        // 给图例添加其他点击效果
+        if(CStyle.legend.display || CStyle.legend.display === "true"){
+            let pClick = null;
+            $(el + " p").attr('status',0).on({
+                "click":function() {
+                    const text = $(this).find("text").text();
+                    if (this === pClick) {
+                        $(id + " .areaBlock[status=1]").each(function(){
+                            const index = $(this).parent().index();
+                            clickEffect(this,false,pieData(total.reoords)[index]);
+                            $(this).attr("status",0);
+                        });
+                        pClick = null;
+                    }else{
+                        $(id + " .areaBlock").each(function(){
+                            const index = $(this).parent().index();
+                            if($(this).attr('data-id') === text){
+                                clickEffect(this,true,pieData(total.reoords)[index]);
+                                $(this).attr("status",1);
+                            }else if($(this).attr("status") === "1"){
+                                clickEffect(this,false,pieData(total.reoords)[index]);
+                                $(this).attr("status",0);
+                            }
+                        });
+                        pClick = this;
+                    }
+                }
+            })
+        }
+
+
+        // 添加点击效果
+        function clickEffect(self,bur,d){
+            // 如果不是JQ对象，则转化为JQ对象！
+            if(!(self instanceof jQuery)){
+                self = $(self);
+            }
+            if(bur || bur === "true"){
+                self.attr({
+                    "d":arcHig(d),
+                    "transform": "translate(" + arcHig.centroid(d)[0]/20 + "," + arcHig.centroid(d)[1]/20 + ")",
+                    "stroke":"#000"
+                })
+            }else{
+                self.attr({
+                    "d":arc(d),
+                    "transform": "translate(0,0)",
+                    "stroke":"none"
+                });
+            }
+        }
+
         //添加弧内的文字
-        arcs.append("text")
+        svg
+            .append("g")
+            .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")")
+            .selectAll("text")
+            .data(pieDataText(total.reoords))
+            .enter()
+            .append("text")
+            .style('color',CStyle.label.color)
+            .style("font-size",CStyle.label.size)
             .attr("transform", function (d) {
-                var x = arc.centroid(d)[0] * 1.4; //文字的x坐标
-                var y = arc.centroid(d)[1] * 1.4;
+                const x = arcText.centroid(d)[0] * 1.9; //文字的x坐标
+                const y = arcText.centroid(d)[1] * 1.9;
                 return "translate(" + x + "," + y + ")";
             })
             .attr("text-anchor", "middle")
             .text(function (d) {
 //                //计算市场份额的百分比
 //                var percent = Number(d.value) / d3.sum(total.reoords, function (d) {
-//                    return d[angleAll.field];
+//                    return d[angleAll.fieldId];
 //                }) * 100;
 //                //保留一位小数点 末尾加一个百分号返回
 //                return percent.toFixed(1) + "%";
-//                return d.data[colourAll.field];
-                return d.data[angleAll.field];
+//                console.log(calculate(d.data[colourAll.fieldId]),$(this).css("font-size"),$(this).css("font-family"));
+                if(labelAll){
+                    return d.data[labelAll.fieldId];
+                }
             });
+//        const dt = pieDataText();
+
+        // 添加文字连接曲线
+        arcs.append("path")
+            .attr("class","path-text")
+            .attr("d",function(d,i){
+                let l = [];
+                l.push([0,0]);
+                l.push(arc.centroid(d));
+                l.push([arcText.centroid(pieDataText(total.reoords)[i])[0]*1.6,arcText.centroid(pieDataText(total.reoords)[i])[1]*1.6]);
+                console.log(l);
+                return line(l);
+            })
+            .attr("stroke",CStyle.label.color)
+
     }
 
 </script>
