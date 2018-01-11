@@ -2,18 +2,19 @@
 // 调用函数
 // 根据数据索引请求数据，并调用图形函数
 var DataIndexes = {
+
     // 为测试环境
     generate:function(data,storage){
+        storage.empty();
         let html = '';
         $.each(data.htmlJson.controls,function(index,val){
             let text = DataIndexes.text(val.customData.controls,val.customData.dataType);
             const style =  val.style;
-
             html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
-            storage.empty().append(html);
+            storage.append(html);
 
-            if(val.customData.dataType === "chart"){
+            if(val.customData.dataType === "chart" || val.customData.dataType === "table"){
                 // 将数据存入检索数据中
                 let chart_date = {
                     'cid':val.cid,
@@ -86,12 +87,24 @@ var DataIndexes = {
                             </div>
                           `;
                 break;
+            case "image":
+                const image = '';
+                textCon = controls?controls.html?controls.html:image:image;
+                text = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    ${ textCon }
+                                </div>
+                            </div>
+                          `;
+                break;
         }
         return text;
     },
 
 
-    // 根据数据索引，请求数据
+
     inAjax:function(d,id){
         const ele = "#"+ id +" .resize-chart",
             self = this,
@@ -100,8 +113,16 @@ var DataIndexes = {
         if((!(queryJson.x) && !(queryJson.y)) || (queryJson.x.length <= 0 && queryJson.y <= 0)){
             return
         }
-        $(ele).html("");  // 删除之前的图形
+        $(ele).html("");
         $(ele).siblings(".prompt").hide();
+
+        // 数组遍历，判断是否有度量
+        const q_l = d.queryJson.x.concat(d.queryJson.y).filter(function(d){
+           if(d.dimMea === "0" || d.dimMea === 0) return d;
+        }).length;
+        if(q_l <= 0) { layer.msg("图表没有度量！"); return ; }
+
+
         $.ajax({
             type:"post",
             url:$url1 + "/bi/report/v1/data.json?projectId="+ projectId +"&versionId="+ versionId +"",
@@ -114,9 +135,12 @@ var DataIndexes = {
                     if(data.data){
                         // 根据上传索引绘制图形
                         self.draw(id,d.type,data.data);
-                    }else{
-                        layer.msg("数据为空！");
+                    }else if(data.code === 500){
                         $(ele).siblings(".prompt").show();
+                        layer.msg("数据异常，请联系管理员！");
+                    }else{
+                        $(ele).siblings(".prompt").show();
+                        layer.msg("数据为空！");
                     }
                 }else{
                     // 后期可删除，只是防止没有数据时，显示之前几个图形
@@ -130,12 +154,8 @@ var DataIndexes = {
             }
         })
     },
-    // 刷新，判断类型，选择图形绘制
-    // 参数：id：元素ID
     draw:function(id,type,data){
         const ele = "#"+ id +" .resize-chart";
-
-        // 判断类型
         switch($("#"+id).attr("data-type")){
             case "chart":
                 switch(type){
@@ -144,10 +164,15 @@ var DataIndexes = {
                         chart_table(ele,data);
                         break;
                     case 101:
+                        if(data.charts.dimValues[0].length >= 50){
+                            layer.msg("数据过多，请使用筛选！");
+                            return
+                        }
                         // 绘制柱状图
                         // 一维度 一度量
                         if(data.dim.dimX.valueTree.length <= 0 && data.dim.dimY.valueTree.length <= 0 && data.charts.meaList.length <= 1 && data.charts.dimValues.length <= 1){
                             bar(ele,data);
+
                             return;
                         }
                         // 一维度 多度量
@@ -205,9 +230,8 @@ var DataIndexes = {
                 }
                 break;
             case "table":
-                // 绘制表格
+                // 表格
                 chart_table(ele,data);
-                // chart_table(id,table_date);
                 break;
         }
     }
@@ -2058,7 +2082,7 @@ function areaChart(id){
 
     var data = [{hour:"0",assault:"60",burglary:"15",larceny_theft:"124",missing_person:"12",non_criminal:"45",other_offenses:"105",suspicious_occ:"23",vandalism:"25",vehicle_related:"18",warrants:"16"},{hour:"1",assault:"41",burglary:"21",larceny_theft:"75",missing_person:"7",non_criminal:"32",other_offenses:"50",suspicious_occ:"18",vandalism:"32",vehicle_related:"10",warrants:"12"},{hour:"2",assault:"55",burglary:"15",larceny_theft:"49",missing_person:"1",non_criminal:"11",other_offenses:"39",suspicious_occ:"16",vandalism:"24",vehicle_related:"15",warrants:"10"},{hour:"3",assault:"39",burglary:"17",larceny_theft:"34",missing_person:"4",non_criminal:"21",other_offenses:"38",suspicious_occ:"9",vandalism:"21",vehicle_related:"7",warrants:"10"},{hour:"4",assault:"12",burglary:"29",larceny_theft:"27",missing_person:"2",non_criminal:"11",other_offenses:"17",suspicious_occ:"7",vandalism:"18",vehicle_related:"6",warrants:"2"},{hour:"5",assault:"16",burglary:"17",larceny_theft:"24",missing_person:"4",non_criminal:"12",other_offenses:"16",suspicious_occ:"4",vandalism:"16",vehicle_related:"8",warrants:"4"},{hour:"6",assault:"21",burglary:"14",larceny_theft:"47",missing_person:"7",non_criminal:"35",other_offenses:"26",suspicious_occ:"7",vandalism:"16",vehicle_related:"14",warrants:"10"},{hour:"7",assault:"26",burglary:"12",larceny_theft:"46",missing_person:"9",non_criminal:"38",other_offenses:"42",suspicious_occ:"13",vandalism:"16",vehicle_related:"21",warrants:"17"},{hour:"8",assault:"37",burglary:"18",larceny_theft:"96",missing_person:"15",non_criminal:"76",other_offenses:"67",suspicious_occ:"16",vandalism:"19",vehicle_related:"18",warrants:"15"},{hour:"9",assault:"41",burglary:"23",larceny_theft:"122",missing_person:"22",non_criminal:"68",other_offenses:"68",suspicious_occ:"26",vandalism:"18",vehicle_related:"23",warrants:"15"},{hour:"10",assault:"52",burglary:"16",larceny_theft:"152",missing_person:"18",non_criminal:"76",other_offenses:"77",suspicious_occ:"27",vandalism:"22",vehicle_related:"27",warrants:"17"},{hour:"11",assault:"47",burglary:"17",larceny_theft:"182",missing_person:"20",non_criminal:"83",other_offenses:"63",suspicious_occ:"35",vandalism:"21",vehicle_related:"17",warrants:"15"},{hour:"12",assault:"51",burglary:"23",larceny_theft:"188",missing_person:"24",non_criminal:"115",other_offenses:"100",suspicious_occ:"37",vandalism:"41",vehicle_related:"33",warrants:"30"},{hour:"13",assault:"62",burglary:"16",larceny_theft:"205",missing_person:"13",non_criminal:"76",other_offenses:"83",suspicious_occ:"27",vandalism:"41",vehicle_related:"20",warrants:"22"},{hour:"14",assault:"51",burglary:"22",larceny_theft:"206",missing_person:"19",non_criminal:"74",other_offenses:"91",suspicious_occ:"23",vandalism:"33",vehicle_related:"21",warrants:"24"},{hour:"15",assault:"47",burglary:"32",larceny_theft:"198",missing_person:"22",non_criminal:"76",other_offenses:"98",suspicious_occ:"29",vandalism:"37",vehicle_related:"29",warrants:"29"},{hour:"16",assault:"53",burglary:"21",larceny_theft:"231",missing_person:"9",non_criminal:"87",other_offenses:"117",suspicious_occ:"27",vandalism:"37",vehicle_related:"40",warrants:"31"},{hour:"17",assault:"57",burglary:"36",larceny_theft:"295",missing_person:"17",non_criminal:"96",other_offenses:"100",suspicious_occ:"28",vandalism:"49",vehicle_related:"48",warrants:"30"},{hour:"18",assault:"54",burglary:"31",larceny_theft:"345",missing_person:"20",non_criminal:"71",other_offenses:"62",suspicious_occ:"27",vandalism:"70",vehicle_related:"53",warrants:"22"},{hour:"19",assault:"79",burglary:"32",larceny_theft:"357",missing_person:"9",non_criminal:"82",other_offenses:"94",suspicious_occ:"29",vandalism:"57",vehicle_related:"34",warrants:"18"},{hour:"20",assault:"62",burglary:"21",larceny_theft:"284",missing_person:"13",non_criminal:"67",other_offenses:"62",suspicious_occ:"25",vandalism:"51",vehicle_related:"48",warrants:"21"},{hour:"21",assault:"49",burglary:"26",larceny_theft:"220",missing_person:"5",non_criminal:"51",other_offenses:"79",suspicious_occ:"13",vandalism:"50",vehicle_related:"44",warrants:"10"},{hour:"22",assault:"56",burglary:"24",larceny_theft:"157",missing_person:"22",non_criminal:"70",other_offenses:"82",suspicious_occ:"16",vandalism:"60",vehicle_related:"49",warrants:"20"},{hour:"23",assault:"61",burglary:"19",larceny_theft:"154",missing_person:"12",non_criminal:"73",other_offenses:"78",suspicious_occ:"24",vandalism:"48",vehicle_related:"39",warrants:"22"}];
 
-    console.log(data)
+    // console.log(data)
 
     var x = d3.scale.linear()
         .range([0, width]);
