@@ -114,9 +114,10 @@ function bind_click_add() {
 
 function bind_click_lessen() {
     $(document.body)
-        .off('click', '.lessen')
-        .on('click', '.lessen', function () {
-            if ($('#input .extractField').length < 2) {
+        .off('click', '#input .lessen')
+        .on('click', '#input .lessen', function () {
+            var inputJudge = $('#input .extractField').length < 2;
+            if (inputJudge) {
                 layer.msg('最后一个提取条件不能删除');
             } else {
                 $(this).parents('.extractField').remove();
