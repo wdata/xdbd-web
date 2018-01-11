@@ -573,6 +573,7 @@ $(function(){
 	}
     function newBiFile(){
         //getBiFileInfo
+        $(".newBiFile .new_type").html(industryType())
         editFile.getNewBiFileInfo(projectId,versionId,directoryId);
         var index = layer.open({
             type: 1,
