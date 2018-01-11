@@ -1,14 +1,15 @@
 const sort = $("#sort");
 const sortFields = sort.find(".sortFields");
+$(".stepName").val(etlName);
+$(".tableOut").val(etlName);
 initFromTable();
 bind_change_fromTable();
 $('.fromTable').trigger('change');
-setVal();
 bind_click_sortAdd();
 bind_click_sortLessen();
 bind_click_sql();
 bind_click_saveActionComp();
-$(".stepName").val(etlName);
+setVal();
 mousedownRestrictions(sort,".sortField");  // 用以在点击的时候，禁止已选择的下拉选项
 init_autosave();  // 用以重置下拉框和输入框、加、减后的change事件，让事件在修改后执行
 
@@ -57,6 +58,7 @@ function setVal() {
         set_sortFields(attValue.extractFields);
         fn_set_sqlOut(actionComp.sqlOut);
     } else {
+        $(".stepName").val(etlName);
         $(".tableOut").val(etlName);
     }
 }
