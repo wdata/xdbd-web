@@ -88,6 +88,7 @@ function demandsBtn(_this) {
 	localStorage.setItem('directoryId', currentActionId);
 	localStorage.setItem('templateVersionId', currentVersionId);
 	window.location.href = 'flowChart.html';
+	// parent.location.reload();
 }
 //新建ETL模板
 function newEtlBtn() {
