@@ -110,9 +110,9 @@ function bind_click_generateSql() {
 
 function bind_click_extractAdd() {
     $(document.body)
-        .off('click', '.outputAdd')
-        .on('click', '.outputAdd', function () {
-            const extractField = $('.extractField');
+        .off('click', '#outputHtml .outputAdd')
+        .on('click', '#outputHtml .outputAdd', function () {
+            const extractField = $('#outputHtml .extractField');
             if(!( extractField.length < extractField.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
             // 获取第一个下拉框的代码

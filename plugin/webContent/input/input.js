@@ -98,9 +98,9 @@ function initFromTable() {
 
 function bind_click_add() {
     $(document.body)
-        .off('click', '.add')
-        .on('click', '.add', function () {
-            const extractField = $('.extractField');
+        .off('click', '#input .add')
+        .on('click', '#input .add', function () {
+            const extractField = $('#input .extractField');
             if(!( extractField.length < extractField.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
             // 获取第一个下拉框的代码
