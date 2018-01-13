@@ -15,6 +15,15 @@
 
 
 
+
+/*模态框*/
+.filter-attr h3:hover{cursor: move;}
+.filter-attr h3:hover img{cursor:pointer;}
+.data-filter-mod h3 img{cursor:pointer;}
+
+
+
+
 /*滚动条*/
 .mCSB_scrollTools{width: 6px;}
 .mCSB_inside > .mCSB_container{margin-right:8px;}

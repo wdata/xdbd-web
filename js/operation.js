@@ -560,6 +560,7 @@ let operating = {
     },
     // 复制
     copy:function(id){
+        copy_data = {}; // 在使用前，清空之前保存的数据！
         $.each(save_arr,function(index,item){
             if(item.cid + "" === id){
                 // 如果cid相同，则将item数据复制给copy_data
@@ -568,6 +569,12 @@ let operating = {
                 if(dataType === "text"|| dataType === "button" || dataType === "image" ){
                     copy_data.customData.html = $("#"+id).find(".resize-panel").siblings().prop("outerHTML");
                 }
+            }
+        });
+        copy_data.filter = [];   // 先定义为数组!
+        $.each(screen_data,function(){
+            if(this.cid + "" === id){
+                copy_data.filter.push(JSON.parse(JSON.stringify(this)));
             }
         });
     },
@@ -579,39 +586,41 @@ let operating = {
             const editBox = $(".edit-libs-box");
 
             const customData = copy_data.customData;
+            const filter = copy_data.filter;   // 筛选数据
             const dataType = customData.dataType;
             const id = dataType + uuid(8,16);
             const left = event.pageX - parseFloat(clearY.width()) - parseFloat(clearY.css("padding-left")) - parseFloat($(".edit-content").css("margin-left"));
             const top = event.pageY - parseFloat($(".clearX").height()) - parseFloat(editBox.css("margin-top"));
 
-            let z = '';
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                z = customData.html;
-            }else if(dataType === "table" || dataType === "chart"){
-                // 绘制图形
-                const chart_date = {
-                    'cid':copy_data.cid,
+            let text = DataIndexes.text(customData.controls,customData.dataType);
+            id_ = copy_data.cid; // 拖拽必须修改id_
+
+            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ text +'</div>';
+            editBox.append(html);
+            // 如果是图表数据，则显示图形！，并将数据存入数组中
+            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
+                // 将数据存入检索数据中
+                let chart_date = {
+                    'cid':id,
                     "type":copy_data.type,
                     "queryJson":copy_data.queryJson,
                 };
-                DataIndexes.inAjax(chart_date,id);
-            }
-
-            const html = '<div  id="'+ id +'" type="'+ copy_data.type +'" data-type="'+ dataType +'" style="height:'+ copy_data.style.height +'px;width:'+ copy_data.style.width +'px;top:'+ top +'px;left:'+ left +'px;z-index:'+ copy_data.displayLevel +'" class="resize-item">'+ z +'</div>';
-            editBox.append(html);
-
-
-            // 如果是表格和图形，需要生成一个新的索引数据添加到数组中
-            if(copy_data.queryJson && dataType === "chart" || dataType === "table" ){
+                // 将数据存入筛选数据中
+                if(filter && filter.length >= 1){      // 先判断数据是否存在，并且数据大于1
+                    $.each(filter,function(){  // 使用each循环遍历数组
+                        const l = this;
+                        l.cid = id;
+                        screen_data.push(l);         // 将筛选数据加入数组中
+                    });
+                }
                 const z = JSON.parse(JSON.stringify(copy_data));
                 z.cid = id;
-                save_arr.push(z);
+                save_arr.push(z);    // 总数据
+                index_arr.push(chart_date);  // 单纯的索引数据
+                DataIndexes.inAjax(chart_date,id);    // 显示图形
             }
             refresh.storage(dataType,id); // 判断不同的TYPE执行不同的采取函数
             // 拖拽初始化！
-            id_ = id; // 拖拽必须修改id_
-            number++; // ID不重复！
             new ZResize({
                 stage: '.edit-libs-box', //舞台
                 itemClass: 'resize-item'//可缩放的类名
@@ -622,7 +631,11 @@ let operating = {
     },
     // 刷新
     refresh:function(){
-        location.reload(); // 刷新页面
+        layer.confirm('刷新前请先保存，是否确定刷新页面？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            location.reload(); // 刷新页面
+        });
     },
     // 预览
     preview:function(){
@@ -703,7 +716,7 @@ let obtain = {
                         }
                     }else if(surroundings === "test" || surroundings === "prod"){
                         if(data.data.htmlJson){
-                            obtain.generate(data.data);
+                            DataIndexes.generate(data.data,$(".generateEditBi"));
                         }
                     }
 
@@ -714,30 +727,6 @@ let obtain = {
             }
         })
     },
-    // 为测试环境
-    generate:function(data){
-        let html = '';
-        $.each(data.htmlJson.controls,function(index,val){
-            let text = '';            // html
-            const dataType = val.customData.dataType  // 类型
-                  ,style =  val.style; // 宽、高
-            // 判断图形、表格、文本、图片、按钮
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                text = val.customData.controls.html;
-            }else if(dataType === "table" || dataType === "chart"){
-                // 将数据存入检索数据中
-                const chart_date = {
-                    'cid':val.cid,
-                    "type":val.type,
-                    "queryJson":val.queryJson,
-                };
-                DataIndexes.inAjax(chart_date,val.cid);
-            }
-            html += '<div linkPageId = "'+ val.linkPageId +'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
-        });
-        $(".generateEditBi").empty().append(html);
-    },
     // 为开发环境
     reduction:function(data){
         if(data.htmlJson.controls){
@@ -747,75 +736,25 @@ let obtain = {
             // 遍历数据,生成图形
             let html = '';
             $.each(data.htmlJson.controls,function(index,val){
-                // 判断图形、表格、文本、图片、按钮
-                let text = '';
-                // 如果是文本和图片，则复制内容不同
+                let text = DataIndexes.text(val.customData.controls,val.customData.dataType);
                 const style =  val.style;
-                const controls = val.customData.controls;
-                const dataType = val.customData.dataType;
-                let textCon = "";
-
                 id_ = val.cid; // 拖拽必须修改id_
 
-
-                switch(dataType){
-                    case "chart":
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                    <h2 class="chartTitle">未命名报表</h2>
-                                    <div class="resize-content">
-                                        <div class="legend"></div>
-                                        <div class="resize-chart"></div>
-                                        <div class="prompt"></div>
-                                    </div>
-                                </div>
-                            </div>
-                          `;
-
-                        // 将数据存入检索数据中
-                        const chart_date = {
-                            'cid':val.cid,
-                            "type":val.type,
-                            "queryJson":val.queryJson,
-                        };
-                        DataIndexes.inAjax(chart_date,val.cid);
-                        index_arr.push(chart_date);
-
-                        break;
-                    case "table":
-                        break;
-                    case "text":
-                        const contenteditable = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true">${ content }</div></div>'
-                        textCon = controls?controls.html?controls.html:contenteditable:contenteditable;
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                   ${ textCon }
-                                </div>
-                            </div>
-                          `;
-                        break;
-                    case "button":
-                        const button = '<div class="content-button"><button></button>${ content }</div>'
-                        textCon = controls?controls.html?controls.html:button:button;
-                        text = `<!--定位层-->
-                            <div class="positioning">
-                                <!--背景样式、边框线、透明度、圆角-->
-                                <div class="inform">
-                                    ${ textCon }
-                                </div>
-                            </div>
-                          `;
-                        break;
-                }
                 number++; // ID不重复！
                 eleLevel++;
                 html = '<div linkPageId = "'+ val.linkPageId +'"  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
 
                 $(".edit-libs-box").append(html);
+                if(val.customData.dataType === "chart"  || val.customData.dataType === "table"){
+                    // 将数据存入检索数据中
+                    let chart_date = {
+                        'cid':val.cid,
+                        "type":val.type,
+                        "queryJson":val.queryJson,
+                    };
+                    DataIndexes.inAjax(chart_date,val.cid);
+                    index_arr.push(chart_date);
+                }
             });
             // 拖拽初始化！
             new ZResize({
@@ -839,12 +778,14 @@ let project = {
     "textFilter":{},
     "listFilterB":[],
     "allBur":false,
+    "filterAttr":null,
     TFilter:function(field, name,fieldId,number,cid){
         const self = this;
         var listFilter = null;
         this.fieldId = fieldId;    // 保存fieldid作为索引
         this.number = number;
         this.cid = cid;
+        this.filterAttr = $("#filter-attrttr").html();
 
         // 判断之前是否有筛选数据
         // 先清除数据;
@@ -867,6 +808,7 @@ let project = {
                 }else{
                     project.chear($(".f-select-methods li").eq(0));
                 }
+                $(".f-select-box1 select").val(this.textFilter.andOr);
 
                 let html = '';
                 $.each(val.listFilterB,function(x,y){
@@ -976,6 +918,7 @@ let project = {
                                 </li>`;
                     });
                     l.append(html);
+                    project.listData();
                 }
             },
             error:function(res){
@@ -1033,7 +976,7 @@ let project = {
                 $(".f-select-cont").hide();
                 $(".f-addbtn-box-1").show();
                 $(".f-addbtn-box-auto").show();
-                $(".fl-automatic").show().siblings().hide();
+                $('.f-select-methods .fl:last').hide().siblings().show();
             }
             $(".f-search-box input").val("");
         })
@@ -1234,6 +1177,8 @@ let project = {
     // 关闭弹出框
     close:function(){
         $("#filter-attr").hide();
+        // 删除数据
+        $("#filter-attrttr").html(this.filterAttr)
     },
 };
 
@@ -2055,16 +2000,16 @@ $(function(){
                                     li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
                                      baseDataType="${item.baseDataType}" dataType="${item.dataType}"
                                      baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
-                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}">${icon} ${item.fieldAlias}</li>
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
                                 `;
                                 });
 
                                 if(value.type==1){//原始字段
-                                    dhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
+                                    dhtml += `<div parentCon="dimensionBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
                                 }else if(value.type==2){//自定义字段
-                                    dhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
+                                    dhtml += `<div parentCon="dimensionBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
                                 }else if(value.type==3){//自定义层
-                                    dhtml += `<div class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
+                                    dhtml += `<div parentCon="dimensionBox" class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
                                 }
                             });
                         }else{
@@ -2086,9 +2031,9 @@ $(function(){
                                 });
 
                                 if(value.type==1){//原始字段
-                                    mhtml += `<div class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    mhtml += `<div parentCon="metricBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
                                 }else if(value.type==2){//自定义字段
-                                    mhtml += `<div class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                                    mhtml += `<div parentCon="metricBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
                                 }
                             });
                         }else{
@@ -2097,8 +2042,8 @@ $(function(){
                         $(".metric-box").empty().append(mhtml);
 
                         //滚动条
-                        $("#dimensionBox").mCustomScrollbar({theme:"dark"});
-                        $(".metric-box").mCustomScrollbar({theme:"dark"});
+                        $("#dimensionBox").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
+                        $(".metric-box").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
 
 
 
@@ -2158,16 +2103,16 @@ $(function(){
 
                                 if(startMoveLevelId!==undefined&&levelId!==undefined){
                                     if(stopMoveLevelId == startMoveLevelId){//非同一个层级
-                                        console.log('内');
+                                        //console.log('内');
                                         joinLevel2(fieldid,levelId,preFieldId);
                                     }else {//同个层级内部
-                                        console.log('外');
+                                        //console.log('外');
                                         popLevelAddLevel(fieldid,startMoveLevelId,stopMoveLevelId,preFieldId);
                                     }
                                 }
                             },
                             drop:function (){
-                                console.log('drop');
+                                //console.log('drop');
                             }
                         }).disableSelection();
 
@@ -2178,7 +2123,7 @@ $(function(){
                             cursor: "move",
                             opacity: 0.5
                         }).disableSelection();
-                        console.log(1);
+                        //console.log(1);
 
                     }
                 }else {
@@ -2186,7 +2131,7 @@ $(function(){
                 }
             },
             error:function(res){
-                // console.log(1);
+                console.log(res);
             }
         });
     }
@@ -2252,8 +2197,27 @@ $(function(){
                                 </div>
                             </div>
                           `;
+
+                    $(".x-pills ul").empty();
+                    $(".y-pills ul").empty();
+                    $(".datas-pills ul").empty();
+                    $(".chart-type-val span").text("柱状图");
+
                     break;
                 case "table":
+                    html = `<!--定位层-->
+                            <div class="positioning">
+                                <!--背景样式、边框线、透明度、圆角-->
+                                <div class="inform">
+                                    <h2 class="chartTitle">未命名报表</h2>
+                                    <div class="resize-content">
+                                        <div class="legend"></div>
+                                        <div class="resize-chart"></div>
+                                        <div class="prompt"></div>
+                                    </div>
+                                </div>
+                            </div>
+                          `;
                     break;
                 case "button":
                     html = `<!--定位层-->
@@ -2280,10 +2244,9 @@ $(function(){
 
             let div = `<div data-type="${ cahrt_type }" type="${ type }" style="z-index:${ number }; left:${ left }px;top:${ top }px;" id = "${ editID }" class="resize-item">
                             ${ html }
-                        </div>`;
+                       </div>`;
 
             $(this).append(div);
-
             refresh.storage(cahrt_type,editID); // 保存
             id_ = editID;
             number++;
@@ -2402,7 +2365,7 @@ $(function(){
             success:function(res){
                 if(res.code===0){
                     layer.msg('修改成功!');
-                    getBiDataModel();
+                    getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
                 }
             },
             error:function(res){
@@ -2603,6 +2566,12 @@ $(function(){
         "remove": {
             text: '移除',
             action: function (e) {
+                if(context.getClickEle().parent().parent().is(".datas-pills"))
+                $.each(screen_data,function(i){
+                    if(context.getClickEle().attr("fieldid") === this.fieldId && id_ === this.cid  ){
+                        screen_data.splice(i,1)
+                    }
+                });
                 context.getClickEle().remove();
             }
         },
@@ -2685,6 +2654,8 @@ function clear(id){
                     filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
+            const biSetId = item.queryJson.biSetId;
+            getBiSet(projectId,biSetId);
 
             if(item.customData.dataType === "chart"){
                 $(".chart-attr-box .x-pills ul").html(x_param);
@@ -2712,10 +2683,10 @@ function clear(id){
             choose = false;
         }else{
             if(choose){
-                $(".x-pills ul").html("");
-                $(".y-pills ul").html("");
-                $(".datas-pills ul").html("");
-                $(".chart-type-val span").text("饼图");
+                $(".x-pills ul").empty();
+                $(".y-pills ul").empty();
+                $(".datas-pills ul").empty();
+                $(".chart-type-val span").text("柱状图");
             }
         }
         // 图片
@@ -2782,13 +2753,6 @@ function typeHideShow(id,type){
             break;
         case "text":
             $(".text-attr-box").show().siblings().hide();
-            // $('.op-box1').html(textHtml());
-            // colorFinder('#backColor');
-            // colorFinder('#borderImg');
-            // $(document).on("click",".chart",function(){
-            //     colorFinder(this);
-            // })
-            
             // 更新数据
             refresh.textData(id);
             // 清空或者还原

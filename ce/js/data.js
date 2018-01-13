@@ -3036,3 +3036,841 @@ var roundCake1 = {
         }
     }
 }
+/*
+ * 圆饼图 - 颜色：region（维度），角度：sales_amount（度量）,尺寸：discount（度量）
+ * */
+var roundCake2 = {
+    "code": 0,
+    "success": true,
+    "message": "操作成功！",
+    "timestamp": 1514360420424,
+    "data": {
+        "dimValues": {
+            "region0": [
+                "东亚",
+                "东南亚",
+                "东欧",
+                "东非",
+                "中亚",
+                "中美洲",
+                "中非",
+                "加勒比海",
+                "加拿大",
+                "北欧",
+                "北非",
+                "南亚",
+                "南欧",
+                "南美",
+                "南部非洲",
+                "大洋洲",
+                "美国东部",
+                "美国中部",
+                "美国南部",
+                "美国西部",
+                "西亚",
+                "西欧",
+                "西非"
+            ]
+        },
+        "meaMaxMin": {
+            "discount_SUM0": {
+                "max": 860.8000000000204,
+                "min": 0
+            },
+            "sales_amount_SUM0": {
+                "max": 1731929.6684999943,
+                "min": 19311.458999999984
+            }
+        },
+        "reoords": [
+            {
+                "region0": "东亚",
+                "discount_SUM0": 113.89999999999999,
+                "sales_amount_SUM0": 855059.3909999982
+            },
+            {
+                "region0": "东南亚",
+                "discount_SUM0": 851.3300000000071,
+                "sales_amount_SUM0": 884423.1690000022
+            },
+            {
+                "region0": "东欧",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 310033.4399999998
+            },
+            {
+                "region0": "东非",
+                "discount_SUM0": 85.30000000000013,
+                "sales_amount_SUM0": 127856.01900000007
+            },
+            {
+                "region0": "中亚",
+                "discount_SUM0": 90.30000000000021,
+                "sales_amount_SUM0": 19311.458999999984
+            },
+            {
+                "region0": "中美洲",
+                "discount_SUM0": 616.4499999999862,
+                "sales_amount_SUM0": 1223100.6281600003
+            },
+            {
+                "region0": "中非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 143630.00999999998
+            },
+            {
+                "region0": "加勒比海",
+                "discount_SUM0": 229.41999999999825,
+                "sales_amount_SUM0": 324280.86104000127
+            },
+            {
+                "region0": "加拿大",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 66928.17
+            },
+            {
+                "region0": "北欧",
+                "discount_SUM0": 331.6999999999999,
+                "sales_amount_SUM0": 636779.1569999991
+            },
+            {
+                "region0": "北非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 233216.6099999998
+            },
+            {
+                "region0": "南亚",
+                "discount_SUM0": 138.20000000000002,
+                "sales_amount_SUM0": 866572.6769999975
+            },
+            {
+                "region0": "南欧",
+                "discount_SUM0": 202.5999999999999,
+                "sales_amount_SUM0": 608593.9679999996
+            },
+            {
+                "region0": "南美",
+                "discount_SUM0": 549.2880000000031,
+                "sales_amount_SUM0": 617223.677879998
+            },
+            {
+                "region0": "南部非洲",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 105191.76000000007
+            },
+            {
+                "region0": "大洋洲",
+                "discount_SUM0": 534.099999999992,
+                "sales_amount_SUM0": 1100184.612
+            },
+            {
+                "region0": "美国东部",
+                "discount_SUM0": 413.99999999999267,
+                "sales_amount_SUM0": 678781.2399999979
+            },
+            {
+                "region0": "美国中部",
+                "discount_SUM0": 558.3400000000001,
+                "sales_amount_SUM0": 501239.8908000005
+            },
+            {
+                "region0": "美国南部",
+                "discount_SUM0": 238.54999999999688,
+                "sales_amount_SUM0": 391721.9050000003
+            },
+            {
+                "region0": "美国西部",
+                "discount_SUM0": 350.19999999999055,
+                "sales_amount_SUM0": 725457.8245000006
+            },
+            {
+                "region0": "西亚",
+                "discount_SUM0": 860.8000000000204,
+                "sales_amount_SUM0": 317106.9599999997
+            },
+            {
+                "region0": "西欧",
+                "discount_SUM0": 531.7500000000086,
+                "sales_amount_SUM0": 1731929.6684999943
+            },
+            {
+                "region0": "西非",
+                "discount_SUM0": 633.500000000002,
+                "sales_amount_SUM0": 173878.81200000006
+            }
+        ],
+        "queryJson": {
+            "biSetId": "2fd9366eb8644dee871a7d5964e42ca6",
+            "dataModelId": "d39bbee2d74d4c62925d55fa1f588dbc",
+            "limit": null,
+            "x": [],
+            "y": [],
+            "colour": [
+                {
+                    "fieldId": "region0",
+                    "field": "region",
+                    "fieldAlias": "地区",
+                    "order": "ASC",
+                    "baseDataType": 1,
+                    "dataType": 1,
+                    "dimMea": 0,
+                    "disCon": 0,
+                    "aggregation": null
+                }
+            ],
+            "size": [
+                {
+                    "fieldId": "discount_SUM0",
+                    "field": "discount",
+                    "fieldAlias": "折扣",
+                    "order": "ASC",
+                    "baseDataType": 4,
+                    "dataType": 4,
+                    "dimMea": 1,
+                    "disCon": 1,
+                    "aggregation": "SUM"
+                }
+            ],
+            "angle": [
+                {
+                    "fieldId": "sales_amount_SUM0",
+                    "field": "sales_amount",
+                    "fieldAlias": "销售额",
+                    "order": "ASC",
+                    "baseDataType": 4,
+                    "dataType": 4,
+                    "dimMea": 1,
+                    "disCon": 1,
+                    "aggregation": "SUM"
+                }
+            ],
+            "detail": [],
+            "label": [],
+            "filter": []
+        },
+        "drawHelper": {
+            "meaAxis": null
+        }
+    }
+}
+/*
+ * 圆饼图 - 颜色：region（维度），角度：sales_amount（度量）,尺寸：discount（度量）,细分：category（维度）,尺寸：market（维度）,
+ * */
+var roundCake3 = {
+    "code": 0,
+    "success": true,
+    "message": "操作成功！",
+    "timestamp": 1514362310662,
+    "data": {
+        "dimValues": {
+            "region0": [
+                "东亚",
+                "东南亚",
+                "东欧",
+                "东非",
+                "中亚",
+                "中美洲",
+                "中非",
+                "加勒比海",
+                "加拿大",
+                "北欧",
+                "北非",
+                "南亚",
+                "南欧",
+                "南美",
+                "南部非洲",
+                "大洋洲",
+                "美国东部",
+                "美国中部",
+                "美国南部",
+                "美国西部",
+                "西亚",
+                "西欧",
+                "西非"
+            ],
+            "market0": [
+                "亚太地区",
+                "欧洲",
+                "非洲",
+                "拉丁美洲",
+                "美国"
+            ],
+            "category0": [
+                "办公用品",
+                "家具",
+                "技术"
+            ]
+        },
+        "meaMaxMin": {
+            "discount_SUM0": {
+                "max": 565.6000000000093,
+                "min": 0
+            },
+            "sales_amount_SUM0": {
+                "max": 656637.1440000003,
+                "min": 3167.574
+            }
+        },
+        "reoords": [
+            {
+                "region0": "东亚",
+                "discount_SUM0": 66,
+                "sales_amount_SUM0": 203284.03500000032,
+                "category0": "办公用品",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "东亚",
+                "discount_SUM0": 26.400000000000002,
+                "sales_amount_SUM0": 336384.59100000036,
+                "category0": "家具",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "东亚",
+                "discount_SUM0": 21.5,
+                "sales_amount_SUM0": 315390.7649999999,
+                "category0": "技术",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "东南亚",
+                "discount_SUM0": 524.7900000000059,
+                "sales_amount_SUM0": 241285.08150000012,
+                "category0": "办公用品",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "东南亚",
+                "discount_SUM0": 169.79000000000002,
+                "sales_amount_SUM0": 313386.7035,
+                "category0": "家具",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "东南亚",
+                "discount_SUM0": 156.7499999999993,
+                "sales_amount_SUM0": 329751.38399999985,
+                "category0": "技术",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "东欧",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 103652.61000000004,
+                "category0": "办公用品",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "东欧",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 98121.89999999997,
+                "category0": "家具",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "东欧",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 108258.93,
+                "category0": "技术",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "东非",
+                "discount_SUM0": 61.80000000000012,
+                "sales_amount_SUM0": 51277.472999999976,
+                "category0": "办公用品",
+                "market0": "非洲"
+            },
+            {
+                "region0": "东非",
+                "discount_SUM0": 10.499999999999998,
+                "sales_amount_SUM0": 32395.946999999993,
+                "category0": "家具",
+                "market0": "非洲"
+            },
+            {
+                "region0": "东非",
+                "discount_SUM0": 12.999999999999993,
+                "sales_amount_SUM0": 44182.598999999995,
+                "category0": "技术",
+                "market0": "非洲"
+            },
+            {
+                "region0": "中亚",
+                "discount_SUM0": 60.200000000000095,
+                "sales_amount_SUM0": 7953.146999999997,
+                "category0": "办公用品",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "中亚",
+                "discount_SUM0": 11.199999999999998,
+                "sales_amount_SUM0": 3167.574,
+                "category0": "家具",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "中亚",
+                "discount_SUM0": 18.89999999999999,
+                "sales_amount_SUM0": 8190.738000000002,
+                "category0": "技术",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "中美洲",
+                "discount_SUM0": 255.20000000000255,
+                "sales_amount_SUM0": 319442.97599999956,
+                "category0": "办公用品",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "中美洲",
+                "discount_SUM0": 268.1999999999986,
+                "sales_amount_SUM0": 441987.37000000017,
+                "category0": "家具",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "中美洲",
+                "discount_SUM0": 93.05000000000003,
+                "sales_amount_SUM0": 461670.2821600005,
+                "category0": "技术",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "中非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 45345.17999999998,
+                "category0": "办公用品",
+                "market0": "非洲"
+            },
+            {
+                "region0": "中非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 36594.83999999999,
+                "category0": "家具",
+                "market0": "非洲"
+            },
+            {
+                "region0": "中非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 61689.99000000002,
+                "category0": "技术",
+                "market0": "非洲"
+            },
+            {
+                "region0": "加勒比海",
+                "discount_SUM0": 110.00000000000097,
+                "sales_amount_SUM0": 89575.41599999994,
+                "category0": "办公用品",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "加勒比海",
+                "discount_SUM0": 73.70000000000014,
+                "sales_amount_SUM0": 118372.40000000001,
+                "category0": "家具",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "加勒比海",
+                "discount_SUM0": 45.72000000000009,
+                "sales_amount_SUM0": 116333.04504000008,
+                "category0": "技术",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "加拿大",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 30034.080000000016,
+                "category0": "办公用品",
+                "market0": "美国"
+            },
+            {
+                "region0": "加拿大",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 10595.279999999997,
+                "category0": "家具",
+                "market0": "美国"
+            },
+            {
+                "region0": "加拿大",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 26298.81,
+                "category0": "技术",
+                "market0": "美国"
+            },
+            {
+                "region0": "北欧",
+                "discount_SUM0": 212.1999999999991,
+                "sales_amount_SUM0": 216127.54200000028,
+                "category0": "办公用品",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "北欧",
+                "discount_SUM0": 68.39999999999999,
+                "sales_amount_SUM0": 167682.52500000002,
+                "category0": "家具",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "北欧",
+                "discount_SUM0": 51.100000000000065,
+                "sales_amount_SUM0": 252969.09000000003,
+                "category0": "技术",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "北非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 85540.40999999999,
+                "category0": "办公用品",
+                "market0": "非洲"
+            },
+            {
+                "region0": "北非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 60977.30999999995,
+                "category0": "家具",
+                "market0": "非洲"
+            },
+            {
+                "region0": "北非",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 86698.88999999998,
+                "category0": "技术",
+                "market0": "非洲"
+            },
+            {
+                "region0": "南亚",
+                "discount_SUM0": 81.5,
+                "sales_amount_SUM0": 200402.82000000007,
+                "category0": "办公用品",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "南亚",
+                "discount_SUM0": 23.699999999999985,
+                "sales_amount_SUM0": 314363.26199999993,
+                "category0": "家具",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "南亚",
+                "discount_SUM0": 33,
+                "sales_amount_SUM0": 351806.5950000006,
+                "category0": "技术",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "南欧",
+                "discount_SUM0": 98.20000000000002,
+                "sales_amount_SUM0": 242436.78599999993,
+                "category0": "办公用品",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "南欧",
+                "discount_SUM0": 48.100000000000065,
+                "sales_amount_SUM0": 150453.25199999995,
+                "category0": "家具",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "南欧",
+                "discount_SUM0": 56.29999999999999,
+                "sales_amount_SUM0": 215703.93,
+                "category0": "技术",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "南美",
+                "discount_SUM0": 311.300000000003,
+                "sales_amount_SUM0": 154902.34000000026,
+                "category0": "办公用品",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "南美",
+                "discount_SUM0": 136.19999999999987,
+                "sales_amount_SUM0": 251610.85000000018,
+                "category0": "家具",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "南美",
+                "discount_SUM0": 101.78799999999981,
+                "sales_amount_SUM0": 210710.48787999994,
+                "category0": "技术",
+                "market0": "拉丁美洲"
+            },
+            {
+                "region0": "南部非洲",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 28795.859999999975,
+                "category0": "办公用品",
+                "market0": "非洲"
+            },
+            {
+                "region0": "南部非洲",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 25076.400000000005,
+                "category0": "家具",
+                "market0": "非洲"
+            },
+            {
+                "region0": "南部非洲",
+                "discount_SUM0": 0,
+                "sales_amount_SUM0": 51319.499999999985,
+                "category0": "技术",
+                "market0": "非洲"
+            },
+            {
+                "region0": "大洋洲",
+                "discount_SUM0": 302.3999999999949,
+                "sales_amount_SUM0": 281713.62600000005,
+                "category0": "办公用品",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "大洋洲",
+                "discount_SUM0": 115.80000000000061,
+                "sales_amount_SUM0": 410468.00400000054,
+                "category0": "家具",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "大洋洲",
+                "discount_SUM0": 115.90000000000079,
+                "sales_amount_SUM0": 408002.9819999999,
+                "category0": "技术",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "美国东部",
+                "discount_SUM0": 244.89999999999654,
+                "sales_amount_SUM0": 205605.2069999999,
+                "category0": "办公用品",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国东部",
+                "discount_SUM0": 92.4,
+                "sales_amount_SUM0": 208202.05200000008,
+                "category0": "家具",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国东部",
+                "discount_SUM0": 76.70000000000017,
+                "sales_amount_SUM0": 264973.9810000003,
+                "category0": "技术",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国中部",
+                "discount_SUM0": 362.3999999999983,
+                "sales_amount_SUM0": 167131.00300000026,
+                "category0": "办公用品",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国中部",
+                "discount_SUM0": 140.0399999999994,
+                "sales_amount_SUM0": 163692.57580000002,
+                "category0": "家具",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国中部",
+                "discount_SUM0": 55.900000000000205,
+                "sales_amount_SUM0": 170416.3119999999,
+                "category0": "技术",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国南部",
+                "discount_SUM0": 166.9999999999994,
+                "sales_amount_SUM0": 125701.58499999993,
+                "category0": "办公用品",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国南部",
+                "discount_SUM0": 39.95000000000001,
+                "sales_amount_SUM0": 117248.41200000008,
+                "category0": "家具",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国南部",
+                "discount_SUM0": 31.599999999999934,
+                "sales_amount_SUM0": 148771.9079999999,
+                "category0": "技术",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国西部",
+                "discount_SUM0": 177.2999999999987,
+                "sales_amount_SUM0": 221031.52500000008,
+                "category0": "办公用品",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国西部",
+                "discount_SUM0": 92.70000000000061,
+                "sales_amount_SUM0": 252434.46750000032,
+                "category0": "家具",
+                "market0": "美国"
+            },
+            {
+                "region0": "美国西部",
+                "discount_SUM0": 80.20000000000057,
+                "sales_amount_SUM0": 251991.83199999997,
+                "category0": "技术",
+                "market0": "美国"
+            },
+            {
+                "region0": "西亚",
+                "discount_SUM0": 565.6000000000093,
+                "sales_amount_SUM0": 109013.55600000006,
+                "category0": "办公用品",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "西亚",
+                "discount_SUM0": 131.99999999999952,
+                "sales_amount_SUM0": 83781.16499999994,
+                "category0": "家具",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "西亚",
+                "discount_SUM0": 163.19999999999922,
+                "sales_amount_SUM0": 124312.23899999994,
+                "category0": "技术",
+                "market0": "亚太地区"
+            },
+            {
+                "region0": "西欧",
+                "discount_SUM0": 286.4999999999982,
+                "sales_amount_SUM0": 601443.6449999998,
+                "category0": "办公用品",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "西欧",
+                "discount_SUM0": 117.54999999999905,
+                "sales_amount_SUM0": 473848.87950000016,
+                "category0": "家具",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "西欧",
+                "discount_SUM0": 127.70000000000091,
+                "sales_amount_SUM0": 656637.1440000003,
+                "category0": "技术",
+                "market0": "欧洲"
+            },
+            {
+                "region0": "西非",
+                "discount_SUM0": 413.6999999999957,
+                "sales_amount_SUM0": 55796.610000000015,
+                "category0": "办公用品",
+                "market0": "非洲"
+            },
+            {
+                "region0": "西非",
+                "discount_SUM0": 89.60000000000021,
+                "sales_amount_SUM0": 39606.137999999984,
+                "category0": "家具",
+                "market0": "非洲"
+            },
+            {
+                "region0": "西非",
+                "discount_SUM0": 130.20000000000033,
+                "sales_amount_SUM0": 78476.06400000001,
+                "category0": "技术",
+                "market0": "非洲"
+            }
+        ],
+        "queryJson": {
+            "biSetId": "2fd9366eb8644dee871a7d5964e42ca6",
+            "dataModelId": "d39bbee2d74d4c62925d55fa1f588dbc",
+            "limit": null,
+            "x": [],
+            "y": [],
+            "colour": [
+                {
+                    "fieldId": "region0",
+                    "field": "region",
+                    "fieldAlias": "地区",
+                    "order": "ASC",
+                    "baseDataType": 1,
+                    "dataType": 1,
+                    "dimMea": 0,
+                    "disCon": 0,
+                    "aggregation": null
+                }
+            ],
+            "size": [
+                {
+                    "fieldId": "discount_SUM0",
+                    "field": "discount",
+                    "fieldAlias": "折扣",
+                    "order": "ASC",
+                    "baseDataType": 4,
+                    "dataType": 4,
+                    "dimMea": 1,
+                    "disCon": 1,
+                    "aggregation": "SUM"
+                }
+            ],
+            "angle": [
+                {
+                    "fieldId": "sales_amount_SUM0",
+                    "field": "sales_amount",
+                    "fieldAlias": "销售额",
+                    "order": "ASC",
+                    "baseDataType": 4,
+                    "dataType": 4,
+                    "dimMea": 1,
+                    "disCon": 1,
+                    "aggregation": "SUM"
+                }
+            ],
+            "detail": [
+                {
+                    "fieldId": "category0",
+                    "field": "category",
+                    "fieldAlias": "类别",
+                    "order": "ASC",
+                    "baseDataType": 1,
+                    "dataType": 1,
+                    "dimMea": 0,
+                    "disCon": 0,
+                    "aggregation": null
+                }
+            ],
+            "label": [
+                {
+                    "fieldId": "market0",
+                    "field": "market",
+                    "fieldAlias": "市场",
+                    "order": "ASC",
+                    "baseDataType": 1,
+                    "dataType": 1,
+                    "dimMea": 0,
+                    "disCon": 0,
+                    "aggregation": null
+                }
+            ],
+            "filter": []
+        },
+        "drawHelper": {
+            "meaAxis": null
+        }
+    }
+}

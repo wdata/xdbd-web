@@ -34,7 +34,7 @@ $(function(){
 	var controls = [];
 	var isIndex = "";//参数4
 	var customData = {};//参数5
-	var lv1DirId = localStorage.getItem("lv1DirId");
+	var pageFlowId = localStorage.getItem("pageFlowId");
 
 	//页面数配置
 	var setting = {
@@ -95,7 +95,7 @@ $(function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		$(".p-cont"+$idx).show().siblings().hide();
 		if($idx===1){
-			curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
+			curTreePages(pageFlowId,versionId,[1,2,5,14,6,7,10,11,15]);
 		}else if($idx===0){
 			// getFirstPages(projectId,versionId,pageFlowDirId);
 		}
@@ -231,7 +231,7 @@ $(function(){
 	
 	$(".page-tooltip").delegate("li","click",function(){
 		$idx = $(this).index();
-	})
+	});
 	
 	//设置链接
 	$(".page-tooltip1").delegate(".set-flow-btn1","click",function(){
@@ -245,14 +245,14 @@ $(function(){
 		      	layer.close(index);
 		      }
 		})
-	})
+	});
 	
 	$(".page-tooltip1").delegate("li","click",function(){
 		$idx = $(this).index();
-	})
+	});
 	
 	//根据BIdirId查询项目树.（首页2与BI报表10）
-	curTreePages(lv1DirId,versionId,[1,2,5,14,6,7,10,11,15]);
+	curTreePages(pageFlowId,versionId,[1,2,5,14,6,7,10,11,15]);
 	function curTreePages(BIdirId,versionId,directoryTypes){
 		$.ajax({
 				type:'POST',
@@ -492,27 +492,5 @@ $(function(){
 
 // 显示BI页面数据
 function displayPage(data){
-	// 遍历数据,生成图形
-	var html = '';
-	$.each(data.htmlJson.controls,function(index,val){
-		var text = ''            // html
-			,style =  val.style  // 宽、高
-			,dataType = val.customData.dataType;  // 类型
-
-        // 判断图形、表格、文本、图片、按钮
-        // 如果是文本和图片，则复制内容不同
-		if(dataType === "text" || dataType === "button" || dataType === "image"){
-			text = val.customData.controls.html;
-		}else if(dataType === "table" || dataType === "chart"){
-			// 将数据存入检索数据中
-			var chart_date = {
-				'cid':val.cid,
-				"type":val.type,
-				"queryJson":val.queryJson,
-			};
-			DataIndexes.inAjax(chart_date,val.cid);
-		}
-		html = '<div  id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
-		$(".edit-content").append(html);
-	});
+    DataIndexes.generate(data,$(".edit-content"));
 }

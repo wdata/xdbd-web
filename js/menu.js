@@ -120,8 +120,11 @@ $(function(){
 	}
 	
 	//获取 顶部导航菜单
-	getTopMenu(projectId,versionId,0);
+	if(previewBur){
+        getTopMenu(projectId,versionId,0);
+	}
 	function getTopMenu(projectId,versionId,menuType){
+		console.log("右侧菜单！");
 		$.ajax({
 			type:'GET',
             url:$url1+'/bi/report/v1/menu/findReportMenu',
@@ -134,7 +137,7 @@ $(function(){
 				"menuType":menuType
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		var data;
               		var html = "";
@@ -147,9 +150,6 @@ $(function(){
               		}
               		
           			$.each(data, function(i,item) {
-              			if(i===0){
-							findLeftMenu(projectId,versionId,item.reportMenuId);
-              			}
               			html += `
               				<li reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}">
 								<span class="m-menu-tag">${item.menuName}</span>
@@ -162,14 +162,18 @@ $(function(){
 							</li>
               			`;
               			html2 += `
-              				<li class="${i===0?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
-              			`;
-
-              	});
+								<li class="${item.reportMenuId==previewReportMenuId?'active':''}" reportMenuId="${item.reportMenuId}" menuType="${item.menuType}" pageId="${item.pageId}" parentId="${item.parentId}"><a href="javascript:;">${item.menuName}</a></li>
+							`;
+					});
               		$(".top-menu-15").empty().append(html);
               		$(".mn-menu").empty().append(html2);
-
-              		
+                    if(previewReportMenuId && previewReportMenuId !== "null" && previewReportMenuId !== "undefined"){
+                        findLeftMenu(projectId,versionId,previewReportMenuId);
+                    }else{
+                        previewReportMenuId = data[0].reportMenuId;
+                        findLeftMenu(projectId,versionId,data[0].reportMenuId);
+                        $(".mn-menu li:first").addClass("active");
+                    }
 	            }else{
                     layer.msg("fail", {icon: 0});
 				}
@@ -303,7 +307,7 @@ $(function(){
 				"updateUser":updateUser
             },
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
@@ -340,7 +344,7 @@ $(function(){
 				"updateUser":updateUser
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		getTopMenu(projectId,versionId,0);//刷新顶部菜单列表
               		layer.msg(res.message, {icon: 6});
@@ -461,14 +465,14 @@ $(function(){
 	//添加
 	$(".le-add").click(function(){
 		layer.closeAll();
-		console.log(topMenuId);
+		// console.log(topMenuId);
 		var pId = "";
 		if(topMenuId){
 			pId = topMenuId;
 		}else{
 			pId = reportMenuId;
 		}
-		console.log(pId);
+		// console.log(pId);
 		var index = layer.open({
 	      type: 1,
 	      btn: ['确定', '取消'],
@@ -516,9 +520,10 @@ $(function(){
 		topMenuId = $(this).attr("reportmenuid");
 		sessionStorage.setItem("tId",topMenuId);
 		parentId = $(this).attr("reportmenuid");
+        previewReportMenuId = $(this).attr("reportmenuid");
 		$("#sidebar-tree").html("");
 		findLeftMenu(projectId,versionId,parentId);
-	})
+	});
 	
 	//添加左侧菜单
 	function addLeftMenu(projectId,versionId,createUser,menuName,menuType,pId){
@@ -537,7 +542,7 @@ $(function(){
 				"parentId":pId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
                 	findLeftMenu(projectId,versionId,sessionStorage.getItem("tId"));//topMenuId
               		layer.msg(res.message, {icon: 6});
@@ -552,6 +557,7 @@ $(function(){
 //	findLeftMenu(projectId,versionId,0);
 	//查询左侧菜单
 	function findLeftMenu(projectId,versionId,reportMenuId){
+		console.log("左侧菜单");
 		$.ajax({
 			type:'GET',
             url:$url1+'/bi/report/v1/menu/findReportMenu',
@@ -564,15 +570,42 @@ $(function(){
 				"reportMenuId":reportMenuId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		zNodes = res.data===null?[]:res.data;
-          			$.fn.zTree.init($("#match-tree"), setting, zNodes);
-          			$.fn.zTree.init($("#link-tree"), setting1, zNodes);
-          			$.fn.zTree.init($("#sidebar-tree"), setting2, zNodes);
-          			$.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
-          			$.fn.zTree.getZTreeObj("match-tree").expandAll(true);
-          			$.fn.zTree.getZTreeObj("link-tree").expandAll(true);
+              		const matchZtree = $("#match-tree");
+                    const linkZtree = $("#link-tree");
+                    const sidebarZtree = $("#sidebar-tree");
+              		if(matchZtree.length >= 1){
+                        $.fn.zTree.init(matchZtree, setting, zNodes);
+                        $.fn.zTree.getZTreeObj("match-tree").expandAll(true);
+					}
+					if(linkZtree.length >= 1){
+                        $.fn.zTree.init(linkZtree, setting1, zNodes);
+                        $.fn.zTree.getZTreeObj("link-tree").expandAll(true);
+					}
+					if(sidebarZtree.length >= 1){
+                        $.fn.zTree.init(sidebarZtree, setting2, zNodes);
+                        $.fn.zTree.getZTreeObj("sidebar-tree").expandAll(true);//默认展开
+						// 如果执行完成，则遍历元素，并给符合元素标识!
+						var bur = true;
+						$.each(zNodes,function(i){
+							if(this.pageId == previewPageId){
+								sidebarZtree.find("li").eq(i).find("a").addClass("curSelectedNode positioning");
+                                bur = false;
+                                pageData(this.pageId);
+                                dirId = this.pageId;
+                            }
+						});
+						if(!previewPageId || previewPageId === "null" || previewPageId === "undefined" || bur){
+                            sidebarZtree.find("li a:first").addClass("curSelectedNode positioning");
+                            previewPageId = zNodes[0].pageId;
+                            if(zNodes[0].pageId){
+                                pageData(zNodes[0].pageId);
+                                dirId = zNodes[0].pageId;
+							}
+						}
+					}
 	            }
 			},
 			error:function(err){
@@ -706,8 +739,8 @@ $(function(){
 		var pageId = curDom[0].pageId;
 			reportMenuId = curDom[0].reportMenuId;
 			topMenuId = "";//设置为空,则添加子菜单
-			console.log('1'+reportMenuId);
-			console.log('2'+topMenuId);
+			// console.log('1'+reportMenuId);
+			// console.log('2'+topMenuId);
 /*		var menuName = '';
 			layer.closeAll();
 		var index = layer.open({
@@ -769,14 +802,17 @@ $(function(){
 			layer.msg("请选择BI页面", {icon: 0});
 		}
 	}
-	
 	function redirectPage(){
+		$("#sidebar-tree li .positioning").removeClass("curSelectedNode");
 		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
 		var curDom = zTree.getSelectedNodes();
 		pageId = curDom[0].pageId;
-		console.log(pageId);
+		if(previewBur){
+            previewPageId = curDom[0].pageId;
+		}
 		if(pageId != null){//执行画图
-			adce(pageId)
+            dirId = curDom[0].pageId;
+			pageData(pageId);
 		}else{//提醒未设置链接
 			$(".mn-htmlmain").empty();
 		}
@@ -798,7 +834,7 @@ $(function(){
 		
 		var aObj = $("#" + treeNode.tId + IDMark_A);
 		if(treeId==="link-tree"){
-			console.log(treeNode.pageId);
+			// console.log(treeNode.pageId);
 			var editStr = `<a id="${treeNode.reportMenuId}" pageId="${treeNode.pageId}"  class="page-link-btn">${treeNode.pageId===null||treeNode.pageId===""?"创建链接":"已创建链接"}</a>`;
 			aObj.append(editStr);
 		}
@@ -895,7 +931,7 @@ $(function(){
 		var file = $(this)[0].files[0];
 		let	filterType=/(?:jpeg|jpg|png|bmp)$/i, /*图片上传类型*/
 			maxSize=1*1024*1024;   /*图片上传的大小最大值*/
-		console.log(file);
+		// console.log(file);
 		if(!filterType.test(file.type)){
 			layer.msg("请上传图片文件!",{icon:0});
 			return false;
@@ -920,7 +956,7 @@ $(function(){
             	username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
             },
 			success:function(res){
-				console.log(res);
+				// console.log(res);
 				if(res.code===0){
 					$(".m-uploadimg>img").attr("src",$url1+res.data);
 					$(".mn-logobox>img").attr("src",$url1+res.data);
@@ -996,7 +1032,7 @@ $(function(){
 		sessionStorage.setItem("tId",topMenuId);
 		$("#link-tree").html("");
 		findLeftMenu(projectId,versionId,topMenuId);
-	})
+	});
 		
 	$("#link-tree").delegate(".page-link-btn","click",function(){
 		getProjPages(lv1DirId);
@@ -1026,7 +1062,7 @@ $(function(){
 				"versionId":versionId
 			}),
 			success:function(res){
-				console.log(res.data);
+				// console.log(res.data);
               	if(res.code===0){
               		zNodes = res.data;
               		if(zNodes!==null){
@@ -1129,7 +1165,7 @@ $(function(){
 				"versionId":versionId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
               	if(res.code===0){
               		var data = res.data;
 	            }
@@ -1154,7 +1190,7 @@ $(function(){
 				"versionId":versionId
 			},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
 				if(res.code===0){
 					var data = res.data;
 						zNodes = data;
@@ -1189,6 +1225,7 @@ $(function(){
 			success:function(res){
 				if(res.code===0&&res.data.length){
 					var data = res.data[0];
+					//console.log(data);
 					var logo,
 						leftHeight = data.leftHeight,
 						leftWidth = data.leftWidth,
@@ -1211,7 +1248,7 @@ $(function(){
                             $(".mn-logobox>img").attr("src","../images/c_img.png");
 							// sessionStorage.setItem("tempLogo","");
 						}
-						console.log(data);
+						// console.log(data);
 						if(navigationText!==undefined&&navigationText!==null){
 							$(".mn-headtxt").text(navigationText);
 							sessionStorage.setItem("tempTxt",navigationText);
@@ -1259,7 +1296,7 @@ $(function(){
 	
 	//预览
 	$("#preview").click(function(e){
-		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"";
+		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId ;
     	window.open("../html/preview.html" + url);
     	e.preventDefault();
 	})
@@ -1268,10 +1305,10 @@ $(function(){
 	$(".mn-htmlmain").delegate(".resize-item","click",function(e){
 		var linkPageId = $(this).attr("linkpageid");
 		if(linkPageId){
-			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId);
+			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId );
 		}
 		e.preventDefault();
-	})
+	});
 	
 	//提示
 	var todo = {
@@ -1301,8 +1338,8 @@ $(function(){
 	})
 
 	//add topMenu scroll[length:6]
-    var ull = document.getElementById("setAllTop");
-    var lii = ull.getElementsByTagName("li");
+    // var ull = document.getElementById("setAllTop");
+    // var lii = ull.getElementsByTagName("li");
     var oZuo = document.querySelector(".zuo1");
     var oYou = document.querySelector(".you1");
     oZuo.onclick = function () {
@@ -1346,8 +1383,7 @@ $(function(){
      * 根据传递的参数，获取页面数据
      * */
     
-	function adce(pageId){
-//		console.log(pageId + "22222222222222222222222")
+	function pageData(pageId){
 	    $.ajax({
 	        type:"get",
 	        url:"/xdbd-bi/bi/report/v1/page.json",
@@ -1363,47 +1399,14 @@ $(function(){
 	        dataType:"json",
 	        success:function(data){
 	            if(data.code === 0){
-	                if(data.data.htmlJson){
-	                    displayPage(data.data);
+	                if(data.data && data.data.htmlJson){
+                        DataIndexes.generate(data.data,$(".mn-htmlmain"));
 	                }
 	            }
 	        },
 	        error:function(res){
-	            // console.log(res);
+	            console.log(res);
 	        }
 	    });
 	}
 
-	
-    // 显示BI页面数据
-    function displayPage(data){
-        // 遍历数据,生成图形
-        var html = '';
-        $.each(data.htmlJson.controls,function(index,val){
-            var text = ''            // html
-                ,style =  val.style  // 宽、高
-                ,dataType = val.customData.dataType;  // 类型
-
-            // 判断图形、表格、文本、图片、按钮
-            // 如果是文本和图片，则复制内容不同
-            if(dataType === "text" || dataType === "button" || dataType === "image"){
-                if(val.customData.controls){
-                    text = val.customData.controls.html;
-                }else if(dataType === "text"){
-                    text = '<div class="content-text edit"><div contenteditable="false" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" data-placeholder="请输入文本" data-medium-focused = "true"></div></div>';
-                }else if(dataType === "button"){
-                    text = '<div class="content-button"><button></button></div>';
-                }
-            }else if(dataType === "table" || dataType === "chart"){
-                // 将数据存入检索数据中
-                var chart_date = {
-                    'cid':val.cid,
-                    "type":val.type,
-                    "queryJson":val.queryJson,
-                };
-                DataIndexes.inAjax(chart_date,val.cid);
-            }
-            html += '<div linkPageId="'+val.linkPageId+'" id="'+ val.cid +'" type="'+ val.type +'" data-type="'+ val.customData.dataType +'" style="height:'+ style.height +'px;width:'+ style.width +'px;top:'+ style.top +'px;left:'+ style.left +'px;z-index:'+ val.displayLevel +'" class="resize-item">'+ text +'</div>';
-        });
-        $(".mn-htmlmain").empty().append(html);
-    }

@@ -43,8 +43,14 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	
-	userRight();
+	//延迟调用：
+	var winTimer = window.setInterval(function(){
+		if(sessionStorage.getItem("userId")){
+			userRight();
+			window.clearInterval(winTimer);
+			winTimer = null;
+		}
+	},20);
 	let onCurEnv = sessionStorage.setItem("onEnv","");
 	function userRight(){
 		$.ajax({
@@ -503,6 +509,8 @@ $(function(){
                     if(res.code===0){
                         layer.msg(res.message, {icon: 6});
                         getProjName(0);//刷新项目树
+                    }else if(res.code===403){
+                        layer.msg('该名称已存在！', {icon: 5});
                     }
                 },
                 error:function(err){
@@ -644,6 +652,9 @@ $(function(){
 
                 curNodeId = node.nodeId;
                 sessionStorage.setItem("curNodeId",curNodeId);
+				//父级ID：
+				pageFlowId = $(this).treeview('getParent',node).directoryId;
+				localStorage.setItem("pageFlowId",pageFlowId);
 
                 dirType = node.directoryType;//目录类型
                 directoryId = node.directoryId;//目录id
