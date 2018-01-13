@@ -1,7 +1,7 @@
 var appkey = 'xdbd';//应用的appkey
 var cas_sever = 'http://192.168.1.15:8445';
-//sessionStorage.setItem("ByuserName","admin");
-//sessionStorage.setItem("userId","2060");
+sessionStorage.setItem("ByuserName","admin");
+sessionStorage.setItem("userId","2060");
 //cas服务器地址
 var urlArguments = parseQueryString(location.href);//获取URL的参数JSON格式
 var reUrl = location.href.split('?')[0];//本项目的地址(回调地址)
@@ -45,9 +45,9 @@ function logOut(){//登出
 	var username = sessionStorage.getItem("ByuserName"),
 		userId = sessionStorage.getItem("userId");
 
-    var previewBur = true;
-    var previewReportMenuId = null;
-    var previewPageId = null;
+	var previewBur = true;
+	var previewReportMenuId = null;
+	var previewPageId = null;
 
 
 function sysidByusernameAndAppkey(ByuserName){//获取sysid(userId)
@@ -132,6 +132,7 @@ function parseQueryString(url) {//解析url参数为JSON对象
 //行业类型
 function industryType() {
   var arr = [
+      '全部',
     '机构组织',
     '农林牧渔',
     '医药卫生',
@@ -159,8 +160,8 @@ function industryType() {
   ];
   var type = [];
   $.each(arr,function(index,item) {
-    var i = (index+1)<10?('0'+(index+1)):(index+1);
+    var i = index<10?('0'+index):index;
     type.push('<option value='+i+'>'+item+'</option>');
-  })
+  });
   return type;
 }

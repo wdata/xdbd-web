@@ -59,7 +59,7 @@ $.ajax({
 			var arr = new Array;
 			console.log(data.data)
 			$.each(data.data, function (index, item) {
-				arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + ' > <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span><div class="demand_remark">'+item.remark+'</div></dd> </dl>')
+				arr.push('<dl class="new_demand" id=' + item.jobId + ' onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandBtn(this)" data-id=' + item.isTemplate + ' > <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deleteBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span><div class="demand_remark">'+item.remark+'</div> </dd> </dl>')
 			})
 			$("#demand_list").html(arr);
 		}
@@ -164,8 +164,9 @@ function newBtn(popups) {
 			success: function (data) {
 				if (data.code == 0) {
 					localStorage.setItem('directoryId', data.data);
+					localStorage.setItem('jobName', newName);
 					window.location.href = 'etlChart.html';
-					// parent.location.reload();
+					parent.location.reload();
 				} else {
 					layer.msg(data.message, { time: 1000 })
 				}

@@ -127,27 +127,28 @@
     }
 
 </style>
-<div class="ensure">
-    <span class="ensure_load saveActionComp">保存</span>
-    <span class="ensure_load generateSql">生成SQL</span>
+<div id="where">
+    <div class="ensure">
+        <span class="ensure_load saveActionComp">保存</span>
+        <span class="ensure_load generateSql">生成SQL</span>
 
-</div>
-<div class="form_title">属性设置</div>
-<div class="fromInp" style="margin-top: 12px;">
-    <label>步骤名称：</label>
-    <input type="text" class="stepName auto_save" readonly="readonly"/>
-</div>
-<div class="fromInp">
-    <label>表输出：</label>
-    <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
-</div>
-<!--<div class="fromInp">-->
+    </div>
+    <div class="form_title">属性设置</div>
+    <div class="fromInp" style="margin-top: 12px;">
+        <label>步骤名称：</label>
+        <input type="text" class="stepName auto_save" readonly="readonly"/>
+    </div>
+    <div class="fromInp">
+        <label>表输出：</label>
+        <input type="text" class="tableOut auto_save" style="margin-left: 23px;"/>
+    </div>
+    <!--<div class="fromInp">-->
     <!--<label>选择表：</label>-->
     <!--<select class="fromTable" style="width:160px;height: 28px;margin-left: 25px;">-->
     <!--</select>-->
-<!--</div>-->
-<div class="related_tit">过滤条件</div>
-<div class="joinTables">
+    <!--</div>-->
+    <div class="related_tit">过滤条件</div>
+    <div class="joinTables">
         <table class="related_tab" cellspacing="0">
             <thead>
             <tr>
@@ -170,9 +171,10 @@
                     </select>
                 </td>
                 <td><input class="value auto_save" type="text" /></td>
-                <td class="regulation"><span class="add onAdd auto_save"></span><span class="lessen onLessen auto_save"></span></td>
+                <td class="regulation"><span class="add onAdd more_save"></span><span class="lessen onLessen more_save"></span></td>
             </tr>
             </tbody>
         </table>
     </div>
+</div>
 </div>
