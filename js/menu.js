@@ -12,7 +12,7 @@ $(function(){
 	 * parentId
 	 * */
 
-	
+	var createUser = sessionStorage.getItem('userId');
 	var topMenu = [];//顶部导航菜单
 	var topMenuId = sessionStorage.getItem("tId")||"";//topMenu--id
 	var reportMenuId;
@@ -601,11 +601,14 @@ $(function(){
 						});
 						if(!previewPageId || previewPageId === "null" || previewPageId === "undefined" || bur){
                             sidebarZtree.find("li a:first").addClass("curSelectedNode positioning");
-                            previewPageId = zNodes[0].pageId;
-                            if(zNodes[0].pageId){
-                                pageData(zNodes[0].pageId);
-                                dirId = zNodes[0].pageId;
+							if(zNodes.length>0){
+								previewPageId = zNodes[0].pageId;
+								if(zNodes[0].pageId){
+									pageData(zNodes[0].pageId);
+									dirId = zNodes[0].pageId;
+								}
 							}
+
 						}
 					}
 	            }
@@ -1246,6 +1249,7 @@ $(function(){
 	}
 
 	function initTemp(i){
+		if(i>tempData.length){return false;}
 		var data = tempData[i];
 		var logo = data.logo,
 			leftHeight = data.leftHeight,
