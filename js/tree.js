@@ -12,7 +12,7 @@ $(function(){
 	var $url2 = "/xdbd-etl";
 	var $url3 = "/xdbd-pm";
 	var $url4 = "/xdbd-wf";
-	var $url = "http://192.168.1.43:8086";//公共页面
+	var $urlPublic = "http://192.168.1.43:8086";//公共页面
 	
 	/*
 	 
@@ -103,7 +103,7 @@ $(function(){
               		});
               		$(".set-cur-env select").empty().append(htmlEnv);
               		//系统管理菜单
-              		var menuSys = menuLv1[1].childrens;
+              		var menuSys = menuLv1[5].childrens;
               		var htmlSys = "";
               		$.each(menuSys, function(i,v) {
               			htmlSys += `
@@ -111,6 +111,25 @@ $(function(){
               			`;
               		});
               		$(".sys-menus").empty().append(htmlSys);
+					//监控中心
+					var menuMonitoring = menuLv1[6].childrens;
+					var htmlMonitoring = "";
+					var isCN = location.hostname.indexOf('.cn');
+					var url = '';
+					$.each(menuMonitoring, function(i,v) {
+						if(isCN==-1){//非 .cn 域名
+							url = v.remark.replace(/\.cn\:/,'.ai:');
+						}else {
+							url = v.remark.replace(/\.ai:/,'.cn:');
+						}
+						htmlMonitoring += `
+              				<li class="${i==0?'active':''}" url="${url}"><a href="javascript:;">${v.name}</a></li>
+              			`;
+						if(i==0){
+							$("#iframepage7").attr("src",url);
+						}
+					});
+					$(".htmlMonitoring-menus").empty().append(htmlMonitoring);
               		
 	            }
 			},
@@ -164,27 +183,34 @@ $(function(){
 		let name = $(this).find("a").text();
 		switch(name){
 			case "个人信息":
-				url = $url+"/page/person/person.html";
+				url = $urlPublic+"/page/person/person.html";
 			break;
 			case "组织管理":
-				url = $url+"/page/org_control/org_control.html";
+				url = $urlPublic+"/page/org_control/org_control.html";
 			break;
 			case "账号管理":
-				url = $url+"/page/account/account.html";
+				url = $urlPublic+"/page/account/account.html";
 			break;
 			case "角色管理":
-				url = $url+"/page/character/character.html";
+				url = $urlPublic+"/page/character/character.html";
 			break;
 			case "日志管理":
 				url = "html/loglist.html";
 			break;
 			case "企业中心":
-				url = $url+"/page/org_control/not_org.html";
+				url = $urlPublic+"/page/org_control/not_org.html";
 			break;
 			default:
 		}
-		$("#iframepage2").attr("src",url);
-	})
+		$("#iframepage6").attr("src",url);
+	});
+	/**
+	 * 监控页面*/
+	$(".htmlMonitoring-menus").delegate("li","click",function(){
+		$(this).addClass("active").siblings().removeClass("active");
+		var url = $(this).attr('url');
+		$("#iframepage3").attr("src",url);
+	});
 	
 	
 	/*
