@@ -1,474 +1,562 @@
 <!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>工作流</title>
-    <!--[if lt IE 9]>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>工作流</title>
+	<!--[if lt IE 9]>
     <?import namespace="v" implementation="#default#VML" ?>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="../css/gooflow/GooFlow.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/gooflow/default.css"/>
-    <style>
-        .myForm{display:block;margin:0px;padding:0px;line-height:1.5;border:#ccc 1px solid;font: 12px Arial, Helvetica, sans-serif;margin:5px 5px 0px 0px;border-radius:4px;}
-        .myForm .form_title{background:#f7f9fc;font-size: 14px;color:#3D5275;height: 36px;line-height: 36px;  text-align: center;border-top: 1px solid #f1f1f1;  border-bottom: 1px solid #f1f1f1;}
-        .myForm .propertys table tr{margin-top: 10px;display: -webkit-box;font-size: 14px;}
-        .myForm .propertys table tr .th{width: 80px; text-algin: center}
-        .myForm .propertys table .select_mission{width: 240px;  height: 28px}
-        .myForm .propertys table .manage{display: inline-block; height: 22px; width: 236px;}
-        .myForm .propertys table tr .add_Btn{cursor: pointer;padding: 0 2px;line-hegit: 26px; }
-        .myForm .save{margin: 5px auto;width: 80px;height: 26px;background: #00B4E1;line-height: 26px;text-align: center;color: #fff;border-radius: 3px;cursor: pointer}
-        #propertyForm{overflow: hidden; height: 500px; overflow-y: visible}
-        .remarks{overflow: hidden;padding:10px 0;background:#f7f9fc;border-top: 1px solid #f1f1f1;border-bottom: 1px solid #f1f1f1;border: 1px solid #ccc;margin: 5px 5px 0 0;border-radius: 3px}
-        .remarks .remark_key{display: inline-block;width: 80px; text-align: center;font-size: 14px}
-        .remarks .remark_value{font-size: 14px;}
-    </style>
-    <script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
-    <!--<script type="text/javascript" src="../plugin/gooflow/child.js"></script>-->
-    <script src="../js/login.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/GooFunc.js"></script>
-    <!--<script type="text/javascript" src="../plugin/gooflow/json2.js"></script>-->
-    <script type="text/javascript" src="../plugin/gooflow/GooFlow.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/GooFlow.color.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/promise.min.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/html2canvas.js"></script>
-    <script type="text/javascript" src="../plugin/gooflow/GooFlow.export.js"></script>
-    <script src="../plugin/layer/layer.js"></script>
-    <script>
-      var jobid = localStorage.getItem('directoryId');
-      var this_userId = sessionStorage.getItem('userId');
-      var this_versionId = localStorage.getItem("versionId");
-      var this_projectId = localStorage.getItem("projectId");
-      var this_createUser = localStorage.getItem("createUser");
-      var this_updateUser = localStorage.getItem("updateUser");
-      var template = localStorage.getItem("isTemplate"); //是否为模板
-      var this_companyId = localStorage.getItem("companyId");
-      var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
-      // var template = false;  
-      var this_remarkName = [];  //算法备注
-      var this_enName = [];  //算法名称
-      var this_algParam = [];
-      var this_actionCompType;
-      var this_actionCompId;
-      var this_actionCompName;
-      var this_actionComp = '';
-      var this_data = {};
-      var this_remark = '';
-      var this_new = true; //新建
-      var onenv = true;
-      var $url = '../xdbd-wf';  //../xdbd-wf
+	<link rel="stylesheet" type="text/css" href="../css/gooflow/GooFlow.css" />
+	<link rel="stylesheet" type="text/css" href="../css/gooflow/default.css" />
+	<style>
+		.myForm {
+			display: block;
+			margin: 0px;
+			padding: 0px;
+			line-height: 1.5;
+			border: #ccc 1px solid;
+			font: 12px Arial, Helvetica, sans-serif;
+			margin: 5px 5px 0px 0px;
+			border-radius: 4px;
+		}
 
-      if(this_onenv == 'dev') {
-        onenv = true;
-      } else if(this_onenv == 'test') {
-        onenv = false;
-      }
+		.myForm .form_title {
+			background: #f7f9fc;
+			font-size: 14px;
+			color: #3D5275;
+			height: 36px;
+			line-height: 36px;
+			text-align: center;
+			border-top: 1px solid #f1f1f1;
+			border-bottom: 1px solid #f1f1f1;
+		}
 
-      init_dag();
+		.myForm .propertys table tr {
+			margin-top: 10px;
+			display: -webkit-box;
+			font-size: 14px;
+		}
 
-      var property={
-        width:1230,
-        height:800,
-        toolBtns:["start round mix","end round mix","parallel","merge","decision","java","shell","spark","algorithm"],
-        haveHead:true,
-//        headLabel:true,
-        initLabelText:'流程图',
-        headBtns:["undo","redo","reload","print","save","execute","saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save""new",,
-        haveTool:onenv,
-        haveDashed:true,
-        haveGroup:true,
-        useOperStack:true
-      };
-      var remark={
-        cursor:"选择指针",
-        direct:"结点连线",
-        dashed:"关联虚线",
-        start:"开始结点",
-        end:"结束结点",
-        parallel: '并行结点',
-        merge:"合并结点",
-        decision:"分支结点",
-        group:"组织划分框编辑开关",
-        java:"java",
-        shell:"shell",
-        spark:"spark",
-        algorithm:"算法",
-//        'new':"新建",
-        undo:"上一步",
-        redo:"下一步",
-        reload:"刷新",
-        print:"打印",
-        save:"保存",
-        execute:"执行",
-        saveCopy:"另存为模板"
-      };
-      var demo;
-      function showDag(getDag) {
-        demo = $.createGooFlow($("#demo"), property);
-        demo.setNodeRemarks(remark);
-        demo.onItemDel = function (id, type) {
-            var self = this;
-            console.log(self)
-            if (confirm("确定要删除该单元吗?")) {
-                init_delec(id);
-                self.blurItem();
-                return true;
-            } else {
-                return false;
-            }
-        };
-        //导出图片功能 END
-        var exportName = "流程图";
-        demo.loadData(getDag);
-//        console.log(this_remark)
-        demo.onPrintClick = function () {
-          demo.exportDiagram(exportName);
-        }
-        demo.onItemFocus = function (id, model) {
-          var obj;
-          if (model == "line") {
-            obj = this.$lineData[id];
-          } else if (model == "node") {
-            obj = this.$nodeData[id];
-            this_actionCompId= id;
-            //this_actionCompType = obj.type;
-            this_actionCompName = obj.name;
-            var str = obj.type;
-            if(str.indexOf(" ")!=-1) {
-              var arr = str.split(" ");
-              this_actionCompType = arr[0];
-            } else {
-              this_actionCompType = str;
-            }
-			fn_task();
-			if(this_actionCompType == 'algorithm') {
-				fn_algorithm();
+		.myForm .propertys table tr .th {
+			width: 80px;
+			text-algin: center
+		}
+
+		.myForm .propertys table .select_mission {
+			width: 240px;
+			height: 28px
+		}
+
+		.myForm .propertys table .manage {
+			display: inline-block;
+			height: 22px;
+			width: 236px;
+		}
+
+		.myForm .propertys table tr .add_Btn {
+			cursor: pointer;
+			padding: 0 2px;
+			line-hegit: 26px;
+		}
+
+		.myForm .save {
+			margin: 5px auto;
+			width: 80px;
+			height: 26px;
+			background: #00B4E1;
+			line-height: 26px;
+			text-align: center;
+			color: #fff;
+			border-radius: 3px;
+			cursor: pointer
+		}
+
+		#propertyForm {
+			overflow: hidden;
+			height: 500px;
+			overflow-y: visible
+		}
+
+		.remarks {
+			overflow: hidden;
+			padding: 10px 0;
+			background: #f7f9fc;
+			border-top: 1px solid #f1f1f1;
+			border-bottom: 1px solid #f1f1f1;
+			border: 1px solid #ccc;
+			margin: 5px 5px 0 0;
+			border-radius: 3px
+		}
+
+		.remarks .remark_key {
+			display: inline-block;
+			width: 80px;
+			text-align: center;
+			font-size: 14px
+		}
+
+		.remarks .remark_value {
+			font-size: 14px;
+		}
+	</style>
+	<script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
+	<!--<script type="text/javascript" src="../plugin/gooflow/child.js"></script>-->
+	<script src="../plugin/layer/layer.js"></script>
+	<script src="../js/login.js"></script>
+	<script type="text/javascript" src="../plugin/gooflow/GooFunc.js"></script>
+	<!--<script type="text/javascript" src="../plugin/gooflow/json2.js"></script>-->
+	<script type="text/javascript" src="../plugin/gooflow/GooFlow.js"></script>
+	<script type="text/javascript" src="../plugin/gooflow/GooFlow.color.js"></script>
+	<script type="text/javascript" src="../plugin/gooflow/promise.min.js"></script>
+	<script type="text/javascript" src="../plugin/gooflow/html2canvas.js"></script>
+	<script type="text/javascript" src="../plugin/gooflow/GooFlow.export.js"></script>
+	<!-- <script src="../plugin/layer/layer.js"></script> -->
+	<script>
+		var jobid = localStorage.getItem('directoryId');
+		var this_userId = sessionStorage.getItem('userId');
+		var this_versionId = localStorage.getItem("versionId");
+		var this_projectId = localStorage.getItem("projectId");
+		var this_createUser = localStorage.getItem("createUser");
+		var this_updateUser = localStorage.getItem("updateUser");
+		var template = localStorage.getItem("isTemplate"); //是否为模板
+		var this_companyId = localStorage.getItem("companyId");
+		var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
+		// var template = false;  
+		var this_remarkName = [];  //算法备注
+		var this_enName = [];  //算法名称
+		var this_algParam = [];
+		var this_actionCompType;
+		var this_actionCompId;
+		var this_actionCompName;
+		var this_actionComp = '';
+		var this_data = {};
+		var this_remark = '';
+		var this_new = true; //新建
+		var onenv = true;
+		var $url = '../xdbd-wf';  //../xdbd-wf
+
+		if (this_onenv == 'dev') {
+			onenv = true;
+		} else if (this_onenv == 'test') {
+			onenv = false;
+		}
+
+		init_dag();
+
+		var property = {
+			width: 1230,
+			height: 800,
+			toolBtns: ["start round mix", "end round mix", "parallel", "merge", "decision", "java", "shell", "spark", "algorithm"],
+			haveHead: true,
+			//        headLabel:true,
+			initLabelText: '流程图',
+			headBtns: ["undo", "redo", "reload", "print", "save", "execute", "saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save""new",,
+			haveTool: onenv,
+			haveDashed: true,
+			haveGroup: true,
+			useOperStack: true
+		};
+		var remark = {
+			cursor: "选择指针",
+			direct: "结点连线",
+			dashed: "关联虚线",
+			start: "开始结点",
+			end: "结束结点",
+			parallel: '并行结点',
+			merge: "合并结点",
+			decision: "分支结点",
+			group: "组织划分框编辑开关",
+			java: "java",
+			shell: "shell",
+			spark: "spark",
+			algorithm: "算法",
+			//        'new':"新建",
+			undo: "上一步",
+			redo: "下一步",
+			reload: "刷新",
+			print: "打印",
+			save: "保存",
+			execute: "执行",
+			saveCopy: "另存为模板"
+		};
+		var demo;
+		function showDag(getDag) {
+			demo = $.createGooFlow($("#demo"), property);
+			demo.setNodeRemarks(remark);
+			demo.onItemDel = function (id, type) {
+				var self = this;
+				// console.log(self)
+				if (confirm("确定要删除该单元吗?")) {
+					self.blurItem();
+					init_delec(id);
+					return true;
+				} else {
+					return false;
+				}
+			};
+			//导出图片功能 END
+			var exportName = "流程图";
+			demo.loadData(getDag);
+			    //    console.log(this_remark)
+			demo.onPrintClick = function () {
+				demo.exportDiagram(exportName);
 			}
+			demo.onItemFocus = function (id, model) {
+				var obj;
+				if (model == "line") {
+					obj = this.$lineData[id];
+				} else if (model == "node") {
+					obj = this.$nodeData[id];
+					this_actionCompId = id;
+					//this_actionCompType = obj.type;
+					this_actionCompName = obj.name;
+					var str = obj.type;
+					if (str.indexOf(" ") != -1) {
+						var arr = str.split(" ");
+						this_actionCompType = arr[0];
+					} else {
+						this_actionCompType = str;
+					}
+					fn_task();
+					if (this_actionCompType == 'algorithm') {
+						fn_algorithm();
+					}
+					//导入模板
+					$('.propertys').empty().load("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".html", function () {
+						init_type(id, obj.type, function () {
+							$.getScript("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".js");
+//                            alert("我是刚导入模板！")
+                            // console.log("我是刚导入模板！ ----------------------------------");
+						});
+					});
+				} else if (model == "area") {
+				}
+				return true;
+			}
+				;
+			demo.onItemBlur = function (id, model) {
+				document.getElementById("propertyForm").reset();
+				return true;
+			};
+			//新建流程图
+			//          demo.onBtnNewClick = function () {
+			//            if(this_new) {
+			//              layer.msg('请先保存流程图',{time: 1000})
+			//            } else {
+			//              window.location.href = 'stencilmanage.html';
+			//            }
+			//          };
+			//保存流程图
+			demo.onBtnSaveClick = function () {
+				var jsons = {};
+				jsons.jobId = jobid;
+				jsons.isTemplate = JSON.parse(template);
+				jsons.updateUser = this_updateUser;
+				jsons.versionId = this_versionId;
+				jsons.projectId = this_projectId;
+				jsons.dag = JSON.stringify(Export());
+				jsons.algorithm = $('.ele_alg').find('input').val();
+				jsons.companyId = this_companyId;
+				$.ajax({
+					type: "POST",
+					url: $url + '/api/job/v1/update',
+					dataType: "json",
+					contentType: "application/json",
+					data: JSON.stringify(jsons),
+					success: function (data) {
+						// console.log(data)
+						if (data.code == 0) {
+							this_new = false;
+							layer.msg('保存成功', { time: 1000 });
+							// setTimeout(function() {
+							//   location.reload();
+							// },2000)
+						} else {
+							layer.msg(data.message, { time: 1000 })
+						}
+					}, error: function (data) {
+						layer.msg(JSON.stringify(data))
+					}
+				})
+			};
+			//刷新流程图
+			demo.onFreshClick = function () {
+				location.reload();
+			};
+			//执行
+			demo.onBtnExecuteClick = function () {
+				$.ajax({
+					type: "POST",
+					url: $url + "/api/job/v1/execute",
+					dataType: "json",
+					contentType: "application/json",
+					data: JSON.stringify({
+						"id": jobid,
+						"versionId": this_versionId
+					}), success: function (data) {
+						// console.log(data);
+						if (data.code == 0) {
+							layer.msg("执行成功", { time: 1000 })
+						} else {
+							layer.msg(data.message, { time: 1000 })
+						}
+					},
+                    beforeSend:function(){
+                        layer.load(0, {shade:[0.1,'#000']}); //0代表加载的风格，支持0-2
+                    },
+                    complete:function(){
+                        layer.closeAll('loading'); //关闭信息框
+                    },
+					error: function (data) {
+						// console.log(JSON.stringify(data))
+					}
+				});
+			};
+			//另存为模板
+			demo.onBtnSaveCopyClick = function () {
+				$.ajax({
+					type: "POST",
+					url: $url + "/api/job/v1/saveAsTemplate",///xdbd-etl
+					dataType: "json",
+					contentType: "application/json",
+					data: JSON.stringify({
+						"jobId": jobid,
+						"versionId": this_versionId,
+						"dag": JSON.stringify(Export()),
+						"updateUser": this_updateUser
+					}), success: function (data) {
+						//              var data = data.data;
+						if (data.code == 0) {
+							layer.msg('模板保存成功', { time: 1000 });
+							setTimeout(function () {
+								window.location.href = 'stencilmanage.html';
+							}, 2000)
+						} else {
+							layer.msg(data.message, { time: 1000 })
+						}
+					}, error: function (data) {
+						console.log(JSON.stringify(data))
+					}
+				});
+			}
+		};
+		var out;
+		function Export() {
+			var port = {};
+			port.dag = demo.exportData();
+			port.dataSheet = this_data;
+			return port;
+		}
+		function add(this_) {
+			// console.log($(this_).parents(".archive"))
+			var td = '<input type="text"/>';
+			$(this_).parents(".archive").find('.son_archive').append(td)
+		}
+		function down(_this) {
+			if ($(_this).parents(".archive").find(".son_archive input").length > 1) {
+				$(_this).parents(".archive").find(".son_archive input").last().remove();
+			}
+		}
+		//属性详情展示遍历方法
+		function ergodic(arr, list) {
+			for (var i = 0; i < list.length; i++) {
+				arr.push(list[i].value)
+			}
+		}
+		function objArr(arr, names, values) {
+			for (var i = 0; i < names.length; i++) {
+				var object = {};
+				object.name = names[i].value;
+				arr.push(object)
+			}
+			for (var j = 0; j < values.length; j++) {
+				arr[j].value = values[j].value
+			}
+		};
+		//有限无环图
+		function init_dag() {
+			var demandId = {
+				"id": jobid,
+				"versionId": this_versionId
+			}
+			$.ajax({
+				type: "POST",
+				url: $url + "/api/job/v1/getById",
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify(demandId),
+				success: function (data) {
+					// console.log(data)
+					if (data.code == 0) {
+						this_remark = data.data.remark;
+						            //  console.log(this_remark)
+						$('.remark_value').html(this_remark);
+						var getDag = "";
+						if (data.data != '' && data.data != null && data.data.dag != null && data.data.dag != 'null') {
+							var dag = JSON.parse(data.data.dag);
+							var dags = JSON.parse(dag);
+							getDag = dags.dag;
+						}
+						showDag(getDag)
+					} else {
+						layer.msg(data.message, { time: 1000 })
+					}
+				}, error: function (data) {
+					console.log(data)
+				}
+			})
+		};
+		//模板任务
+		function fn_task() {
+			var version = {
+				versionId: this_versionId
+			};
+			$.ajax({
+				type: "POST",
+				url: "/xdbd-etl/api/action/v1/getActionList",
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify(version),
+				success: function (data) {
+					// console.log(data)
+					if (data.code == 0) {
+						var arr = [];
+						$.each(data.data, function (index, item) {
+							arr.push('<option value=' + item.actionId + '>' + item.name + '</option>');
+						});
+						$("#ele_genre").append(arr);
+					} else {
+						layer.msg(data.message, { time: 1000 })
+					}
+				}, error: function (data) {
+					layer.msg(JSON.stringify(data), { time: 1000 })
+				}
+			})
+		};
+		/* 单个属性读取 */
+		function init_type(id, type, fn) {
+			$.post($url + '/api/sysJobComp/v1/getByType', { ///xdbd-wf
+				'webComponentId': id,
+				'jobId': jobid,
+				'type': type
+			}, function (data) {
+				if (data.code == 0) {
+					if (data.data == null || typeof (data.data) == "string") {
+						this_actionComp = JSON.parse(data.data);
+					} else {
+						this_actionComp = JSON.parse(data.data.attValue);
+					}
+					//alert(JSON.stringify(this_actionComp))
+					fn();
+					//return this_actionComp;
+				} else {
+					layer.msg(data.message, { time: 1000 })
+				}
+			})
+		}
+		//      删除组件
+		function init_delec(arr) {
+			$.ajax({
+				type: "POST",
+				url: $url + "/api/jobComp/v1/deleteByIds",
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify({
+					"id": jobid,
+					"ids": [arr],
+					"versionId": this_versionId
+				}),
+				success: function (data) {
+					if (data.code == 0) {
+						layer.msg('删除成功', { time: 1000 })
+						delete this_data[arr];
+						//               alert(JSON.stringify(this_data))
+					} else {
+						layer.msg(data.message, { time: 1000 })
+					}
+				}, error: function (data) {
+					layer.msg(JSON.stringify(data), { time: 1000 })
+				}
+			})
+		}
+		//        保存单个组件
+		function fn_save(jsonStr) {
+			$.ajax({
+				type: "POST",
+				url: $url + '/api/jobComp/v1/save',///xdbd-etl
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify({
+					"webComponentId": this_actionCompId,
+					"name": this_actionCompName,
+					"jobId": jobid,
+					"sysJobCompId": 'comp0003',
+					"createUser": this_createUser,
+					"remark": '',
+					"versionId": this_versionId,
+					"attValue": JSON.stringify(jsonStr)
+				}), success: function (data) {
+					if (data.code === 0) {
+//						layer.msg('保存成功!', { time: 1000 });
+					}else {
+						layer.msg(data.message, { time: 1000 })
+					}
+				}, error: function (data) {
+					layer.msg(JSON.stringify(data), { time: 1000 })
+				}
+			});
+		}
 
-            //导入模板
-            $('.propertys').empty().load("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".html", function () {
-              init_type(id,obj.type,function(){
-                $.getScript("../plugin/webJobStream/" + this_actionCompType + "/" + this_actionCompType + ".js");
-              });
-            });
-          } else if (model == "area") {
-          }
-            return true;
-          }
-          ;
-          demo.onItemBlur = function (id, model) {
-            document.getElementById("propertyForm").reset();
-            return true;
-          };
-          //新建流程图
-//          demo.onBtnNewClick = function () {
-//            if(this_new) {
-//              layer.msg('请先保存流程图',{time: 1000})
-//            } else {
-//              window.location.href = 'stencilmanage.html';
-//            }
-//          };
-          //保存流程图
-          demo.onBtnSaveClick = function () {
-//            console.log(Export())
-            var jsons = {};
-            jsons.jobId = jobid;
-            jsons.isTemplate = JSON.parse(template);
-            jsons.updateUser = this_updateUser;
-            jsons.versionId = this_versionId;
-            jsons.projectId = this_projectId;
-            jsons.dag = JSON.stringify(Export());
-            jsons.algorithm = $('.ele_alg').find('input').val();
-            jsons.companyId = this_companyId;
-            $.ajax({
-              type: "POST",
-              url: $url + '/api/job/v1/update',
-              dataType: "json",
-              contentType: "application/json",
-              data: JSON.stringify(jsons),
-              success: function (data) {
-                console.log(data)
-                if (data.code == 0) {
-                  this_new = false;
-                  layer.msg('保存成功',{time: 1000});
-                  setTimeout(function() {
-                    location.reload();
-                  },2000)
-                } else {
-                  layer.msg(data.message,{time: 1000})
-                }
-              }, error: function (data) {
-                layer.msg(JSON.stringify(data))
-              }
-            })
-          };
-          //刷新流程图
-          demo.onFreshClick = function () {
-            location.reload();
-          };
-          //执行
-          demo.onBtnExecuteClick = function () {
-            $.ajax({
-              type: "POST",
-              url: $url + "/api/job/v1/execute",
-              dataType: "json",
-              contentType: "application/json",
-              data: JSON.stringify({
-                "id": jobid,
-                "versionId": this_versionId
-              }), success: function (data) {
-                console.log(data);
-                if (data.code == 0) {
-                  layer.msg("执行成功",{time: 1000})
-                } else {
-                  layer.msg(data.message,{time: 1000})
-                }
-              }, error: function (data) {
-                console.log(JSON.stringify(data))
-              }
-            });
-          };
-          //另存为模板
-          demo.onBtnSaveCopyClick = function () {
-            $.ajax({
-              type: "POST",
-              url: $url + "/api/job/v1/saveAsTemplate",///xdbd-etl
-              dataType: "json",
-              contentType: "application/json",
-              data: JSON.stringify({
-                "jobId": jobid,
-                "versionId": this_versionId,
-                "dag": JSON.stringify(Export()),
-                "updateUser": this_updateUser
-              }), success: function (data) {
-//              var data = data.data;
-                if (data.code == 0) {
-                  layer.msg('模板保存成功',{time: 1000});
-                  setTimeout(function() {
-                    window.location.href = 'stencilmanage.html';
-                  },2000)
-                } else {
-                  layer.msg(data.message,{time: 1000})
-                }
-              }, error: function (data) {
-                console.log(JSON.stringify(data))
-              }
-            });
-          }
-      };
-      var out;
-      function Export(){
-        var port = {};
-        port.dag = demo.exportData();
-        port.dataSheet = this_data;
-        return port;
-      }
-      function add(this_) {
-        console.log($(this_).parents(".archive"))
-        var td = '<input type="text"/>';
-        $(this_).parents(".archive").find('.son_archive').append(td)
-      }
-      function down(_this) {
-        if($(_this).parents(".archive").find(".son_archive input").length > 1) {
-          $(_this).parents(".archive").find(".son_archive input").last().remove();
-        }
-      }
-      //属性详情展示遍历方法
-      function ergodic(arr,list) {
-        for(var i=0;i<list.length;i++) {
-          arr.push(list[i].value)
-        }
-      }
-      function objArr(arr,names,values) {
-        for(var i=0;i<names.length;i++) {
-          var object = {};
-          object.name = names[i].value;
-          arr.push(object)
-        }
-        for(var j=0;j<values.length;j++) {
-          arr[j].value = values[j].value
-        }
-      };
-        //有限无环图
-      function init_dag() {
-        var demandId = {
-          "id": jobid,
-          "versionId": this_versionId
-        }
-        $.ajax({
-          type:"POST",
-          url:$url+"/api/job/v1/getById",
-          dataType:"json",
-          contentType:"application/json",
-          data:JSON.stringify(demandId),
-          success:function(data){
-            console.log(data)
-            if(data.code == 0) {
-              this_remark = data.data.remark;
-//              console.log(this_remark)
-              $('.remark_value').html(this_remark);
-              var getDag = "";
-              if(data.data != '' && data.data != null && data.data.dag != null && data.data.dag !='null') {
-                var dag = JSON.parse(data.data.dag);
-                var dags = JSON.parse(dag);
-                getDag = dags.dag;
-              }
-              showDag(getDag)
-            } else {
-              layer.msg(data.message,{time: 1000})
-            }
-          },error:function(data){
-            console.log(data)
-          }
-        })
-      };
-      //模板任务
-      function fn_task() {
-        var version = {
-          versionId:this_versionId
-        };
-        $.ajax({
-          type:"POST",
-          url:"/xdbd-etl/api/action/v1/getActionList",
-          dataType:"json",
-          contentType:"application/json",
-          data:JSON.stringify(version),
-          success:function(data){
-            console.log(data)
-            if(data.code == 0) {
-              var arr = [];
-              $.each(data.data,function(index,item) {
-                arr.push('<option value='+item.actionId+'>'+item.name+'</option>');
-              })
-              $("#ele_genre").append(arr);
-            } else {
-              layer.msg(data.message,{time: 1000})
-            }
-          },error:function(data){
-            layer.msg(JSON.stringify(data),{time: 1000})
-          }
-        })
-      };
-      /* 单个属性读取 */
-      function init_type(id,type,fn) {
-        $.post($url +'/api/sysJobComp/v1/getByType',{ ///xdbd-wf
-          'webComponentId':id,
-          'jobId':jobid,
-          'type': type
-        },function(data){
-          if(data.code == 0) {
-            if(data.data == null || typeof(data.data) == "string") {
-              this_actionComp = JSON.parse(data.data);
-            } else {
-              this_actionComp = JSON.parse(data.data.attValue);
-            }
-            //alert(JSON.stringify(this_actionComp))
-            fn();
-           //return this_actionComp;
-          } else {
-              layer.msg(data.message,{time: 1000})
-          }
-        })
-      }
-//      删除组件
-        function init_delec(arr) {
-          $.ajax({
-            type: "POST",
-            url: $url + "/api/jobComp/v1/deleteByIds",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({
-              "id": jobid,
-              "ids": [arr],
-              "versionId": this_versionId
-            }),
-            success: function (data) {
-              if(data.code == 0) {
-                layer.msg('删除成功',{time: 1000})
-                delete this_data[arr];
-//               alert(JSON.stringify(this_data))
-              } else {
-                  layer.msg(data.message,{time: 1000})
-              }
-            }, error: function (data) {
-              layer.msg(JSON.stringify(data),{time: 1000})
-            }
-          })
-        }
-//        保存单个组件
-        function fn_save(jsonStr) {
-          $.ajax({
-            type:"POST",
-            url:$url+'/api/jobComp/v1/save',///xdbd-etl
-            dataType:"json",
-            contentType:"application/json",
-            data:JSON.stringify({
-              "webComponentId": this_actionCompId,
-              "name":this_actionCompName,
-              "jobId":jobid,
-              "sysJobCompId":'comp0003',
-              "createUser": this_createUser,
-              "remark":'',
-              "versionId": this_versionId,
-              "attValue":JSON.stringify(jsonStr)
-            }),success:function(data){
-              if(data.code == 0) {
-                layer.msg('保存成功!',{time: 1000});
-              } else {
-                layer.msg(data.message,{time: 1000})
-              }
-            },error:function(data){
-              layer.msg(JSON.stringify(data),{time: 1000})
-            }
-          });
-        }
+		//算法参数
+		function fn_algorithm() {
+			$.ajax({
+				type: "POST",
+				url: $url + '/api/algorithm/v1/getAll.json',///xdbd-etl
+				dataType: "json",
+				contentType: "application/json"
+				, success: function (data) {
+					if (data.code == 0) {
+						// console.log(data)
+						var alg = [];
+						$.each(data.data, function (index, item) {
+							alg.push('<option value=' + item.id + '>' + item.name + '</option>');
+							var obj = {};
+							obj.id = item.id;
+							obj.remark = item.remarkName;
+							var param = {};
+							param.id = item.id;
+							param.algParam = JSON.parse(item.algParam);
+							var en_name = {};
+							en_name.id = item.id;
+							en_name.enName = item.enName;
+							this_remarkName.push(obj);
+							this_algParam.push(param);
+							this_enName.push(en_name);
+						})
+						$("#ele_arithmetic").append(alg);
+					} else {
+						layer.msg(data.message, { time: 1000 })
+					}
+				}, error: function (data) {
+					layer.msg(JSON.stringify(data), { time: 1000 })
+				}
+			});
+		}
 
-        //算法参数
-        function fn_algorithm() {
-          $.ajax({
-            type:"POST",
-            url:$url+'/api/algorithm/v1/getAll.json',///xdbd-etl
-            dataType:"json",
-            contentType:"application/json"
-            ,success:function(data){
-              if(data.code == 0) {
-                console.log(data)
-                var alg = [];
-                $.each(data.data,function(index,item) {
-                  alg.push('<option value='+item.id+'>'+item.name+'</option>');
-                  var obj = {};
-                  obj.id = item.id;
-                  obj.remark = item.remarkName;
-                  var param = {};
-                  param.id = item.id;
-                  param.algParam = JSON.parse(item.algParam);
-                  var en_name = {};
-                  en_name.id = item.id;
-                  en_name.enName = item.enName;
-                  this_remarkName.push(obj);
-                  this_algParam.push(param);
-                  this_enName.push(en_name);
-                })
-                $("#ele_arithmetic").append(alg);
-              } else {
-                layer.msg(data.message,{time: 1000})
-              }
-            },error:function(data){
-              layer.msg(JSON.stringify(data),{time: 1000})
-            }
-          });
-        }
-
-    </script>
+	</script>
 </head>
+
 <body>
-<div id="demo" style="float:left"></div>
-<form class="myForm" id="propertyForm">
-    <div class="form_title">属性设置</div>
-    <div class="propertys"></div>
-</form>
-<div class="remarks">
-    <label class="remark_key">任务备注</label>
-    <span class="remark_value"></span>
-</div>
+	<div id="demo" style="float:left"></div>
+	<form class="myForm" id="propertyForm">
+		<div class="form_title">属性设置</div>
+		<div class="propertys"></div>
+	</form>
+	<div class="remarks">
+		<label class="remark_key">任务备注</label>
+		<span class="remark_value"></span>
+	</div>
 </body>
+
 </html>

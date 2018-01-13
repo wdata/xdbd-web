@@ -30,7 +30,7 @@ function getTemplateList(name, type) {
 				itemId = data.data;
 				$.each(data.data, function (index, item) {
 					//graphDiagram.push(item.actionId+','+item.dag);
-					arr.push('<dl class="new_demand" onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandsBtn(this)" data-id=' + item.actionId + ' id=' + item.versionId + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span> <div class="demand_remark">'+item.remark+'</div></dd> </dl>')
+					arr.push('<dl class="new_demand" onmouseout="outBtn(this)" onmouseover="overBtn(this)" onclick="demandsBtn(this)" data-id=' + item.actionId + ' id=' + item.versionId + '> <dt><div id="demand_delete" class=' + item.versionId + ' onclick="deletesBtn(this)">X</div><img src="../images/wendang_moren.png"></dt> <dd> <p>' + item.name + '</p> <span>' + item.remark + '</span><div class="demand_remark">'+item.remark+'</div></dd> </dl>')
 				})
 				$("#demand_list").html(arr);
 			}
@@ -57,7 +57,7 @@ function outBtn(_this) {
 function deletesBtn(_this) {
 	event.cancelBubble = true; // 当前点击不影响父级点击事件
 	var parans = {
-		actionId: $(_this).parents(".new_demand").attr("id"),
+		actionId: $(_this).parents(".new_demand").attr("data-id"),
 		versionId: this_versionId
 	};
 	layer.confirm('是否要删除当前模板？', {
@@ -88,6 +88,7 @@ function demandsBtn(_this) {
 	localStorage.setItem('directoryId', currentActionId);
 	localStorage.setItem('templateVersionId', currentVersionId);
 	window.location.href = 'flowChart.html';
+	// parent.location.reload();
 }
 //新建ETL模板
 function newEtlBtn() {
