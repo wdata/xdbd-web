@@ -12,7 +12,7 @@ $(function(){
 	var $url2 = "/xdbd-etl";
 	var $url3 = "/xdbd-pm";
 	var $url4 = "/xdbd-wf";
-	var $urlPublic = "http://192.168.1.43:8086";//公共页面
+	var $url = "http://192.168.1.43:8086";//公共页面
 	
 	/*
 	 
@@ -43,14 +43,17 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	//延迟调用：
+	
+	userRight();
+	/*//延迟调用：
 	var winTimer = window.setInterval(function(){
 		if(sessionStorage.getItem("userId")){
 			userRight();
 			window.clearInterval(winTimer);
 			winTimer = null;
 		}
-	},20);
+	},20);*/
+
 	let onCurEnv = sessionStorage.setItem("onEnv","");
 	function userRight(){
 		$.ajax({
@@ -108,25 +111,6 @@ $(function(){
               			`;
               		});
               		$(".sys-menus").empty().append(htmlSys);
-					//监控中心
-					var menuMonitoring = menuLv1[2].childrens;
-					var htmlMonitoring = "";
-					var isCN = location.hostname.indexOf('.cn');
-					var url = '';
-					$.each(menuMonitoring, function(i,v) {
-						if(isCN==-1){//非 .cn 域名
-							url = v.remark.replace(/\.cn\:/,'.ai:');
-						}else {
-							url = v.remark.replace(/\.ai:/,'.cn:');
-						}
-						htmlMonitoring += `
-              				<li class="${i==0?'active':''}" url="${url}"><a href="javascript:;">${v.name}</a></li>
-              			`;
-						if(i==0){
-							$("#iframepage3").attr("src",url);
-						}
-					});
-					$(".htmlMonitoring-menus").empty().append(htmlMonitoring);
               		
 	            }
 			},
@@ -180,35 +164,28 @@ $(function(){
 		let name = $(this).find("a").text();
 		switch(name){
 			case "个人信息":
-				url = $urlPublic+"/page/person/person.html";
+				url = $url+"/page/person/person.html";
 			break;
 			case "组织管理":
-				url = $urlPublic+"/page/org_control/org_control.html";
+				url = $url+"/page/org_control/org_control.html";
 			break;
 			case "账号管理":
-				url = $urlPublic+"/page/account/account.html";
+				url = $url+"/page/account/account.html";
 			break;
 			case "角色管理":
-				url = $urlPublic+"/page/character/character.html";
+				url = $url+"/page/character/character.html";
 			break;
 			case "日志管理":
 				url = "html/loglist.html";
 			break;
 			case "企业中心":
-				url = $urlPublic+"/page/org_control/not_org.html";
+				url = $url+"/page/org_control/not_org.html";
 			break;
 			default:
 		}
 		$("#iframepage2").attr("src",url);
-	});
-	/**
-	 * 监控页面*/
-	$(".htmlMonitoring-menus").delegate("li","click",function(){
-		$(this).addClass("active").siblings().removeClass("active");
-		var url = $(this).attr('url');
-		$("#iframepage3").attr("src",url);
-	});
-
+	})
+	
 	
 	/*
 	 
@@ -323,7 +300,7 @@ $(function(){
                     "actionId":directoryId
                 }),
                 success:function(res){
-                    console.log(res);
+                    // console.log(res);
                     if(res.code===0){
 						var data = res.data;
 						var $etlbox = $(".newEtlFile");
@@ -333,6 +310,7 @@ $(function(){
                         $etlbox.find(".new_type").val(data.businessType);
                         $etlbox.find(".new_describe").val(data.remark);
 
+                        editFile.getEtlDataSource(projectId,versionId,data.dsId);
                     }
                 },
                 error:function(err){
@@ -340,7 +318,7 @@ $(function(){
                 }
             });
 		},
-        getEtlDataSource:function(projectId,versionId){
+        getEtlDataSource:function(projectId,versionId,dsId){
             $.ajax({
                 type: "POST",
                 url: $url2 + "/api/datasource/v1/getDataSourceList",  ///xdbd-etl
@@ -351,14 +329,15 @@ $(function(){
                     versionId:versionId
                 }),
                 success: function (res) {
-                    console.log(res);
+                    // console.log(res);
                     if (res.code === 0) {
                         var data = res.data;
                         var html = '';
                         if(data.length){
                             $.each(data, function (i,v) {
-                                html += `<option value="${i.dsId}">${v.name}</option>`
-                            })
+                                const select = dsId===this.dsId?"selected":"";
+                                html += `<option ${ select } value="${v.dsId}">${v.name}</option>`
+                            });
                             $(".newEtlFile .new_ds").html(html);
                         }else{
                             layer.msg("请先添加数据源!", {icon: 0});
@@ -380,7 +359,7 @@ $(function(){
                 contentType: "application/json",
                 data:JSON.stringify({
                     "isTemplate":false,					//是否为模板
-                    "dsId":"",
+                    "dsId":$(".newEtlFile .new_ds").val(),   // 数据源id
                     "companyId":companyId,
                     "projectId":projectId,
                     "templateVersionId":"",							//模板版本ID
@@ -432,10 +411,10 @@ $(function(){
                 }
             });
 		},
-        modifyZylFileInfo:function(directoryId,name,remark,businessType){
+        modifyZylFileInfo:function(directoryId,versionId,name,remark,businessType){
             $.ajax({
                 type:'POST',
-                url:$url4+'/api/job/v1/save',
+                url:$url4+'/api/job/v1/modify',
                 headers:{
                     username:sessionStorage.getItem("ByuserName"),userId:sessionStorage.getItem("userId")
                 },
@@ -446,7 +425,8 @@ $(function(){
                     "name":name,
                     "updateUser":sessionStorage.getItem("userId"),
                     "remark":remark,
-                    "businessType":businessType
+					"businessType":businessType,
+					'versionId':versionId
                 }),
                 success:function(res){
                     console.log(res);
@@ -510,8 +490,8 @@ $(function(){
                         layer.msg(res.message, {icon: 6});
                         getProjName(0);//刷新项目树
                     }else if(res.code===403){
-                        layer.msg('该名称已存在！', {icon: 5});
-                    }
+						layer.msg('该名称已存在！', {icon: 5});
+					}
                 },
                 error:function(err){
                     console.log(err);
@@ -522,7 +502,6 @@ $(function(){
 
 	function newEtlFile(){
 		//getEtlFileInfo
-        editFile.getEtlDataSource(projectId,versionId);
         editFile.getNewEtlFileInfo(versionId,directoryId);
         var index = layer.open({
             type: 1,
@@ -580,7 +559,7 @@ $(function(){
                 }else if(!$.trim(remark)){
                     layer.msg("作业流描述不能为空", {icon: 0});
                 }else{
-                    editFile.modifyZylFileInfo(directoryId,name,remark,businessType);
+                    editFile.modifyZylFileInfo(directoryId,versionId,name,remark,businessType);
                     layer.close(index);
                 }
             },
@@ -594,6 +573,7 @@ $(function(){
 	}
     function newBiFile(){
         //getBiFileInfo
+        $(".newBiFile .new_type").html(industryType())
         editFile.getNewBiFileInfo(projectId,versionId,directoryId);
         var index = layer.open({
             type: 1,
@@ -626,7 +606,6 @@ $(function(){
             }
         });
     }
-
 	function getRootNode(_this,node){//获取根节点的directoryId
 		var n = _this.treeview('getParent',node);
 		if(n.directoryId){
@@ -635,7 +614,6 @@ $(function(){
 			localStorage.setItem("lv1DirId",node.directoryId);
 		}
 	}
-
 	function showTree(treeviewData){
         $tree = $('#treeview5').treeview({
             color: "#878D99",
@@ -648,11 +626,10 @@ $(function(){
             selectedBackColor: "#578fe6",
             onNodeSelected:function(event,node){
 				getRootNode($(this),node);//寻找根节点
-				console.log(localStorage.getItem("lv1DirId"));
-
                 curNodeId = node.nodeId;
                 sessionStorage.setItem("curNodeId",curNodeId);
-				//父级ID：
+
+				//父级ID
 				pageFlowId = $(this).treeview('getParent',node).directoryId;
 				localStorage.setItem("pageFlowId",pageFlowId);
 
@@ -687,7 +664,6 @@ $(function(){
                     currentNode.tags=['1'];
                 }
 
-                console.log("1="+dirType);
                 //new
 				switch(dirType){
 					case "14":
@@ -811,8 +787,8 @@ $(function(){
                         $("#iframepage1").attr("src","html/flowChart.html?directoryId="+directoryId);//etl页面
                         break;
                     case "13":
-                        items = items6;
-                        $("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
+						items = items6;
+						$("#iframepage1").attr("src","html/etlChart.html?directoryId="+directoryId);//作业流页面
                         break;
                     case "15":
                     case "14":
@@ -856,7 +832,6 @@ $(function(){
             basicContext.show(items,e);
         }
         $("#treeview5").delegate(".badge","click",function(e){
-            console.log(items);
             onLeftKey(e);
             return false;
         });
@@ -873,9 +848,6 @@ $(function(){
             $tree.treeview('collapseAll', { silent: true });
         }
     }
-
-
-
 		    
 //	getProjName(0);
 	function getProjName(id){ 
@@ -892,7 +864,6 @@ $(function(){
 			},
 			success:function(res){
               	if(res.code===0){
-              		console.log(res);
               		treeviewData = res.data;
               		// localStorage.setItem("treeviewData",JSON.stringify(treeviewData));
                     showTree(treeviewData);
@@ -1308,7 +1279,6 @@ $(function(){
 					"oldVersionName":oldVersionName
 				},
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 	              		//切换版本成功之后,刷新项目树
 	              		getProjName(0);//刷新项目树
@@ -1347,7 +1317,6 @@ $(function(){
 			});
 		};
 			$('#import-file').on('change',function(e){
-    			//console.log(e.target.files[0])
     			confirmLeadingIn();
     			layer.closeAll()
     		})
@@ -1363,7 +1332,6 @@ $(function(){
 			    processData: false,
 			    contentType: false,
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						layer.msg("导入成功", {icon: 6});
 						getProjName(0);//刷新项目树
@@ -1498,7 +1466,6 @@ $(function(){
 			var curClickedDom = curTreeObj.getSelectedNodes();
 			directoryId = curTreeObj.getSelectedNodes()[0].directoryId;//目录id
 //			localStorage.setItem("directoryId",directoryId);
-			console.log("1=="+directoryId)
 		}
 		
 
@@ -1549,7 +1516,6 @@ $(function(){
 					"versionId":versionId
 				}),
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						var treeObj = $("#"+selectorId+"");
 						$.fn.zTree.init(treeObj, setting, res.data);
@@ -1584,7 +1550,6 @@ $(function(){
 					"directoryId":directoryId
 				},
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						//删除成功,刷新项目树
 						getProjName(0);
@@ -1597,6 +1562,7 @@ $(function(){
 				}
 			});
 		}
+
 		
 		//修改名称
 		function renameFile(directoryId,name){
@@ -1614,7 +1580,6 @@ $(function(){
 					"name":name
 				},
 				success:function(res){
-					console.log(res);
 	              	if(res.code===0){
 						//修改名称成功,刷新项目树
 						getProjName(0);
@@ -1646,7 +1611,6 @@ $(function(){
 					"versionId":versionId
 				}),
 				success:function(res){
-					console.log(res);
 					if(res.code===0){
 						var data = res.data;
 						var html = `
