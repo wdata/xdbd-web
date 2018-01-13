@@ -1,27 +1,25 @@
-/**
- * Created by qiangxl on 2017/11/6.
- */
-$(function() {
-  bind_saveJobStream();
-  setVal();
+setVal();
+bind_saveJobStream();
 
-  function bind_saveJobStream() {
-    $('.saveJobStream').click(function(){
-      fn_save(getVal());
-      this_data[this_actionCompId] = getVal();
-    });
-  }
+$('.saveJobStream').click(function () {
+    bind_saveJobStream();
+});
 
-  function getVal() {
-    var data = {};
-    data = {
-      "start": $('.start_name').val(),
-      "type": "start"
-    }
-    return data;
-  }
 
-  function setVal() {
-    $('.start_name').val(this_actionCompName);
-  }
-})
+function bind_saveJobStream() {
+    fn_save(getVal());
+    this_data[this_actionCompId] = getVal();
+}
+
+function getVal() {
+	var data = {};
+	data = {
+		"start": $('.start_name').val(),
+		"type": "start"
+	};
+	return data;
+}
+
+function setVal() {
+	$('.start_name').val(this_actionCompName);
+}
