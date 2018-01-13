@@ -438,9 +438,9 @@ li {
 }
 .m-html-mod.m-html-mod0 .mn-logobox {
 	width: 120px;
-	height: 40px;
-	left: 50px;
-	top: 20px;
+	height: 80px;
+	left: 30px;
+	top: 0;
 }
 .m-html-mod .mn-logobox>img {
 	height: 100%;
@@ -468,9 +468,9 @@ li {
 }
 .m-html-mod.m-html-mod1 .mn-logobox {
 	width: 120px;
-	height: 40px;
-	right: 120px;
-	top: 20px;
+	height: 80px;
+	right: 40px;
+	top: 0;
 }
 .m-html-mod.m-html-mod1 .mn-headtxt {
 	left: 30px;
@@ -497,9 +497,9 @@ li {
 }
 .m-html-mod.m-html-mod2 .mn-logobox {
 	width: 120px;
-	height: 40px;
-	left: 50px;
-	top: 20px;
+	height: 80px;
+	left: 30px;
+	top: 0;
 }
 .m-html-mod.m-html-mod2 .mn-headtxt {
 	right: 100px;
@@ -621,7 +621,7 @@ ul.ztree {
 	overflow-x: hidden;
 }
 .ztree li {line-height:30px;}
-.ztree li a {display:block;height:30px;padding-top: 0; padding-left: 10%;}
+.ztree li a {display:block;height:30px;padding-top: 0px; padding-left: 10%;}
 .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
 .ztree li a span.button.switch {visibility:hidden}
 .ztree.showIcon li a span.button.switch {visibility:visible}
