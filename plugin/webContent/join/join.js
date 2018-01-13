@@ -249,7 +249,7 @@ function bind_click_extractLessen() {
     $(document.body)
         .off('click', '.joinLessen')
         .on('click', '.joinLessen', function () {
-            if ($('.extractField').length < 2) {
+            if ($('#join .extractField').length < 2) {
                 layer.msg('最后一个提取条件不能删除')
             } else {
                 $(this).parents('.extractField').remove();

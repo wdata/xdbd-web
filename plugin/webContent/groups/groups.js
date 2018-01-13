@@ -51,8 +51,8 @@ function bind_click_saveActionComp() {
 }
 function bind_click_groupAdd() {
 	$(document.body)
-		.off('click', '.onAdd')
-		.on('click', '.onAdd', function () {
+		.off('click', '#groups .onAdd')
+		.on('click', '#groups .onAdd', function () {
             const groupField = groups.find(".group");
             if(!( groupField.length < groupField.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
@@ -77,9 +77,9 @@ function bind_click_groupLessen() {
 }
 function bind_click_extractAdd() {
 	$(document.body)
-		.off('click', '.extractAdd')
-		.on('click', '.extractAdd', function () {
-            const groupField = $('.groupField');
+		.off('click', '#groups .extractAdd')
+		.on('click', '#groups .extractAdd', function () {
+            const groupField = $('#groups .groupField');
             if(!( groupField.length < groupField.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
             // 获取第一个下拉框的代码

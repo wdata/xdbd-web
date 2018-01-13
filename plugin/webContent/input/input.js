@@ -98,9 +98,9 @@ function initFromTable() {
 
 function bind_click_add() {
     $(document.body)
-        .off('click', '.add')
-        .on('click', '.add', function () {
-            const extractField = $('.extractField');
+        .off('click', '#input .add')
+        .on('click', '#input .add', function () {
+            const extractField = $('#input .extractField');
             if(!( extractField.length < extractField.eq(0).find('.field option').length )){ layer.msg("不能增加了！"); return false;}
 
             // 获取第一个下拉框的代码
@@ -114,9 +114,10 @@ function bind_click_add() {
 
 function bind_click_lessen() {
     $(document.body)
-        .off('click', '.lessen')
-        .on('click', '.lessen', function () {
-            if ($('#input .extractField').length < 2) {
+        .off('click', '#input .lessen')
+        .on('click', '#input .lessen', function () {
+            var inputJudge = $('#input .extractField').length < 2;
+            if (inputJudge) {
                 layer.msg('最后一个提取条件不能删除');
             } else {
                 $(this).parents('.extractField').remove();
