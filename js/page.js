@@ -466,8 +466,11 @@ $(function(){
 		tip:function(){
 			$(".top-bar>img").on("mouseenter",function(){
 	            layer.tips($(this).attr('data-tip'), this,{
-	                tips: 3
-	            });
+					tips: [3,'#F2F2F2'],
+					skin:"biTips",
+					time:1000
+
+				});
 	        });
 		},
 		refresh:function(){

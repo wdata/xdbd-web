@@ -674,12 +674,14 @@ let operating = {
     // },
     // 移入提示
     moveLayer:function(){
-        $(".top-bar>img").on("mouseenter",function(){
+        $(" .top-bar>img , .chart-type-box img").on("mouseenter",function(){
             layer.tips($(this).attr('data-tip'),this,{
                 tips: [3,'#F2F2F2'],
                 skin:"biTips",
+                time:1000
             });
         });
+
     },
 // #6B6B6B
 };
