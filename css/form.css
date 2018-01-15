@@ -447,18 +447,18 @@ form p.error {
 	float: left;
 }
 .menu-top li+li {
-	margin-left: 20px;
+	margin-left: 16px;
 }
 .menu-top li a {
 	display: block;
-	width: 160px;
+	width: 140px;
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
 	font-size: 18px;
 	color: #FFFFFF;
 	background: url(../images/menubg.png) no-repeat;
-	background-size: 160px 40px;
+	background-size: 100% 40px;
 }
 .menu-top li.active a {
 	color:#578fe6;

@@ -12,7 +12,7 @@ $(function(){
 	 * parentId
 	 * */
 
-	
+	var createUser = sessionStorage.getItem('userId');
 	var topMenu = [];//顶部导航菜单
 	var topMenuId = sessionStorage.getItem("tId")||"";//topMenu--id
 	var reportMenuId;
@@ -57,16 +57,17 @@ $(function(){
 			}
 		}
 	    e.preventDefault()
-	})
+	});
 	
 	//样式--模板
 	$(".m-cont-box1 ul").on("click","li",function(e){
 		var $idx = $(this).index();
 		$(this).addClass("active").siblings().removeClass("active");
 		typeCode = $idx+1;
+		initTemp($idx);
 		$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+$idx);
 		e.preventDefault()
-	})
+	});
 	
 	//菜单--导航切换
 	$(".m-set-navs").on("click","a",function(e){
@@ -80,7 +81,7 @@ $(function(){
 	       	slidesPerView: 'auto'
 	    });
 		 e.preventDefault();
-	})
+	});
 	
 	//顶部菜单
 	$("#head-text-btn").click(function(e){
@@ -92,7 +93,7 @@ $(function(){
 			layer.msg("请输入顶部菜单内容", {icon: 5});
 		}
 		e.preventDefault();
-	})
+	});
 
 	function setHeadText(projectId,versionId,createUser,menuName){
 		$.ajax({
@@ -147,6 +148,7 @@ $(function(){
           				topMenu = data;
               		}else{
               			data = [];
+						return false;
               		}
               		
           			$.each(data, function(i,item) {
@@ -214,7 +216,7 @@ $(function(){
 		}else{
 			$(".top-reedit").hide();
 		}
-	})
+	});
 	function modifyTopMenuName(projectId,versionId,reportMenuId,menuName,updateUser){
 		$.ajax({
 			type:'PUT',
@@ -329,7 +331,7 @@ $(function(){
             layer.closeAll();
         });
 
-	})
+	});
 	//清空顶部菜单
 	function clearTopMenu(projectId,versionId,updateUser){
 		$.ajax({
@@ -497,7 +499,7 @@ $(function(){
 	      }
 	   });
 
-	})
+	});
 	
 	//点击头部菜单展示对应的左部菜单
 	$("#scroll-topmenu").delegate(".swiper-slide","click",function(e){
@@ -599,11 +601,14 @@ $(function(){
 						});
 						if(!previewPageId || previewPageId === "null" || previewPageId === "undefined" || bur){
                             sidebarZtree.find("li a:first").addClass("curSelectedNode positioning");
-                            previewPageId = zNodes[0].pageId;
-                            if(zNodes[0].pageId){
-                                pageData(zNodes[0].pageId);
-                                dirId = zNodes[0].pageId;
+							if(zNodes.length>0){
+								previewPageId = zNodes[0].pageId;
+								if(zNodes[0].pageId){
+									pageData(zNodes[0].pageId);
+									dirId = zNodes[0].pageId;
+								}
 							}
+
 						}
 					}
 	            }
@@ -651,14 +656,14 @@ $(function(){
 		var upOrDown = "7";
 		orderLeftMenu(projectId,versionId,reportMenuId,upOrDown,updateUser);
 		e.preventDefault();
-	})
+	});
 	
 	//下移
 	$(".le-down").click(function(e){
 		var upOrDown = "8";
 		orderLeftMenu(projectId,versionId,reportMenuId,upOrDown,updateUser);
 		e.preventDefault();
-	})
+	});
 	
 	
 	//排序左侧菜单
@@ -703,7 +708,7 @@ $(function(){
             layer.closeAll();
         });
 
-	})
+	});
 	//清空左部菜单
 	function clearLeftMenu(projectId,versionId,reportMenuId,menuType,updateUser){
 		$.ajax({
@@ -807,9 +812,9 @@ $(function(){
 		var zTree = $.fn.zTree.getZTreeObj("sidebar-tree");
 		var curDom = zTree.getSelectedNodes();
 		pageId = curDom[0].pageId;
-		if(previewBur){
+		// if(previewBur){
             previewPageId = curDom[0].pageId;
-		}
+		// }
 		if(pageId != null){//执行画图
             dirId = curDom[0].pageId;
 			pageData(pageId);
@@ -876,7 +881,7 @@ $(function(){
 			break;
 		}
 		e.preventDefault();
-	})
+	});
 	$("#ok-model").click(function(e){
 		var typeCode = $(".m-cont-box1 li.active").index()+1,
 			topWidth = $(".mtop-width").val(),
@@ -890,7 +895,7 @@ $(function(){
 			layer.msg("信息不能为空", {icon: 5});
 		}
 		e.preventDefault();
-	})
+	});
 	
 	function addModel(projectId,versionId,typeCode,topWidth,topHeight,leftWidth,leftHeight,navigationText,user){
 		$.ajax({
@@ -916,6 +921,7 @@ $(function(){
               		sessionStorage.setItem("tempTxt",navigationText);
               		$(".mnavigation-text").val("");
               		layer.msg(res.message, {icon: 6});
+					findTemp();
 	            }
 			},
 			error:function(err){
@@ -1210,8 +1216,9 @@ $(function(){
 	}
 	
 	//1.7 查询模板
-	findTemp(projectId,versionId);
-	function findTemp(projectId,versionId){
+	findTemp();
+	var tempData = '';
+	function findTemp(){
 		$.ajax({
 			type:"GET",
 			url:$url1+"/api/v1/findTemplateStyle",
@@ -1224,73 +1231,89 @@ $(function(){
 			},
 			success:function(res){
 				if(res.code===0&&res.data.length){
-					var data = res.data[0];
 					//console.log(data);
-					var logo,
-						leftHeight = data.leftHeight,
-						leftWidth = data.leftWidth,
-						navigationText = data.navigationText,
-						topHeight = data.topHeight,
-						topWidth = data.topWidth,
-						typeCode = parseInt(data.typeCode);
-						//存储
-						sessionStorage.setItem("leftHeight",leftHeight);
-						sessionStorage.setItem("leftWidth",leftWidth);
-						sessionStorage.setItem("topHeight",topHeight);
-						sessionStorage.setItem("topWidth",topWidth);
-						if(logo!==null&&logo!=="undefined"){
-							logo = data.logo;
-                            $(".m-uploadimg>img").attr("src",$url1+logo);
-                            $(".mn-logobox>img").attr("src",$url1+logo);
-							// sessionStorage.setItem("tempLogo",logo);
-						}else{
-                            $(".m-uploadimg>img").attr("src","../images/c_img.png");
-                            $(".mn-logobox>img").attr("src","../images/c_img.png");
-							// sessionStorage.setItem("tempLogo","");
-						}
-						// console.log(data);
-						if(navigationText!==undefined&&navigationText!==null){
-							$(".mn-headtxt").text(navigationText);
-							sessionStorage.setItem("tempTxt",navigationText);
-						}else{
-							$(".mn-headtxt").text("小道科技欢迎您!");
-							sessionStorage.setItem("tempTxt","");
-						}
-						if(logo!==undefined&&logo!==null&&logo!==""){
-							$(".mn-logobox>img").attr("src",$url1+logo);
-							$(".m-uploadimg>img").attr("src",$url1+logo);
-						}else{
-							$(".mn-logobox>img").attr("src","../images/mlogo.png");
-                            $(".m-uploadimg>img").attr("src","../images/c_img.png");
-						}
-						if(topWidth===null||topHeight===null||topWidth==="1920"&&topHeight==="60"){
-							$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
-							$(".mtop-width").val("1200").attr("readonly","readonly");
-							$(".mtop-height").val("60").attr("readonly","readonly");
-						}else{
-							$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
-							$(".mtop-width").val(topWidth).removeAttr("readonly");
-							$(".mtop-height").val(topHeight).removeAttr("readonly");
-						}
-						if(leftWidth===null||leftHeight===null||leftWidth==="240"&&leftHeight==="600"){
-							$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
-							$(".mleft-width").val("240").attr("readonly","readonly");
-							$(".mleft-height").val("600").attr("readonly","readonly");
-						}else{
-							$(".leftsize button").eq(1).addClass("active").siblings().removeClass("active");
-							$(".mleft-width").val(leftWidth).removeAttr("readonly");
-							$(".mleft-height").val(leftHeight).removeAttr("readonly");
-						}
-						// console.log(typeCode);
-						$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+(typeCode-1));
-						$(".m-cont-box1 ul li").eq(typeCode-1).addClass("active").siblings().removeClass("active");
-						
+					tempData = res.data;
+					if(tempData.length>0){
+						$.each(tempData,function(i,item){
+							if(item.activation){console.log(i);
+								initTemp(i);
+							}
+						});
+					}
 				}
 			},
 			error:function(res){
 				console.log(res);
 			}
 		});
+	}
+
+	function initTemp(i){
+		if(i>tempData.length){return false;}
+		var data = tempData[i];
+		var logo = data.logo,
+			leftHeight = data.leftHeight,
+			leftWidth = data.leftWidth,
+			navigationText = data.navigationText,
+			topHeight = data.topHeight,
+			topWidth = data.topWidth,
+			typeCode = parseInt(data.typeCode);
+		//存储
+		sessionStorage.setItem("leftHeight",leftHeight);
+		sessionStorage.setItem("leftWidth",leftWidth);
+		sessionStorage.setItem("topHeight",topHeight);
+		sessionStorage.setItem("topWidth",topWidth);
+
+		//顶部导航栏
+		if( topWidth || topHeight ){
+			if(topWidth==="1920"&&topHeight==="60"){
+				$(".topsize button").eq(0).addClass("active").siblings().removeClass("active");
+				$(".mtop-width").val("1920").attr("readonly","readonly");
+				$(".mtop-height").val("60").attr("readonly","readonly");
+			}else{
+				$(".topsize button").eq(1).addClass("active").siblings().removeClass("active");
+				$(".mtop-width").val(topWidth).removeAttr("readonly");
+				$(".mtop-height").val(topHeight).removeAttr("readonly");
+			}
+		}
+
+		//左侧导航栏
+		if( leftWidth || leftHeight){
+			if(leftWidth==='240'&&leftHeight==='600'){
+				$(".leftsize button").eq(0).addClass("active").siblings().removeClass("active");
+				$(".mleft-width").val("240").attr("readonly","readonly");
+				$(".mleft-height").val("600").attr("readonly","readonly");
+			}else {
+				$(".leftsize button").eq(1).addClass("active").siblings().removeClass("active");
+				$(".mleft-width").val(leftWidth).removeAttr("readonly");
+				$(".mleft-height").val(leftHeight).removeAttr("readonly");
+			}
+		}
+
+		//Logo
+		if(logo!==null&&logo!=="undefined"&&logo!==''){
+			$(".m-uploadimg>img").attr("src",$url1+logo);
+			$(".mn-logobox>img").attr("src",$url1+logo);
+			// sessionStorage.setItem("tempLogo",logo);
+		}else{
+			$(".m-uploadimg>img").attr("src","../images/c_img.png");
+			$(".mn-logobox>img").attr("src","../images/c_img.png");
+			// sessionStorage.setItem("tempLogo","");
+		}
+		//导航栏添加文本
+		if(navigationText!==undefined&&navigationText!==null&&navigationText!==''){
+			$(".mn-headtxt").text(navigationText);
+			$('input.mnavigation-text').val(navigationText);
+			sessionStorage.setItem("tempTxt",navigationText);
+		}else{
+			$(".mn-headtxt").text("深脑科技欢迎您!");
+			$('input.mnavigation-text').val("深脑科技欢迎您!");
+			sessionStorage.setItem("tempTxt","深脑科技欢迎您");
+		}
+
+		$(".m-html-mod-box>div").attr("class","m-html-mod m-html-mod"+(typeCode-1));
+		$(".m-cont-box1 ul li").eq(typeCode-1).addClass("active").siblings().removeClass("active");
+
 	}
 	
 	
@@ -1299,13 +1322,15 @@ $(function(){
 		var url  = "?username="+ username +"&userId="+ userId +"&pageId="+ dirId +"&projectId="+ projectId +"&versionId="+ versionId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId ;
     	window.open("../html/preview.html" + url);
     	e.preventDefault();
-	})
+	});
 	
 	//页面跳转
 	$(".mn-htmlmain").delegate(".resize-item","click",function(e){
-		var linkPageId = $(this).attr("linkpageid");
-		if(linkPageId){
-			window.open("../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId );
+		const linkPageId = $(this).attr("linkpageid");
+		console.log(linkPageId);
+		if(linkPageId && linkPageId !== "null" && linkPageId !== "undefined"){
+			// window.location.href = "../html/preview.html?projectId="+projectId+"&versionId="+versionId+"&userId="+userId+"&pageId="+linkPageId  +"&previewReportMenuId="+ previewReportMenuId +"&previewPageId="+ previewPageId;
+            pageData(linkPageId);
 		}
 		e.preventDefault();
 	});
@@ -1335,7 +1360,7 @@ $(function(){
 	//刷新
 	$("#page-fresh").click(function(){
 		todo.refresh();
-	})
+	});
 
 	//add topMenu scroll[length:6]
     // var ull = document.getElementById("setAllTop");
@@ -1344,10 +1369,10 @@ $(function(){
     var oYou = document.querySelector(".you1");
     oZuo.onclick = function () {
         zuo1();
-    }
+    };
     oYou.onclick = function () {
         you1();
-    }
+    };
     function you1() {
         var ull =document.getElementById("setAllTop");
         var lii = ull.getElementsByTagName("li");
