@@ -20,7 +20,6 @@ function GooFlow(bgDiv,property){
 	}
 	var width=(property.width||800);
 	var height=(property.height||500);
-	var this_jobName = localStorage.getItem("jobName");
 	this.$bgDiv.css({width:width+"px",height:height+"px"});
 	this.$tool=null;//左侧工具栏对象
 	this.$head=null;//顶部标签及工具栏按钮
