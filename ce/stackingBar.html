@@ -69,7 +69,7 @@
             detailAll = queryJson.detail[0],                         // 全部属性 - 细分
             labelAll = queryJson.label[0];                           // 全部属性 - 标签
 
-        const maxData = d3.max(xTitle.map(function(d){ let db = 0;total.reoords.filter(function(d1){ if( d1[dimension.field] === d){ db += d1[measure.field]; }});return db;}))*11/10;  // 最大值重新修改
+        const maxData = d3.max(xTitle.map(function(d){ let db = 0;total.records.filter(function(d1){ if( d1[dimension.field] === d){ db += d1[measure.field]; }});return db;}))*11/10;  // 最大值重新修改
         const legendData = chartLegendData(el,total,CStyle);                // 获取图例创建后的数据
 
         /*
@@ -127,7 +127,7 @@
         *  
         * */
         let finalData = dimValues[dimension.fieldId].map(function(x){
-            let db = total.reoords.filter(function(d){
+            let db = total.records.filter(function(d){
                 if(d[dimension.field] === x){
                     return d;
                 }

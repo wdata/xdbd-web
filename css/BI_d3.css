@@ -357,3 +357,8 @@ table th,table td{
 
 /*  图例 -- 结束   */
 
+/*  圆饼图 -- 开始 */
+.path-text-roundCake{
+    fill: none;
+}
+/*  圆饼图 -- 结束 */
