@@ -1871,37 +1871,6 @@ $(function(){
 
     //获取BI Set列表接口
     getBiSet(projectId);
-    function getBiSet(projectId){
-        $.ajax({
-            type:'get',
-            url:$url1 + '/bi/report/v1/biset/list.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "dbType":"0",
-            },
-            success:function(res){
-                if(res.code===0){
-                    if(res.message && res.data.length >0){
-                        let data = res.data,
-                            html = '+';
-                        $.each(data,function(i,item){
-                            html += `
-						<option value="${item.biSetName}" biSetId="${item.biSetId}">${item.biSetName}</option>
-              			`;
-                        });
-                        $(".data-source-box select").empty().append(html);
-                        getBiDataModel();
-                    }
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
     $(".data-source-box select").change(function(){
         getBiDataModel();
     });
@@ -2871,3 +2840,36 @@ var duplexContenteditable = new function() {
         }
     }
 };
+
+
+function getBiSet(projectId,orgBiSetId){
+    $.ajax({
+        type:'get',
+        url:$url1 + '/bi/report/v1/biset/list.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "dbType":"0",
+        },
+        success:function(res){
+            if(res.code===0){
+                if(res.message && res.data.length >0){
+                    let data = res.data,
+                        html = '+',
+                        biSetId = '';
+                    $.each(data,function(i,item){
+                        html += `<option value="${item.biSetName}" ${ (orgBiSetId && item.biSetId === orgBiSetId)?"selected":"" } biSetId="${item.biSetId}">${item.biSetName}</option>`;
+                    });
+                    $(".data-source-box select").empty().append(html);
+                    biSetId = $(".data-source-box select option:selected").attr("biSetId");
+                    getBiDataModel(biSetId);
+                }
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
