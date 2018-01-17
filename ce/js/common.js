@@ -275,6 +275,8 @@ function chartLegend(elemt,data,CStyle){
         case 2:position = "bottom";row = "row";break;
         case 3:position = "left";break;
     }
+    // 计算整个元素长度 数据长度 + 颜色块长度 + margin-right
+    const length = d3.sum(legendsData.map(function(d){ return (d.length) * size + htmlSize * .5 + htmlSize * .8  }));
     // 根据颜色编译成循环色
     var o = d3.scale.ordinal()
         .domain(colorDomain)
@@ -294,8 +296,6 @@ function chartLegend(elemt,data,CStyle){
 
         // 计算字符串的长度平均值
         const mean = d3.mean(legendsData.map(function(d){ return d.length }));
-        // 计算整个元素长度 数据长度 + 颜色块长度 + margin-right
-        const length = d3.sum(legendsData.map(function(d){ return (d.length) * size + htmlSize * .5 + htmlSize * .8  }));
         // 添加最外层div，输入数据
         const legends = ele.append("div")
             .attr("class","legend-list")
@@ -510,5 +510,16 @@ function calculate(text,fontSize,fontFamily){
     }
     result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
     result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
+    return result;
+}
+
+
+// 切割数组
+function split_array(arr, len) {
+    const a_len = arr.length;
+    let result = [];
+    for (let i = 0; i < a_len; i += len) {
+        result.push(arr.slice(i, i + len));
+    }
     return result;
 }

@@ -36,8 +36,8 @@
         var cs = new chartStyle("#chartDFAB2A73",CStyle);
         cs.title();
         cs.background();
-        chartLegend("#chartDFAB2A73",roundCake3,CStyle);
-        pieChart("#chartDFAB2A73",roundCake3,CStyle);
+        chartLegend("#chartDFAB2A73",roundCake4,CStyle);
+        pieChart("#chartDFAB2A73",roundCake4,CStyle);
 //        cs.reset();
     });
 
@@ -91,12 +91,21 @@
             .startAngle([0]); //值访问器
 
         // 文字位置，不以数据大小作为位置
-        const pieDataText = d3.layout.pie() //创建饼状图
-            .value(function(){ return 1; });
+        // 右侧区域
+        const pieDataTextRight = d3.layout.pie() //创建饼状图
+            .value(function () {   return 1;   })
+            .startAngle(.1)
+            .endAngle(3)
+//            .padAngle(0);
+        // 左侧区域
+        const pieDataTextLeft = d3.layout.pie() //创建饼状图
+            .value(function () {   return 1;   })
+            .startAngle(3.4)
+            .endAngle(6.1);
 
 
         //绘制
-        const outerRadius = d3.min([widthO,height0])/2;
+        const outerRadius = d3.min([widthO,height0])/2 * .8;
         const innerRadius = 0; //内半径和外半径
         const sizeMeaMaxMin = total.meaMaxMin[sizeAll.fieldId];
         // 根据尺寸变化的线性比例尺
@@ -119,19 +128,23 @@
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
 
+        // 文字间距
+        const textLength = function(d){
+            return [ arcText.centroid(d)[0] * 2.5, arcText.centroid(d)[1] * 2.5 ];
+        };
+
         // 显示文字线条
         const line = d3.svg.line()
             .x(function(d){ return d[0] })
             .y(function(d){ return d[1] })
-            .interpolate('linear');
-
+            .interpolate('bundle');
 
         const div = d3.select(id).append("div")
             .attr("class","message");
-
+        console.log(total.records);
         //添加对应数目的弧组
         const arcs = svg.selectAll("g")
-            .data(pieData(total.reoords))
+            .data(pieData(total.records))
             .enter()
             .append("g")
             .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")");
@@ -206,7 +219,7 @@
                     $(id + " .areaBlock").attr("class","areaBlock");
                     $(id + " .areaBlock[status=1]").each(function(){
                         const index = $(this).parent().index();
-                        clickEffect(this,false,pieData(total.reoords)[index]);
+                        clickEffect(this,false,pieData(total.records)[index]);
                     });
                     $(id + " .areaBlock").attr("status",0);
                     $(el + " p span").removeClass("opacity");
@@ -224,7 +237,7 @@
                     if (this === pClick) {
                         $(id + " .areaBlock[status=1]").each(function(){
                             const index = $(this).parent().index();
-                            clickEffect(this,false,pieData(total.reoords)[index]);
+                            clickEffect(this,false,pieData(total.records)[index]);
                             $(this).attr("status",0);
                         });
                         pClick = null;
@@ -232,10 +245,10 @@
                         $(id + " .areaBlock").each(function(){
                             const index = $(this).parent().index();
                             if($(this).attr('data-id') === text){
-                                clickEffect(this,true,pieData(total.reoords)[index]);
+                                clickEffect(this,true,pieData(total.records)[index]);
                                 $(this).attr("status",1);
                             }else if($(this).attr("status") === "1"){
-                                clickEffect(this,false,pieData(total.reoords)[index]);
+                                clickEffect(this,false,pieData(total.records)[index]);
                                 $(this).attr("status",0);
                             }
                         });
@@ -267,49 +280,91 @@
             }
         }
 
-        //添加弧内的文字
-        svg
-            .append("g")
-            .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")")
-            .selectAll("text")
-            .data(pieDataText(total.reoords))
-            .enter()
-            .append("text")
-            .style('color',CStyle.label.color)
-            .style("font-size",CStyle.label.size)
-            .attr("transform", function (d) {
-                const x = arcText.centroid(d)[0] * 1.9; //文字的x坐标
-                const y = arcText.centroid(d)[1] * 1.9;
-                return "translate(" + x + "," + y + ")";
-            })
-            .attr("text-anchor", "middle")
-            .text(function (d) {
+        // 将数组按照 图表高度，分成相应的等分，并取每个等分的最大值
+        const totalRecordsLength = total.records.length,
+            equalPoints = 48,   // 分成多少等分
+            equalPointsLength = totalRecordsLength / equalPoints, // 每个等分的长度
+            tREP = split_array(total.records,equalPointsLength);
+        // 获取每个等分中的最大值，并组成一个数组
+        const totalREPMax = tREP.map(function(d){
+            const dLength = d.length;
+            let forMax = null,
+                max = null;
+            for(let i = 0; i < dLength; i++) {
+                if(d[i][angleAll.fieldId] > forMax) {
+                    forMax = d[i][angleAll.fieldId];
+                    max = d[i];
+                }
+            }
+            return max;
+        });
+
+        textPath(pieDataTextRight(split_array(totalREPMax,totalREPMax.length/2)[0]));   // 右侧数据
+        textPath(pieDataTextLeft(split_array(totalREPMax,totalREPMax.length/2)[1]));   // 左侧数据
+
+
+        function textPath(data){
+            //添加弧内的文字
+            const textG = svg.append("g")
+                .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")")
+                .selectAll("text")
+                .data(data)
+                .enter();
+
+            textG.append("text")
+                .style('color',CStyle.label.color)
+                .style("font-size",CStyle.label.size)
+                .attr("transform", function (d) {
+                    return "translate(" + textLength(d) + ")";
+                })
+                .style("text-anchor","middle")
+                .style("text-anchor",function(d){
+                    if(labelAll){
+                        const x = textLength(d)[0];
+                        if( x >= 0 ){
+                            return "unset";
+                        }else{
+                            return "end";
+                        }
+                    }
+                })
+                .text(function (d) {
 //                //计算市场份额的百分比
-//                var percent = Number(d.value) / d3.sum(total.reoords, function (d) {
+//                var percent = Number(d.value) / d3.sum(total.records, function (d) {
 //                    return d[angleAll.fieldId];
 //                }) * 100;
 //                //保留一位小数点 末尾加一个百分号返回
 //                return percent.toFixed(1) + "%";
 //                console.log(calculate(d.data[colourAll.fieldId]),$(this).css("font-size"),$(this).css("font-family"));
-                if(labelAll){
-                    return d.data[labelAll.fieldId];
-                }
-            });
+                    if(labelAll){
+                        return d.data[labelAll.fieldId];
+                    }
+                });
 //        const dt = pieDataText();
 
-        // 添加文字连接曲线
-        arcs.append("path")
-            .attr("class","path-text")
-            .attr("d",function(d,i){
-                let l = [];
-                l.push([0,0]);
-                l.push(arc.centroid(d));
-                l.push([arcText.centroid(pieDataText(total.reoords)[i])[0]*1.6,arcText.centroid(pieDataText(total.reoords)[i])[1]*1.6]);
-                console.log(l);
-                return line(l);
-            })
-            .attr("stroke",CStyle.label.color)
+            /*
+            *  添加文字连接曲线：
+            *  */
+            textG.append("path")
+                .attr("class","path-text-roundCake")
+                .style("stroke",function(d){ if(colourAll){ return o(d.data[colourAll.fieldId]); }else{return defaultColor;}})
+                .attr("d",function(d,i){
+                    let L = [];
+                    const rawData = d.data;
+                    console.log(pieData(total.records));
+                    const
+                        conterPoint = arc.centroid(d),
+                        start = [conterPoint.map(function(d){ return d * 2 })],
+                        middle = [conterPoint.map(function(d){ return d * 2 })],
+//                    middle = [arcText.centroid(d)[0] * 1.1,arcText.centroid(d)[1] * 1.1],
+                        end = [textLength(data[i])];
 
+
+                    L = L.concat(start,middle,end);
+                    return line(L);
+                })
+                .attr("stroke",CStyle.label.color);
+        }
     }
 
 </script>

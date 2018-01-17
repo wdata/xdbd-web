@@ -215,7 +215,7 @@
 
         const g = svg.append("g")
             .selectAll("g")
-            .data(total.reoords)
+            .data(total.records)
             .enter()
             .append("g")
             .attr("transform", function(d) { if(axisAorY){ return "translate(" + xc(d[allTwo]) + ",0)" }else{ return "translate(0," + xc(d[allTwo]) + ")" } })
@@ -295,7 +295,7 @@
             };
             svg.append("g")
                 .selectAll("g")
-                .data(total.reoords)
+                .data(total.records)
                 .enter()
                 .append("g")
                 .attr("transform", function(d) { if(axisAorY){ return "translate(" + xc(d[allTwo]) + ",0)" }else{ return "translate(0," + xc(d[allTwo]) + ")" } })
