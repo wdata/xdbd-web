@@ -1249,7 +1249,7 @@ $(function(){
 	}
 
 	function initTemp(i){
-		if(i>tempData.length){return false;}
+		if( i>tempData.length || tempData.length<1 ){return false;}
 		var data = tempData[i];
 		var logo = data.logo,
 			leftHeight = data.leftHeight,
@@ -1340,15 +1340,21 @@ $(function(){
 		tip:function(){
 			$(".top-bar>img").on("mouseenter",function(){
 	            layer.tips($(this).attr('data-tip'), this,{
-	                tips: 3
-	            });
+					tips: [3,'#F2F2F2'],
+					skin:"biTips",
+					time:1000
+
+				});
 	        });
 		},
 		deltip:function(){
 			$(".opt-tip").on("mouseenter",function(){
 	            layer.tips($(this).attr('data-tip'), this,{
-	                tips: 3
-	            });
+					tips: [3,'#F2F2F2'],
+					skin:"biTips",
+					time:1000
+
+				});
 	        });
 		},
 		refresh:function(){
