@@ -1,3 +1,5 @@
+var sortSql;
+var sortTable;
 const sort = $("#sort");
 const sortFields = sort.find(".sortFields");
 $(".stepName").val(etlName);
@@ -50,6 +52,7 @@ function bind_click_saveActionComp() {
 
 function setVal() {
     var actionComp = fn_get_actionComp_by_webComponentId(this_webComponentId);
+    console.log(actionComp)
     if (actionComp !== null) {
         var attValue = eval("(" + actionComp.attValue + ")");
         fn_set_stepName(etlName);
@@ -87,6 +90,7 @@ function initFromTable() {
             var actionComp = fn_get_actionComp_by_webComponentId(this.from);
             var tableOut = tables[actionComp.fromTable];
             ary.push({name:tableOut.remark,val:actionComp.fromTable});
+            sortSql = actionComp.sqlOut;
         }
     });
     var optionsHtml = "";
@@ -162,7 +166,8 @@ function bind_click_sql() {
 function generate_sql() {
     var s = squel.select();
     var fromTable = fn_get_fromTable();
-    s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
+    // s.from("(" + fn_get_sqlOut_by_fromTable(fromTable) + ")", fromTable);
+    s.from("(" + sortSql + ")", fromTable);
     //提取字段
     $.each(fn_get_fields_by_fromTable(fromTable).extractFields, function () {
         var field = this.field;
