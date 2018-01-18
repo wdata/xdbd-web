@@ -848,23 +848,36 @@ function bar(id,original){
 function chart_table(id,data){
     //hyf_修改
     console.log(data);
-    var records = data.records;
-    var th='',tds='';var td='';
-    $.each(records,function(index,item){
+    var queryJson = data.queryJson;//查询JSON
+    var records = data.records;//查询结果
+    var ths='',tds='';
 
-        th += `<th>${item.province0}</th>`;
-        td += `<td>${item['sales_amount(SUM)0']}</td>`;
-
-
-        /*for(var key in item){
-            if(index===0)th+='<th>'+key+'</th>';
-            td+='<td>'+item[key]+'</td>';
-        }*/
-        //
+    $.each(queryJson.x,function(index,item){
+        let th = '';
+        $.each(records,function(key,val){
+            th += `<th>${val[item.fieldId]}</th>`;
+        });
+        ths+= `<tr>${th}</tr>`;
     });
-    tds+='<tr>'+td+'</tr>';
+
+    $.each(queryJson.y,function(index,item){
+        let td = '';
+        $.each(records,function(key,val){
+            td += `<td>${val[item.fieldId]}</td>`;
+        });
+        tds+= `<tr>${td}</tr>`;
+    });
+
+
+
     $(id).find("table").remove();
-    var table_text='<table><thead>'+th+'</thead><tbody>'+tds+'</tbody></table>';
+    var table_text=`
+        <table>
+            <thead>${ths}</thead>
+            <tbody>${tds}</tbody>
+        </table>
+    `;
+
     $(id).append(table_text);
 
 }
