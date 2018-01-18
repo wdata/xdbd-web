@@ -1,509 +1,5 @@
 $(function(){
-/*
-* operation.js存在重复-start
-* */
-    var startMoveLevelId = '',stopMoveLevelId = '';//层级Id：开始拖拽的层级Id，结束拖拽时的层级Id
 
-    function getBiDataModel(){
-        var biSetId = $(".data-source-box select option:selected").attr("biSetId");
-        $("#dimensionBox").mCustomScrollbar("destroy");
-        $(".metric-box").mCustomScrollbar("destroy");
-        $.ajax({
-            type:'get',
-            url:$url1 + '/bi/report/v1/datamodel.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "pageId":dirId,
-                "biSetId":biSetId
-            },
-            success:function(res){
-                if(res.code === 0){
-                    if(res.message){
-                        let data = res.data,
-                            dhtml = '',
-                            mhtml = '';
-
-                        modelId = data.modelId;
-
-                        var dimensions = res.data.dimensions;//维度
-                        var measures = res.data.measures;//度量
-                        //维度
-                        if(dimensions.length>0){
-                            $.each(dimensions,function(index,value) {
-                                var li='';
-                                $.each(value.fields,function(i,item){
-                                    var icon = (item.dataType+'').getIcon(item.dataType);
-                                    li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
-                                     baseDataType="${item.baseDataType}" dataType="${item.dataType}"
-                                     baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
-                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
-                                `;
-                                });
-
-                                if(value.type==1){//原始字段
-                                    dhtml += `<div parentCon="dimensionBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
-                                }else if(value.type==2){//自定义字段
-                                    dhtml += `<div parentCon="dimensionBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
-                                }else if(value.type==3){//自定义层
-                                    dhtml += `<div parentCon="dimensionBox" class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
-                                }
-                            });
-                        }else{
-                            dhtml='';
-                        }
-                        $(".dimension-box").empty().append(dhtml);
-
-                        //度量
-                        if(measures.length>0){
-                            $.each(measures,function(index,value) {
-                                var li='';
-                                $.each(value.fields,function(i,item){
-                                    var icon = (item.dataType+'').getIcon(item.dataType);
-                                    li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
-                                     baseDataType="${item.baseDataType}" dataType="${item.dataType}"
-                                     baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
-                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
-                                `;
-                                });
-
-                                if(value.type==1){//原始字段
-                                    mhtml += `<div parentCon="metricBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
-                                }else if(value.type==2){//自定义字段
-                                    mhtml += `<div parentCon="metricBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
-                                }
-                            });
-                        }else{
-                            mhtml='';
-                        }
-
-                        $(".metric-box").empty().append(mhtml);
-
-
-                        //滚动条
-                        $("#dimensionBox").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
-                        $(".metric-box").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
-
-
-
-                        /*//设置度量维度可拖拽
-                        $( ".set-param-box ul li").draggable({
-                            // same-resource ul li
-                            appendTo: "body",
-                            helper: "clone"
-                        });*/
-
-
-
-                        //维度拖拽：
-                        $("#dimensionBox .original_ul li").draggable({
-                            appendTo: "body",
-                            helper: "clone",
-                            connectToSortable:'.level_ul',//关联可排序的容器s
-                            cursor: "move",
-                            opacity: 0.5
-                        }).disableSelection();
-                        $("#dimensionBox .userdefined_ul li").draggable({
-                            appendTo: "body",
-                            helper: "clone",
-                            connectToSortable:'.level_ul',//关联可排序的容器
-                            cursor: "move",
-                            opacity: 0.5
-                        }).disableSelection();
-
-                        $(".level_ul").sortable({
-                            connectWith: ".level_ul",
-                            helper: "clone",
-                            cursor: "move",//移动时候鼠标样式
-                            opacity: 0.5, //拖拽过程中透明度
-                            placeholder: "placeholder_line",//占位符className，设置一个样式
-                            start:function(e,ui){
-                                startMoveLevelId=$(ui.item[0]).parent().prev().find('p').attr('levelid');
-                                //console.log('start-levelid: '+startMoveLevelId);
-                            },
-                            stop:function(e,ui) {
-                                stopMoveLevelId=$(ui.item[0]).parent().prev().find('p').attr('levelid');
-                                var levelId = $(this).prev().find('p').attr('levelid');
-                                var fieldid = $(ui.item[0]).attr('fieldid');
-                                var prevLi = $(ui.item[0]).prev();
-                                var preFieldId = '';
-                                if(prevLi.length>0){
-                                    preFieldId = prevLi.attr('fieldid');
-                                }
-
-                                //console.log('stop-levelid: '+stopMoveLevelId);
-                                //console.log('是否为同层级内部移动：' + (stopMoveLevelId == startMoveLevelId) );
-                                //console.log(fieldid,'\n',levelId,'\n',prevfieldid);
-
-
-                                if(startMoveLevelId!==undefined&&levelId!==undefined){
-                                    if(stopMoveLevelId == startMoveLevelId){//非同一个层级
-                                        //console.log('内');
-                                        joinLevel2(fieldid,levelId,preFieldId);
-                                    }else {//同个层级内部
-                                        //console.log('外');
-                                        popLevelAddLevel(fieldid,startMoveLevelId,stopMoveLevelId,preFieldId);
-                                    }
-                                }
-                            },
-                            drop:function (){
-                                //console.log('drop');
-                            }
-                        }).disableSelection();
-
-                        //度量拖拽：
-                        $("#metricBox .placeholder li").draggable({
-                            appendTo: "body",
-                            helper: "clone",
-                            cursor: "move",
-                            opacity: 0.5
-                        }).disableSelection();
-                        //console.log(2);
-                    }
-                }else {
-                    $(".dimension-box").empty();$(".metric-box").empty()
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    //修改字段别名
-    function setBiFieldName(id,name){
-        $.ajax({
-            type:'PUT',
-            url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":id,
-                "prop":1,
-                "newValue":name
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('修改成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    //加入层级之二:拖拽加入
-    function joinLevel2(fieldId,levelId,preFieldId){
-        $.ajax({
-            type:'PUT',
-            url:$url1 + '/bi/report/v1/dataModel/levelField.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":fieldId,
-                "levelId":levelId,
-                "preFieldId":preFieldId
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('拖拽成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    //不同层级之间的拖拽
-    function popLevelAddLevel(fieldId,startMoveLevelId,stopMoveLevelId,preFieldId){
-        $.ajax({
-            type:'DELETE',
-            url:$url1 + '/bi/report/v1/dataModel/levelField.json'+'?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId+'&levelId='+startMoveLevelId,
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('移出成功!');
-                    joinLevel2(fieldId,stopMoveLevelId,preFieldId);
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-
-/*
- * operation.js存在重复-end
- * */
-
-
-
-    //修改字段名称
-    function editName($this){
-        var id = $this.attr("fieldId");
-        var text = $.trim($this.text());
-        layer.prompt({title: '修改名称',value: text,maxlength: 30, formType: 0}, function(val, index){
-            setBiFieldName(id,val);//修改字段名称
-            layer.close(index);
-        });
-    }
-    //克隆字段
-    function copyField(fieldId){
-        $.ajax({
-            type:'post',
-            url:$url1 + '/bi/report/v1/dataModel/copiedfield.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":fieldId
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('克隆成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    //删除自定义字段
-    function deleteField(fieldId){
-        $.ajax({
-            type:'delete',
-            url:$url1 + '/bi/report/v1/dataModel/customField.json?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId,
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('删除成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-
-    //修改字属性（类型转换）
-    function setFieldDataType(fieldId,dataType){
-        // prop：1-修改别名；2-转换类型；3-转换为维度（度量）；4-聚合算法；5-日期格式
-        // 当prop值为2时，dataType 转换类型：转换后的类型，1-文本（字符串）；2-日期；3-日期和时间；4-数字
-        $.ajax({
-            type:'PUT',
-            url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":fieldId,
-                "prop":2,
-                "newValue":dataType
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('修改成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-
-    //修改字属性（维度转换）
-    function setDimensionOrMeasure(fieldId,type){
-        // prop：1-修改别名；2-转换类型；3-转换为维度（度量）；4-聚合算法；5-日期格式
-        // 当prop值为3时，type:0-维度；1-度量
-        $.ajax({
-            type:'PUT',
-            url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":fieldId,
-                "prop":3,
-                "newValue":type
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('修改成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    //修改字属性（聚合算法）
-    function setarithmetic(fieldId,arithmeticType){
-        // prop：1-修改别名；2-转换类型；3-转换为维度（度量）；4-聚合算法；5-日期格式
-        // 当prop值为4时，arithmeticType:SUM-求和；AVG-平均值；MAX-最大值；MIN-最小值；COUNT-记录数；DCOUNT-取值数
-        $.ajax({
-            type:'PUT',
-            url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":fieldId,
-                "prop":4,
-                "newValue":arithmeticType
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('修改成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    //创建层级
-    function createLevel(fieldId){
-        layer.prompt({title: '创建层级',value: '',maxlength: 30, formType: 0}, function(val, index){
-            layer.close(index);
-            layer.msg('创建层级：'+ val);
-
-            $.ajax({
-                type:'post',
-                url:$url1 + '/bi/report/v1/dataModel/fieldLevel.json',
-                headers:{   username:username, userId:userId    },
-                dataType:'json',
-                data:{
-                    "projectId":projectId,
-                    "versionId":versionId,
-                    "dataModelId":modelId,
-                    "fieldId":fieldId,
-                    "levelName":val
-                },
-                success:function(res){
-                    if(res.code===0){
-                        layer.msg('创建成功!');
-                        getBiDataModel();
-                    }
-                },
-                error:function(res){
-                    console.log(res);
-                }
-            });
-        });
-    }
-
-    //加入层级之一:手动加入
-    function selectLevel(fieldId){
-        var selectVal = '';
-        var option = '';
-        $.ajax({//获取层级
-            type:'get',
-            url:$url1 + '/bi/report/v1/dataModel/fieldLevelList.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "dataModelId":modelId
-            },
-            success:function(res){
-                if(res.code===0){
-                    if(res.data.length>0){
-                        $.each(res.data,function(i,item){
-                            option+=`<option value="${item.levelId}">${item.levelName}</option>`;
-                        });
-
-                        var select = `<select class="">${option}</select>`;
-                        layer.open({
-                            title: '加入层级',
-                            type: 1, content:select,
-                            btn: ['确定', '取消'],
-                            yes:function(index,layero) {//确定按钮
-                                joinLevel(fieldId,selectVal.val());
-                                layer.close(index);
-                            },
-                            btn2:function(index,layero){},//取消按钮
-                            success:function(layero, index){//layer层创建成功后的回调
-                                selectVal = $(layero).find('.layui-layer-btn').css('padding','0 15px 12px').end()
-                                    .find('.layui-layer-content').css('padding','20px').find('select').css('margin','0');
-                            }
-                        });
-                    }else {//没有层级
-                        layer.confirm('未查询到层级，是否创建层级？',function(index,ui){
-                            createLevel(fieldId);
-                            layer.close(index);
-                        });
-                    }
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-    function joinLevel(fieldId,levelId){
-        $.ajax({
-            type:'PUT',
-            url:$url1 + '/bi/report/v1/dataModel/levelField.json',
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            data:{
-                "projectId":projectId,
-                "versionId":versionId,
-                "fieldId":fieldId,
-                "levelId":levelId
-            },
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('加入成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
-
-    //移出层级
-    function popLevel($this){
-        console.log($this);
-        var fieldId = $this.attr("fieldId");
-        var levelId = $this.parent().prev().find('p').attr('levelId');
-        $.ajax({
-            type:'DELETE',
-            url:$url1 + '/bi/report/v1/dataModel/levelField.json'+'?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId+'&levelId='+levelId,
-            headers:{   username:username, userId:userId    },
-            dataType:'json',
-            success:function(res){
-                if(res.code===0){
-                    layer.msg('移出成功!');
-                    getBiDataModel();
-                }
-            },
-            error:function(res){
-                console.log(res);
-            }
-        });
-    }
 
     //删除层级
     $('#dimensionBox').on('click','.hierarchy .level_con i.fa',function(){
@@ -526,7 +22,6 @@ $(function(){
                         console.log(res);
                     }
                 });
-
                 layer.close(index);
             }
         });
@@ -804,11 +299,596 @@ $(function(){
         }
     });
 
-
-
     $( ".filter-attr" ).draggable({cursor: "move", handle: "h3"});
 
 });
+
+
+
+
+/*
+* operation.js存在重复-start
+* */
+var startMoveLevelId = '',stopMoveLevelId = '';//层级Id：开始拖拽的层级Id，结束拖拽时的层级Id
+
+function getBiDataModel(){
+    var biSetId = $(".data-source-box select option:selected").attr("biSetId");
+    $("#dimensionBox").mCustomScrollbar("destroy");
+    $(".metric-box").mCustomScrollbar("destroy");
+    $.ajax({
+        type:'get',
+        url:$url1 + '/bi/report/v1/datamodel.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "pageId":dirId,
+            "biSetId":biSetId
+        },
+        success:function(res){
+            if(res.code === 0){
+                if(res.message){
+                    let data = res.data,
+                        dhtml = '',
+                        mhtml = '';
+
+                    modelId = data.modelId;
+
+                    var dimensions = res.data.dimensions;//维度
+                    var measures = res.data.measures;//度量
+                    //维度
+                    if(dimensions.length>0){
+                        $.each(dimensions,function(index,value) {
+                            var li='';
+                            $.each(value.fields,function(i,item){
+                                var icon = (item.dataType+'').getIcon(item.dataType);
+                                li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
+                                     baseDataType="${item.baseDataType}" dataType="${item.dataType}"
+                                     baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
+                                `;
+                            });
+
+                            if(value.type==1){//原始字段
+                                dhtml += `<div parentCon="dimensionBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder original_ul">${li}</ul></div>`;
+                            }else if(value.type==2){//自定义字段
+                                dhtml += `<div parentCon="dimensionBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder userdefined_ul">${li}</ul></div>`;
+                            }else if(value.type==3){//自定义层
+                                dhtml += `<div parentCon="dimensionBox" class="hierarchy"><div class="dimension-title level_con"><p levelId="${value.id}">${value.title}</p><i class="fa fa-trash-o fa-lg"></i></div><ul class="placeholder level_ul">${li}</ul></div>`;
+                            }
+                        });
+                    }else{
+                        dhtml='';
+                    }
+                    $(".dimension-box").empty().append(dhtml);
+
+                    //度量
+                    if(measures.length>0){
+                        $.each(measures,function(index,value) {
+                            var li='';
+                            $.each(value.fields,function(i,item){
+                                var icon = (item.dataType+'').getIcon(item.dataType);
+                                li+=`<li fieldId="${item.fieldId}" fieldName="${item.fieldName}" isCopied="${item.isCopied}"
+                                     baseDataType="${item.baseDataType}" dataType="${item.dataType}"
+                                     baseDimMea="${item.baseDimMea}" dim_mea="${item.dimMea}"
+                                     baseDisCon="${item.baseDisCon}" disCon="${item.disCon}" defaultAggregation="${item.defaultAggregation}">${icon} ${item.fieldAlias}</li>
+                                `;
+                            });
+
+                            if(value.type==1){//原始字段
+                                mhtml += `<div parentCon="metricBox" class="original"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                            }else if(value.type==2){//自定义字段
+                                mhtml += `<div parentCon="metricBox" class="user-defined"><div class="dimension-title"><p>${value.title}</p></div><ul class="placeholder">${li}</ul></div>`;
+                            }
+                        });
+                    }else{
+                        mhtml='';
+                    }
+
+                    $(".metric-box").empty().append(mhtml);
+
+
+                    //滚动条
+                    $("#dimensionBox").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
+                    $(".metric-box").mCustomScrollbar({theme:"dark",autoHideScrollbar:true,scrollInertia:200});
+
+
+
+                    /*//设置度量维度可拖拽
+                    $( ".set-param-box ul li").draggable({
+                        // same-resource ul li
+                        appendTo: "body",
+                        helper: "clone"
+                    });*/
+
+
+
+                    //维度拖拽：
+                    $("#dimensionBox .original_ul li").draggable({
+                        appendTo: "body",
+                        helper: "clone",
+                        connectToSortable:'.level_ul',//关联可排序的容器s
+                        cursor: "move",
+                        opacity: 0.5
+                    }).disableSelection();
+                    $("#dimensionBox .userdefined_ul li").draggable({
+                        appendTo: "body",
+                        helper: "clone",
+                        connectToSortable:'.level_ul',//关联可排序的容器
+                        cursor: "move",
+                        opacity: 0.5
+                    }).disableSelection();
+
+                    $(".level_ul").sortable({
+                        connectWith: ".level_ul",
+                        helper: "clone",
+                        cursor: "move",//移动时候鼠标样式
+                        opacity: 0.5, //拖拽过程中透明度
+                        placeholder: "placeholder_line",//占位符className，设置一个样式
+                        start:function(e,ui){
+                            startMoveLevelId=$(ui.item[0]).parent().prev().find('p').attr('levelid');
+                            //console.log('start-levelid: '+startMoveLevelId);
+                        },
+                        stop:function(e,ui) {
+                            stopMoveLevelId=$(ui.item[0]).parent().prev().find('p').attr('levelid');
+                            var levelId = $(this).prev().find('p').attr('levelid');
+                            var fieldid = $(ui.item[0]).attr('fieldid');
+                            var prevLi = $(ui.item[0]).prev();
+                            var preFieldId = '';
+                            if(prevLi.length>0){
+                                preFieldId = prevLi.attr('fieldid');
+                            }
+
+                            //console.log('stop-levelid: '+stopMoveLevelId);
+                            //console.log('是否为同层级内部移动：' + (stopMoveLevelId == startMoveLevelId) );
+                            //console.log(fieldid,'\n',levelId,'\n',prevfieldid);
+
+
+                            if(startMoveLevelId!==undefined&&levelId!==undefined){
+                                if(stopMoveLevelId == startMoveLevelId){//非同一个层级
+                                    //console.log('内');
+                                    joinLevel2(fieldid,levelId,preFieldId);
+                                }else {//同个层级内部
+                                    //console.log('外');
+                                    popLevelAddLevel(fieldid,startMoveLevelId,stopMoveLevelId,preFieldId);
+                                }
+                            }
+                        },
+                        drop:function (){
+                            //console.log('drop');
+                        }
+                    }).disableSelection();
+
+                    //度量拖拽：
+                    $("#metricBox .placeholder li").draggable({
+                        appendTo: "body",
+                        helper: "clone",
+                        cursor: "move",
+                        opacity: 0.5
+                    }).disableSelection();
+                    //console.log(2);
+                }
+            }else {
+                $(".dimension-box").empty();$(".metric-box").empty()
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+//修改字段别名
+function setBiFieldName(id,name){
+    $.ajax({
+        type:'PUT',
+        url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":id,
+            "prop":1,
+            "newValue":name
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('修改成功!');
+                getBiDataModel($(".data-source-box select option:selected").attr("biSetId"));
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+//加入层级之二:拖拽加入
+function joinLevel2(fieldId,levelId,preFieldId){
+    $.ajax({
+        type:'PUT',
+        url:$url1 + '/bi/report/v1/dataModel/levelField.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":fieldId,
+            "levelId":levelId,
+            "preFieldId":preFieldId
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('拖拽成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+//不同层级之间的拖拽
+function popLevelAddLevel(fieldId,startMoveLevelId,stopMoveLevelId,preFieldId){
+    $.ajax({
+        type:'DELETE',
+        url:$url1 + '/bi/report/v1/dataModel/levelField.json'+'?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId+'&levelId='+startMoveLevelId,
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        success:function(res){
+            if(res.code===0){
+                layer.msg('移出成功!');
+                joinLevel2(fieldId,stopMoveLevelId,preFieldId);
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+
+/*
+ * operation.js存在重复-end
+ * */
+
+
+
+//修改字段名称
+function editName($this){
+    var id = $this.attr("fieldId");
+    var text = $.trim($this.text());
+    layer.prompt({title: '修改名称',value: text,maxlength: 30, formType: 0}, function(val, index){
+        setBiFieldName(id,val);//修改字段名称
+        layer.close(index);
+    });
+}
+//克隆字段
+function copyField(fieldId){
+    $.ajax({
+        type:'post',
+        url:$url1 + '/bi/report/v1/dataModel/copiedfield.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":fieldId
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('克隆成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+//删除自定义字段
+function deleteField(fieldId){
+    $.ajax({
+        type:'delete',
+        url:$url1 + '/bi/report/v1/dataModel/customField.json?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId,
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        success:function(res){
+            if(res.code===0){
+                layer.msg('删除成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+
+//修改字属性（类型转换）
+function setFieldDataType(fieldId,dataType){
+    // prop：1-修改别名；2-转换类型；3-转换为维度（度量）；4-聚合算法；5-日期格式
+    // 当prop值为2时，dataType 转换类型：转换后的类型，1-文本（字符串）；2-日期；3-日期和时间；4-数字
+    $.ajax({
+        type:'PUT',
+        url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":fieldId,
+            "prop":2,
+            "newValue":dataType
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('修改成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+
+//修改字属性（维度转换）
+function setDimensionOrMeasure(fieldId,type){
+    // prop：1-修改别名；2-转换类型；3-转换为维度（度量）；4-聚合算法；5-日期格式
+    // 当prop值为3时，type:0-维度；1-度量
+    $.ajax({
+        type:'PUT',
+        url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":fieldId,
+            "prop":3,
+            "newValue":type
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('修改成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+//修改字属性（聚合算法）
+function setarithmetic(fieldId,arithmeticType){
+    // prop：1-修改别名；2-转换类型；3-转换为维度（度量）；4-聚合算法；5-日期格式
+    // 当prop值为4时，arithmeticType:SUM-求和；AVG-平均值；MAX-最大值；MIN-最小值；COUNT-记录数；DCOUNT-取值数
+    $.ajax({
+        type:'PUT',
+        url:$url1 + '/bi/report/v1/dataModel/fieldProps.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":fieldId,
+            "prop":4,
+            "newValue":arithmeticType
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('修改成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+//创建层级
+function createLevel(fieldId){
+    layer.prompt({title: '创建层级',value: '',maxlength: 30, formType: 0}, function(val, index){
+        layer.close(index);
+        layer.msg('创建层级：'+ val);
+
+        $.ajax({
+            type:'post',
+            url:$url1 + '/bi/report/v1/dataModel/fieldLevel.json',
+            headers:{   username:username, userId:userId    },
+            dataType:'json',
+            data:{
+                "projectId":projectId,
+                "versionId":versionId,
+                "dataModelId":modelId,
+                "fieldId":fieldId,
+                "levelName":val
+            },
+            success:function(res){
+                if(res.code===0){
+                    layer.msg('创建成功!');
+                    getBiDataModel();
+                }
+            },
+            error:function(res){
+                console.log(res);
+            }
+        });
+    });
+}
+
+//加入层级之一:手动加入
+function selectLevel(fieldId){
+    var selectVal = '';
+    var option = '';
+    $.ajax({//获取层级
+        type:'get',
+        url:$url1 + '/bi/report/v1/dataModel/fieldLevelList.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "dataModelId":modelId
+        },
+        success:function(res){
+            if(res.code===0){
+                if(res.data.length>0){
+                    $.each(res.data,function(i,item){
+                        option+=`<option value="${item.levelId}">${item.levelName}</option>`;
+                    });
+
+                    var select = `<select class="">${option}</select>`;
+                    layer.open({
+                        title: '加入层级',
+                        type: 1, content:select,
+                        btn: ['确定', '取消'],
+                        yes:function(index,layero) {//确定按钮
+                            joinLevel(fieldId,selectVal.val());
+                            layer.close(index);
+                        },
+                        btn2:function(index,layero){},//取消按钮
+                        success:function(layero, index){//layer层创建成功后的回调
+                            selectVal = $(layero).find('.layui-layer-btn').css('padding','0 15px 12px').end()
+                                .find('.layui-layer-content').css('padding','20px').find('select').css('margin','0');
+                        }
+                    });
+                }else {//没有层级
+                    layer.confirm('未查询到层级，是否创建层级？',function(index,ui){
+                        createLevel(fieldId);
+                        layer.close(index);
+                    });
+                }
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+function joinLevel(fieldId,levelId){
+    $.ajax({
+        type:'PUT',
+        url:$url1 + '/bi/report/v1/dataModel/levelField.json',
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        data:{
+            "projectId":projectId,
+            "versionId":versionId,
+            "fieldId":fieldId,
+            "levelId":levelId
+        },
+        success:function(res){
+            if(res.code===0){
+                layer.msg('加入成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+
+//移出层级
+function popLevel($this){
+    console.log($this);
+    var fieldId = $this.attr("fieldId");
+    var levelId = $this.parent().prev().find('p').attr('levelId');
+    $.ajax({
+        type:'DELETE',
+        url:$url1 + '/bi/report/v1/dataModel/levelField.json'+'?projectId='+projectId+'&versionId='+versionId+'&fieldId='+fieldId+'&levelId='+levelId,
+        headers:{   username:username, userId:userId    },
+        dataType:'json',
+        success:function(res){
+            if(res.code===0){
+                layer.msg('移出成功!');
+                getBiDataModel();
+            }
+        },
+        error:function(res){
+            console.log(res);
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
