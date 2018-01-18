@@ -1,4 +1,5 @@
 var whereTable;
+var whereTableOut;
 const where = $("#where")
 initFromTable();
 setVal();
@@ -22,6 +23,7 @@ function initFromTable() {
         if (this.to == this_webComponentId) {
             var actionComp = fn_get_actionComp_by_webComponentId(this.from);
             whereTable = actionComp.fromTable;
+            whereTableOut = actionComp.tableOut;
         }
     });
     if (whereTable != null && whereTable != '') {
@@ -52,6 +54,7 @@ function setVal() {
 function getVal() {
     var data = {};
     data['name'] = fn_get_stepName();
+    data['projectId'] = this_projectId;
     data['webComponentId'] = this_webComponentId;
     data['actionId'] = this_actionId;
     data['actionCompType'] = this_actionCompType;
@@ -155,13 +158,13 @@ function generate_sql() {
         }
         s.field(field);
     });
-
     $.each(get_wheres(), function () {
+        var out = whereTableOut+".";
         var field = this.field;
         var expr = " " + this.expr + " ";
         var value = this.value;
         value = "'" + value + "'";
-        var whereSql = field + expr + value;
+        var whereSql = out + field + expr + value;
         s.where(whereSql);
     });
     return s.toString();
