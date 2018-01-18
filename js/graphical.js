@@ -830,7 +830,7 @@ function bar(id,original){
 }
 
 // 表格
-function chart_table(id,date){
+/*function chart_table(id,date){
     var th='',tds='';
     $.each(date,function(index,item){
         var td='';
@@ -843,7 +843,35 @@ function chart_table(id,date){
     $(id).find("table").remove();
     var table_text='<table><thead>'+th+'</thead><tbody>'+tds+'</tbody></table>';
     $(id).append(table_text);
+    console.log(date);
+}*/
+function chart_table(id,data){
+    //hyf_修改
+    console.log(data);
+    var records = data.records;
+    var th='',tds='';var td='';
+    $.each(records,function(index,item){
+
+        th += `<th>${item.province0}</th>`;
+        td += `<td>${item['sales_amount(SUM)0']}</td>`;
+
+
+        /*for(var key in item){
+            if(index===0)th+='<th>'+key+'</th>';
+            td+='<td>'+item[key]+'</td>';
+        }*/
+        //
+    });
+    tds+='<tr>'+td+'</tr>';
+    $(id).find("table").remove();
+    var table_text='<table><thead>'+th+'</thead><tbody>'+tds+'</tbody></table>';
+    $(id).append(table_text);
+
 }
+
+
+
+
 
 // 多维柱状图 多个维度 多个度量 维度需要交叉
 function manyChart (id,data){
