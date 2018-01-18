@@ -106,7 +106,7 @@ $(function(){
 
 
               		//系统管理菜单
-              		var menuSys = menuLv1[5].childrens;
+              		var menuSys = menuLv1[4].childrens;
               		var htmlSys = "";
               		$.each(menuSys, function(i,v) {
               			htmlSys += `
@@ -115,7 +115,7 @@ $(function(){
               		});
               		$(".sys-menus").empty().append(htmlSys);
 					//监控中心
-					var menuMonitoring = menuLv1[6].childrens;
+					var menuMonitoring = menuLv1[5].childrens;
 					var htmlMonitoring = "";
 					var isCN = location.hostname.indexOf('.cn');
 					var url = '';
