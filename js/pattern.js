@@ -70,3 +70,5 @@ $(".tab_size").change(function() {
         $('.tab_page').hide();
     }
 })
+console.log($(window).height())
+$('.tab_list').css('height',($(window).height()-70)+'px');
