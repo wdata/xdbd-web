@@ -1804,9 +1804,9 @@ div.f-addbtn-box-auto li{
 	border-top: none;
 }
 .op-box .title-box {
-	height: 70px;
+	/* height: 70px; */
 	line-height: 36px;
-	border-bottom: 1px solid #CCCCCC;
+	/* border-bottom: 1px solid #CCCCCC; */
 	text-align: center;
 }
 .op-box .empty {
@@ -2454,6 +2454,10 @@ body .biTips.layui-layer .layui-layer-content{
 	border: 1px solid #ccc;
 }
 /* 新增表格 */
+.tab_list{
+	/* height: 500px; */
+	overflow-y: auto;
+}
 .tab_title{
 	border: 1px solid #ccc;
 	background: #eee;
@@ -2477,6 +2481,17 @@ body .biTips.layui-layer .layui-layer-content{
 	padding: 3px;
 	margin: 7px 0;
 	background: #eee;
+}
+.tab_page{
+	display: block;
+	margin-top: 12px;
+	height: 30px;
+}
+.tab_page > label{
+	display: inline;
+}
+.tab_page > .tab_pages{
+	width: 75px;
 }
 /* 新增图表 */
 .tab_menu>li{
