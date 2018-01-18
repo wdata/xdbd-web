@@ -34,6 +34,7 @@ function setVal() {
 function getVal() {
     var data = {};
     data['name'] = fn_get_stepName();
+    data['projectId'] = this_projectId;
     data['webComponentId'] = this_webComponentId;
     data['actionId'] = this_actionId;
     data['actionCompType'] = this_actionCompType;
