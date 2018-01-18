@@ -173,7 +173,7 @@
 		var this_isTemplate;
 		var this_templateVersionId = localStorage.getItem('templateVersionId');
 		var this_actionId = localStorage.getItem('directoryId');
-		//      var this_versionId = sessionStorage.getItem('verid');
+		var this_projectId = localStorage.getItem('projectId');
 		var this_versionId = localStorage.getItem("versionId");
 		var this_onenv = sessionStorage.getItem("onEnv"); //切换环境
 		var onenv = true;
@@ -435,7 +435,6 @@
 		//根据webComponentId获取actionComp
 		function fn_get_actionComp_by_webComponentId(webComponentId) {
 			var actionComp;
-			console.log(actionComps)
 			$.each(actionComps, function () {
 				if (this.webComponentId == webComponentId) {
 					actionComp = this;
@@ -448,6 +447,7 @@
 		//根据fromTable获取fields
 		function fn_get_fields_by_fromTable(fromTable) {
 			var fieldOut;
+			console.log(actionComps,fromTable)
 			$.each(actionComps, function (i,item) {
 				if (item.tableOut == fromTable) {
 					// fieldOut = this.fieldOut;
@@ -461,9 +461,7 @@
 		//根据fromTable获取sqlOut
 		function fn_get_sqlOut_by_fromTable(fromTable) {
 			var sqlOut;
-			console.log(actionComps,fromTable)
 			$.each(actionComps, function () {
-				console.log(this.tableOut,fromTable)
 				if (this.tableOut == fromTable) {
 					sqlOut = this.sqlOut;
 					return true;
@@ -530,7 +528,6 @@
 		function fn_set_extractFields(extractFields) {
 			var extractFieldHtml = $('.extractField').prop('outerHTML');
 			$('.extractField').remove();
-			console.log(extractFields);
 			$.each(extractFields, function () {
 				var table = this.table;
 				var field = this.field;
