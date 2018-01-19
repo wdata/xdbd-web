@@ -502,6 +502,7 @@ function chartLegendData(el,total,CStyle){
     return { "elHeight":elHeight, "elWidth":elWidth, "color":color, "colorDomain":colorDomain, "positionBur":positionBur }
 }
 
+// 计算字符串长度
 // calculate("人生大事","12px","微软雅黑");
 function calculate(text,fontSize,fontFamily){
     const span = document.createElement("span");

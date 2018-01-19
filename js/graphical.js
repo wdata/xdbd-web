@@ -732,93 +732,6 @@ function line(id, tit, sub, data, mark, lin) {
     }
 }
 
-// 封装一维柱状图  一个维度 一个度量
-function bar(id,original){
-    // 处理数据，将多维数据转化为一维多度量数据；
-    var data = original.charts.dimValues[0].map(function(d,i){
-        return {"letter":d, "frequency": original.charts.meaList[0].meaValues[0][0][i]}
-    });
-    // 设置图形距离上下左右宽度
-    var margin = {top: 10, right: 10, bottom: 30, left: 30};
-    // 设置高度和宽度
-    var height = $(id).height() - margin.top - margin.bottom;
-    var width = $(id).width()- margin.left - margin.right;
-
-    //宽度，高度，数据
-    var yData = [];
-    for(var i=0;i<data.length;i++) {
-        yData.push(data[i].frequency);
-    }
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1);
-    var y = d3.scale.linear()
-        .domain([0,d3.max(yData)])
-        .range([height, 0]);
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickFormat(d3.format("s"));             // 数字后面格式;
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function(d) {
-            return "<strong>数量:</strong> <span style='color:#ddd'>" + d.frequency + "</span>";
-        });
-    var svg = d3.select(id).append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    svg.call(tip);
-    x.domain(data.map(function(d) { return d.letter; }));
-    y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Frequency");
-
-    svg.selectAll(".bar")
-        .data(data)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("width", x.rangeBand())
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide)
-        .attr("fill","red")
-        .transition()
-        .duration(3000)
-        .ease("bounce")
-        .delay(function(d,i){
-            return 200*i;
-        })
-        .attr("x", function(d,i){
-            return x(d.letter)
-            30 + xScale(i);
-        } )
-        .attr("y",function(d,i){
-            return y(d.frequency)
-            50 + 500 - yScale(d) ;
-        })
-        .attr("height",function(d) { return height - y(d.frequency); })
-        .attr("fill","steelblue");
-
-}
-
 // 表格
 /*function chart_table(id,date){
     var th='',tds='';
@@ -870,460 +783,6 @@ function chart_table(id,data){
     $(id).append(table_text);
 
 }
-
-
-// 多维柱状图 多个维度 多个度量 维度需要交叉
-// function manyChart (id,data){
-//     var figure=1;
-//     var  dim_width=20;//每列维度之间的间距
-//     var  dim_height=10;//每行维度之间的间距
-//     var dim2_num=null;//保存第二维度的个数
-//     var idA = $(id);
-//     var margin = {top: 40, right: 40, bottom: 20, left: 20},
-//         width = idA.width() - margin.left - margin.right,
-//         height = idA.height() - margin.top - margin.bottom;
-//     var color=d3.scale.category20();
-//     //柱状图之间的间距
-//     var rangeBand=4;
-//     var svg=d3.select(id).append("svg")
-//         .attr("width", idA.width())
-//         .attr("height", idA.height())
-//         .attr("preserveAspectRatio", "xMidYMid meet")
-//         .attr("viewBox", "0 0 "+ (width + margin.left + margin.right) +" "+ (height + margin.top + margin.bottom) +"")
-//         .append("g")
-//         .attr("class", "graph")
-//         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//     var y_axials=data.dim.dimY;
-//     var x_axials=data.dim.dimX;
-//     var charts=data.charts;
-// //            console.log(charts);
-// //            console.log(x_axials);
-// //            console.log(y_axials);
-//     var max=null;
-//     var isChart=true;
-//     var y_axis1=[],x_axis1=[];//Y轴第一级维度数组
-//     var dimValues = charts.dimValues;//坐标维度
-//     var meaList = charts.meaList;//坐标度量
-//     var dataset=[],y_axis2_len=[],dimValues_len=[];
-//     var dim1_num=y_axials.valueTree.length;//保存最高维度的个数
-//     var fontSize = parseInt($("body").css("font-size"));
-//
-//     var XLeft = 0;
-//     var YTop = 0;
-//     var XRight = 0;
-//
-//
-//     var record = [];
-//
-//
-//     var Yfq = 0;
-//     var ma = cale(JSON.parse(JSON.stringify(y_axials.valueTree)),height - YTop);
-//     YAxis(ma);
-//     function YAxis(data){
-//         var s = 0;
-//         var len = [];
-//         var children = [];
-//         //绘制Y轴维度
-//         var texts_g = svg.append("g")
-//             .attr("transform", "translate(0,"+ dim_height +")");
-//         texts_g.selectAll()
-//             .data(data)
-//             .enter()
-//             .append("text")
-//             .attr("fill", "#333")
-//             .attr("y", function (d, i) {
-//                 // 将子集数据存入数组中
-//                 if(d.children){
-//                     var l = d.children.length;
-//                     y_axis2_len.push(l);
-//                     $.each(d.children,function(x,y){
-//                         var m = JSON.parse(JSON.stringify(y));
-//                         m.cale = d.cale/l;
-//                         m.calePar = s;
-//                         m.count = x;
-//                         children.push(m);
-//                     });
-//                 }else{
-//                     if(charts.meaAxis === "x" ){
-//                         record.push(d);
-//                     }
-//                 }
-//                 var c = d.cale * d.count?d.cale * d.count:0;
-//                 var h = d.calePar + c + d.cale/2;
-//                 s += d.cale;
-//                 len.push((d.value + "").length);
-//                 return h;
-//             })
-//             .attr("x",(-margin.top/4) + margin.top*Yfq)
-//             .text(function (d) {return d.value;})
-//             .attr("text-anchor", "top");
-//
-//         XLeft += Math.abs(d3.max(len) * fontSize);  // 记录其宽度;
-//         if(children.length > 0){
-//             Yfq ++;
-//             YAxis(children);
-//         }
-//     }
-//
-//     function cale(data,leng){
-//         var t = 0;
-//         $.each(data,function(index,val){
-//             val.cale = leng/data.length;
-//             val.calePar = t;
-//             t += leng/data.length;
-//         });
-//         return data;
-//     }
-//
-//
-//     //绘制X轴维度
-//     var Xfq = 0;
-//     var maX = cale(JSON.parse(JSON.stringify(x_axials.valueTree)),width - XLeft - 90 );
-//     Xaxis(maX);
-//     function Xaxis(data){
-//         var s = 0;
-//         var children = [];
-//         var texts_g = svg.append("g")
-//             .attr("transform", "translate("+ XLeft +",0)");
-//         texts_g.selectAll()
-//             .data(data)
-//             .enter()
-//             .append("text")
-//             .attr("fill", "#333")
-//             .attr("x", function(d,i) {
-//                 // 将子集数据存入数组中  // 将子集数据存入数组中
-//                 if(d.children){
-//                     var l = d.children.length;
-//                     y_axis2_len.push(l);
-//                     $.each(d.children,function(x,y){
-//                         var m = JSON.parse(JSON.stringify(y));
-//                         m.cale = d.cale/l;
-//                         m.calePar = s;
-//                         m.count = x;
-//                         children.push(m);
-//                     });
-//                 }else{
-//                     if(charts.meaAxis === "y" ){
-//                         record.push(d);
-//                     }
-//                 }
-//                 var c = d.cale * d.count?d.cale * d.count:0;
-//                 var h = d.calePar + c + d.cale/2 + dim_height;
-//                 s += d.cale;
-//                 return h;
-//             })
-//             .attr("y",(-margin.top/4) + Xfq * margin.top/2)
-//             .text(function (d) {
-//                 return d.value;
-//             });
-//         YTop += Math.abs((-margin.top/4) + Xfq * margin.top/2 );  // 记录高度
-//         if(children.length > 0){
-//             Xfq++;
-//             Xaxis(children);
-//         }
-//     }
-//
-//     handle(record);
-//     var hanData = [];
-//     function handle(record){
-//         var handleData = [];
-//         if(dimValues.length > 1)
-//             $.each(dimValues,function(index,val){
-//                 var a = [];
-//                 $.each(val,function(x,y){
-//                     var b = {};
-//                     b.value = y;
-//                     b.children = null;
-//                     a.push(b);
-//                 });
-//                 record[index].children = a;
-//             });
-//         var s = 0;
-//         $.each(record,function(i,d){
-//             // 将子集数据存入数组中  // 将子集数据存入数组中
-//             if(d.children){
-//                 var l = d.children.length;
-//                 y_axis2_len.push(l);
-//                 $.each(d.children,function(x,y){
-//                     var m = JSON.parse(JSON.stringify(y));
-//                     m.cale = d.cale/l;
-//                     m.calePar = s;
-//                     m.count = x;
-//                     handleData.push(m);
-//                 });
-//             }
-//             s += d.cale;
-//         });
-//         hanData = JSON.parse(JSON.stringify(handleData));
-//         if(charts.meaAxis === "x" ){
-//             Yfq++;
-//             YAxis(handleData)
-//         }else{
-//             Xfq++;
-//             Xaxis(handleData);
-//
-//         }
-//         togram(handleData);
-//     }
-//
-// //        section();
-// //        function section(){
-// //            var z = [];
-// //            $.each(dimValues,function(index,val){
-// //                $.each(val,function(x,y){
-// //                    z.push(y);
-// //                })
-// //            });
-// //            var texts_g = svg.append("g")
-// //                .attr("class", " dim" + figure)
-// //                .attr("transform", "translate("+dim_width+",10)");
-// //            texts_g.selectAll(" dim" + figure)
-// //                .data(z)
-// //                .enter()
-// //                .append("text")
-// //                .attr("fill", "#333")
-// //                .attr("x",function(d,i){
-// //                    if(charts.meaAxis === "x" ){
-// //                        return width - margin.right/1.5;
-// //                    }else{
-// //                        dimValues_len.push(d.length);
-// //                        return XLeft + (width - XLeft)/z.length * i;
-// //                    }
-// //                })
-// //                .attr("y",function(d,i) {
-// //                    if (charts.meaAxis === "x") {
-// //                        dimValues_len.push(d.length);
-// //                        return YTop + (height - YTop)/z.length * i;
-// //                    } else {
-// //                        return height - margin.bottom/4;
-// //                    }
-// //                })
-// //                .text(function (d) {return d;})
-// //                .attr("text-anchor", "top")
-// //        }
-//
-//     //            绘制X轴的坐标轴
-//     function togram(handleData){
-//         var measureLength = [];
-//         measure(meaList,measureLength); // 度量
-//
-//         $.each(meaList,function(index,val){
-//             var meaY = [];
-//             $.each(val.meaValues,function(x,y){
-//                 var cale = 0;
-//                 var meaX = [];
-//
-//                 $.each(y,function(z,w){
-//                     $.each(w,function(a,b){
-//                         meaX.push(b);
-//                     });
-//                 });
-//                 meaY.push(meaX);
-//
-//                 var measuY = 0
-//                     ,measuX = 0
-//                     ,ascending = null
-//                     ,xData = null;
-//
-// //                    console.log(measureLength,index);
-//                 if(charts.meaAxis === "y"){
-//
-//                     if(measureLength.length >= val.meaValues.length){
-//                         measuY = measureLength[x][0] + measureLength[x][2]
-//                     }else{
-//                         measuY = x * 100;
-//                     }
-//                     // console.log(XLeft);
-//                     measuX = XLeft;
-//                     if(handleData[0]){
-//                         ascending = handleData[0].cale / 2 - dim_height
-//                     }else{
-//                         ascending = height/val.meaValues.length;
-//                     }
-//
-//                 }else{
-//                     measuY = -10;
-//
-//                     if(measureLength.length >= val.meaValues.length){
-//                         measuX = measureLength[x][0] + measureLength[x][2]
-//                     }else{
-//                         measuX = x * 100;
-//                     }
-//
-//                     if(handleData[0]){
-//                         ascending = handleData[0].cale / 2 - dim_height
-//                     }else{
-//                         ascending = width/val.meaValues.length;
-//                     }
-//                 }
-//
-//                 var range = measureLength[x][1] - measureLength[x][0];
-//
-//                 var x = d3.scale.linear()
-//                     .domain([0,measureLength[x][3]])
-//                     .range([0, range]);
-//
-//
-//                 var rect_g=svg.append("g")
-//                     .attr("class", "rect")
-//                     .attr("transform", "translate("+ measuX +", "+ measuY +" )");
-//                 rect_g.selectAll(".rect")
-//                     .data(meaX)
-//                     .enter()
-//                     .append("rect")
-//                     .attr("x", function(d,i){
-//                         if(charts.meaAxis === "y"){
-//                             // XY轴计算公式
-//                             if(handleData[i]){
-//                                 var c = handleData[i].cale * handleData[i].count?handleData[i].cale * handleData[i].count:0;
-//                                 var h = handleData[i].calePar + c + handleData[i].cale/2 + dim_height;
-//                                 return h + ascending * index + dim_height * index ;
-//                             }else{
-//                                 return ascending * index + dim_height * index ;
-//                             }
-//                         }else{
-//                             return 0;
-//                         }
-//                     })
-//                     .attr("y", function(d,i) {
-//                         if(charts.meaAxis === "y"){
-//                             return 0;
-//                         }else{
-//                             // XY轴计算公式
-//                             if(handleData[i]){
-//                                 var c = handleData[i].cale * handleData[i].count?handleData[i].cale * handleData[i].count:0;
-//                                 var h = handleData[i].calePar + c + handleData[i].cale/2 + dim_height;
-//                                 return h + ascending * index + dim_height * index ;
-//                             }else{
-//                                 return ascending * index + dim_height * index ;
-//                             }
-//                         }
-//                     })
-//                     .attr("width",function(d,i){
-//                         if(charts.meaAxis === "y"){
-//                             if(handleData[i]){
-//                                 ascending = d3.min([ascending,handleData[i].cale / 2 - dim_height]);  // 取最小值显示
-//                                 return ascending;
-//                             }else{
-//                                 return 20;
-//                             }
-//                         }else{
-//                             return d3.max([x(d),1]);
-//                         }
-//                     })
-//                     .attr("height", function(d,i){
-//                         if(charts.meaAxis === "y"){
-//                             return d3.max([x(d),1]);
-//                         }else{
-//                             if(handleData[i]){
-//                                 ascending = d3.min([ascending,handleData[i].cale / 2 - dim_height]);  // 取最小值显示
-//                                 return ascending;
-//                             }else{
-//                                 return 20;
-//                             }
-//                         }
-//                     })
-//                     .attr('fill',function(d,i){
-//                         return color(index)
-//                     })
-//                     .on("mouseover",function(d,i){
-//                         d3.select(this).attr("fill",'#e439ca');
-//                         var tx=parseFloat(d3.event.pageX);
-//                         var ty=parseFloat(d3.event.pageY);
-//                         $(".hint").css({"left":(tx+10)+"px","top":(ty+10)+"px"});
-//                         $(".hint").text(val.meaTitle+"："+d).show();
-//                     })
-//                     .on("mouseout",function(d,i){
-//                         $(".hint").text("").hide();
-//                         d3.select(this).attr("fill",color(index));
-//                     });
-//
-//
-//
-//
-//
-//             });
-//         });
-//
-//     }
-//
-//
-//     function measure(da,measureLength){
-//         var maxnumber = [];
-//         $.each(da,function(index,val){
-//             maxnumber.push(val.maxValue);
-//         });
-//         var max = d3.max(maxnumber);
-//         var maxLength = ( max + "").length;
-//         var data = da[0].meaValues;
-//         var mX = 0
-//             ,mY = 0
-//             ,mXY = 0
-//             ,range = 0
-//             ,orient = "right"
-//             ,ticks = 2;
-//         if(charts.meaAxis === "y"){
-//             mX = width - margin.right;
-// //                if(maxLength > 6) mX = mX - 12 * (maxLength - 6);
-// //                console.log( 12 * (maxLength - 6));
-//             mY = dim_height + YTop;
-// //                range = height - YTop - dim_height - (data.length-1) * mY;
-//             range = height - YTop - dim_height;
-//             orient = "right";
-//             ticks = 3;
-//             mXY = mY;
-//         }else{
-//             mX = XLeft;
-//             mY = height;
-// //                range = width - XLeft - (data.length-1) * mY;
-//             range = width - XLeft;
-//             orient = "bottom";
-//             ticks = 5;
-//             mXY = mX;
-//         }
-//         for(var h=0;h<data.length;h++) {
-// //                measureLength.push([(range / data.length) * h + (data.length-1) * mY , (range / data.length) * (h + 1)  + (data.length-1) * mY,mXY,max]);
-//             measureLength.push([(range / data.length) * h , (range / data.length) * (h + 1),mXY,max]);
-//             var x2 = d3.scale.linear()
-//                 .domain([0, max])
-//                 //                    .range([(range / data.length) * h + (data.length-1) * mY , (range / data.length) * (h + 1) + (data.length-1) * mY])
-//                 .range([(range / data.length) * h , (range / data.length) * (h + 1)])
-//                 .nice();
-//             var xAxis2 = d3.svg.axis()
-//                 .scale(x2)
-//                 .orient(orient)
-//                 .ticks(ticks)
-//                 .tickFormat(d3.format("s"));             // 数字后面格式
-//             svg.append("g")
-//                 .attr("class", "x axis")
-//                 .attr("transform", function(d,i){
-// //                        return "translate(" + mX + "," + mY * h + ")";
-//                     return "translate(" + mX + "," + mY + ")";
-//                 })
-//                 .call(xAxis2);
-//         }
-//         return measureLength;
-//     }
-//
-//
-// //            绘制X轴维度title
-//     var texts_g = svg.append("g")
-//         .attr("class", "title")
-//         .attr("transform", "translate(-"+margin.left+",-"+margin.top+")")
-//         .append("text")
-//         .attr("x", width/2)
-//         .attr("y", height)
-//         .attr("fill","red")
-//         .attr("text-anchor", "top");
-//     texts_g.selectAll()
-//         .data(meaList)
-//         .enter()
-//         .append("text")
-//         .text(function(d,i){
-//             return d.meaTitle;
-//         });
-//
-// }
 
 // 2017-10-25 饼图  一个维度 一个度量
 function pieChart(id, dataset,r1) {
@@ -2782,6 +2241,49 @@ function manyGroup(elemt,data,CStyle){
         .domain(xTitle)
         .rangeBands(xOAxis, .2);
 
+
+    // 用来获取裁剪之后的标签
+    const xTitleOmitted = function(axisB,widthO,height0,xTitle){
+        /*
+        *  计算字符串的平均长度
+        * */
+        this.size = $(id).css("font-size");
+        this.family = $(id).css("font-family");
+        this.xTitleN  = xTitle.join("");
+        this.xTitleNJ = xTitle.join("").length / xTitle.length;
+        this.xTitleStart = this.xTitleN.slice(0,( this.xTitleNJ ));
+        this.al = calculate(this.xTitleStart, this.size, this.family);
+        this.l = axisB === "x" ?
+            widthO : height0;  // 判断标签的长度是多少？
+        this.xl = axisB === "x" ?
+            this.al.width : this.al.height;  // 判断是用字符串宽度还是高度
+
+        // 如果标签数量大于
+        if(this.xl * xTitle.length >= this.l){
+            // 如果数据过大，则只显示部分的标签
+            this.al = this.l/ this.xl;
+            this.d = [];
+            for(let x = 1 ; x <= this.al ; x++){
+                this.d = this.d.concat(xTitle.splice( (  parseInt( xTitle.length / this.al ) ) * x, 1));
+            }
+            // 如果字符串太长，则显示省略号
+            return this.d.map(function(d){
+                this.dl = calculate(d, this.size, this.family);
+                this.dl = (axisB === "x" ? this.dl.width : this.dl.height);
+                if( this.dl <= this.xl ){
+                    return d;
+                }else{
+                    return d.slice(0, this.xTitleNJ) + "...";
+                }
+            });
+        }else{
+            return xTitle;
+        }
+    };
+    const x1 = d3.scale.ordinal()
+        .domain(xTitleOmitted(axisB,widthO,height0,xTitle))
+        .rangeBands(xOAxis, .2);
+
     /* 颜色区宽度 */
     const xc = d3.scale.ordinal()
         .domain(x1Domain)
@@ -2842,9 +2344,8 @@ function manyGroup(elemt,data,CStyle){
         .style("text-anchor","middle")
         .attr("transform",function(){ if(axisAorY){ return 'rotate(270,0,0)'; } });
 
-
     const xAxis = d3.svg.axis()
-        .scale(x)
+        .scale(x1)
         .orient(xorientAxis);
 
     svg.append("g")
