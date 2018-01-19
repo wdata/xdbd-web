@@ -30,7 +30,7 @@
 <script src="../plugin/d3/d3.v3.min.js"></script>
 <script  src="../plugin/d3/d3.tip.js"></script>
 <script  src="js/data.js"></script>
-<script src="./js/common.js"></script>
+<script src="../common/ChartCommon.js"></script>
 <script>
     $(function(){
         var cs = new chartStyle("#chartDFAB2A73",CStyle);
@@ -280,11 +280,16 @@
             }
         }
 
+        let processedData = total.records.map(function(d,i){
+            let z = d;
+            z.index = i;
+            return z;
+        });
         // 将数组按照 图表高度，分成相应的等分，并取每个等分的最大值
-        const totalRecordsLength = total.records.length,
-            equalPoints = 48,   // 分成多少等分
+        const totalRecordsLength = processedData.length,
+            equalPoints = 32,   // 分成多少等分
             equalPointsLength = totalRecordsLength / equalPoints, // 每个等分的长度
-            tREP = split_array(total.records,equalPointsLength);
+            tREP = split_array(processedData,equalPointsLength);
         // 获取每个等分中的最大值，并组成一个数组
         const totalREPMax = tREP.map(function(d){
             const dLength = d.length;
@@ -304,6 +309,7 @@
 
 
         function textPath(data){
+            const rawData = pieData(total.records);
             //添加弧内的文字
             const textG = svg.append("g")
                 .attr("transform", "translate(" + (widthO / 2) + "," + (height0 / 2) + ")")
@@ -350,10 +356,9 @@
                 .style("stroke",function(d){ if(colourAll){ return o(d.data[colourAll.fieldId]); }else{return defaultColor;}})
                 .attr("d",function(d,i){
                     let L = [];
-                    const rawData = d.data;
-                    console.log(pieData(total.records));
+                    console.log();
                     const
-                        conterPoint = arc.centroid(d),
+                        conterPoint = arc.centroid(rawData[d.data.index]),
                         start = [conterPoint.map(function(d){ return d * 2 })],
                         middle = [conterPoint.map(function(d){ return d * 2 })],
 //                    middle = [arcText.centroid(d)[0] * 1.1,arcText.centroid(d)[1] * 1.1],

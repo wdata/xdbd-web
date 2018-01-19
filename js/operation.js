@@ -164,6 +164,7 @@ let refresh = {
                 'field': $(icon).attr("fieldname"),
                 'fieldAlias': $(icon).text(),
                 'order': "ASC",
+                'baseDataType': $(icon).attr('baseDataType'),
                 'dataType': $(icon).attr('datatype'),
                 'dimMea': $(icon).attr("dim_mea"),
                 'disCon': $(icon).attr("disCon"),
@@ -178,6 +179,7 @@ let refresh = {
                 'field':$(icon).attr("fieldname"),
                 'fieldAlias':$(icon).text(),
                 'order':"ASC",
+                'baseDataType': $(icon).attr('baseDataType'),
                 'dataType':$(icon).attr('datatype'),
                 'dimMea':$(icon).attr("dim_mea"),
                 'disCon':$(icon).attr("disCon"),
@@ -192,6 +194,7 @@ let refresh = {
                 'field':$(icon).attr("fieldname"),
                 'fieldAlias':$(icon).text(),
                 'order':"ASC",
+                'baseDataType': $(icon).attr('baseDataType'),
                 'dataType':$(icon).attr('datatype'),
                 'dimMea':$(icon).attr("dim_mea"),
                 'disCon':$(icon).attr("disCon"),
@@ -230,11 +233,13 @@ let refresh = {
         chart_date.displayLevel = this.whLength(id,"z-index");
         // 控件类型
         chart_date.type = this.typeData($("#"+ id +"").attr("data-type"));
+        // chart_date.type = 66;  // 开发固定
         // 宽高、距左、距右
         chart_date.style.width = this.whLength(id,"width");
         chart_date.style.height = this.whLength(id,"height");
         chart_date.style.top = this.whLength(id,"top");
         chart_date.style.left = this.whLength(id,"left");
+        console.log(chart_date);
         return chart_date;
     },
     // 根据ID名返回宽度
@@ -245,11 +250,13 @@ let refresh = {
     typeData:function(dataType){
         var type = null;
     // 控件类型：0-表格；101-柱状图；102-拆线图；103-圆饼图；201-文本；202-图片；203-按钮
+    // 控件类型：最新的图表全为 66
         switch(dataType){
             case "chart":
                 type = $(".chart-type-val span").attr("data-type");
                 break;
-            case "table":type = 0;
+            //case "table":type = 0;
+            case "table":type = 66;
                 break;
             case "text":type = 202;
                 break;
@@ -2000,7 +2007,7 @@ $(function(){
                 // 柱状图
 
 
-                $( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
+                $( "<li baseDataType="+ ui.draggable.attr('baseDataType') + " dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
                 pillsLi();
             }else if($.inArray(ui.draggable.attr("fieldId"),lis)!==-1 && id_!==""){
                 layer.alert('已存在！！！')
@@ -2019,7 +2026,7 @@ $(function(){
                 lis.push($(this).attr("fieldId"));
             });
             if($.inArray(ui.draggable.attr("fieldId"),lis)===-1&&id_!==""){
-                $( "<li dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
+                $( "<li baseDataType="+ ui.draggable.attr('baseDataType') + " dataType="+ui.draggable.attr("dataType")+" dim_mea="+ui.draggable.attr("dim_mea")+" fieldName="+ui.draggable.attr("fieldName")+" disCon="+ui.draggable.attr("disCon")+" defaultAggregation='"+ui.draggable.attr("defaultAggregation")+"' fieldId='"+ui.draggable.attr("fieldId")+"'></li>" ).html( ui.draggable.html() ).appendTo( $(this).find("ul") );
 
 
                 let uiEle = $(ui.draggable[0]);
@@ -2328,19 +2335,19 @@ function clear(id){
             let x_param='',y_param='',filter='';
             if(item.queryJson.x){
                 $.each(item.queryJson.x,function(x,item){
-                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    x_param += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.y){
                 $.each(item.queryJson.y,function(y,item){
-                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    y_param += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.filter){
                 $.each(item.queryJson.filter,function(y,item){
                     const min = item.numericFilter?item.numericFilter.range.min:"";
                     const max = item.numericFilter?item.numericFilter.range.max:"";
-                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    filter += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             const biSetId = item.queryJson.biSetId;
@@ -2357,7 +2364,6 @@ function clear(id){
             }
 
             pillsLi();
-
             // 全部属性
             const type = $(".chart-type-lists ul li[data-type="+ item.type +"] span").text();
             $(".chart-type-val span").text(type).attr("data-type",item.type);

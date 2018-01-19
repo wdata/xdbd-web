@@ -313,8 +313,8 @@ var startMoveLevelId = '',stopMoveLevelId = '';//层级Id：开始拖拽的层�
 
 function getBiDataModel(){
     var biSetId = $(".data-source-box select option:selected").attr("biSetId");
-    $("#dimensionBox").mCustomScrollbar("destroy");
-    $(".metric-box").mCustomScrollbar("destroy");
+    /*$("#dimensionBox").mCustomScrollbar("destroy");
+    $(".metric-box").mCustomScrollbar("destroy");*/
     $.ajax({
         type:'get',
         url:$url1 + '/bi/report/v1/datamodel.json',

@@ -238,16 +238,21 @@ function chartLegend(elemt,data,CStyle){
     /*
     *  先绘制图例，以确定图例的宽高度
     *  如果legend.display == false则不显示
+    *
     * */
-    if(!(CStyle.legend.display || CStyle.legend.display === "true")){
+    if(!(CStyle.legend.display && CStyle.legend.display === "true" && ifNullUnfd(data.data.queryJson.colour))){
         return false;
     }
 
     const total = data.data;
-    const sizeAll = total.queryJson.size[0];   // 尺寸和颜色为度量时；
-    const colourAll = total.queryJson.colour[0];                       // 全部属性 - 颜色
+    const queryJson = total.queryJson;
+    const sizeAll = ifNullUnfd(queryJson.size) > 0 ?
+        queryJson.size[0] : null;   // 尺寸和颜色为度量时；
+    const colourAll = ifNullUnfd(queryJson.colour) > 0 ?
+        queryJson.colour[0] : null;                       // 全部属性 - 颜色
     const id = elemt + " .legend";   // 根据提供的样式名或者兄弟元素.legend
-    const legendsData = total.dimValues[total.queryJson.colour[0].fieldId];
+
+    const legendsData = total.dimValues[colourAll[0].fieldId];
 
     let color = CStyle.discreteColor;   // 如何颜色是维度则是离散颜色，如果是度量则是连续颜色；
     let colorDomain = total.dimValues[colourAll.fieldId];
@@ -462,7 +467,12 @@ function chartLegend(elemt,data,CStyle){
 
 // 返回图例的宽高度和颜色
 function chartLegendData(el,total,CStyle){
-    const colourAll = total.queryJson.colour[0];                       // 全部属性 - 颜色
+    if(!ifNullUnfd(total.queryJson.colour)){
+        return { "elHeight":0, "elWidth":0, "color":CStyle.continuousColor, "colorDomain":0, "positionBur":true };
+    }
+
+    const colourAll = total.queryJson.colour[0];     // 全部属性 - 颜色
+
     let color = CStyle.discreteColor;   // 如何颜色是维度则是离散颜色，如果是度量则是连续颜色；
     let colorDomain = total.dimValues[colourAll.fieldId];
     if(colourAll.dimMea && colourAll.dimMea === 1){
@@ -492,6 +502,7 @@ function chartLegendData(el,total,CStyle){
     return { "elHeight":elHeight, "elWidth":elWidth, "color":color, "colorDomain":colorDomain, "positionBur":positionBur }
 }
 
+// 计算字符串长度
 // calculate("人生大事","12px","微软雅黑");
 function calculate(text,fontSize,fontFamily){
     const span = document.createElement("span");
@@ -511,6 +522,51 @@ function calculate(text,fontSize,fontFamily){
     result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
     result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
     return result;
+}
+
+// 判断数据是否为空，或者数组长度等于0
+function ifNullUnfd(data){
+    const typeOfData = typeof(data);
+    const d = typeOfData !== "string" ?
+        data + "":data;
+    if(d !== "null" && d !== "undefined"){
+        if(typeOfData === "number" && data.length <= 0){
+            return false;
+        }else if(typeOfData === "object" && d === "{}"){
+            return false;
+        }
+    }else{
+        return false;
+    }
+    return true;
+}
+
+/*
+*   图例是只显示第一个维度
+*   因此需要判断第一个维度是在X轴、Y轴、颜色、尺寸、角度、细分、标签、形状！
+* */
+function oneDF(queryJson){
+    let d = null;
+    if(ifNullUnfd(queryJson.x)){
+        d = queryJson.x;
+    }else if(ifNullUnfd(queryJson.y)){
+        d = queryJson.y;
+    }else if(ifNullUnfd(queryJson.colour)){
+        d = queryJson.colour;
+    }else if(ifNullUnfd(queryJson.size)){
+        d = queryJson.size;
+    }else if(ifNullUnfd(queryJson.angle)){
+        d = queryJson.angle;
+    }else if(ifNullUnfd(queryJson.detail)){
+        d = queryJson.detail;
+    }else if(ifNullUnfd(queryJson.label)){
+        d = queryJson.label;
+    }else if(ifNullUnfd(queryJson.shape)){
+        d = queryJson.shape;
+    }else{
+        return false;
+    }
+    return d;
 }
 
 

@@ -29,7 +29,7 @@
 <script src="../plugin/d3/d3.v3.min.js"></script>
 <script  src="../plugin/d3/d3.tip.js"></script>
 <script  src="js/data.js"></script>
-<script src="./js/common.js"></script>
+<script src="../common/ChartCommon.js"></script>
 <script>
     $(function(){
         let cs = new chartStyle("#chartDFAB2A73",CStyle);
@@ -102,16 +102,16 @@
         let allTwo = null;
         if(colourAll && colourAll.dimMea === 0){
             x1Domain = dimValues[colourAll.fieldId];
-            allTwo = colourAll.field
+            allTwo = colourAll.fieldId
         }else if(sizeAll && sizeAll.dimMea === 0){
             x1Domain = dimValues[sizeAll.fieldId];
-            allTwo = sizeAll.field;
+            allTwo = sizeAll.fieldId;
         }else if(detailAll){
             x1Domain = dimValues[detailAll.fieldId];
-            allTwo = detailAll.field
+            allTwo = detailAll.fieldId
         }else if(labelAll){
             x1Domain = dimValues[labelAll.fieldId];
-            allTwo = labelAll.field
+            allTwo = labelAll.fieldId
         }else{
             x1Domain = d3.range(1);
         }
@@ -223,12 +223,12 @@
 
         g.append("rect")
             .attr("class","areaBlock")
-            .style("fill",function(d){ if(colourAll){ return o(d[colourAll.field]); }else{return defaultColor;}})
-            .attr("data-id",function (d){ if(colourAll){ return d[colourAll.field] } })
-            .attr("width", function(d) {if(axisAorY){if(sizeAll){return w(d[sizeAll.field]);}else{return xc.rangeBand() ;}}else{return y(d[measure.field]) - 1;}})
-            .attr("height", function(d) {if(axisAorY){return  height0 - y(d[measure.field])}else{if(sizeAll){return w(d[sizeAll.field]);}else{return xc.rangeBand() ;}}})
-            .attr("x", function(d) { if(axisAorY){ if(sizeAll){return  x(d[dimension.field]) + (xc.rangeBand() -w(d[sizeAll.field]))/2}else{return  x(d[dimension.field])}}else{ return 0 }  })
-            .attr("y", function(d) { if(axisAorY){ return y(d[measure.field]) }else{if(sizeAll){return  x(d[dimension.field]) + (xc.rangeBand() -w(d[sizeAll.field]))/2}else{return  x(d[dimension.field])}}})
+            .style("fill",function(d){ if(colourAll){ return o(d[colourAll.fieldId]); }else{return defaultColor;}})
+            .attr("data-id",function (d){ if(colourAll){ return d[colourAll.fieldId] } })
+            .attr("width", function(d) {if(axisAorY){if(sizeAll){return w(d[sizeAll.fieldId]);}else{return xc.rangeBand() ;}}else{return y(d[measure.fieldId]) - 1;}})
+            .attr("height", function(d) {if(axisAorY){return  height0 - y(d[measure.fieldId])}else{if(sizeAll){return w(d[sizeAll.fieldId]);}else{return xc.rangeBand() ;}}})
+            .attr("x", function(d) { if(axisAorY){ if(sizeAll){return  x(d[dimension.fieldId]) + (xc.rangeBand() -w(d[sizeAll.fieldId]))/2}else{return  x(d[dimension.fieldId])}}else{ return 0 }  })
+            .attr("y", function(d) { if(axisAorY){ return y(d[measure.fieldId]) }else{if(sizeAll){return  x(d[dimension.fieldId]) + (xc.rangeBand() -w(d[sizeAll.fieldId]))/2}else{return  x(d[dimension.fieldId])}}})
             .on({
                 "mouseover":function(d){
                     d3.select(this).attr("stroke",'#000');
@@ -239,12 +239,12 @@
                         .style("left",(tx - margin.left - margin.right + 100) + "px")
                         .text("");
 
-                    div.append("text").text( dimension.fieldAlias + "：" + d[dimension.field]);
-                    if(colourAll){  div.append("text").text( colourAll.fieldAlias + "：" + d[colourAll.field]);  }
-                    if(sizeAll){    div.append("text").text( sizeAll.fieldAlias + "：" + d[sizeAll.field]);  }
-                    if(detailAll){  div.append("text").text( detailAll.fieldAlias + "：" + d[detailAll.field]);  }
-                    if(labelAll){   div.append("text").text( labelAll.fieldAlias + "：" + d[labelAll.field]);    }
-                    div.append("text").text( measure.fieldAlias + "：" + d[measure.field]);
+                    div.append("text").text( dimension.fieldAlias + "：" + d[dimension.fieldId]);
+                    if(colourAll){  div.append("text").text( colourAll.fieldAlias + "：" + d[colourAll.fieldId]);  }
+                    if(sizeAll){    div.append("text").text( sizeAll.fieldAlias + "：" + d[sizeAll.fieldId]);  }
+                    if(detailAll){  div.append("text").text( detailAll.fieldAlias + "：" + d[detailAll.fieldId]);  }
+                    if(labelAll){   div.append("text").text( labelAll.fieldAlias + "：" + d[labelAll.fieldId]);    }
+                    div.append("text").text( measure.fieldAlias + "：" + d[measure.fieldId]);
 
                 },
                 "mousemove":function(){
@@ -305,27 +305,27 @@
                     let ret = null;
                     if(axisAorY){
                         if(vertical.in){
-                            ret = x(d[dimension.field]) + (xc.rangeBand())/2;
+                            ret = x(d[dimension.fieldId]) + (xc.rangeBand())/2;
                         }else if(vertical.under){
                             if(sizeAll){
-                                ret = x(d[dimension.field]) + (xc.rangeBand() + w(d[sizeAll.field]))/2
+                                ret = x(d[dimension.fieldId]) + (xc.rangeBand() + w(d[sizeAll.fieldId]))/2
                             }else{
-                                ret = x(d[dimension.field]) + xc.rangeBand();
+                                ret = x(d[dimension.fieldId]) + xc.rangeBand();
                             }
                         }else{
                             if(sizeAll){
-                                ret = x(d[dimension.field]) + (xc.rangeBand() -w(d[sizeAll.field]))/2
+                                ret = x(d[dimension.fieldId]) + (xc.rangeBand() -w(d[sizeAll.fieldId]))/2
                             }else{
-                                ret = x(d[dimension.field])
+                                ret = x(d[dimension.fieldId])
                             }
                         }
                     }else{
                         if(horizontal.in){
-                            ret = y(d[measure.field])/2;
+                            ret = y(d[measure.fieldId])/2;
                         }else if(horizontal.under){
                             ret = 0;
                         }else{
-                            ret = y(d[measure.field]);
+                            ret = y(d[measure.fieldId]);
                         }
                     }
                     return  ret;
@@ -334,26 +334,26 @@
                     let ret = null;
                     if(axisAorY){
                         if(horizontal.in){
-                            ret = (height0 + y(d[measure.field]))/2;
+                            ret = (height0 + y(d[measure.fieldId]))/2;
                         }else if(horizontal.under){
                             ret = height0;
                         }else{
-                            ret = y(d[measure.field]);
+                            ret = y(d[measure.fieldId]);
                         }
                     }else{
                         if(vertical.in){
-                            ret = x(d[dimension.field]) + (xc.rangeBand())/2;
+                            ret = x(d[dimension.fieldId]) + (xc.rangeBand())/2;
                         }else if(vertical.under){
                             if(sizeAll){
-                                ret = x(d[dimension.field]) + (xc.rangeBand() + w(d[sizeAll.field]))/2
+                                ret = x(d[dimension.fieldId]) + (xc.rangeBand() + w(d[sizeAll.fieldId]))/2
                             }else{
-                                ret = x(d[dimension.field]) + xc.rangeBand();
+                                ret = x(d[dimension.fieldId]) + xc.rangeBand();
                             }
                         }else{
                             if(sizeAll){
-                                ret = x(d[dimension.field]) + (xc.rangeBand() -w(d[sizeAll.field]))/2
+                                ret = x(d[dimension.fieldId]) + (xc.rangeBand() -w(d[sizeAll.fieldId]))/2
                             }else{
-                                ret = x(d[dimension.field])
+                                ret = x(d[dimension.fieldId])
                             }
                         }
                     }
@@ -412,19 +412,19 @@
                 })
                 .text(function(d){
                     if(CStyle.label.overlapping){
-                        const result = calculate(d[labelAll.field],$(this).css("font-size"),$(this).css("font-family"));
+                        const result = calculate(d[labelAll.fieldId],$(this).css("font-size"),$(this).css("font-family"));
                         let reservedH = null,
                             reservedW = null;
                         if(axisAorY){
-                            reservedH = height0 - y(d[measure.field])
+                            reservedH = height0 - y(d[measure.fieldId])
                         }else{
-                            reservedW = y(d[measure.field]);
+                            reservedW = y(d[measure.fieldId]);
                         }
                         if(reservedH >= result.height || reservedW >= result.width){
-                            return d[labelAll.field];
+                            return d[labelAll.fieldId];
                         }
                     }else{
-                        return d[labelAll.field];
+                        return d[labelAll.fieldId];
                     }
                 })
                 .filter(function(d,i){
