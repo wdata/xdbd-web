@@ -843,11 +843,11 @@ function chart_table(id,data){
     var ths='',tds='';
 
     $.each(queryJson.x,function(index,item){
-        let th = '';
+        let td = '';
         $.each(records,function(key,val){
-            th += `<th>${val[item.fieldId]}</th>`;
+            td += `<td>${val[item.fieldId]}</td>`;
         });
-        ths+= `<tr>${th}</tr>`;
+        tds+= `<tr>${td}</tr>`;
     });
 
     $.each(queryJson.y,function(index,item){
@@ -863,7 +863,6 @@ function chart_table(id,data){
     $(id).find("table").remove();
     var table_text=`
         <table>
-            <thead>${ths}</thead>
             <tbody>${tds}</tbody>
         </table>
     `;

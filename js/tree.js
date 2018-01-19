@@ -207,6 +207,12 @@ $(function(){
 		}
 		$("#iframepage6").attr("src",url);
 	});
+
+    $(".sys-menus").delegate("li","click",function(){
+        $(this).addClass("active").siblings().removeClass("active");
+    });
+
+
 	/**
 	 * 监控页面*/
 	$(".htmlMonitoring-menus").delegate("li","click",function(){
