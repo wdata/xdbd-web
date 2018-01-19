@@ -233,6 +233,7 @@ let refresh = {
         chart_date.displayLevel = this.whLength(id,"z-index");
         // 控件类型
         chart_date.type = this.typeData($("#"+ id +"").attr("data-type"));
+        // chart_date.type = 66;  // 开发固定
         // 宽高、距左、距右
         chart_date.style.width = this.whLength(id,"width");
         chart_date.style.height = this.whLength(id,"height");
@@ -2334,19 +2335,19 @@ function clear(id){
             let x_param='',y_param='',filter='';
             if(item.queryJson.x){
                 $.each(item.queryJson.x,function(x,item){
-                    x_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    x_param += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.y){
                 $.each(item.queryJson.y,function(y,item){
-                    y_param += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    y_param += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             if(item.queryJson.filter){
                 $.each(item.queryJson.filter,function(y,item){
                     const min = item.numericFilter?item.numericFilter.range.min:"";
                     const max = item.numericFilter?item.numericFilter.range.max:"";
-                    filter += `<li datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
+                    filter += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
             const biSetId = item.queryJson.biSetId;

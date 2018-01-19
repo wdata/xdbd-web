@@ -113,7 +113,7 @@
 						<p>属性</p>
 						<div class="opt-chart-type">
 							<div class="chart-type-val">
-								<span data-type="101">柱状图</span>
+								<span data-type="101">并列柱状图</span>
 								<i class="fa fa-caret-down fr"></i>
 							</div>
 							<div class="chart-type-lists">
@@ -121,13 +121,13 @@
 									<li data-type="101" class="active">
 										<div>
 											<img src="images/icon_bar_on.png" alt="" class="fl"/>
-											<span>柱状图</span>
+											<span>并列柱状图</span>
 										</div>
 									</li>
 									<li data-type="102">
 										<div>
 											<img src="images/icon_line_on.png" alt="" class="fl" />
-											<span>折线图</span>
+											<span>堆叠柱状图</span>
 										</div>
 									</li>
 									<li data-type="103">
@@ -136,15 +136,9 @@
 											<span>饼图</span>
 										</div>
 									</li>
-									<li data-type="66">
-										<div>
-											<img src="images/icon_table_on.png" alt="" class="fl" />
-											<span>表格</span>
-										</div>
-									</li>
 									<li data-type="104">
 										<div>
-											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<img src="images/icon_table_on.png" alt="" class="fl" />
 											<span>堆叠柱状图</span>
 										</div>
 									</li>
@@ -169,19 +163,25 @@
 									<li data-type="108">
 										<div>
 											<img src="images/icon_bar_on.png" alt="" class="fl" />
-											<span>仪表盘</span>
+											<span>矩阵图</span>
 										</div>
 									</li>
 									<li data-type="109">
 										<div>
 											<img src="images/icon_bar_on.png" alt="" class="fl" />
-											<span>漏斗图</span>
+											<span>气泡图</span>
 										</div>
 									</li>
 									<li data-type="110">
 										<div>
 											<img src="images/icon_bar_on.png" alt="" class="fl" />
-											<span>矩阵图</span>
+											<span>气泡地图</span>
+										</div>
+									</li>
+									<li data-type="111">
+										<div>
+											<img src="images/icon_bar_on.png" alt="" class="fl" />
+											<span>色彩地图</span>
 										</div>
 									</li>
 								</ul>
@@ -427,7 +427,7 @@
 									<input type="checkbox" checked="checked" class="tab_size"/>
 								</div>
 							</div>
-							<div class="tab_page wa-text">
+							<div class="tab_page">
 								<label>每页显示条数</label>
 								<select class="tab_pages">
 									<option value="10">10</option>
@@ -484,7 +484,7 @@
 				<div class="text-attr-box" style="display: none;">
 					<div class="title-box">
 						<h3>文本</h3>
-						<div class="set-text-attr" style="border-top: 1px solid #ccc">
+						<div class="set-text-attr">
 							<p>字体段落</p>
 							<div class="set-text-attr-wrap">
 								<div class="set-text-color">
@@ -1124,6 +1124,7 @@
 	<!-- 公共样式页面 -->
 	<script src="js/commonStyle.js"></script>
 	<!--存放3D转化封装的函数-->
+	<script src="common/ChartCommon.js"></script>
 	<script src="js/graphical.js"></script>
 	<!--编辑器内的操作-->
 	<script src="js/operation.js"></script>
