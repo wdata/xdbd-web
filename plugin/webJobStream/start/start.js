@@ -14,7 +14,13 @@ function bind_saveJobStream() {
 function getVal() {
 	var data = {};
 	data = {
-		"start": $('.start_name').val(),
+		"coordinator":{
+			"start": $('.time_start').val(),
+			"end": $('.time_end').val(),
+			"name": $('.start_name').val(),
+			"timeunit": $('.start_date').val(),
+			"frequency": $('.start_time').val()
+		},
 		"type": "start"
 	};
 	return data;

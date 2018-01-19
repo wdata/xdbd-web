@@ -3,5 +3,32 @@
         <td class="th">任务名称</td>
         <td><input disabled="disabled" type="text" class="manage start_name" readonly="readonly" /></td>
     </tr>
+    <tr>
+        <td class="th">开始时间</td>
+        <td>
+            <input type="text" class="manage time_start" onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="th">结束时间</td>
+        <td>
+            <input type="text" class="manage time_end" onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>    
+        </td>    
+    </tr>
+    <tr>
+        <td class="th">执行周期</td>
+        <td>
+            <select class="manage start_date">
+                <option value="months">月份</option>
+                <option value="days">天数</option>
+                <option value="hours">小时</option>
+                <option value="minutes">分钟</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="th"></td>
+        <td><input type="number" class="manage start_time"/></td>
+    </tr>
 </table>
 <div class="saveJobStream save">保存</div>

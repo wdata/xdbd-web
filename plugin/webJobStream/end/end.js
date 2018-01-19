@@ -13,7 +13,7 @@ function bind_saveJobStream() {
 function getVal() {
     var data = {};
     data = {
-        "start": $('.end_name').val(),
+        "name":$('.end_name').val(),
         "type": "end"
     }
     return data;
