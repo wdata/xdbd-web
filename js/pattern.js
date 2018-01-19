@@ -50,25 +50,28 @@ function radioBtn() {
     }
 }
 //选项卡
-$(".tab_menu li").click(function(){
-    $(this).addClass("on").siblings().removeClass("on"); //切换选中的按钮高亮状态
-    var index=$(this).index(); //获取被按下按钮的索引值，需要注意index是从0开始的
-    $(".tab_box > div").eq(index).show().siblings().hide(); //在按钮选中时在下面显示相应的内容，同时隐藏不需要的框架内容
-});
+function Tablelist(name,item) {
+    name.click(function(){
+        $(this).addClass("on").siblings().removeClass("on"); //切换选中的按钮高亮状态
+        var index=$(this).index(); //获取被按下按钮的索引值，需要注意index是从0开始的
+        item.eq(index).show().siblings().hide(); //在按钮选中时在下面显示相应的内容，同时隐藏不需要的框架内容
+    });
+}
+Tablelist($(".tab_menu li"),$(".tab_box > div"));
+Tablelist($(".tab_chart li"),$(".chart_box > div"));
 //是否显示表头
-$(".tab_pitch").change(function() {
-    if($(this).is(':checked')) {
-        $('.tab_tit').show();
-    } else {
-        $('.tab_tit').hide();
-    }
-})
-$(".tab_size").change(function() {
-    if($(this).is(':checked')) {
-        $('.tab_page').show();
-    } else {
-        $('.tab_page').hide();
-    }
-})
+function isShow(name,item) {
+    name.change(function() {
+        if($(this).is(':checked')) {
+            item.show();
+        } else {
+            item.hide();
+        }
+    })
+}
+isShow($(".tab_pitch"),$('.tab_tit'));
+isShow($(".tab_size"),$('.tab_page'));
+isShow($(".tab_legend"),$('.tab_cutline'));
+
 console.log($(window).height())
-$('.tab_list').css('height',($(window).height()-70)+'px');
+$('.tab_list').css('height',($(window).height()-100)+'px');
