@@ -30,7 +30,7 @@ var dataA2 = {
                 "min": 74.52
             }
         },
-        "reoords": [
+        "records": [
             {
                 "category": "办公用品",
                 "sales_amount": 96.36,
@@ -190,7 +190,7 @@ var dataA3 = {
                 "min": 44.28
             }
         },
-        "reoords": [
+        "records": [
             {
                 "category": "办公用品",
                 "sales_amount": 96.36,
@@ -494,7 +494,7 @@ var dataA4 = {
                 "min": 7.77
             }
         },
-        "reoords": [
+        "records": [
             {
                 "category": "办公用品",
                 "sales_amount": 46.53,
@@ -1857,7 +1857,7 @@ var dataB2 = {
                 "min": 72
             }
         },
-        "reoords": [
+        "records": [
             {
                 "category": "办公用品",
                 "sales_amount": 96.36,
@@ -2077,7 +2077,7 @@ var dataB3 = {
                 "min": 2
             }
         },
-        "reoords": [
+        "records": [
             {
                 "category": "办公用品",
                 "sales_amount": 96.36,
@@ -2317,7 +2317,7 @@ var dataB4 = {
                 "min": 2
             }
         },
-        "reoords": [
+        "records": [
             {
                 "category": "办公用品",
                 "sales_amount": 72,
@@ -2475,7 +2475,7 @@ var stackDataA1 = {
                 "min": 9.618
             }
         },
-        "reoords": [
+        "records": [
             {
                 "region": "东亚",
                 "sales_amount": 197.28,
@@ -2905,7 +2905,7 @@ var roundCake1 = {
                 "min": 13.08
             }
         },
-        "reoords": [
+        "records": [
             {
                 "market": "亚太地区",
                 "sales_amount": 197.28,
@@ -3082,7 +3082,7 @@ var roundCake2 = {
                 "min": 19311.458999999984
             }
         },
-        "reoords": [
+        "records": [
             {
                 "region0": "东亚",
                 "discount_SUM0": 113.89999999999999,
@@ -3311,7 +3311,7 @@ var roundCake3 = {
                 "min": 3167.574
             }
         },
-        "reoords": [
+        "records": [
             {
                 "region0": "东亚",
                 "discount_SUM0": 66,
