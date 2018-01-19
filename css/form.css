@@ -444,7 +444,7 @@ form p.error {
 	background-color:transparent;
 }
 .menu-top .menu-top-ul{
-	min-width: 920px;
+	min-width: 880px;
 }
 .menu-top li {
 	float: left;
@@ -454,12 +454,12 @@ form p.error {
 }
 .menu-top li a {
 	display: block;
-	width: 140px;
+	width: 130px;
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
 	font-size: 18px;
-	color: #FFFFFF;
+	color: #dfdfdf;
 	background: url(../images/menubg.png) no-repeat;
 	background-size: 100% 40px;
 }
