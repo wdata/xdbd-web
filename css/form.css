@@ -443,6 +443,9 @@ form p.error {
 	margin-top: -40px;
 	background-color:transparent;
 }
+.menu-top .menu-top-ul{
+	min-width: 920px;
+}
 .menu-top li {
 	float: left;
 }
@@ -2257,6 +2260,7 @@ div.f-addbtn-box-auto li{
 	position: absolute;
 	right: 353px;
 	top: 25px;
+	top: 10px;
 	width: 150px;
 	height: 25px;
 	background-color: #FFFFFF;
