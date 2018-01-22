@@ -125,9 +125,9 @@ $(function(){
 						htmlMonitoring += `
               				<li class="${i==0?'active':''}" url="${url}"><a href="javascript:;">${v.name}</a></li>
               			`;
-						if(i==0){
+						/*if(i==0){
 							$("#iframepage7").attr("src",url);
-						}
+						}*/
 					});
 					$(".htmlMonitoring-menus").empty().append(htmlMonitoring);
               		
@@ -209,7 +209,8 @@ $(function(){
 	$(".htmlMonitoring-menus").delegate("li","click",function(){
 		$(this).addClass("active").siblings().removeClass("active");
 		var url = $(this).attr('url');
-		$("#iframepage3").attr("src",url);
+		//$("#iframepage3").attr("src",url);
+        window.open(url);
 	});
 	
 	
