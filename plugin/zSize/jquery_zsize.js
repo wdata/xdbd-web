@@ -443,11 +443,13 @@
             el.on('click', function(e) {
                 e.stopPropagation();
                 self.triggerResize(el);
-                //console.log(save_arr);
                 if($(this).attr("id") !== id_){
                     id_ = $(this).attr("id");
                     data_type = $(this).attr("data-type");
                     clear(id_);
+
+                    const biSetId = item.queryJson.biSetId;
+                    getBiSet(projectId,biSetId);
                 }
                 recordingId = id_;  // 点击时记录id，
                 // shutDownC();  //    关闭文本编辑区

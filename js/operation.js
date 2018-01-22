@@ -2350,8 +2350,6 @@ function clear(id){
                     filter += `<li baseDataType="${ item.baseDataType }" datatype="${ item.dataType }" dim_mea="${ item.dimMea }" fieldname="${ item.field }" discon="${ item.disCon }" defaultaggregation="${ item.aggregation }" fieldId="${ item.fieldId }" min="${ min }"  max="${ max }"  class="ui-draggable">${ item.fieldAlias }</li>`;
                 });
             }
-            const biSetId = item.queryJson.biSetId;
-            getBiSet(projectId,biSetId);
 
             if(item.customData.dataType === "chart"){
                 $(".chart-attr-box .x-pills ul").html(x_param);
