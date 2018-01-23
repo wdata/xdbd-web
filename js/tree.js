@@ -44,7 +44,7 @@ $(function(){
 	 * 
 	 */
 	
-	userRight();
+	// userRight();
 	/*//延迟调用：
 	var winTimer = window.setInterval(function(){
 		if(sessionStorage.getItem("userId")){
@@ -138,7 +138,89 @@ $(function(){
 			}
 		});
 	}
-	
+
+
+
+///2018-01-23-------start-------//////
+	var apiResource = {"code":0,"success":true,"message":"操作成功！","timestamp":1516006903701,"data":[{"sort":1,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"501","method":"GET","name":"智能BI","remark":"","url":"/xdbd/pm","children":null,"childrens":[{"sort":1,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"515","method":"GET","name":"开发环境","remark":"","url":"/xdbd/pm/dev","children":null,"childrens":[]},{"sort":2,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"516","method":"GET","name":"测试环境","remark":"","url":"/xdbd/pm/test","children":null,"childrens":[]},{"sort":3,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"517","method":"GET","name":"生产环境","remark":"","url":"/xdbd/pm/prod","children":null,"childrens":[]}]},{"sort":15,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"502","method":"GET","name":"智能信链","remark":"","url":"/xdbd/znxl","children":null,"childrens":[]},{"sort":16,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"503","method":"GET","name":"智能投顾","remark":"","url":"/xdbd/zntg","children":null,"childrens":[]},{"sort":17,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"504","method":"GET","name":"智能风控","remark":"","url":"/xdbd/znfk","children":null,"childrens":[]},{"sort":18,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"505","method":"GET","name":"智能营销","remark":"","url":"/xdbd/znyx","children":null,"childrens":[]},{"sort":20,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"506","method":"GET","name":"系统管理","remark":"","url":"/xdbd/sm","children":null,"childrens":[{"sort":1,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"518","method":"GET","name":"个人信息","remark":null,"url":"/xdbd/sm/userinfo","children":null,"childrens":[]},{"sort":2,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"519","method":"GET","name":"组织管理","remark":null,"url":"/xdbd/sm/ozmanager","children":null,"childrens":[]},{"sort":3,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"511","method":"GET","name":"账号管理","remark":"","url":"/xdbd/sm/account","children":null,"childrens":[]},{"sort":4,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"512","method":"GET","name":"角色管理","remark":"","url":"/xdbd/sm/role","children":null,"childrens":[]},{"sort":5,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"514","method":"GET","name":"企业中心","remark":"","url":"/xdbd/sm/bscenter","children":null,"childrens":[]},{"sort":6,"type":2,"status":1,"tag":0,"icon":"","image":"","id":"513","method":"GET","name":"日志管理","remark":"","url":"/xdbd/sm/log","children":null,"childrens":[]}]},{"sort":21,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"507","method":"GET","name":"监控中心","remark":null,"url":"/xdbd/monitor","children":null,"childrens":[{"sort":12,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"508","method":"GET","name":"CDH监控","remark":"http://bd.braindeep.ai:7180","url":"/xdbd/monitor/cdh","children":null,"childrens":[]},{"sort":13,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"509","method":"GET","name":"HDFS监控端口","remark":"http://bd.braindeep.ai:50070","url":"/xdbd/monitor/hdfs","children":null,"childrens":[]},{"sort":14,"type":2,"status":1,"tag":0,"icon":null,"image":null,"id":"510","method":"GET","name":"oozie监控端口","remark":"http://bd.braindeep.ai:11000/oozie/","url":"/xdbd/monitor/oozie","children":null,"childrens":[]}]}]};
+	function userRight_yanshi(res){
+		if(res.code===0){
+			var menuLv1 = res.data;
+			var htmlLv1 = "";
+			//一级菜单
+			$.each(menuLv1, function(i,v) {
+				htmlLv1 += `
+								<li class="${i===0?'active':''}"><a href="javascript:;">${v.name}</a></li>
+							`;
+			});
+			$(".menu-top ul").empty().append(htmlLv1);
+
+			//项目管理环境控制
+			var menuEnv = menuLv1[0].childrens;
+			var htmlEnv = "";
+			$.each(menuEnv, function(i,v) {
+				htmlEnv += `
+								<option value="${v.name}">${v.name}</option>
+							`;
+				if(i===0){
+					onCurEnv = v.name;
+					switch(onCurEnv){
+						case "开发环境":
+							onCurEnv = "dev";
+							break;
+						case "测试环境":
+							onCurEnv = "test";
+							break;
+						case "生产环境":
+							onCurEnv = "prod";
+							break;
+						default:
+					}
+					sessionStorage.setItem("onEnv",onCurEnv);
+					getProjName(0);//刷新项目树
+				}
+			});
+			$(".set-cur-env select").empty().append(htmlEnv);
+			//系统管理菜单
+			var menuSys = menuLv1[4].childrens;
+			var htmlSys = "";
+			$.each(menuSys, function(i,v) {
+				htmlSys += `
+								<li class="${v.name==='日志管理'?'active':''}"><a href="javascript:;">${v.name}</a></li>
+							`;
+			});
+			$(".sys-menus").empty().append(htmlSys);
+			//监控中心
+			var menuMonitoring = menuLv1[5].childrens;
+			var htmlMonitoring = "";
+			var isCN = location.hostname.indexOf('.cn');
+			var url = '';
+			$.each(menuMonitoring, function(i,v) {
+				if(isCN==-1){//非 .cn 域名
+					url = v.remark.replace(/\.cn\:/,'.ai:');
+				}else {
+					url = v.remark.replace(/\.ai:/,'.cn:');
+				}
+				htmlMonitoring += `
+								<li class="${i==0?'active':''}" url="${url}"><a href="javascript:;">${v.name}</a></li>
+							`;
+				/*if(i==0){
+					$("#iframepage7").attr("src",url);
+				}*/
+			});
+			$(".htmlMonitoring-menus").empty().append(htmlMonitoring);
+
+		}
+	}
+	userRight_yanshi(apiResource);
+
+///2018-01-23-------end-------//////
+
+
+
+
+
+
 	/**
 	 * 环境切换
 	 */
