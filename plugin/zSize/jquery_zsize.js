@@ -448,8 +448,12 @@
                     data_type = $(this).attr("data-type");
                     clear(id_);
 
-                    const biSetId = item.queryJson.biSetId;
-                    getBiSet(projectId,biSetId);
+                    $.each(save_arr,function(i,item){
+                        if(item.cid === $(this).attr("id")){
+                            const biSetId = item.queryJson.biSetId;
+                            getBiSet(projectId,biSetId);
+                        }
+                    });
                 }
                 recordingId = id_;  // 点击时记录id，
                 // shutDownC();  //    关闭文本编辑区

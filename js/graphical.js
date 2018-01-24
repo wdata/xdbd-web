@@ -2387,9 +2387,10 @@ function manyGroup(elemt,data,CStyle){
         .attr("y", function(d) { if(axisAorY){ return y(d[measure.fieldId]) }else{if(sizeAll){return  x(d[dimension.fieldId]) + (xc.rangeBand() -w(d[sizeAll.fieldId]))/2}else{return  x(d[dimension.fieldId])}}})
         .on({
             "mouseover":function(d){
+
                 d3.select(this).attr("stroke",'#000');
-                const tx = parseFloat(d3.event.pageX - parseInt($(elemt).css("left")));
-                const ty = parseFloat(d3.event.pageY - parseInt($(elemt).css("top")));
+                const tx = parseFloat(d3.event.pageX - parseInt($("#" + elemt).css("left")));
+                const ty = parseFloat(d3.event.pageY - parseInt($("#" + elemt).css("top")));
                 div.style("display","block")
                     .style("top",(ty - margin.top - margin.bottom) + "px")
                     .style("left",(tx - margin.left - margin.right + 100) + "px")
@@ -2404,8 +2405,8 @@ function manyGroup(elemt,data,CStyle){
 
             },
             "mousemove":function(){
-                const tx = parseFloat(d3.event.pageX - parseInt($(elemt).css("left")));
-                const ty = parseFloat(d3.event.pageY - parseInt($(elemt).css("top")));
+                const tx = parseFloat(d3.event.pageX - parseInt($("#" + elemt).css("left")));
+                const ty = parseFloat(d3.event.pageY - parseInt($("#" + elemt).css("top")));
                 div.style("top",(ty - margin.top - margin.bottom) + "px")
                     .style("left",(tx - margin.left - margin.right + 40) + "px")
             },
