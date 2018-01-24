@@ -133,6 +133,7 @@
 		var this_data = {};
 		var this_remark = '';
 		var this_new = true; //新建
+		var this_jobName = 'flowChart'; //作业流名称
 		var onenv = true;
 		var $url = '../xdbd-wf';  //../xdbd-wf
 
@@ -390,7 +391,7 @@
 					// console.log(data)
 					if (data.code == 0) {
 						this_remark = data.data.remark;
-						            //  console.log(this_remark)
+						this_jobName = data.data.name;
 						$('.remark_value').html(this_remark);
 						var getDag = "";
 						if (data.data != '' && data.data != null && data.data.dag != null && data.data.dag != 'null') {

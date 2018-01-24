@@ -443,22 +443,25 @@ form p.error {
 	margin-top: -40px;
 	background-color:transparent;
 }
+.menu-top .menu-top-ul{
+	min-width: 880px;
+}
 .menu-top li {
 	float: left;
 }
 .menu-top li+li {
-	margin-left: 20px;
+	margin-left: 16px;
 }
 .menu-top li a {
 	display: block;
-	width: 160px;
+	width: 130px;
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
 	font-size: 18px;
-	color: #FFFFFF;
+	color: #dfdfdf;
 	background: url(../images/menubg.png) no-repeat;
-	background-size: 160px 40px;
+	background-size: 100% 40px;
 }
 .menu-top li.active a {
 	color:#578fe6;
@@ -2253,6 +2256,7 @@ div.f-addbtn-box-auto li{
 	position: absolute;
 	right: 353px;
 	top: 25px;
+	top: 10px;
 	width: 150px;
 	height: 25px;
 	background-color: #FFFFFF;
