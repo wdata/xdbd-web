@@ -164,9 +164,8 @@ function newBtn(popups) {
 			success: function (data) {
 				if (data.code == 0) {
 					localStorage.setItem('directoryId', data.data);
-					// localStorage.setItem('jobName', newName);
 					window.location.href = 'etlChart.html';
-					parent.location.reload();
+					// getProjName(0);//刷新左侧树数据
 				} else {
 					layer.msg(data.message, { time: 1000 })
 				}

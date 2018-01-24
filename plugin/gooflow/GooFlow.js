@@ -70,7 +70,8 @@ function GooFlow(bgDiv,property){
 	    this.onPrintClick=null;//打印流程图按钮定义
 	    this.onBtnPreviewClick=null//预览
 	    this.onBtnSaveCopyClick=null//另存为模板
-	    this.onBtnExecuteClick=null//执行
+		this.onBtnExecuteClick=null//执行
+		this.onBtnWaitForClick=null//定时执行
 		if(property.headBtns)
 		this.$head.on("click",{inthis:this},function(e){
 			if(!e)e=window.event;
@@ -89,7 +90,8 @@ function GooFlow(bgDiv,property){
         case "ico_print":   if(This.onPrintClick!=null)	This.onPrintClick();break;
         case "ico_preview": if(This.onBtnPreviewClick!=null) This.onBtnPreviewClick();break;
         case "ico_saveCopy": if(This.onBtnSaveCopyClick!=null) This.onBtnSaveCopyClick();break;
-        case "ico_execute": if(This.onBtnExecuteClick!=null) This.onBtnExecuteClick();break;
+		case "ico_execute": if(This.onBtnExecuteClick!=null) This.onBtnExecuteClick();break;
+		case "ico_waitFor": if(This.onBtnWaitForClick!=null) This.onBtnWaitForClick();break;
 			}
 		});
 	}

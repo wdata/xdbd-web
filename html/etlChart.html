@@ -101,9 +101,11 @@
 		}
 	</style>
 	<script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
-	<!--<script type="text/javascript" src="../plugin/gooflow/child.js"></script>-->
+	<script type="text/javascript" src="../plugin/My97DatePicker/WdatePicker.js"></script>
+	<script src="../plugin/treeview/bootstrap-treeview.js"></script>
 	<script src="../plugin/layer/layer.js"></script>
 	<script src="../js/login.js"></script>
+	<script src="../js/tree.js"></script>
 	<script type="text/javascript" src="../plugin/gooflow/GooFunc.js"></script>
 	<!--<script type="text/javascript" src="../plugin/gooflow/json2.js"></script>-->
 	<script type="text/javascript" src="../plugin/gooflow/GooFlow.js"></script>
@@ -145,13 +147,13 @@
 		init_dag();
 
 		var property = {
-			width: 1230,
-			height: 800,
+			width:  document.body.clientWidth-200, //1230,
+			height:  document.body.clientHeight-200, //800,
 			toolBtns: ["start round mix", "end round mix", "parallel", "merge", "decision", "java", "shell", "spark", "algorithm"],
 			haveHead: true,
 			//        headLabel:true,
 			initLabelText: '流程图',
-			headBtns: ["undo", "redo", "reload", "print", "save", "execute", "saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save""new",,
+			headBtns: ["undo", "redo", "reload", "print", "save", "execute", "waitFor", "saveCopy"],//如果haveHead=true，则定义HEAD区的按钮  "save""new",,
 			haveTool: onenv,
 			haveDashed: true,
 			haveGroup: true,
@@ -178,6 +180,7 @@
 			print: "打印",
 			save: "保存",
 			execute: "执行",
+			waitFor: "定时执行",
 			saveCopy: "另存为模板"
 		};
 		var demo;
@@ -289,6 +292,35 @@
 				$.ajax({
 					type: "POST",
 					url: $url + "/api/job/v1/execute",
+					dataType: "json",
+					contentType: "application/json",
+					data: JSON.stringify({
+						"id": jobid,
+						"versionId": this_versionId
+					}), success: function (data) {
+						// console.log(data);
+						if (data.code == 0) {
+							layer.msg("执行成功", { time: 1000 })
+						} else {
+							layer.msg(data.message, { time: 1000 })
+						}
+					},
+                    beforeSend:function(){
+                        layer.load(0, {shade:[0.1,'#000']}); //0代表加载的风格，支持0-2
+                    },
+                    complete:function(){
+                        layer.closeAll('loading'); //关闭信息框
+                    },
+					error: function (data) {
+						// console.log(JSON.stringify(data))
+					}
+				});
+			};
+			//定时执行
+			demo.onBtnWaitForClick = function () {
+				$.ajax({
+					type: "POST",
+					url: $url + "/api/job/v1/executeCoordinator",
 					dataType: "json",
 					contentType: "application/json",
 					data: JSON.stringify({
@@ -489,6 +521,7 @@
 				contentType: "application/json",
 				data: JSON.stringify({
 					"webComponentId": this_actionCompId,
+					"projectId": this_projectId,
 					"name": this_actionCompName,
 					"jobId": jobid,
 					"sysJobCompId": 'comp0003',

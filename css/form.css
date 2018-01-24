@@ -109,6 +109,9 @@ a:focus, a:hover {
 .r {
 	text-align: right;
 }
+.top{
+	margin-top: 10px;
+}
 /*分页*/
 #opagination {
 	text-align: center;
@@ -2475,7 +2478,7 @@ body .biTips.layui-layer .layui-layer-content{
 	float: right;
 	margin-right: 17px;
 }
-.tab_tit>.tab_bar>input{
+.tab_bar>input{
 	display: inline-block;
 	width: 159px;
 	margin: 7px 11px; 
@@ -2498,13 +2501,18 @@ body .biTips.layui-layer .layui-layer-content{
 	width: 75px;
 }
 /* 新增图表 */
-.tab_menu>li{
+.option-head>li{
 	float: left;
 	width: 50%;
 	height: 30px;
 	display: inline-block;
 	line-height: 30px;
 }
-.tab_menu>li.on{
+.option-head>li.on{
 	background: #578fe6;
+}
+/* 新增图表 */
+.set-text-align > a{
+	font-size: 12px;
+	padding: 0 3px;
 }
