@@ -1,6 +1,6 @@
 $(function(){
 	/*
-	 
+	
 	 * url地址变量
 	 * BI : http://192.168.1.42:8084/xdbd-bi
 	 * ETL: http://192.168.1.42:8084/xdbd-etl
@@ -43,7 +43,6 @@ $(function(){
 	 * 用户菜单权限
 	 * 
 	 */
-	
 	userRight();
 	/*//延迟调用：
 	var winTimer = window.setInterval(function(){
@@ -693,7 +692,6 @@ $(function(){
                     ||dirType==="9"||dirType==="11"||dirType==="5"){
                     currentNode.tags=['1'];
                 }
-
                 //new
 				switch(dirType){
 					case "14":
@@ -880,7 +878,7 @@ $(function(){
     }
 		    
 //	getProjName(0);
-	function getProjName(id){ 
+	function getProjName(id){
 		$.ajax({
 			type:'POST',
             url:$url3+'/bigdata/project/findProjectTree',
@@ -890,11 +888,12 @@ $(function(){
             dataType:'json',
 			data:{
 				"id":id,
+				"projectId":projectId,
 				"env":onCurEnv
 			},
 			success:function(res){
               	if(res.code===0){
-              		treeviewData = res.data;
+					  treeviewData = res.data;
               		// localStorage.setItem("treeviewData",JSON.stringify(treeviewData));
                     showTree(treeviewData);
 	            }

@@ -102,8 +102,10 @@
 	</style>
 	<script type="text/javascript" src="../plugin/gooflow/jquery.min.js"></script>
 	<script type="text/javascript" src="../plugin/My97DatePicker/WdatePicker.js"></script>
+	<script src="../plugin/treeview/bootstrap-treeview.js"></script>
 	<script src="../plugin/layer/layer.js"></script>
 	<script src="../js/login.js"></script>
+	<script src="../js/tree.js"></script>
 	<script type="text/javascript" src="../plugin/gooflow/GooFunc.js"></script>
 	<!--<script type="text/javascript" src="../plugin/gooflow/json2.js"></script>-->
 	<script type="text/javascript" src="../plugin/gooflow/GooFlow.js"></script>
@@ -145,8 +147,8 @@
 		init_dag();
 
 		var property = {
-			width: 1230,
-			height: 800,
+			width:  document.body.clientWidth-200, //1230,
+			height:  document.body.clientHeight-200, //800,
 			toolBtns: ["start round mix", "end round mix", "parallel", "merge", "decision", "java", "shell", "spark", "algorithm"],
 			haveHead: true,
 			//        headLabel:true,
@@ -519,6 +521,7 @@
 				contentType: "application/json",
 				data: JSON.stringify({
 					"webComponentId": this_actionCompId,
+					"projectId": this_projectId,
 					"name": this_actionCompName,
 					"jobId": jobid,
 					"sysJobCompId": 'comp0003',

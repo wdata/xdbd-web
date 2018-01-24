@@ -14,8 +14,8 @@ function bind_saveJobStream() {
 function getVal() {
 	var data = {};
 	data = {
-		"start": $('.time_start').val(),
-		"end": $('.time_end').val(),
+		"startTime": $('.time_start').val(),
+		"endTime": $('.time_end').val(),
 		"name": $('.start_name').val(),
 		"timeunit": $('.start_date').val(),
 		"frequency": $('.start_time').val(),
