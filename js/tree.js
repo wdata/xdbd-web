@@ -943,7 +943,8 @@ $(function () {
 
     function newBiFile() {
         //getBiFileInfo
-        editFile.getNewBiFileInfo(projectId, versionId, directoryId);
+        $(".newBiFile .new_type").html(industryType())
+        editFile.getNewBiFileInfo(projectId,versionId,directoryId);
         var index = layer.open({
             type: 1,
             btn: ['确定', '取消'],
