@@ -520,7 +520,7 @@ $(function () {
         let url;
         let name = $(this).find("a").text();
         switch (name) {
-            case "个人信息":
+            /*case "个人信息":
                 url = $urlPublic + "/page/person/person.html";
                 break;
             case "组织管理":
@@ -537,8 +537,10 @@ $(function () {
                 break;
             case "企业中心":
                 url = $urlPublic + "/page/org_control/not_org.html";
-                break;
+                break;*/
             default:
+                url = "html/loglist.html";
+                break;
         }
         $("#iframepage6").attr("src", url);
     });
