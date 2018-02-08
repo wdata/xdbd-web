@@ -212,7 +212,7 @@ $(function () {
             "image": null,
             "id": "502",
             "method": "GET",
-            "name": "智能信链",
+            "name": "智能图谱",
             "remark": "",
             "url": "/xdbd/znxl",
             "children": null,
