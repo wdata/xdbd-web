@@ -64,12 +64,37 @@
   <script type="text/javascript" src="vendor-52c21385f74458a889bd.js"></script>
   <script type="text/javascript" src="app-52c21385f74458a889bd.js"></script>
   <script>
-    // var a = document.getElementsByClassName('CodeMirror-code')[0];
-    // var b = `<div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -45px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 14px; width: 21px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-keyword">MATCH</span> <span class="cm-operator">(</span><span class="cm-variable cm-p-variable">n</span><span class="cm-operator cm-p-label">:</span><span class="cm-variable cm-p-label">Company</span><span class="cm-operator">)</span> <span class="cm-keyword">where</span> <span class="cm-variable cm-p-variable">n</span><span class="cm-operator">.</span><span class="cm-variable cm-p-property">company_name</span><span class="cm-operator">=</span><span class="cm-variable">~</span><span class="cm-string">'.*TCL.*'</span> <span class="cm-keyword">RETURN</span> <span class="cm-variable cm-p-variable">n</span> <span class="cm-keyword">LIMIT</span> <span class="cm-number">25</span></span></pre></div>`;
+    window.onload = function(){
+      // 插入文本 
+      var a = document.getElementsByClassName('CodeMirror-code')[0];
 
-    // console.log(a);
-    // a.append(`MATCH (n:Company) where n.company_name=~'.*TCL.*' RETURN n LIMIT 25`);
+      var b = `<div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -45px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 14px; width: 21px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-keyword">MATCH</span> <span class="cm-operator">(</span><span class="cm-variable cm-p-variable">n</span><span class="cm-operator cm-p-label">:</span><span class="cm-variable cm-p-label">Company</span><span class="cm-operator">)</span> <span class="cm-keyword">where</span> <span class="cm-variable cm-p-variable">n</span><span class="cm-operator">.</span><span class="cm-variable cm-p-property">company_name</span><span class="cm-operator">=</span><span class="cm-variable">~</span><span class="cm-string">'.*TCL.*'</span> <span class="cm-keyword">RETURN</span> <span class="cm-variable cm-p-variable">n</span> <span class="cm-keyword">LIMIT</span> <span class="cm-number">25</span></span></pre></div>`;
 
+      // a.append(`MATCH (n:Company) where n.company_name=~'.*TCL.*' RETURN n LIMIT 25`);
+
+      // 删除出现的neo4j的提示
+      var b = document.getElementsByClassName('styled__StyledStream-kEBYx')[0];
+      var c = document.getElementsByClassName('styled__SyncDisconnectedBanner-dqivLs')[0];
+
+      console.log(a);
+      console.log(b);
+      console.log(c);
+
+      var setA = setTimeout(function(){
+        
+        // a.innerHTML = b;
+        // b.innerHTML = "";
+        clearInterval(setA);
+
+      }, 300)
+
+      var setB = setTimeout(function(){
+
+        // c.parentNode.removeChild(c);
+        clearInterval(setB);
+
+      }, 500)
+    }
   </script>
 
 </body>
